@@ -1,0 +1,19 @@
+{
+  "name": "workaway",
+  "version": "0.0.1",
+  "description": "Main work away app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/esgiprojetninja/workaway.git"
+  },
+  "author": "ESGI ninja Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/esgiprojetninja/workaway/issues"
+  },
+  "homepage": "https://github.com/esgiprojetninja/workaway#readme"
+}
