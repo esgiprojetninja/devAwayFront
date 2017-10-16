@@ -6,9 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --tab-width 4 ./**/*.{js,jsx} && eslint . --fix",
-    "build": "next build",
+    "build:js": "next build",
     "start": "NODE_ENV=production node server.js",
-    "dev": "node server.js"
+    "build-dev:js": "node server.js",
+    "build:scss": "webpack --config webpack.style.config.js",
+    "build-dev:scss": "webpack --config webpack.style.config.js --watch"
   },
   "repository": {
     "type": "git",
@@ -21,12 +23,26 @@
   },
   "homepage": "https://github.com/esgiprojetninja/workaway#readme",
   "dependencies": {
+    "autoprefixer": "^7.1.5",
+    "babel-loader": "^7.1.2",
+    "bootstrap-sass": "^3.3.7",
+    "css-loader": "^0.28.7",
     "express": "^4.16.2",
+    "extract-text-webpack-plugin": "^3.0.1",
+    "file-loader": "^1.1.5",
     "isomorphic-unfetch": "^2.0.0",
     "next": "^4.0.1",
+    "node-sass": "^4.5.3",
+    "postcss-loader": "^2.0.8",
+    "precss": "^2.0.0",
     "prop-types": "^15.6.0",
+    "raw-loader": "^0.5.1",
     "react": "^16.0.0",
+    "react-bootstrap": "^0.31.3",
     "react-dom": "^16.0.0",
-    "react-markdown": "^2.5.0"
+    "react-markdown": "^2.5.0",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.19.0",
+    "url-loader": "^0.6.2"
   }
 }

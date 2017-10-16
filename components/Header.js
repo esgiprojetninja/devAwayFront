@@ -1,19 +1,29 @@
-import Link from "next/link";
 import React from "react";
-
-const linkStyle = {
-    marginRight: "1em"
-};
+import Router from "next/router";
+import {Nav, Navbar, NavItem} from "react-bootstrap";
 
 const Header = () => (
-    <div>
-        <Link href="/">
-            <a style={linkStyle}>Home</a>
-        </Link>
-        <Link href="/about">
-            <a style={linkStyle}>About</a>
-        </Link>
-    </div>
+    <Navbar fluid inverse staticTop>
+        <Navbar.Header>
+            <Navbar.Brand>
+            <a href="#">Workaway</a>
+            </Navbar.Brand>
+            <Navbar.Toggle />
+        </Navbar.Header>
+        <Navbar.Collapse>
+            <Nav>
+                <NavItem onClick={() => Router.push("/")}>
+                    Home
+                </NavItem>
+                <NavItem onClick={() => Router.push("/about")}>
+                    About
+                </NavItem>
+                <NavItem onClick={() => Router.push("/auth")}>
+                    Login / Signup
+                </NavItem>
+            </Nav>
+        </Navbar.Collapse>
+    </Navbar>
 );
 
 export default Header;

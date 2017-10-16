@@ -1,17 +1,19 @@
 import Header from "./Header";
 import React from "react";
 import T from "prop-types";
-
-const layoutStyle = {
-    margin: "1em",
-    padding: "1em",
-    border: "1px solid #DDD"
-};
+import Head from "next/head";
 
 const BaseLayout = (props) => (
-    <div style={layoutStyle}>
+    <div>
+        <Head>
+            <title>Workaway</title>
+            <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+            <link rel="stylesheet" href="css/styles.css"/>
+        </Head>
         <Header />
-        {props.children}
+        <div className="container-fluid">
+            {props.children}
+        </div>
     </div>
 );
 
