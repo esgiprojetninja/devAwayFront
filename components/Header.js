@@ -6,7 +6,7 @@ const Header = () => (
     <Navbar fluid inverse staticTop>
         <Navbar.Header>
             <Navbar.Brand>
-            <a href="#">Workaway</a>
+                <a href="#">Workaway</a>
             </Navbar.Brand>
             <Navbar.Toggle />
         </Navbar.Header>
