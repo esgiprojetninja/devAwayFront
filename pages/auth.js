@@ -1,10 +1,9 @@
 import React from "react";
 import Link from "next/link";
 import {Button} from "react-bootstrap";
-import BaseLayout from "../components/BaseLayout";
 
 const auth = () => (
-    <BaseLayout>
+    <div>
         <Link href="/auth/google">
             <Button
                 bsStyle="primary"
@@ -19,7 +18,7 @@ const auth = () => (
                 Connect with facebook
             </Button>
         </Link>
-    </BaseLayout>
+    </div>
 );
 
 export default auth;

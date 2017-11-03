@@ -1,6 +1,7 @@
 import Header from "./Header";
 import React from "react";
 import T from "prop-types";
+import * as types from "../app/types";
 import Head from "next/head";
 
 const BaseLayout = (props) => (
@@ -10,7 +11,7 @@ const BaseLayout = (props) => (
             <meta name="viewport" content="initial-scale=1.0, width=device-width" />
             <link rel="stylesheet" href="css/styles.css"/>
         </Head>
-        <Header />
+        <Header user={props.user} />
         <div className="container-fluid">
             {props.children}
         </div>
@@ -18,7 +19,8 @@ const BaseLayout = (props) => (
 );
 
 BaseLayout.propTypes = {
-    children: T.node
+    children: T.node,
+    user: types.User
 };
 
 export default BaseLayout;

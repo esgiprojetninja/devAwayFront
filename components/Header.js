@@ -1,5 +1,6 @@
 import React from "react";
 import Router from "next/router";
+import * as types from "../app/types";
 import {Nav, Navbar, NavItem} from "react-bootstrap";
 
 export default class Header extends React.Component {
@@ -18,9 +19,6 @@ export default class Header extends React.Component {
                         <NavItem onClick={() => Router.push("/")}>
                             Home
                         </NavItem>
-                        <NavItem onClick={() => Router.push("/about")}>
-                            About
-                        </NavItem>
                         <NavItem onClick={() => Router.push("/auth")}>
                             Login / Signup
                         </NavItem>
@@ -29,4 +27,8 @@ export default class Header extends React.Component {
             </Navbar>
         );
     }
+};
+
+Header.propTypes = {
+    user: types.User
 };

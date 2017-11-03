@@ -45,13 +45,6 @@ app.prepare().then(() => {
         passport.authenticate("facebook", {successRedirect: "/",
             failureRedirect: "/login"}));
 
-
-    server.get("/p/:id", (req, res) => {
-        const actualPage = "/post";
-        const queryParams = {id: req.params.id};
-        app.render(req, res, actualPage, queryParams);
-    });
-
     server.get("/api/me", (req, res) => {
         const user = globalData.user ? globalData.user : {
             displayName: "Not connected"
