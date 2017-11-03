@@ -1,7 +1,7 @@
 import Header from "./Header";
 import React from "react";
 import T from "prop-types";
-import * as types from "../app/types";
+import * as types from "../config/types";
 import Head from "next/head";
 
 const BaseLayout = (props) => (

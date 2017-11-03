@@ -1,9 +1,11 @@
 /* global process */
 const express = require("express");
 const next  = require("next");
-const passport = require("./app/auth/passportConfig");
 const cookieParser = require("cookie-parser");
 const expressSession = require("express-session");
+
+const passport = require("./config/auth/passportConfig");
+const apiRoutes = require("./routing/api/api");
 
 const dev = process.env.NODE_ENV !== "production";
 const app = next({dev});
@@ -24,37 +26,32 @@ app.prepare().then(() => {
 
     server.use(express.static("public"));
     server.use(cookieParser());
-    server.use(expressSession({ secret: 'keyboard cat' }));
+    server.use(expressSession({secret: "keyboard cat"}));
     server.use(passport.initialize());
     server.use(passport.session());
     server.use(isLoggedIn);
 
+    // Passport
+
     server.get("/auth/google",
         passport.authenticate("google", {scope: ["https://www.googleapis.com/auth/plus.login"]}));
-
     server.get("/auth/google/callback",
         passport.authenticate("google", {failureRedirect: "/login", successRedirect: "/"}),
         function (req, res) {
             res.redirect("/");
         });
-
     server.get("/auth/facebook", passport.authenticate("facebook"));
-
+    server.get("/auth/facebook/callback",
+        passport.authenticate("facebook", {successRedirect: "/",
+            failureRedirect: "/login"}));
     server.get("/logout", function (req, res) {
         globalData.user = {};
         req.logout();
         res.redirect("/");
     });
 
-    server.get("/auth/facebook/callback",
-        passport.authenticate("facebook", {successRedirect: "/",
-            failureRedirect: "/login"}));
-
-    server.get("/api/me", (req, res) => {
-        const user = globalData.user ? globalData.user : {};
-        res.setHeader("Content-Type", "application/json");
-        res.send(user);
-    });
+    // API
+    apiRoutes(server, globalData);
 
     server.get("*", (req, res) => {
         return handle(req, res);

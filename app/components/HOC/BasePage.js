@@ -2,7 +2,7 @@ import React from "react";
 import fetch from "isomorphic-unfetch";
 import BaseLayout from "../BaseLayout";
 
-import * as types from "../../app/types";
+import * as types from "../../config/types";
 
 const BasePage = function (Page) {
     return class Base extends React.Component {

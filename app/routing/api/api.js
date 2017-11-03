@@ -1,4 +1,4 @@
-export default function apiRoutes(server, globalData) {
+function apiRoutes(server, globalData) {
     server.get("/api/me", (req, res) => {
         const user = globalData.user ? globalData.user : {
             displayName: "Not connected"
@@ -7,3 +7,6 @@ export default function apiRoutes(server, globalData) {
         res.send(user);
     });
 }
+
+/* global module */
+module.exports = apiRoutes;

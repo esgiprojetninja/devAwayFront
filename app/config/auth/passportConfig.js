@@ -1,4 +1,4 @@
-const env = require("../../.env.js");
+const env = require("../../../.env.js");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 const FacebookStrategy = require("passport-facebook").Strategy;

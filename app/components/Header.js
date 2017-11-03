@@ -1,6 +1,6 @@
 import React from "react";
 import Router from "next/router";
-import * as types from "../app/types";
+import * as types from "../config/types";
 import {Nav, Navbar, NavItem} from "react-bootstrap";
 
 export default class Header extends React.Component {
