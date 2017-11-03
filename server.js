@@ -16,7 +16,6 @@ app.prepare().then(() => {
 
     function isLoggedIn(req, res, next) {
         if (req.user) {
-            console.log(`Authenticated as ${req.user.displayName}`);
             globalData.user = req.user;
         }
         return next();
@@ -41,14 +40,18 @@ app.prepare().then(() => {
 
     server.get("/auth/facebook", passport.authenticate("facebook"));
 
+    server.get("/logout", function (req, res) {
+        globalData.user = {};
+        req.logout();
+        res.redirect("/");
+    });
+
     server.get("/auth/facebook/callback",
         passport.authenticate("facebook", {successRedirect: "/",
             failureRedirect: "/login"}));
 
     server.get("/api/me", (req, res) => {
-        const user = globalData.user ? globalData.user : {
-            displayName: "Not connected"
-        };
+        const user = globalData.user ? globalData.user : {};
         res.setHeader("Content-Type", "application/json");
         res.send(user);
     });
@@ -63,6 +66,7 @@ app.prepare().then(() => {
         }
         console.log("> Ready on http://127.0.0.1:3000");
     });
+
 }).catch((ex) => {
     console.error(ex.stack);
     process.exit(1);

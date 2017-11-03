@@ -10,7 +10,7 @@ export default class Header extends React.Component {
             <Navbar fluid inverse staticTop>
                 <Navbar.Header>
                     <Navbar.Brand>
-                        <a href="#">{this.props.user ? this.props.user.displayName : ""}</a>
+                        <a href="#">{this.props.user.id ? this.props.user.displayName : ""}</a>
                     </Navbar.Brand>
                     <Navbar.Toggle />
                 </Navbar.Header>
@@ -19,12 +19,21 @@ export default class Header extends React.Component {
                         <NavItem onClick={() => Router.push("/")}>
                             Home
                         </NavItem>
-                        <NavItem onClick={() => Router.push("/auth")}>
-                            Login / Signup
-                        </NavItem>
+                        {this.renderAuthBtn()}
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>
+        );
+    }
+
+    renderAuthBtn() {
+        const connected = this.props.user.id;
+        return (
+            <NavItem onClick={
+                () => connected ? Router.push("/logout") : Router.push("/auth")
+            }>
+                {connected ? "Logout" : "Login / Signup"}
+            </NavItem>
         );
     }
 };

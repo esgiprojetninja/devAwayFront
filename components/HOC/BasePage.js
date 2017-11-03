@@ -1,5 +1,5 @@
 import React from "react";
-
+import fetch from "isomorphic-unfetch";
 import BaseLayout from "../BaseLayout";
 
 import * as types from "../../app/types";
@@ -17,7 +17,7 @@ const BasePage = function (Page) {
                 const user = await userRes.json();
                 return Page.getInitialProps({user});
             }
-            return {};
+            return {user: {}};
         }
 
         render() {
