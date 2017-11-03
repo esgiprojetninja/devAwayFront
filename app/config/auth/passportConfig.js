@@ -10,6 +10,8 @@ passport.use(new GoogleStrategy({
     callbackURL: "http://127.0.0.1:3000/auth/google/callback"
 },
 function (accessToken, refreshToken, profile, done) {
+    console.log("coucou");
+    console.log(profile);
     // User.findOrCreate({googleId: profile.id}, function (err, user) {
     //     return done(err, user);
     // });
@@ -30,11 +32,11 @@ function (accessToken, refreshToken, profile, done) {
 }
 ));
 
-passport.serializeUser(function(user, cb) {
+passport.serializeUser(function (user, cb) {
     cb(null, user);
 });
 
-passport.deserializeUser(function(obj, cb) {
+passport.deserializeUser(function (obj, cb) {
     cb(null, obj);
 });
 

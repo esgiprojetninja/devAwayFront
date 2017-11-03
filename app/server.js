@@ -6,6 +6,7 @@ const expressSession = require("express-session");
 
 const passport = require("./config/auth/passportConfig");
 const apiRoutes = require("./routing/api/api");
+const authRoutes = require("./routing/auth/auth");
 
 const dev = process.env.NODE_ENV !== "production";
 const app = next({dev});
@@ -32,23 +33,7 @@ app.prepare().then(() => {
     server.use(isLoggedIn);
 
     // Passport
-
-    server.get("/auth/google",
-        passport.authenticate("google", {scope: ["https://www.googleapis.com/auth/plus.login"]}));
-    server.get("/auth/google/callback",
-        passport.authenticate("google", {failureRedirect: "/login", successRedirect: "/"}),
-        function (req, res) {
-            res.redirect("/");
-        });
-    server.get("/auth/facebook", passport.authenticate("facebook"));
-    server.get("/auth/facebook/callback",
-        passport.authenticate("facebook", {successRedirect: "/",
-            failureRedirect: "/login"}));
-    server.get("/logout", function (req, res) {
-        globalData.user = {};
-        req.logout();
-        res.redirect("/");
-    });
+    authRoutes(server, globalData);
 
     // API
     apiRoutes(server, globalData);

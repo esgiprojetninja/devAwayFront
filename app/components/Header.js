@@ -36,7 +36,7 @@ export default class Header extends React.Component {
             </NavItem>
         );
     }
-};
+}
 
 Header.propTypes = {
     user: types.User
