@@ -12,11 +12,23 @@ const handle = app.getRequestHandler();
 app.prepare().then(() => {
     const server = express();
 
+    const globalData = {};
+
+    function isLoggedIn(req, res, next) {
+        if (req.user) {
+            console.log(`Authenticated as ${req.user.displayName}`);
+            globalData.user = req.user;
+        }
+        return next();
+    }
+
+
     server.use(express.static("public"));
     server.use(cookieParser());
     server.use(expressSession({ secret: 'keyboard cat' }));
     server.use(passport.initialize());
     server.use(passport.session());
+    server.use(isLoggedIn);
 
     server.get("/auth/google",
         passport.authenticate("google", {scope: ["https://www.googleapis.com/auth/plus.login"]}));
@@ -38,6 +50,14 @@ app.prepare().then(() => {
         const actualPage = "/post";
         const queryParams = {id: req.params.id};
         app.render(req, res, actualPage, queryParams);
+    });
+
+    server.get("/api/me", (req, res) => {
+        const user = globalData.user ? globalData.user : {
+            displayName: "Not connected"
+        };
+        res.setHeader("Content-Type", "application/json");
+        res.send(user);
     });
 
     server.get("*", (req, res) => {

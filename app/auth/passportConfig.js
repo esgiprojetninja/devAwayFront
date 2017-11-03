@@ -13,7 +13,6 @@ function (accessToken, refreshToken, profile, done) {
     // User.findOrCreate({googleId: profile.id}, function (err, user) {
     //     return done(err, user);
     // });
-    console.log(profile.displayName);
     return profile.displayName ? done(null, profile) : done("Couldn't authenticate");
 }));
 
@@ -27,7 +26,6 @@ function (accessToken, refreshToken, profile, done) {
     //   if (err) { return done(err); }
     //   done(null, user);
     // });
-    console.log(profile.displayName);
     return profile.displayName ? done(null, profile) : done("Couldn't authenticate");
 }
 ));
