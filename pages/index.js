@@ -1,6 +1,6 @@
-import BasePage from "../app/components/HOC/BasePage";
+import BasePage from "../components/HOC/BasePage";
 import React from "react";
-import * as types from "../app/config/types";
+import * as types from "../server/lib/config/types";
 
 class Index extends React.Component {
 

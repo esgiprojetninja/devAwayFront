@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import {Button} from "react-bootstrap";
 
-import BasePage from "../app/components/HOC/BasePage";
+import BasePage from "../components/HOC/BasePage";
 
 const auth = () => (
     <div>
