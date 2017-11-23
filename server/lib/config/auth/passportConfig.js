@@ -9,8 +9,6 @@ passport.use(new GoogleStrategy({
     callbackURL: "/auth/google/callback"
 },
 function (accessToken, refreshToken, profile, done) {
-    console.log("coucou");
-    console.log(profile);
     // User.findOrCreate({googleId: profile.id}, function (err, user) {
     //     return done(err, user);
     // });

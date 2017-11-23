@@ -3,8 +3,6 @@ const express = require("express");
 const next  = require("next");
 const cookieParser = require("cookie-parser");
 const expressSession = require("express-session");
-const graphqlHTTP =  require("express-graphql");
-var {buildSchema} = require('graphql');
 
 const passport = require("./config/auth/passportConfig");
 const apiRoutes = require("./routing/api/api");
@@ -14,30 +12,8 @@ const dev = process.env.NODE_ENV !== "production";
 const app = next({dev});
 const handle = app.getRequestHandler();
 
-// Express-graphql tuto | TODO: move this away
-
-// Construct a schema, using GraphQL schema language
-var schema = buildSchema(`
-    type Query {
-        hello: String
-    }
-`);
-
-// The root provides a resolver function for each API endpoint
-var root = {
-    hello: () => {
-        return "Hello world!";
-    }
-};
-
 app.prepare().then(() => {
     const server = express();
-
-    server.use("/graphql", graphqlHTTP({
-        schema: schema,
-        rootValue: root,
-        graphiql: true
-    }));
 
     const globalData = {};
 
