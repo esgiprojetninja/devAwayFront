@@ -53,6 +53,8 @@
   },
   "devDependencies": {
     "babel-jest": "^21.2.0",
+    "enzyme": "^3.2.0",
+    "enzyme-adapter-react-16": "^1.1.0",
     "jest": "^21.2.1",
     "nodemon": "^1.12.1",
     "regenerator-runtime": "^0.11.0"
@@ -62,12 +64,11 @@
     "collectCoverage": true,
     "collectCoverageFrom": [
       "components/**/*.{js,jsx}",
-      "!components/__tests__/"
+      "!**/components/__tests__/"
     ],
     "coverageDirectory": "coverage",
-    "testFileExtensions": [
-      "js",
-      "es6"
+    "setupFiles": [
+      "./config/testSetup.js"
     ]
   }
 }
