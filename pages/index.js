@@ -12,7 +12,7 @@ class Index extends React.Component {
 
     render() {
         return (
-            <h1>{ this.props.user.displayName }</h1>
+            <h1>Hello {this.props.user.displayName ? this.props.user.displayName : ""} !</h1>
         );
     }
 }

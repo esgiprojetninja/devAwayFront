@@ -10,7 +10,7 @@ export default class Header extends React.Component {
             <Navbar fluid inverse staticTop>
                 <Navbar.Header>
                     <Navbar.Brand>
-                        <a href="#">{this.props.user.id ? this.props.user.displayName : ""}</a>
+                        <a href="#">{this.props.user.name}</a>
                     </Navbar.Brand>
                     <Navbar.Toggle />
                 </Navbar.Header>
@@ -27,7 +27,7 @@ export default class Header extends React.Component {
     }
 
     renderAuthBtn() {
-        const connected = this.props.user.id;
+        const connected = this.props.user.id !== "";
         return (
             <NavItem onClick={
                 () => connected ? Router.push("/logout") : Router.push("/auth")
