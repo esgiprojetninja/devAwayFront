@@ -3,6 +3,7 @@ npm-debug.log
 .vscode/
 .next/
 .env.js
+components/__tests__/coverage/
 
 /server/dist/
 
