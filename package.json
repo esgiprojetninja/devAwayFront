@@ -4,10 +4,10 @@
   "description": "Main work away app",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest -t babelify",
+    "test-dev": "jest --watch",
     "format": "prettier --tab-width 4 ./**/*.{js,jsx} && eslint . --fix",
     "build:js": "next build",
-    "start": "NODE_ENV=production node server/dist/server.js",
     "start-dev": "node server/lib/server --exec babel",
     "build:scss": "webpack --config webpack.style.config.js",
     "build-dev:scss": "webpack --config webpack.style.config.js --watch"
@@ -52,6 +52,24 @@
     "url-loader": "^0.6.2"
   },
   "devDependencies": {
-    "nodemon": "^1.12.1"
+    "babel-jest": "^21.2.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-es2015": "^6.24.1",
+    "jest": "^21.2.1",
+    "nodemon": "^1.12.1",
+    "regenerator-runtime": "^0.11.0"
+  },
+  "jest": {
+    "verbose": true,
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "components/**/*.{js,jsx}",
+      "!components/__tests__/**/*"
+    ],
+    "coverageDirectory": "components/__tests__/coverage/",
+    "testFileExtensions": [
+      "js",
+      "es6"
+    ]
   }
 }
