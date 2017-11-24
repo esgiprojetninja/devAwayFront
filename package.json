@@ -7,7 +7,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --tab-width 4 ./**/*.{js,jsx} && eslint . --fix",
     "build:js": "next build",
-    "start": "NODE_ENV=production node server/dist/server.js",
     "start-dev": "node server/lib/server --exec babel",
     "build:scss": "webpack --config webpack.style.config.js",
     "build-dev:scss": "webpack --config webpack.style.config.js --watch"
