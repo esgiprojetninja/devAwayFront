@@ -13,17 +13,21 @@ const BasePage = function (Page) {
 
         static async getInitialProps(context) {
             if (Page.getInitialProps) {
-                const userRes = await fetch("http://127.0.0.1:3000/api/qraphql", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        query: "{ name, id }"
-                    })
-                });
-                const user = await userRes.json();
-                return Page.getInitialProps({user: user.data});
+                // const query = await fetch("http://127.0.0.1:3000/api/me", {
+                //     method: "POST",
+                //     headers: {
+                //         "Content-Type": "application/json"
+                //     },
+                //     body: JSON.stringify({
+                //         query: `{
+                //             id
+                //             name
+                //         }`
+                //     })
+                // });
+                // const res = await query.json();
+                // return Page.getInitialProps({user: res.data});
+                return {user: {}};
             }
             return {user: {}};
         }
