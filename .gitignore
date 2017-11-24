@@ -3,3 +3,6 @@ npm-debug.log
 .vscode/
 .next/
 .env.js
+
+/server/dist/
+
