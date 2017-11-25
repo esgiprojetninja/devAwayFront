@@ -2,7 +2,7 @@ import React from "react";
 import { PropTypes as T } from "prop-types";
 
 class App extends React.PureComponent {
-    render() {
+    render(): React$Node { // Coucou flow linter, no comprendo los typos que tienes
         return this.props.user.authenticated ?
             (
                 <div>{JSON.stringify(this.props.user)}</div>
