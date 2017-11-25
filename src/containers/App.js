@@ -1,9 +1,15 @@
+// @flow flow-disable
 import { connect } from "react-redux";
 import AppComponent from "../ui/App";
+import type { StateType } from "../reducers";
 
-const mapStateToProps = state => state;
+export type AppStateType = StateType;
 
-const mapDispatchToProps = dispatch => ({ // eslint-disable-line
+export type AppPropsType = {};
+
+const mapStateToProps = (state: StateType): AppStateType => state;
+
+const mapDispatchToProps = (dispatch): AppPropsType => ({ // eslint-disable-line
 });
 
 const App = connect(
