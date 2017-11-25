@@ -1,79 +1,31 @@
 {
-  "name": "workaway",
-  "version": "0.0.1",
-  "description": "Main work away app",
-  "main": "index.js",
-  "scripts": {
-    "test": "jest -t babelify",
-    "test-dev": "jest --watch",
-    "format": "prettier --tab-width 4 ./**/*.{js,jsx} && eslint . --fix",
-    "build:js": "next build",
-    "start-dev": "node server/lib/server --exec babel",
-    "build:scss": "webpack --config webpack.style.config.js",
-    "build-dev:scss": "webpack --config webpack.style.config.js --watch"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/esgiprojetninja/workaway.git"
-  },
-  "author": "ESGI ninja Team",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/esgiprojetninja/workaway/issues"
-  },
-  "homepage": "https://github.com/esgiprojetninja/workaway#readme",
+  "name": "devaway",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
-    "autoprefixer": "^7.1.5",
-    "babel": "^6.23.0",
-    "babel-cli": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-preset-react": "^6.24.1",
-    "babel-preset-stage-2": "^6.24.1",
-    "bootstrap-sass": "^3.3.7",
-    "cookie-parser": "^1.4.3",
-    "css-loader": "^0.28.7",
-    "express": "^4.16.2",
-    "express-session": "^1.15.6",
-    "extract-text-webpack-plugin": "^3.0.1",
-    "file-loader": "^1.1.5",
-    "isomorphic-unfetch": "^2.0.0",
-    "next": "^4.0.1",
-    "node-sass": "^4.5.3",
-    "postcss-loader": "^2.0.8",
-    "precss": "^2.0.0",
     "prop-types": "^15.6.0",
-    "raw-loader": "^0.5.1",
-    "react": "^16.0.0",
-    "react-bootstrap": "^0.31.3",
-    "react-dom": "^16.0.0",
-    "react-markdown": "^2.5.0",
-    "sass-loader": "^6.0.6",
-    "style-loader": "^0.19.0",
-    "url-loader": "^0.6.2"
+    "react": "^16.1.1",
+    "react-dom": "^16.1.1",
+    "react-redux": "^5.0.6",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "1.0.17",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "babel-eslint": "^8.0.2",
-    "babel-jest": "^21.2.0",
     "eslint": "^4.11.0",
+    "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-react": "^7.5.1",
-    "enzyme": "^3.2.0",
-    "enzyme-adapter-react-16": "^1.1.0",
-    "jest": "^21.2.1",
-    "nodemon": "^1.12.1",
-    "regenerator-runtime": "^0.11.0"
-  },
-  "jest": {
-    "verbose": true,
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "components/**/*.{js,jsx}",
-      "!**/components/__tests__/"
-    ],
-    "coverageDirectory": "coverage",
-    "setupFiles": [
-      "./config/testSetup.js"
-    ]
+    "flow-bin": "^0.59.0",
+    "jest-cli": "^21.2.1"
   }
 }
