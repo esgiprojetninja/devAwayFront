@@ -1,6 +1,7 @@
+/* global document */
 import "./index.css";
-import App from "./App";
+import startApp from "./startApp";
 import registerServiceWorker from "./registerServiceWorker";
 
-App.startApp();
+startApp(document.getElementById("root"));
 registerServiceWorker();
