@@ -1,4 +1,7 @@
-/* global User */
+/*
+    global
+        User
+*/
 declare type User = {
     name: string,
     id: string
