@@ -2,7 +2,7 @@ module.exports = {
     "extends": ["airbnb", "plugin:flowtype/recommended"],
     "parser": "babel-eslint",
     "rules": {
-      "import/extensions": { "js": "always", "json": "never", "jsx": "always" },
+      "import/extensions": [0, "never", { "js": "always", "json": "never", "jsx": "always" }],
       "react/jsx-filename-extension": [1, { "extensions": ["js", "jsx"] }],
       "react/jsx-indent": [2, 4],
       "indent": ["error", 4],
