@@ -2,7 +2,8 @@ module.exports = {
     "extends": ["airbnb", "plugin:flowtype/recommended"],
     "parser": "babel-eslint",
     "rules": {
-      "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+      "import/extensions": [0, "never", { "js": "always", "json": "never", "jsx": "always" }],
+      "react/jsx-filename-extension": [1, { "extensions": ["js", "jsx"] }],
       "react/jsx-indent": [2, 4],
       "indent": ["error", 4],
       "quotes": [2, "double", "avoid-escape"],
@@ -11,7 +12,7 @@ module.exports = {
       "flowtype/delimiter-dangle": [2, "never"],
       "flowtype/generic-spacing": [2, "never"],
       "flowtype/no-primitive-constructor-types": 2,
-      "flowtype/no-types-missing-file-annotation": 2,
+      "flowtype/no-types-missing-file-annotation": 0, // Fixme
       "flowtype/no-weak-types": 2,
       "flowtype/object-type-delimiter": [2, "comma"],
       "flowtype/require-parameter-type": 2,
