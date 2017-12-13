@@ -1,4 +1,2 @@
-// @flow
-
-export const LOGOUT: string = "LOGOUT";
-export const LOGIN: string = "LOGIN_SUCCESS";
+export const LOGOUT = "LOGOUT";
+export const LOGIN = "LOGIN_SUCCESS";

@@ -1,11 +1,19 @@
-// @flow
 import * as React from "react";
-import type { AppStateType, AppPropsType } from "../containers/App";
-
+import * as T from "prop-types";
 import Navbar from "./Navbar.jsx";
 
-export default class App extends React.PureComponent<AppPropsType, AppStateType> {
-    render(): React.Element<*> {
+export default class App extends React.PureComponent {
+    static propTypes = {
+        user: T.shape({
+            authenticated: T.bool
+        })
+    }
+
+    static defaultProps = {
+        user: {}
+    }
+
+    render() {
         return (
             <div>
                 <Navbar />
