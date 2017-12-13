@@ -2,7 +2,7 @@ import fetch from "isomorphic-fetch";
 
 const baseUrl = process.env.REACT_APP_API_URL;
 
-export async function fetchAll() {
+export function fetchAll() {
     const query = `
     {
         accommodations {
@@ -15,13 +15,11 @@ export async function fetchAll() {
         }
     }
     `;
-    const req = await fetch(`http://${baseUrl}/api/graphql`, {
+    return fetch(`http://${baseUrl}/api/graphql`, {
         method: "POST",
         "Content-Type": "application/graphql",
         body: JSON.stringify({ query })
     });
-    const data = req.json();
-    return data;
 }
 
 export const toto = "toto";

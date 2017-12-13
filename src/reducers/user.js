@@ -2,7 +2,20 @@ import * as types from "../actions/types/user";
 
 
 const initialSate = {
-    authenticated: false
+    data: {
+        id: 0,
+        email: "",
+        lastName: "",
+        firstName: "",
+        languages: "",
+        skills: "",
+        createdAt: "",
+        updateAt: "",
+        username: ""
+    },
+    isLoading: false,
+    hasError: false,
+    errorText: ""
 };
 
 const userReducer = (state = initialSate, action) => {
@@ -13,7 +26,20 @@ const userReducer = (state = initialSate, action) => {
     case types.LOGIN_REQUEST:
         return {
             ...state,
-            ...payload
+            isLoading: true
+        };
+    case types.LOGIN_SUCCESS:
+        return {
+            ...state,
+            data: payload,
+            isLoading: false
+        };
+    case types.LOGIN_FAILURE:
+        return {
+            ...state,
+            error: payload,
+            isLoading: false,
+            hasError: true
         };
     default:
         return state;

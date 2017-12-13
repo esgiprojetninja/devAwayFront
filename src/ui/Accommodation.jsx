@@ -7,10 +7,10 @@ import IconButton from "material-ui/IconButton";
 import CloseIcon from "material-ui-icons/Close";
 import Button from "material-ui/Button";
 
-const accommodationPropTypes = {
+const accommodationPropTypes = T.shape({
     title: T.string,
     id: T.number
-};
+});
 
 export default class Accommodation extends React.PureComponent {
     static propTypes = {
