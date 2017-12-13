@@ -1,4 +1,3 @@
-/* @flow */
 import React from "react";
 import thunk from "redux-thunk";
 import { createStore, applyMiddleware } from "redux";
@@ -9,7 +8,7 @@ import { Provider } from "react-redux";
 import MainReducer from "./reducers";
 import App from "./containers/App";
 
-function startApp(node: Element) {
+function startApp(node) {
     const store = createStore(
         MainReducer,
         applyMiddleware(thunk),
