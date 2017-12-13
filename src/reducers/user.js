@@ -10,7 +10,7 @@ const userReducer = (state = initialSate, action) => {
     switch (action.type) {
     case types.LOGOUT:
         return initialSate;
-    case types.LOGIN:
+    case types.LOGIN_REQUEST:
         return {
             ...state,
             ...payload

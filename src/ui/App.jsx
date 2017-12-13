@@ -1,24 +1,13 @@
 import * as React from "react";
-import * as T from "prop-types";
+
 import Navbar from "./Navbar.jsx";
+import Accommodation from "../containers/Accommodation";
 
-export default class App extends React.PureComponent {
-    static propTypes = {
-        user: T.shape({
-            authenticated: T.bool
-        })
-    }
+const App = () => (
+    <div>
+        <Navbar />
+        <Accommodation />
+    </div>
+);
 
-    static defaultProps = {
-        user: {}
-    }
-
-    render() {
-        return (
-            <div>
-                <Navbar />
-                <div>{JSON.stringify(this.props.user)}</div>
-            </div>
-        );
-    }
-}
+export default App;

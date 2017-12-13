@@ -1,2 +1,2 @@
 export const LOGOUT = "LOGOUT";
-export const LOGIN = "LOGIN_SUCCESS";
+export const LOGIN_REQUEST = "LOGIN_REQUEST";
