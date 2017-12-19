@@ -16,28 +16,19 @@ const initialSate = {
     errorText: ""
 };
 
-function sortNumber(a, b) {
-    return a - b;
-}
-
 const accommodation = (state = initialSate, action) => {
-    const data = [];
-    const byID = new Map();
-    switch (action) {
+    const { payload } = action;
+    switch (action.type) {
     case FETCH_ACCOMMODATIONS_REQUEST:
         return {
             ...state,
             isLoading: true
         };
     case FETCH_ACCOMMODATIONS_SUCCESS:
-        action.payload.forEach((item) => {
-            data.push(Number(item.id));
-            byID.set(item.id, item);
-        });
         return {
             ...state,
-            data: data.sort(sortNumber),
-            byID,
+            data: payload.data,
+            byID: payload.byID,
             isLoading: false
         };
     case FETCH_ACCOMMODATIONS_FAILURE:

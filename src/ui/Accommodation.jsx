@@ -22,7 +22,8 @@ export default class Accommodation extends React.PureComponent {
             isLoading: T.bool
         }).isRequired,
         hasError: T.bool.isRequired,
-        errorText: T.string.isRequired
+        errorText: T.string.isRequired,
+        onFetchAccommodationsClicked: T.func.isRequired
     }
 
     constructor(props) {
@@ -46,8 +47,8 @@ export default class Accommodation extends React.PureComponent {
         }
         return (
             <ul>
-                {this.props.data.forEach(id => (
-                    <li>{this.props.byID[id].title} | #{this.props.byID[id].id}</li>
+                {this.props.data.map(id => (
+                    <li>{this.props.byID.get(id).title} | #{this.props.byID.get(id).id}</li>
                 ))}
             </ul>
         );
@@ -107,6 +108,11 @@ export default class Accommodation extends React.PureComponent {
                 <h1>Accommodation</h1>
                 <p>{this.props.errorText}</p>
                 {this.renderAccommodationList()}
+                <Button
+                    onClick={this.props.onFetchAccommodationsClicked}
+                >
+                    Reload
+                </Button>
             </div>
         );
     }

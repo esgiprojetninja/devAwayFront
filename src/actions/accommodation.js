@@ -10,11 +10,11 @@ export const FETCH_ACCOMMODATION_SUCCESS = "FETCH_ACCOMMODATION_SUCCESS";
 export const FETCH_ACCOMMODATION_FAILURE = "FETCH_ACCOMMODATION_FAILURE";
 
 const fetchAccommodationsRequest = () => ({
-    type: FETCH_ACCOMMODATION_REQUEST
+    type: FETCH_ACCOMMODATIONS_REQUEST
 });
 
 const fetchAccommodationsSuccess = data => ({
-    type: FETCH_ACCOMMODATION_SUCCESS,
+    type: FETCH_ACCOMMODATIONS_SUCCESS,
     payload: data
 });
 
@@ -27,7 +27,14 @@ export function fetchAccommodations() {
     return (dispatch) => {
         dispatch(fetchAccommodationsRequest());
         return fetchAll()
-            .then(data => fetchAccommodationsSuccess(data))
-            .catch(error => fetchAccommodationsFailure(error));
+            .then(
+                (res) => {
+                    if (res.code) {
+                        return dispatch(fetchAccommodationsFailure(res.message));
+                    }
+                    return dispatch(fetchAccommodationsSuccess(res));
+                },
+                error => console.log(error)
+            );
     };
 }

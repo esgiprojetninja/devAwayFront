@@ -13,9 +13,7 @@ export async function login(credentials) {
             _password: credentials.password
         })
     });
-    console.log(req);
     const data = req.json();
-    console.log(data);
     return data;
 }
 

@@ -1,24 +1,35 @@
+/* global window */
 import fetch from "isomorphic-fetch";
+
+import {
+    parseCollectionFromApi
+} from "../parsers/entityParsers";
 
 const baseUrl = process.env.REACT_APP_API_URL;
 
 export function fetchAll() {
-    const query = `
-    {
-        accommodations {
-            edges {
-                node {
-                    title
-                    id
-                 }
-            }
+    const token = window.localStorage.getItem("authToken");
+    // const req = await fetch(`http://${baseUrl}/api/graphql?${query}`, {
+    return fetch(`http://${baseUrl}/api/accommodations`, {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${token}`
         }
-    }
-    `;
-    return fetch(`http://${baseUrl}/api/graphql`, {
-        method: "POST",
-        "Content-Type": "application/graphql",
-        body: JSON.stringify({ query })
+    }).then(
+        response => (
+            response.json()
+        ),
+        error => error
+    ).then((parsed) => {
+        console.log(parsed["hydra:member"]);
+        const {
+            byID,
+            data
+        } = parseCollectionFromApi(parsed["hydra:member"]);
+        return {
+            byID,
+            data
+        };
     });
 }
 

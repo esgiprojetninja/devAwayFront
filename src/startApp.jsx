@@ -8,9 +8,6 @@ import { Provider } from "react-redux";
 
 import MainReducer from "./reducers";
 import App from "./containers/App";
-import {
-    fetchAccommodations
-} from "./actions/accommodation";
 
 const loggerMiddleware = createLogger();
 
@@ -22,8 +19,6 @@ function startApp(node) {
             loggerMiddleware
         ),
     );
-
-    store.dispatch(fetchAccommodations());
     render(
         <Provider store={store}>
             <BrowserRouter>

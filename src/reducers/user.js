@@ -13,6 +13,7 @@ const initialSate = {
         updateAt: "",
         username: ""
     },
+    isLoggedIn: false,
     isLoading: false,
     hasError: false,
     errorText: ""
@@ -31,12 +32,13 @@ const userReducer = (state = initialSate, action) => {
     case types.LOGIN_SUCCESS:
         return {
             ...state,
-            data: payload,
+            isLoggedIn: true,
             isLoading: false
         };
     case types.LOGIN_FAILURE:
         return {
             ...state,
+            isLoggedIn: false,
             error: payload,
             isLoading: false,
             hasError: true

@@ -1,3 +1,4 @@
+/* global window */
 import * as types from "./types/user";
 
 import {
@@ -29,10 +30,11 @@ export function login(credentials) {
         return ApiLogin(credentials)
             .then(
                 (res) => {
-                    if (res.code !== 200) {
+                    if (res.code) {
                         return dispatch(loginFailure(res.message));
                     }
-                    return dispatch(loginSuccess(res.json()));
+                    window.localStorage.setItem("authToken", res.token);
+                    return dispatch(loginSuccess(res));
                 },
                 error => console.log(error)
             );
