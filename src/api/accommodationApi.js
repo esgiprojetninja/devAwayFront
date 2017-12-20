@@ -15,20 +15,23 @@ export function fetchAll() {
         headers: {
             Authorization: `Bearer ${token}`
         }
-    }).then(
-        response => (
-            response.json()
-        ),
-        error => error
-    ).then((parsed) => {
-        console.log(parsed["hydra:member"]);
-        const {
-            byID,
-            data
-        } = parseCollectionFromApi(parsed["hydra:member"]);
+    }).then(response => (
+        response.json()
+    )).then((parsed) => {
+        const member = parsed["hydra:member"];
+        if (member) {
+            const {
+                byID,
+                data
+            } = parseCollectionFromApi(member);
+            return {
+                byID,
+                data
+            };
+        }
         return {
-            byID,
-            data
+            hasError: true,
+            message: parsed.detail
         };
     });
 }

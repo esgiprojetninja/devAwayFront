@@ -29,7 +29,7 @@ export function fetchAccommodations() {
         return fetchAll()
             .then(
                 (res) => {
-                    if (res.code) {
+                    if (res.hasError) {
                         return dispatch(fetchAccommodationsFailure(res.message));
                     }
                     return dispatch(fetchAccommodationsSuccess(res));

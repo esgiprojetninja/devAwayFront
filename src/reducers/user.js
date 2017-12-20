@@ -27,7 +27,9 @@ const userReducer = (state = initialSate, action) => {
     case types.LOGIN_REQUEST:
         return {
             ...state,
-            isLoading: true
+            isLoading: true,
+            hasError: false,
+            error: ""
         };
     case types.LOGIN_SUCCESS:
         return {

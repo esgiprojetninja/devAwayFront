@@ -13,7 +13,8 @@ const initialSate = {
         isLoading: false
     },
     hasError: false,
-    errorText: ""
+    errorText: "",
+    mode: "list"
 };
 
 const accommodation = (state = initialSate, action) => {

@@ -3,7 +3,7 @@ import {
     fetchAccommodations
 } from "../actions/accommodation";
 
-import AccommodationComponent from "../ui/Accommodation.jsx";
+import AccommodationComponent from "../ui/Accommodation/Accommodation.jsx";
 
 const mapStateToProps = (state) => {
     const {
@@ -12,14 +12,16 @@ const mapStateToProps = (state) => {
         hasError,
         errorText,
         data,
-        byID
+        byID,
+        mode
     } = state.accommodation;
     return {
         accommodations: data.map(id => byID.get(id)),
         isLoading,
         current,
         hasError,
-        errorText
+        errorText,
+        mode
     };
 };
 

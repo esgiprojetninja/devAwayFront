@@ -14,12 +14,12 @@ const App = () => (
     <div>
         <Navbar />
         <Grid container>
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={6}>
                 <Paper style={paper.paperBox}>
                     <LogBox />
                 </Paper>
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={6}>
                 <Paper style={paper.paperBox}>
                     <Accommodation />
                 </Paper>
