@@ -5,7 +5,23 @@ import {
 
 import AccommodationComponent from "../ui/Accommodation.jsx";
 
-const mapStateToProps = state => (state.accommodation);
+const mapStateToProps = (state) => {
+    const {
+        isLoading,
+        current,
+        hasError,
+        errorText,
+        data,
+        byID
+    } = state.accommodation;
+    return {
+        accommodations: data.map(id => byID.get(id)),
+        isLoading,
+        current,
+        hasError,
+        errorText
+    };
+};
 
 const mapDispatchToProps = dispatch => ({
     onFetchAccommodationsClicked: () => dispatch(fetchAccommodations())

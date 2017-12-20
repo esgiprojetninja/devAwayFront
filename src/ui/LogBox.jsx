@@ -68,26 +68,30 @@ export default class LogBox extends React.PureComponent {
             <form
                 onSubmit={this.handleSubmit}
             >
-                <TextField
-                    error={this.props.hasError}
-                    type="text"
-                    name="username"
-                    id="username"
-                    onChange={this.handleUsernameChange}
-                />
-                <TextField
-                    error={this.props.hasError}
-                    type="password"
-                    name="pwd"
-                    id="pwd"
-                    onChange={this.handlePasswordChange}
-                />
-                <Button
-                    type="submit"
-                >
-                    Login
-                </Button>
-                {this.renderErrors()}
+                <CardContent>
+                    <TextField
+                        error={this.props.hasError}
+                        type="text"
+                        name="username"
+                        id="username"
+                        onChange={this.handleUsernameChange}
+                    />
+                    <TextField
+                        error={this.props.hasError}
+                        type="password"
+                        name="pwd"
+                        id="pwd"
+                        onChange={this.handlePasswordChange}
+                    />
+                    {this.renderErrors()}
+                </CardContent>
+                <CardActions>
+                    <Button
+                        type="submit"
+                    >
+                        Login
+                    </Button>
+                </CardActions>
             </form>
         );
     }
@@ -102,12 +106,7 @@ export default class LogBox extends React.PureComponent {
     render() {
         return (
             <Card>
-                <CardContent>
-                    {this.renderBox()}
-                </CardContent>
-                <CardActions>
-                    <Button dense>Learn More</Button>
-                </CardActions>
+                {this.renderBox()}
             </Card>
         );
     }
