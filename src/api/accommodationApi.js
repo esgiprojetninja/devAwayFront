@@ -7,33 +7,61 @@ import {
 
 const baseUrl = process.env.REACT_APP_API_URL;
 
-export function fetchAll() {
+function generateFetch(entity, verb, id, data) {
     const token = window.localStorage.getItem("authToken");
-    // const req = await fetch(`http://${baseUrl}/api/graphql?${query}`, {
-    return fetch(`http://${baseUrl}/api/accommodations`, {
-        method: "GET",
+    const isJson = verb === "DELETE" ? "" : ".json";
+    let url = `http://${baseUrl}/api/${entity}`;
+    if (id) {
+        url = `${url}/${id}`;
+    }
+    return fetch(`${url}${isJson}`, {
+        method: verb,
         headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(data)
+    }).then((response) => {
+        if (!response.ok) {
+            return Promise.resolve({
+                hasError: true,
+                message: response.statusText
+            });
         }
-    }).then(response => (
-        response.json()
-    )).then((parsed) => {
-        const member = parsed["hydra:member"];
-        if (member) {
-            const {
-                byID,
-                data
-            } = parseCollectionFromApi(member);
-            return {
-                byID,
-                data
-            };
+        return response.json();
+    });
+}
+
+export function fetchAll() {
+    return generateFetch("accommodations", "GET").then((parsed) => {
+        if (parsed.hasError) {
+            return parsed;
         }
+        const {
+            byID,
+            data
+        } = parseCollectionFromApi(parsed);
         return {
-            hasError: true,
-            message: parsed.detail
+            byID,
+            data
         };
     });
 }
 
-export const toto = "toto";
+function create(accommodation) {
+    return generateFetch("accommodations", "POST", null, accommodation);
+}
+
+function update(accommodation) {
+    return generateFetch("accommodations", "PUT", accommodation.id, accommodation);
+}
+
+
+// TODO: check update and create methods when api is ok
+export function createOrUpdate(accommodation) {
+    return accommodation.id > 0 ? update(accommodation) : create(accommodation);
+}
+
+export function deleteItem(id) {
+    return generateFetch("accommodations", "DELETE", id);
+}

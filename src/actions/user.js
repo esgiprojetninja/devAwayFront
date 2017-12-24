@@ -5,10 +5,13 @@ import {
     login as ApiLogin
 } from "../api/userApi";
 
-export const logout = () => ({
-    payload: {},
-    type: types.LOGOUT
-});
+export const logout = () => {
+    window.localStorage.removeItem("authToken");
+    return {
+        payload: {},
+        type: types.LOGOUT
+    };
+};
 
 const loginRequest = () => ({
     type: types.LOGIN_REQUEST

@@ -1,6 +1,11 @@
 import { connect } from "react-redux";
 import {
-    fetchAccommodations
+    fetchAccommodations,
+    setCurrentAccommodation,
+    showList,
+    updateAccommodation,
+    saveAccommodation,
+    deleteAccommodation
 } from "../actions/accommodation";
 
 import AccommodationComponent from "../ui/Accommodation/Accommodation.jsx";
@@ -17,6 +22,7 @@ const mapStateToProps = (state) => {
     } = state.accommodation;
     return {
         accommodations: data.map(id => byID.get(id)),
+        selectedAccommodations: data.map(id => ({ id, selected: false })),
         isLoading,
         current,
         hasError,
@@ -26,7 +32,12 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-    onFetchAccommodationsClicked: () => dispatch(fetchAccommodations())
+    onFetchAccommodationsClicked: () => dispatch(fetchAccommodations()),
+    onAccommodationDetailClicked: id => dispatch(setCurrentAccommodation(id)),
+    onShowListClicked: () => dispatch(showList()),
+    onAccommodationChanged: (property, value) => dispatch(updateAccommodation(property, value)),
+    onSaveAccommodationClicked: () => dispatch(saveAccommodation()),
+    onDeleteAccommodationClicked: id => dispatch(deleteAccommodation(id))
 });
 
 const Accommodation = connect(

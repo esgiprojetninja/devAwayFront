@@ -13,6 +13,7 @@ import {
     accommodationPropTypes
 } from "../../propTypes/accommodationType";
 import AccommodationList from "./AccommodationList.jsx";
+import AccommodationDetail from "./AccommodationDetail.jsx";
 
 export default class Accommodation extends React.PureComponent {
     static propTypes = {
@@ -25,7 +26,12 @@ export default class Accommodation extends React.PureComponent {
         hasError: T.bool.isRequired,
         errorText: T.string.isRequired,
         mode: T.oneOf(["list", "edit"]).isRequired,
-        onFetchAccommodationsClicked: T.func.isRequired
+        onFetchAccommodationsClicked: T.func.isRequired,
+        onAccommodationDetailClicked: T.func.isRequired,
+        onShowListClicked: T.func.isRequired,
+        onAccommodationChanged: T.func.isRequired,
+        onSaveAccommodationClicked: T.func.isRequired,
+        onDeleteAccommodationClicked: T.func.isRequired
     }
 
     constructor(props) {
@@ -49,7 +55,20 @@ export default class Accommodation extends React.PureComponent {
         }
         if (this.props.mode === "list") {
             return (
-                <AccommodationList accommodations={this.props.accommodations} />
+                <AccommodationList
+                    accommodations={this.props.accommodations}
+                    onAccommodationDetailClicked={this.props.onAccommodationDetailClicked}
+                />
+            );
+        }
+        if (this.props.mode === "edit") {
+            return (
+                <AccommodationDetail
+                    accommodation={this.props.current}
+                    onAccommodationChanged={this.props.onAccommodationChanged}
+                    onSaveAccommodationClicked={this.props.onSaveAccommodationClicked}
+                    onDeleteAccommodationClicked={this.props.onDeleteAccommodationClicked}
+                />
             );
         }
         return null;
@@ -103,6 +122,18 @@ export default class Accommodation extends React.PureComponent {
         );
     }
 
+    renderShowListButton() {
+        return this.props.mode !== "list"
+            ? (
+                <Button
+                    onClick={this.props.onShowListClicked}
+                >
+                    Show list
+                </Button>
+            )
+            : null;
+    }
+
     render() {
         return (
             <Card>
@@ -117,6 +148,7 @@ export default class Accommodation extends React.PureComponent {
                     >
                         Reload
                     </Button>
+                    {this.renderShowListButton()}
                 </CardActions>
             </Card>
         );

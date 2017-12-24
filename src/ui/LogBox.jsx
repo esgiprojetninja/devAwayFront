@@ -13,9 +13,11 @@ export default class LogBox extends React.PureComponent {
     static propTypes = {
         data: User.isRequired,
         isLoading: T.bool.isRequired,
+        isLoggedIn: T.bool.isRequired,
         hasError: T.bool.isRequired,
         errorText: T.string.isRequired,
-        onSubmit: T.func.isRequired
+        onSubmit: T.func.isRequired,
+        onLogoutClicked: T.func.isRequired
     };
 
     constructor(props) {
@@ -74,6 +76,7 @@ export default class LogBox extends React.PureComponent {
                         type="text"
                         name="username"
                         id="username"
+                        margin="normal"
                         onChange={this.handleUsernameChange}
                     />
                     <TextField
@@ -81,6 +84,7 @@ export default class LogBox extends React.PureComponent {
                         type="password"
                         name="pwd"
                         id="pwd"
+                        margin="normal"
                         onChange={this.handlePasswordChange}
                     />
                     {this.renderErrors()}
@@ -100,10 +104,28 @@ export default class LogBox extends React.PureComponent {
         if (this.props.isLoading) {
             return <CircularProgress />;
         }
-        return this.props.data.id ? this.renderLoggedBox() : this.renderLogBox();
+        return this.props.isLoggedIn ? this.renderLoggedBox() : this.renderLogBox();
     }
 
     render() {
+        /* global window */
+        // TODO remove global and use this.props.data instead
+        if (window.localStorage.getItem("authToken")) {
+            return (
+                <Card>
+                    <CardContent>
+                        Hello
+                    </CardContent>
+                    <CardActions>
+                        <Button
+                            onClick={this.props.onLogoutClicked}
+                        >
+                            Logout
+                        </Button>
+                    </CardActions>
+                </Card>
+            );
+        }
         return (
             <Card>
                 {this.renderBox()}
