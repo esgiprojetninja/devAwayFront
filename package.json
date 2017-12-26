@@ -41,6 +41,7 @@
       "src/containers/**/*.{js,jsx}",
       "src/reducers/**/*.{js,jsx}",
       "src/ui/**/*.{js,jsx}",
+      "src/api/**/*.{js,jsx}",
       "!**/node_modules/**",
       "!**/vendor/**"
     ]
