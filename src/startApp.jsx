@@ -8,16 +8,17 @@ import { Provider } from "react-redux";
 
 import MainReducer from "./reducers";
 import App from "./containers/App";
-
-const loggerMiddleware = createLogger();
+import API from "./api/mainApi";
 
 function startApp(node) {
+    const middlewares = [thunk.withExtraArgument(API)];
+    if (process.env.NODE_ENV === "development") {
+        middlewares.push(createLogger({ collapsed: true }));
+    }
+
     const store = createStore(
         MainReducer,
-        applyMiddleware(
-            thunk,
-            loggerMiddleware
-        ),
+        applyMiddleware(...middlewares)
     );
     render(
         <Provider store={store}>

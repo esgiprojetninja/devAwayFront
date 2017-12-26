@@ -1,10 +1,6 @@
 /* global window */
 import * as types from "./types/user";
 
-import {
-    login as ApiLogin
-} from "../api/userApi";
-
 export const logout = () => {
     window.localStorage.removeItem("authToken");
     return {
@@ -28,9 +24,9 @@ const loginFailure = error => ({
 });
 
 export function login(credentials) {
-    return (dispatch) => {
+    return (dispatch, getState, API) => {
         dispatch(loginRequest());
-        return ApiLogin(credentials)
+        return API.userApi.login(credentials)
             .then(
                 (res) => {
                     if (res.code) {

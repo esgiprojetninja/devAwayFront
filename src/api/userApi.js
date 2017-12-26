@@ -2,8 +2,8 @@ import fetch from "isomorphic-fetch";
 
 const baseUrl = process.env.REACT_APP_API_URL;
 
-export async function login(credentials) {
-    const req = await fetch(`http://${baseUrl}/api/login_check`, {
+const userApi = {
+    login: credentials => (fetch(`http://${baseUrl}/api/login_check`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -12,9 +12,7 @@ export async function login(credentials) {
             _username: credentials.username,
             _password: credentials.password
         })
-    });
-    const data = req.json();
-    return data;
-}
+    })).then(res => res.json())
+};
 
-export const toto = "toto";
+export default userApi;

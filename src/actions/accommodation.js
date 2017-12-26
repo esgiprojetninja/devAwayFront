@@ -1,10 +1,3 @@
-import {
-    fetchAll,
-    createOrUpdate,
-    deleteItem
-} from "../api/accommodationApi";
-
-
 export const UPDATE_ACCOMMODATION = "UPDATE_ACCOMMODATION";
 export const updateAccommodation = (property, value) => ({
     type: UPDATE_ACCOMMODATION,
@@ -43,9 +36,9 @@ const fetchAccommodationsFailure = error => ({
 });
 
 export function fetchAccommodations() {
-    return (dispatch) => {
+    return (dispatch, getState, API) => {
         dispatch(fetchAccommodationsRequest());
-        return fetchAll()
+        return API.accommodationApi.fetchAll()
             .then(
                 (res) => {
                     if (res.hasError) {
@@ -75,9 +68,9 @@ const saveAccommodationFailure = payload => ({
 });
 
 export function saveAccommodation() {
-    return (dispatch, getState) => {
+    return (dispatch, getState, API) => {
         dispatch(saveAccommodationRequest());
-        return createOrUpdate(getState().accommodation.current).then((res) => {
+        return API.accommodationApi.createOrUpdate(getState().accommodation.current).then((res) => {
             if (res.hasError) {
                 return dispatch(saveAccommodationFailure(res.message));
             }
@@ -103,9 +96,9 @@ const deleteAccommodationFailure = payload => ({
 });
 
 export function deleteAccommodation(id) {
-    return (dispatch) => {
+    return (dispatch, getState, API) => {
         dispatch(deleteAccommodationRequest());
-        return deleteItem(id).then((res) => {
+        return API.accommodationApi.deleteItem(id).then((res) => {
             if (res.hasError) {
                 return dispatch(deleteAccommodationFailure(res.message));
             }
