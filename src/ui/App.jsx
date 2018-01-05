@@ -1,24 +1,31 @@
 import * as React from "react";
-import * as T from "prop-types";
+import Grid from "material-ui/Grid";
+import Paper from "material-ui/Paper";
+
 import Navbar from "./Navbar.jsx";
+import LogBox from "../containers/LogBox";
+import Accommodation from "../containers/Accommodation";
 
-export default class App extends React.PureComponent {
-    static propTypes = {
-        user: T.shape({
-            authenticated: T.bool
-        })
-    }
+import {
+    paper
+} from "../styles/theme.js";
 
-    static defaultProps = {
-        user: {}
-    }
+const App = () => (
+    <div>
+        <Navbar />
+        <Grid container>
+            <Grid item xs={12} sm={6}>
+                <Paper style={paper.paperBox}>
+                    <LogBox />
+                </Paper>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+                <Paper style={paper.paperBox}>
+                    <Accommodation />
+                </Paper>
+            </Grid>
+        </Grid>
+    </div>
+);
 
-    render() {
-        return (
-            <div>
-                <Navbar />
-                <div>{JSON.stringify(this.props.user)}</div>
-            </div>
-        );
-    }
-}
+export default App;

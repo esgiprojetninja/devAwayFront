@@ -36,16 +36,9 @@ function NavBar(props) {
 
 NavBar.propTypes = {
     classes: T.shape({
-        root: T.shape({
-            width: T.string
-        }),
-        flex: T.shape({
-            flex: T.number
-        }),
-        menuButton: T.shape({
-            marginLeft: T.string,
-            marginRight: T.string
-        })
+        root: T.string,
+        flex: T.string,
+        menuButton: T.string
     }).isRequired
 };
 
