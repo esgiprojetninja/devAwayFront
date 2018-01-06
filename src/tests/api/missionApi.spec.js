@@ -10,7 +10,7 @@ describe("API mission", () => {
     const baseUrl = "toto.api";
 
     beforeAll(() => {
-        process.env.REACT_APP_API_URL = baseUrl;
+        process.env.REACT_APP_API_URL = "toto.api";
         window.localStorage = {
             getItem: () => "eerzearez"
         };

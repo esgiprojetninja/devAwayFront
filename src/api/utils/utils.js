@@ -1,9 +1,9 @@
 /* global window, fetch */
 import "isomorphic-fetch";
 
-const baseUrl = process.env.REACT_APP_API_URL;
 
 export function generateFetch(entity, verb, id, data) {
+    const baseUrl = process.env.REACT_APP_API_URL;
     const token = window.localStorage.getItem("authToken");
     const isJson = verb === "DELETE" ? "" : ".json";
     let url = `http://${baseUrl}/api/${entity}`;
