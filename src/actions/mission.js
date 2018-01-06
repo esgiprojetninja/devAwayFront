@@ -1,15 +1,3 @@
-/*
-- CREATE
-    [x] POST
-- READ
-    [x] fetchAll
-    [] fetchOne
-- UPDATE
-    [x] PUT
-- DELETE
-    [] deleteOne
-*/
-
 export const FETCH_MISSIONS_REQUEST = "FETCH_MISSIONS_REQUEST";
 const fetchMissionsRequest = () => ({
     type: FETCH_MISSIONS_REQUEST

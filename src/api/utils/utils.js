@@ -1,11 +1,8 @@
-/* global window */
+/* global window, fetch */
 import "isomorphic-fetch";
 
 const baseUrl = process.env.REACT_APP_API_URL;
 
-// This file is meant to export more than one util
-// TODO: remove eslint-disable comments
-/* eslint-disable */
 export function generateFetch(entity, verb, id, data) {
     const token = window.localStorage.getItem("authToken");
     const isJson = verb === "DELETE" ? "" : ".json";
@@ -30,4 +27,3 @@ export function generateFetch(entity, verb, id, data) {
         return response.json();
     });
 }
-/* eslint-enable */
