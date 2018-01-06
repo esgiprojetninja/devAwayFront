@@ -1,7 +1,3 @@
-export function parseAccommodation(a) {
-
-}
-
 export function parseCollectionFromApi(items) {
     const data = [];
     const byID = new Map();

@@ -6,17 +6,17 @@ import {
     generateFetch
 } from "./utils/utils";
 
-function create(accommodation) {
-    return generateFetch("accommodations", "POST", null, accommodation);
+function create(mission) {
+    return generateFetch("missions", "POST", null, mission);
 }
 
-function update(accommodation) {
-    return generateFetch("accommodations", "PUT", accommodation.id, accommodation);
+function update(mission) {
+    return generateFetch("missions", "PUT", mission.id, mission);
 }
 
-const accommodationApi = {
+const missionApi = {
     fetchAll: () => {
-        return generateFetch("accommodations", "GET").then((parsed) => {
+        return generateFetch("missions", "GET").then((parsed) => {
             if (parsed.hasError) {
                 return parsed;
             }
@@ -31,12 +31,12 @@ const accommodationApi = {
         });
     },
     // TODO: check update and create methods when api is ok
-    createOrUpdate: (accommodation) => {
-        return accommodation.id > 0 ? update(accommodation) : create(accommodation);
+    createOrUpdate: (mission) => {
+        return mission.id > 0 ? update(mission) : create(mission);
     },
     deleteItem: (id) => {
-        return generateFetch("accommodations", "DELETE", id);
+        return generateFetch("missions", "DELETE", id);
     }
 };
 
-export default accommodationApi;
+export default missionApi;

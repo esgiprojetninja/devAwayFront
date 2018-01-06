@@ -3,6 +3,7 @@ module.exports = {
     "parser": "babel-eslint",
     "rules": {
       "import/extensions": [0, "never", { "js": "always", "json": "never", "jsx": "always" }],
+      "import/prefer-default-export": [1, "always"],
       "react/jsx-filename-extension": [1, { "extensions": ["js", "jsx"] }],
       "react/jsx-indent": [2, 4],
       "react/jsx-indent-props": [2, 4],

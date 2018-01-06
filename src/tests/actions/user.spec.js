@@ -4,7 +4,7 @@ import thunk from "redux-thunk";
 import * as userActionTypes from "../../actions/types/user";
 import * as userActions from "../../actions/user";
 
-import mockAPI from "../mock/API";
+import { mockAPI } from "../mock/API";
 
 const mockStore = configureMockStore([thunk.withExtraArgument(mockAPI)]);
 
