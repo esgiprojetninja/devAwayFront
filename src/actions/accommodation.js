@@ -92,7 +92,8 @@ const deleteAccommodationSuccess = () => ({
 
 export const DELETE_ACCOMMODATION_FAILURE = "DELETE_ACCOMMODATION_FAILURE";
 const deleteAccommodationFailure = payload => ({
-    type: payload
+    type: DELETE_ACCOMMODATION_FAILURE,
+    payload
 });
 
 export function deleteAccommodation(id) {
@@ -103,7 +104,7 @@ export function deleteAccommodation(id) {
                 return dispatch(deleteAccommodationFailure(res.message));
             }
             dispatch(deleteAccommodationSuccess());
-            (dispatch(fetchAccommodations()));
+            dispatch(fetchAccommodations());
             return dispatch(showList());
         });
     };
