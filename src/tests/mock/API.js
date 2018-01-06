@@ -11,6 +11,11 @@ export const mockAPI = {
         fetchAll: () => Promise.resolve([]),
         createOrUpdate: () => Promise.resolve({}),
         deleteItem: () => Promise.resolve({})
+    },
+    profileApi: {
+        fetchAll: () => Promise.resolve([]),
+        createOrUpdate: () => Promise.resolve({}),
+        deleteItem: () => Promise.resolve({})
     }
 };
 
@@ -31,6 +36,20 @@ export const mockAPIWithErrors = {
         })
     },
     messageApi: {
+        fetchAll: () => Promise.resolve({
+            hasError: true,
+            message: "Ooops"
+        }),
+        createOrUpdate: () => Promise.resolve({
+            hasError: true,
+            message: "Won't save"
+        }),
+        deleteItem: () => Promise.resolve({
+            hasError: true,
+            message: "Couldn't delete"
+        })
+    },
+    profileApi: {
         fetchAll: () => Promise.resolve({
             hasError: true,
             message: "Ooops"
