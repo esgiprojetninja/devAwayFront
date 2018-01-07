@@ -1,5 +1,4 @@
 const defaultMargin = "0.5em";
-const defaultPadding = "0.5em";
 
 export const paper = {
     paperBox: {

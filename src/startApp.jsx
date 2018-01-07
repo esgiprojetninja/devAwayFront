@@ -7,7 +7,7 @@ import { BrowserRouter, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 
 import MainReducer from "./reducers";
-import App from "./containers/App";
+import Home from "./containers/Home";
 import API from "./api/mainApi";
 
 function startApp(node) {
@@ -23,7 +23,7 @@ function startApp(node) {
     render(
         <Provider store={store}>
             <BrowserRouter>
-                <Route path="/" component={App} />
+                <Route path="/" component={Home} />
             </BrowserRouter>
         </Provider>
         ,
