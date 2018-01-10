@@ -26,7 +26,7 @@ class NavBar extends React.PureComponent {
         navbarClasses.push(this.state.open ? classes.dropDown_in : classes.dropDown_out);
         return (
             <div className={classes.root}>
-                <AppBar position="fixed" className={navbarClasses}>
+                <AppBar position="fixed" className={navbarClasses.join(" ")}>
                     <Toolbar>
                         <Typography type="title" color="inherit" className={classes.flex}>
                             Dev away

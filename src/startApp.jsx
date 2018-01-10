@@ -5,6 +5,11 @@ import { createLogger } from "redux-logger";
 import { render } from "react-dom";
 import { BrowserRouter, Route } from "react-router-dom";
 import { Provider } from "react-redux";
+import { MuiThemeProvider } from "material-ui/styles";
+
+import {
+    defaultTheme
+} from "./styles/theme.js";
 
 import MainReducer from "./reducers";
 import Home from "./containers/Home";
@@ -21,11 +26,13 @@ function startApp(node) {
         applyMiddleware(...middlewares)
     );
     render(
-        <Provider store={store}>
-            <BrowserRouter>
-                <Route path="/" component={Home} />
-            </BrowserRouter>
-        </Provider>
+        <MuiThemeProvider theme={defaultTheme}>
+            <Provider store={store}>
+                <BrowserRouter>
+                    <Route path="/" component={Home} />
+                </BrowserRouter>
+            </Provider>
+        </MuiThemeProvider>
         ,
         node,
     );

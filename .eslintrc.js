@@ -7,6 +7,7 @@ module.exports = {
       "react/jsx-filename-extension": [1, { "extensions": ["js", "jsx"] }],
       "react/jsx-indent": [2, 4],
       "react/jsx-indent-props": [2, 4],
+      "react/prefer-stateless-function": 0,
       "indent": ["error", 4],
       "quotes": [2, "double", "avoid-escape"],
       "import/no-extreaneous-dependencies": 0,
