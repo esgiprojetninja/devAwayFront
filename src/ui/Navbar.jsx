@@ -7,6 +7,8 @@ import Typography from "material-ui/Typography";
 import IconButton from "material-ui/IconButton";
 import MenuIcon from "material-ui-icons/Menu";
 
+import LogBox from "../containers/LogBox";
+
 class NavBar extends React.PureComponent {
     state = {
         open: false
@@ -27,10 +29,11 @@ class NavBar extends React.PureComponent {
         return (
             <div className={classes.root}>
                 <AppBar position="fixed" className={navbarClasses.join(" ")}>
-                    <Toolbar>
+                    <Toolbar className={classes.toolbar}>
                         <Typography type="title" color="inherit" className={classes.flex}>
                             Dev away
                         </Typography>
+                        <LogBox />
                     </Toolbar>
                 </AppBar>
                 <IconButton
@@ -77,8 +80,11 @@ export default withStyles(theme => ({
     },
     toggleButton: {
         position: "fixed",
-        top: "10px",
-        right: "10px",
+        top: theme.spacing.unit,
+        right: theme.spacing.unit,
         zIndex: theme.zIndex.appBar + 1
+    },
+    toolbar: {
+        paddingRight: theme.spacing.unit * 6
     }
 }))(NavBar);
