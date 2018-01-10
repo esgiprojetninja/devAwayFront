@@ -2,6 +2,7 @@ module.exports = {
     "extends": ["airbnb"],
     "parser": "babel-eslint",
     "rules": {
+    "function-paren-newline": [0, "multiline"],
       "import/extensions": [0, "never", { "js": "always", "json": "never", "jsx": "always" }],
       "import/prefer-default-export": [1, "always"],
       "react/jsx-filename-extension": [1, { "extensions": ["js", "jsx"] }],

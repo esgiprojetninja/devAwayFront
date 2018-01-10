@@ -4,6 +4,9 @@ import {
     mount
 } from "enzyme";
 import Reboot from "material-ui/Reboot";
+import { createStore } from "redux";
+import { Provider } from "react-redux";
+import userReducer from "../../reducers/user";
 import Navbar from "../../ui/Navbar.jsx";
 import ArticleWithMedia from "../../ui/ArticleWithMedia.jsx";
 import HomeSearchForm from "../../ui/HomeSearchForm.jsx";
@@ -11,8 +14,17 @@ import HomeSearchForm from "../../ui/HomeSearchForm.jsx";
 import Home from "../../ui/Home.jsx";
 
 describe("ui <Home />", () => {
+    global.localStorage = {
+        getItem: jest.fn()
+    };
+    const store = createStore(userReducer);
+
     it("should render with main items", () => {
-        const wrapper = mount(<Home />);
+        const wrapper = mount(
+            <Provider store={store}>
+                <Home />
+            </Provider>
+        );
         expect(wrapper.find(Navbar).length).toBe(1);
         expect(wrapper.find(Reboot).length).toBe(1);
         expect(wrapper.find(ArticleWithMedia).length).toBe(1);
