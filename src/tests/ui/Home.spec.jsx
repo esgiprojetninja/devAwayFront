@@ -6,7 +6,7 @@ import {
 import Reboot from "material-ui/Reboot";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
-import userReducer from "../../reducers/user";
+import mainReducer from "../../reducers/index";
 import Navbar from "../../ui/Navbar.jsx";
 import ArticleWithMedia from "../../ui/ArticleWithMedia.jsx";
 import HomeSearchForm from "../../ui/HomeSearchForm.jsx";
@@ -17,7 +17,7 @@ describe("ui <Home />", () => {
     global.localStorage = {
         getItem: jest.fn()
     };
-    const store = createStore(userReducer);
+    const store = createStore(mainReducer);
 
     it("should render with main items", () => {
         const wrapper = mount(
