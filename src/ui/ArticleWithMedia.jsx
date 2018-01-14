@@ -16,7 +16,7 @@ const ArticleWithMedia = (props) => {
     } = props;
     return (
         <Grid className={classes.containerWrapper}>
-            <Grid container sm={8} className={classes.container}>
+            <Grid item sm={8} className={classes.container}>
                 <div className="full-width">
                     <Typography
                         type="headline"

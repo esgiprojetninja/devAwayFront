@@ -22,7 +22,7 @@ class HomeSearchForm extends React.PureComponent {
         const { classes } = this.props;
         return (
             <form className={classes.container}>
-                <div class="vertical-align">
+                <div className="vertical-align">
                     <div className="vertical-align">
                         <FormControl className={classes.formControl}>
                             <InputLabel htmlFor="location">Location</InputLabel>
@@ -62,7 +62,7 @@ class HomeSearchForm extends React.PureComponent {
                         </FormControl>
                     </div>
                     <div className="vertical-align">
-                        <FormControl className={classes.formControl, classes.formControlGuests}>
+                        <FormControl className={classes.formControl + " " + classes.formControlGuests}>
                             <InputLabel htmlFor="guests">Guests</InputLabel>
                             <Select
                                 value={this.state.nbGuests}
@@ -77,8 +77,7 @@ class HomeSearchForm extends React.PureComponent {
                     </div>
                     <div className="vertical-align">
                         <Button
-                            className="btn-ninja"
-                            hoveredStyle="btn-ninja"
+                            className={classes.button}
                             raised
                             type="submit"
                         >
@@ -107,6 +106,11 @@ export default withStyles(theme => ({
     },
     formControlGuests: {
         marginRight: "20px"
+    },
+    button: {
+        marginLeft: "15px",
+        backgroundColor: "#fe5858",
+        color: "#ffffff"
     },
     formControl: {
         margin: `0 ${theme.spacing.unit}px`

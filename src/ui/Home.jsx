@@ -42,10 +42,25 @@ const Home = (props) => {
                 article4={article}
             />
             <div className={classes.brandRibon}>
-                <img
-                    alt="Devaway Logo"
-                    src={`${process.env.PUBLIC_URL}/img/logo.png`}
-                />
+                <div>
+                    <img
+                        className={classes.brandRibonImg + " " + classes.brandRibonEsgiImg}
+                        alt="Esgi Logo"
+                        src={`${process.env.PUBLIC_URL}/img/esgilogo.png`}
+                    />
+                </div>
+                <div>
+                    <img
+                        className={classes.brandRibonImg + " " + classes.brandRibonImgLogo}
+                        alt="Devaway Logo"
+                        src={`${process.env.PUBLIC_URL}/img/logo.png`}
+                    />
+                    <img
+                        className={classes.brandRibonImg}
+                        alt="Devaway title"
+                        src={`${process.env.PUBLIC_URL}/img/devawaytitleblack.png`}
+                    />
+                </div>
             </div>
             <div className={classes.whiteContent}>
                 <Typography type="display2">
@@ -89,6 +104,12 @@ export default withStyles(theme => ({
     root: {
         color: theme.palette.common.white
     },
+    brandRibonImg: {
+        maxHeight: "7vh"
+    },
+    brandRibonImgLogo: {
+        marginRight: "15px"
+    },
     brandRibon: {
         backgroundColor: theme.palette.background.contentFrame,
         padding: theme.spacing.unit * 2,
@@ -103,6 +124,10 @@ export default withStyles(theme => ({
         height: "80vh",
         background: `url('${process.env.PUBLIC_URL}/img/home-background.png') center`,
         backgroundSize: "cover"
+    },
+    brandRibonEsgiImg: {
+        maxHeight: "13vh",
+        marginRight: "5vw"
     },
     homePlWrapper: {
         marginTop: "23px"
