@@ -9,7 +9,7 @@ import ArticleWithMedia from "./ArticleWithMedia.jsx";
 const Home = (props) => {
     const { classes } = props;
     const title = "Our Service";
-    const lead = "Stay in distinctive private homes in over 180 destinations";
+    const lead = "Stay in distinctive private homes in over 180 destinations - with an unprecedented level of service.";
     const article = "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...";
     return (
         <div>
@@ -25,9 +25,11 @@ const Home = (props) => {
                         alt="Devaway Title"
                         src={`${process.env.PUBLIC_URL}/img/devawaytitle.png`}
                     />
-                    <hr className="small-hr"/>
-                    <span className="home-pl">Use our skills to share a human</span>
-                    <span className="home-pl">experience, it's a win-win</span>
+                    <hr className="hr small-hr"/>
+                    <div className={classes.homePlWrapper}>
+                        <span className="home-pl">Use our skills to share a human</span>
+                        <span className="home-pl">experience, it's a win-win</span>
+                    </div>
                 </div>
             </div>
             <HomeSearchForm />
@@ -101,6 +103,9 @@ export default withStyles(theme => ({
         height: "80vh",
         background: `url('${process.env.PUBLIC_URL}/img/home-background.png') center`,
         backgroundSize: "cover"
+    },
+    homePlWrapper: {
+        marginTop: "23px"
     },
     homeLogo: {
         maxHeight: "9vh",
