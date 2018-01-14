@@ -14,13 +14,21 @@ const Home = (props) => {
     return (
         <div>
             <div className={classes.backgroundImg}>
-                <Typography
-                    align="center"
-                    type="display4"
-                    className={classes.root}
-                >
-                    Dev Away
-                </Typography>
+                <div>
+                    <img
+                        className={classes.homeLogo}
+                        alt="Devaway Logo"
+                        src={`${process.env.PUBLIC_URL}/img/logo.png`}
+                    />
+                    <img
+                        className={classes.homeTitle}
+                        alt="Devaway Title"
+                        src={`${process.env.PUBLIC_URL}/img/devawaytitle.png`}
+                    />
+                    <hr className="small-hr"/>
+                    <span className="home-pl">Use our skills to share a human</span>
+                    <span className="home-pl">experience, it's a win-win</span>
+                </div>
             </div>
             <HomeSearchForm />
             <ArticleWithMedia
@@ -90,9 +98,16 @@ export default withStyles(theme => ({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        height: "50vw",
+        height: "80vh",
         background: `url('${process.env.PUBLIC_URL}/img/home-background.png') center`,
         backgroundSize: "cover"
+    },
+    homeLogo: {
+        maxHeight: "9vh",
+        marginRight: "15px"
+    },
+    homeTitle: {
+        maxHeight: "9vh"
     },
     whiteContent: {
         padding: theme.spacing.unit * 2,
