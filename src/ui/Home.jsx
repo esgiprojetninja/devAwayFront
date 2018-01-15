@@ -5,10 +5,13 @@ import Typography from "material-ui/Typography";
 
 import HomeSearchForm from "./HomeSearchForm.jsx";
 import ArticleWithMedia from "./ArticleWithMedia.jsx";
+// import AccommodationCard from "./AccommodationCard.jsx";
+import Accommodation from "../containers/Accommodation.js";
 
 const Home = (props) => {
+    console.log('props', props);
     const { classes } = props;
-    const title = "Our Service";
+    const titleService = "Our Service";
     const lead = "Stay in distinctive private homes in over 180 destinations - with an unprecedented level of service.";
     const article = "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...";
     return (
@@ -34,7 +37,7 @@ const Home = (props) => {
             </div>
             <HomeSearchForm />
             <ArticleWithMedia
-                title={title}
+                title={titleService}
                 lead={lead}
                 article1={article}
                 article2={article}
@@ -62,16 +65,28 @@ const Home = (props) => {
                     />
                 </div>
             </div>
+            <div className={classes.subSection}>
+                <div className="d-block">
+                    <Typography
+                        type="headline"
+                        align="center"
+                        className={classes.sectionTitle}
+                    >
+                        Destinations
+                    </Typography>
+                    <hr className={"hr medium-hr black " + classes.subSectionHr } />
+                </div>
+                <img src={`${process.env.PUBLIC_URL}/img/SoonDestinations.png`}/>
+            </div>
             <div className={classes.whiteContent}>
-                <Typography type="display2">
-                    Soon...
-                </Typography>
+                <Accommodation/>
             </div>
             <footer className={classes.footer}>
                 <Typography
                     type="subheading"
                 >
-                    Devaway ©
+                    <span className="d-block"> d e v a w a y © provides you the best accommodations </span>
+                    <span className="d-block"> with a sharing human experience. </span>
                 </Typography>
                 <ul className={classes.footerList}>
                     <li className={classes.footerListItem}>
@@ -87,6 +102,11 @@ const Home = (props) => {
                         <a href="/#">Legal terms</a>
                     </li>
                 </ul>
+                <Typography
+                    type="subheading"
+                >
+                    <span className="d-block"> Public Cloud by <a href="https://github.com/esgiprojetninja/workaway" target="_blank">ESGI Ninja</a></span>
+                </Typography>
             </footer>
         </div>
     );
@@ -109,6 +129,18 @@ export default withStyles(theme => ({
     },
     brandRibonImgLogo: {
         marginRight: "15px"
+    },
+    sectionTitle: {
+        textTransform: "uppercase",
+        fontSize: "25px",
+        letterSpacing: "2px",
+    },
+    subSection: {
+        textAlign: "center",
+        padding: "50px 25px"
+    },
+    subSectionHr: {
+        marginBottom: "40px"
     },
     brandRibon: {
         backgroundColor: theme.palette.background.contentFrame,
@@ -147,13 +179,16 @@ export default withStyles(theme => ({
     },
     footer: {
         backgroundColor: theme.palette.background.contentFrame,
-        padding: theme.spacing.unit * 2
+        padding: "50px"
     },
     footerList: {
         listStyleType: "none",
-        display: "inline-flex"
+        display: "inline-flex",
+        margin: "15px 0",
+        padding: 0
     },
     footerListItem: {
-        margin: theme.spacing.unit
+        marginLeft: 0,
+        marginRight: "10px"
     }
 }))(Home);
