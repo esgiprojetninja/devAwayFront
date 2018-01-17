@@ -16,6 +16,9 @@ export const mockAPI = {
         fetchAll: () => Promise.resolve([]),
         createOrUpdate: () => Promise.resolve({}),
         deleteItem: () => Promise.resolve({})
+    },
+    guardApi: {
+        checkGuard: () => Promise.resolve(123456)
     }
 };
 
@@ -61,6 +64,12 @@ export const mockAPIWithErrors = {
         deleteItem: () => Promise.resolve({
             hasError: true,
             message: "Couldn't delete"
+        })
+    },
+    guardApi: {
+        checkGuard: () => Promise.resolve({
+            hasError: true,
+            message: "Auth error"
         })
     }
 };
