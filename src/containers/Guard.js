@@ -7,11 +7,11 @@ import {
 
 import GuardComponent from "../ui/Guard.jsx";
 
-const mapStateToProps = (state) => {
+export const mapStateToProps = (state) => {
     return state.guard;
 };
 
-const mapDispatchToProps = dispatch => ({
+export const mapDispatchToProps = dispatch => ({
     onCredentialChange: (property, value) => dispatch(updateCredentials(property, value)),
     onFormSubmit: () => dispatch(checkGuard())
 });
