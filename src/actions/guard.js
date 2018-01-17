@@ -27,7 +27,8 @@ const checkGuardFailure = payload => ({
 export function checkGuard() {
     return (dispatch, getState, API) => {
         dispatch(checkGuardRequest());
-        return API.guardApi.checkGuard(getState().data)
+        const { email, password } = getState().guard.data;
+        return API.guardApi.checkGuard({ email, password })
             .then(
                 (res) => {
                     if (res.hasError) {

@@ -6,7 +6,11 @@ import {
 } from "../actions/guard";
 
 const initialSate = {
-    data: {},
+    data: {
+        email: "",
+        password: "",
+        code: 0
+    },
     isLoading: false,
     hasError: false,
     errorText: ""
