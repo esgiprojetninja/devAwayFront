@@ -51,6 +51,23 @@ export function fetchAccommodations() {
     };
 }
 
+export function fetchAccommodationsWithoutAuth() {
+    return (dispatch, getState, API) => {
+        dispatch(fetchAccommodationsRequest());
+        return API.accommodationApi.fetchAllWithoutAuth()
+            .then(
+                (res) => {
+                    if (res.hasError) {
+                        return dispatch(fetchAccommodationsFailure(res.message));
+                    }
+                    console.log('response in actions', res);
+                    return dispatch(fetchAccommodationsSuccess(res));
+                },
+                error => console.log(error)
+            );
+    };
+}
+
 export const SAVE_ACCOMMODATION_REQUEST = "FETCH_ACCOMMODATION_REQUEST";
 const saveAccommodationRequest = () => ({
     type: SAVE_ACCOMMODATION_REQUEST
@@ -105,6 +122,7 @@ export function deleteAccommodation(id) {
             }
             dispatch(deleteAccommodationSuccess());
             dispatch(fetchAccommodations());
+            dispatch(fetchAccommodationsWithoutAuth());
             return dispatch(showList());
         });
     };

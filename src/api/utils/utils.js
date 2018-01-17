@@ -55,3 +55,25 @@ export function generateAnonymousFetch(
         return response.json();
     });
 }
+
+export function generateFetchWithoutAuth(entity, id) {
+    const baseUrl = process.env.REACT_APP_API_URL;
+    let url = `http://${baseUrl}/api/${entity}`;
+    if(id) {
+        url = `${url}/${id}`;
+    }
+    return fetch(`${url}`, {
+        method: 'GET',
+        headers: {
+            "Content-Type": "application/json",
+        }
+    }).then((response) => {
+        if (!response.ok) {
+            return Promise.resolve({
+                hasError: true,
+                message: response.statusText
+            });
+        }
+        return response.json();
+    });
+}

@@ -5,7 +5,7 @@ import Typography from "material-ui/Typography";
 
 import HomeSearchForm from "./HomeSearchForm.jsx";
 import ArticleWithMedia from "./ArticleWithMedia.jsx";
-// import AccommodationCard from "./AccommodationCard.jsx";
+import AccommodationCard from "../containers/AccommodationCard.js";
 import Accommodation from "../containers/Accommodation.js";
 
 const Home = (props) => {
@@ -76,7 +76,22 @@ const Home = (props) => {
                     </Typography>
                     <hr className={"hr medium-hr black " + classes.subSectionHr } />
                 </div>
-                <img src={`${process.env.PUBLIC_URL}/img/SoonDestinations.png`}/>
+                <img className={classes.destinationsImg} src={`${process.env.PUBLIC_URL}/img/SoonDestinations.png`}/>
+            </div>
+            <div className={classes.subSection}>
+                <div className="d-block">
+                    <Typography
+                        type="headline"
+                        align="center"
+                        className={classes.sectionTitle}
+                    >
+                        Accommodations
+                    </Typography>
+                    <hr className={"hr medium-hr black " + classes.subSectionHr } />
+                </div>
+            </div>
+            <div className={classes.whiteContent}>
+                <AccommodationCard/>
             </div>
             <div className={classes.whiteContent}>
                 <Accommodation/>
@@ -137,7 +152,11 @@ export default withStyles(theme => ({
     },
     subSection: {
         textAlign: "center",
-        padding: "50px 25px"
+        padding: "50px 25px",
+        backgroundColor: "white"
+    },
+    destinationsImg: {
+        opacity: 0.5
     },
     subSectionHr: {
         marginBottom: "40px"

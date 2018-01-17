@@ -3,7 +3,8 @@ import {
 } from "../parsers/entityParsers";
 
 import {
-    generateFetch
+    generateFetch,
+    generateFetchWithoutAuth
 } from "./utils/utils";
 
 function create(accommodation) {
@@ -14,12 +15,32 @@ function update(accommodation) {
     return generateFetch("accommodations", "PUT", accommodation.id, accommodation);
 }
 
+function getAccommodations() {
+    return generateFetchWithoutAuth("accommodations", null);
+}
+
 const accommodationApi = {
     fetchAll: () => {
         return generateFetch("accommodations", "GET").then((parsed) => {
             if (parsed.hasError) {
                 return parsed;
             }
+            const {
+                byID,
+                data
+            } = parseCollectionFromApi(parsed);
+            return {
+                byID,
+                data
+            };
+        });
+    },
+    fetchAllWithoutAuth: () => {
+        return getAccommodations().then((parsed) => {
+            if (parsed.hasError) {
+                return parsed;
+            }
+            console.log('parsed', parsed);
             const {
                 byID,
                 data
