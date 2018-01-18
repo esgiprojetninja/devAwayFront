@@ -3,11 +3,9 @@ import React from "react";
 import {
     mount
 } from "enzyme";
-import Reboot from "material-ui/Reboot";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 import mainReducer from "../../reducers/index";
-import Navbar from "../../ui/Navbar.jsx";
 import ArticleWithMedia from "../../ui/ArticleWithMedia.jsx";
 import HomeSearchForm from "../../ui/HomeSearchForm.jsx";
 
@@ -25,8 +23,6 @@ describe("ui <Home />", () => {
                 <Home />
             </Provider>
         );
-        expect(wrapper.find(Navbar).length).toBe(1);
-        expect(wrapper.find(Reboot).length).toBe(1);
         expect(wrapper.find(ArticleWithMedia).length).toBe(1);
         expect(wrapper.find(HomeSearchForm).length).toBe(1);
     });
