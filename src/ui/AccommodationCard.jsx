@@ -7,6 +7,9 @@ import Snackbar from "material-ui/Snackbar";
 import IconButton from "material-ui/IconButton";
 import CloseIcon from "material-ui-icons/Close";
 import Button from "material-ui/Button";
+import GroupIcon from 'material-ui-icons/Group';
+import LocalHotelIcon from 'material-ui-icons/LocalHotel';
+import HotTubIcon from 'material-ui-icons/HotTub';
 import Typography from "material-ui/Typography";
 
 import {
@@ -45,8 +48,37 @@ export default class AccommodationCard extends React.PureComponent {
         return this.props.accommodations.map(a => (
             <div
                 key={a.id}
+                className="accommodation-card"
             >
-                {a.title}
+                <div className="card-img">
+                    <img
+                        alt={a.city + " accommodation"}
+                        src={`${process.env.REACT_APP_API_URL}${a.pictures}`}
+                    />
+                </div>
+                <div className="card-title">
+                    {a.title}
+                </div>
+                <div className="card-subtitle">
+                    {a.country} {a.city}
+                </div>
+                <div className="card-description">
+                    {a.description}
+                </div>
+                <div className="card-icon-container">
+                    <div class="card-icon-wrapper">
+                        <GroupIcon className="card-icon"/>
+                        <span className="card-icon-value">{a.nbMaxGuest}</span>
+                    </div>
+                    <div className="card-icon-wrapper">
+                        <LocalHotelIcon className="card-icon"/>
+                        <span className="card-icon-value">{a.nbBedroom}</span>
+                    </div>
+                    <div className="card-icon-wrapper">
+                        <HotTubIcon className="card-icon"/>
+                        <span className="card-icon-value">{a.nbBathroom}</span>
+                    </div>
+                </div>
             </div>
         ));
     }
@@ -101,13 +133,9 @@ export default class AccommodationCard extends React.PureComponent {
 
     render() {
         return (
-            <Card>
-                <CardContent>
-                    <Typography type="headline" component="h3">Accommodation</Typography>
-                    <Typography component="p">{this.props.errorText}</Typography>
-                    {this.renderListItems()}
-                </CardContent>
-            </Card>
+            <div>
+                {this.renderListItems()}
+            </div>
         );
     }
 }

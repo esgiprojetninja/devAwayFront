@@ -54,3 +54,60 @@ button.btn-white {
     padding: 2.5px 10px;
     font-size: 3vh;
 }
+
+.accommodation-card{
+    max-width: 400px;
+    border: 1px solid #292929;
+    background-color: #ffffff;
+    padding: 15px;
+}
+
+.accommodation-card .card-img img{
+    background-size: cover;
+}
+
+.accommodation-card .card-img{
+    display: block;
+    padding: 10px;
+}
+
+.accommodation-card .card-title {
+    display: block;
+    padding: 10px;
+    text-align: center;
+}
+
+.accommodation-card .card-subtitle{
+    display: block;
+    padding: 10px;
+    text-align: center;
+}
+
+.accommodation-card .card-description{
+    display: block;
+    padding: 10px;
+    text-align: justify;
+}
+
+.accommodation-card .card-icon-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.accommodation-card .card-icon-wrapper{
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.accommodation-card .card-icon{
+    vertical-align: middle;
+    margin-right: 10px;
+}
+
+.accommodation-card .card-icon-value{
+    vertical-align: middle;
+}
