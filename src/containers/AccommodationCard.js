@@ -1,4 +1,6 @@
 import { connect } from "react-redux";
+import Grid from "material-ui/Grid";
+
 import {
     fetchAccommodations,
     fetchAccommodationsWithoutAuth,

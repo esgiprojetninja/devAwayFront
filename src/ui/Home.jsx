@@ -65,7 +65,7 @@ const Home = (props) => {
                     />
                 </div>
             </div>
-            <div className={classes.subSection}>
+            <div className={classes.subSection + " " + classes.subSectionDestination}>
                 <div className="d-block">
                     <Typography
                         type="headline"
@@ -89,12 +89,9 @@ const Home = (props) => {
                     </Typography>
                     <hr className={"hr medium-hr black " + classes.subSectionHr } />
                 </div>
-            </div>
-            <div className={classes.whiteContent}>
-                <AccommodationCard/>
-            </div>
-            <div className={classes.whiteContent}>
-                <Accommodation/>
+                <div className="vertical-align">
+                    <AccommodationCard/>
+                </div>
             </div>
             <footer className={classes.footer}>
                 <Typography
@@ -152,11 +149,14 @@ export default withStyles(theme => ({
     },
     subSection: {
         textAlign: "center",
-        padding: "50px 25px",
+        padding: "25px",
         backgroundColor: "white"
     },
     destinationsImg: {
         opacity: 0.5
+    },
+    subSectionDestination: {
+        paddingTop: "50px"
     },
     subSectionHr: {
         marginBottom: "40px"
