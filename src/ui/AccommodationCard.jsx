@@ -68,7 +68,7 @@ export default class AccommodationCard extends React.PureComponent {
                                 {a.title}
                             </div>
                             <div className="card-subtitle">
-                                {a.country} {a.city}
+                                {a.country}, {a.city}
                             </div>
                             <div className="card-description">
                                 {a.description}

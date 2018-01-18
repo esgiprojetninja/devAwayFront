@@ -156,7 +156,8 @@ export default withStyles(theme => ({
         opacity: 0.5
     },
     subSectionDestination: {
-        paddingTop: "50px"
+        paddingTop: "50px",
+        overflow: "hidden"
     },
     subSectionHr: {
         marginBottom: "40px"
