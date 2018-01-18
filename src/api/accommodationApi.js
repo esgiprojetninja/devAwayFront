@@ -36,11 +36,10 @@ const accommodationApi = {
         });
     },
     fetchAllWithoutAuth: () => {
-        return getAccommodations().then((parsed) => {
+        return generateFetchWithoutAuth("accommodations", "GET").then((parsed) => {
             if (parsed.hasError) {
                 return parsed;
             }
-            console.log('parsed', parsed);
             const {
                 byID,
                 data

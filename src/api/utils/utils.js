@@ -56,17 +56,19 @@ export function generateAnonymousFetch(
     });
 }
 
-export function generateFetchWithoutAuth(entity, id) {
+export function generateFetchWithoutAuth(entity, verb, id, data) {
     const baseUrl = process.env.REACT_APP_API_URL;
+    const isJson = verb === "DELETE" ? "" : ".json";
     let url = `http://${baseUrl}/api/${entity}`;
-    if(id) {
+    if (id) {
         url = `${url}/${id}`;
     }
-    return fetch(`${url}`, {
-        method: 'GET',
+    return fetch(`${url}${isJson}`, {
+        method: verb,
         headers: {
             "Content-Type": "application/json",
-        }
+        },
+        body: JSON.stringify(data)
     }).then((response) => {
         if (!response.ok) {
             return Promise.resolve({

@@ -54,13 +54,12 @@ export function fetchAccommodations() {
 export function fetchAccommodationsWithoutAuth() {
     return (dispatch, getState, API) => {
         dispatch(fetchAccommodationsRequest());
-        return API.accommodationApi.fetchAllWithoutAuth()
+        return API.accommodationApi.fetchAll()
             .then(
                 (res) => {
                     if (res.hasError) {
                         return dispatch(fetchAccommodationsFailure(res.message));
                     }
-                    console.log('response in actions', res);
                     return dispatch(fetchAccommodationsSuccess(res));
                 },
                 error => console.log(error)

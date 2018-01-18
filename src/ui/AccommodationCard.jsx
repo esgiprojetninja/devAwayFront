@@ -1,7 +1,7 @@
 import React from "react";
 import * as T from "prop-types";
 
-import Card, { CardActions, CardContent } from "material-ui/Card";
+import Card, { CardActions, CardContent, CardTitle, CardText, CardMedia } from "material-ui/Card";
 import { CircularProgress } from "material-ui/Progress";
 import Snackbar from "material-ui/Snackbar";
 import IconButton from "material-ui/IconButton";
@@ -14,25 +14,25 @@ import {
 } from "../propTypes/accommodationType";
 
 export default class AccommodationCard extends React.PureComponent {
-    // static propTypes = {
-    //     accommodations: T.arrayOf(accommodationPropTypes).isRequired,
-    //     isLoading: T.bool.isRequired,
-    //     current: T.shape({
-    //         data: accommodationPropTypes,
-    //         isLoading: T.bool
-    //     }).isRequired,
-    //     hasError: T.bool.isRequired,
-    //     errorText: T.string.isRequired,
-    //     onFetchAccommodations: T.func.isRequired,
-    // }
+    static propTypes = {
+        accommodations: T.arrayOf(accommodationPropTypes).isRequired,
+        isLoading: T.bool.isRequired,
+        hasError: T.bool.isRequired,
+        errorText: T.string.isRequired,
+        onFetchAccommodations: T.func.isRequired,
+    }
 
     constructor(props) {
         super(props);
         this.state = {
-            acccommodations: this.props.onFetchAccommodations(),
             snackOpen: this.props.hasError
         };
-        console.log('this', this);
+    }
+
+    componentDidMount() {
+        if(this.props.accommodations.length == 0) {
+            this.props.onFetchAccommodations();
+        }
     }
 
     handleRequestClose() {
@@ -41,18 +41,14 @@ export default class AccommodationCard extends React.PureComponent {
         });
     }
 
-    renderAccommodationCardList() {
-        console.log('this', this);
-        if (this.props.isLoading) {
-            return (
-                <CircularProgress />
-            );
-        }
-        return (
-            <div>
-                show accommodations
+    renderListItems() {
+        return this.props.accommodations.map(a => (
+            <div
+                key={a.id}
+            >
+                {a.title}
             </div>
-        );
+        ));
     }
 
     renderError() {
@@ -109,7 +105,7 @@ export default class AccommodationCard extends React.PureComponent {
                 <CardContent>
                     <Typography type="headline" component="h3">Accommodation</Typography>
                     <Typography component="p">{this.props.errorText}</Typography>
-                    {this.renderAccommodationCardList()}
+                    {this.renderListItems()}
                 </CardContent>
             </Card>
         );

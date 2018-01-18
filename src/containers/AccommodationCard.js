@@ -11,7 +11,6 @@ import AccommodationCardComponent from "../ui/AccommodationCard.jsx";
 const mapStateToProps = (state) => {
     const {
         isLoading,
-        current,
         hasError,
         errorText,
         data,
@@ -19,9 +18,7 @@ const mapStateToProps = (state) => {
     } = state.accommodation;
     return {
         accommodations: data.map(id => byID.get(id)),
-        selectedAccommodations: data.map(id => ({ id, selected: false })),
         isLoading,
-        current,
         hasError,
         errorText,
     };
