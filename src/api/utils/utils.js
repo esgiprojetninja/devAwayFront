@@ -28,7 +28,7 @@ export function generateFetch(entity, verb, id, data) {
     });
 }
 
-export function generateAnonymFetch(
+export function generateAnonymousFetch(
     path,
     verb,
     data,

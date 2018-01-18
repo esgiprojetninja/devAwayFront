@@ -7,6 +7,7 @@ import {
     mockAPIWithErrors
 } from "../mock/API";
 
+import mainReducer from "../../reducers/index";
 import {
     UPDATE_CREDENTIALS,
     updateCredentials,
@@ -40,7 +41,7 @@ describe("Actions guard", () => {
                 payload: 123456
             }
         ];
-        const store = mockStore();
+        const store = mockStore(mainReducer(undefined, {}));
         return store.dispatch(checkGuard()).then(() => {
             expect(store.getActions()).toEqual(expectedActions);
         });
@@ -54,7 +55,9 @@ describe("Actions guard", () => {
                 payload: "Auth error"
             }
         ];
-        const storeError = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)])();
+        const storeError = configureMockStore(
+            [thunk.withExtraArgument(mockAPIWithErrors)]
+        )(mainReducer(undefined, {}));
         return storeError.dispatch(checkGuard()).then(() => {
             expect(storeError.getActions()).toEqual(expectedActions);
         });

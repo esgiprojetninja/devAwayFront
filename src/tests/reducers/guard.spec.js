@@ -9,7 +9,11 @@ import {
 
 describe("Reducer guard", () => {
     const initialSate = {
-        data: {},
+        data: {
+            email: "",
+            password: "",
+            code: 0
+        },
         isLoading: false,
         hasError: false,
         errorText: ""
@@ -29,6 +33,7 @@ describe("Reducer guard", () => {
         )).toEqual({
             ...initialSate,
             data: {
+                ...initialSate.data,
                 email: "toto@toto.toto"
             }
         });

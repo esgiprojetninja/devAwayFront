@@ -6,7 +6,10 @@ import {
     FETCH_PROFILES_FAILURE,
     SAVE_PROFILE_REQUEST,
     SAVE_PROFILE_SUCCESS,
-    SAVE_PROFILE_FAILURE
+    SAVE_PROFILE_FAILURE,
+    GET_ME_REQUEST,
+    GET_ME_SUCCESS,
+    GET_ME_FAILURE
 } from "../../actions/profile";
 
 describe("Reducer profile", () => {
@@ -127,6 +130,51 @@ describe("Reducer profile", () => {
             errorText: "Won't save",
             current: {
                 ...state.current,
+                isLoading: false
+            }
+        });
+    });
+
+    it("should GET_ME_REQUEST", () => {
+        expect(profileReducer(initialSate, {
+            type: GET_ME_REQUEST
+        })).toEqual({
+            ...initialSate,
+            current: {
+                ...initialSate.current,
+                isLoading: true
+            }
+        });
+    });
+
+    it("should GET_ME_SUCCESS", () => {
+        expect(profileReducer(initialSate, {
+            type: GET_ME_SUCCESS,
+            payload: {
+                some: "user"
+            }
+        })).toEqual({
+            ...initialSate,
+            current: {
+                ...initialSate.current,
+                isLoading: false,
+                data: {
+                    some: "user"
+                }
+            }
+        });
+    });
+
+    it("should GET_ME_FAILURE", () => {
+        expect(profileReducer(initialSate, {
+            type: GET_ME_FAILURE,
+            payload: "Error"
+        })).toEqual({
+            ...initialSate,
+            hasError: true,
+            errorText: "Error",
+            current: {
+                ...initialSate.current,
                 isLoading: false
             }
         });

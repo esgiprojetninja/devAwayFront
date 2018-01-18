@@ -19,7 +19,11 @@ import {
     DELETE_PROFILE_REQUEST,
     DELETE_PROFILE_SUCCESS,
     DELETE_PROFILE_FAILURE,
-    deleteProfile
+    deleteProfile,
+    GET_ME_REQUEST,
+    GET_ME_SUCCESS,
+    GET_ME_FAILURE,
+    getMe
 } from "../../actions/profile";
 
 const mockStore = configureMockStore([thunk.withExtraArgument(mockAPI)]);
@@ -101,6 +105,35 @@ describe("Actions profile", () => {
             }
         });
         return storeError.dispatch(deleteProfile(1000)).then(() => {
+            expect(storeError.getActions()).toEqual(expectedActions);
+        });
+    });
+
+    it("should get me", () => {
+        const expectedActions = [
+            { type: GET_ME_REQUEST },
+            { type: GET_ME_SUCCESS, payload: { some: "user" } }
+        ];
+        const store = mockStore();
+        return store.dispatch(getMe()).then(() => {
+            expect(store.getActions()).toEqual(expectedActions);
+        });
+    });
+
+    it("should get me (error)", () => {
+        const expectedActions = [
+            { type: GET_ME_REQUEST },
+            {
+                type: GET_ME_FAILURE,
+                payload: "Who are you ?"
+            }
+        ];
+        const storeError = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)])({
+            profile: {
+                current: {}
+            }
+        });
+        return storeError.dispatch(getMe()).then(() => {
             expect(storeError.getActions()).toEqual(expectedActions);
         });
     });

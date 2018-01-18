@@ -55,4 +55,12 @@ describe("API profile", () => {
             done();
         });
     });
+
+    it("should get me", (done) => {
+        fetchMock.get(`http://${baseUrl}/api/users/me.json`, {});
+        profileApi.getMe().then((res) => {
+            expect(res).toEqual({});
+            done();
+        });
+    });
 });
