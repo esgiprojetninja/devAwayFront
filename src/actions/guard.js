@@ -40,3 +40,37 @@ export function checkGuard() {
             );
     };
 }
+
+export const CREATE_GUARD_REQUEST = "CREATE_GUARD_REQUEST";
+const createGuardRequest = () => ({
+    type: CREATE_GUARD_REQUEST
+});
+
+export const CREATE_GUARD_SUCCESS = "CREATE_GUARD_SUCCESS";
+const createGuardSuccess = payload => ({
+    type: CREATE_GUARD_SUCCESS,
+    payload
+});
+
+export const CREATE_GUARD_FAILURE = "CREATE_GUARD_FAILURE";
+const createGuardFailure = payload => ({
+    type: CREATE_GUARD_FAILURE,
+    payload
+});
+
+export function createGuard() {
+    return (dispatch, getState, API) => {
+        dispatch(createGuardRequest());
+        const { email, password } = getState().guard.data;
+        return API.guardApi.createGuard({ email, password })
+            .then(
+                (res) => {
+                    if (res.hasError) {
+                        return dispatch(createGuardFailure(res.message));
+                    }
+                    return dispatch(createGuardSuccess(res));
+                },
+                error => console.log(error)
+            );
+    };
+}

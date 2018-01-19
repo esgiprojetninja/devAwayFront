@@ -24,21 +24,13 @@ function prepare(name, state) {
 
 describe("Container Guard", () => {
     describe("mapDispatchToProps", () => {
-        it("onCredentialChange", () => {
-            const { store, fn } = prepare("onCredentialChange", mainReducer(undefined, {}));
-            fn().then(() => {
-                expect(store.getActions().map(a => a.type)).toEqual([
-                    "UPDATE_CREDENTIALS"
-                ]);
-            });
-        });
 
         it("onFormSubmit", () => {
             const { store, fn } = prepare("onFormSubmit", mainReducer(undefined, {}));
             fn().then(() => {
                 expect(store.getActions().map(a => a.type)).toEqual([
-                    "CHECK_GUARD_REQUEST",
-                    "CHECK_GUARD_SUCCESS"
+                    "CREATE_GUARD_REQUEST",
+                    "CREATE_GUARD_SUCCESS"
                 ]);
             });
         });

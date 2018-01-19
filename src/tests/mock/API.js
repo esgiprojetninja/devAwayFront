@@ -19,7 +19,8 @@ export const mockAPI = {
         getMe: () => Promise.resolve({ some: "user" })
     },
     guardApi: {
-        checkGuard: () => Promise.resolve(123456)
+        checkGuard: () => Promise.resolve({token: "prout" }),
+        createGuard: () => Promise.resolve({ code: 123456 })
     }
 };
 
@@ -75,6 +76,10 @@ export const mockAPIWithErrors = {
         checkGuard: () => Promise.resolve({
             hasError: true,
             message: "Auth error"
+        }),
+        createGuard: () => Promise.resolve({
+            hasError: true,
+            message: "Yoops"
         })
     }
 };

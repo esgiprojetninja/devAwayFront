@@ -95,7 +95,7 @@ export class Profile extends React.PureComponent {
             <div className={classes.container}>
                 <Grid container>
                     <Grid item sm>
-                        <Paper>
+                        <Paper className={classes.paper} >
                             {this.props.current.isLoading &&
                                 <LinearProgress id="getMeProgess" color="accent" mode="query" />
                             }
@@ -103,7 +103,7 @@ export class Profile extends React.PureComponent {
                         </Paper>
                     </Grid>
                     <Grid item sm>
-                        <Paper>
+                        <Paper className={classes.paper}>
                             <Guard />
                         </Paper>
                     </Grid>
@@ -134,5 +134,8 @@ export default withStyles(theme => ({
     container: {
         marginTop: theme.spacing.unit * 10,
         margin: theme.spacing.unit * 2
+    },
+    paper: {
+        padding: theme.spacing.unit * 2
     }
 }))(Profile);
