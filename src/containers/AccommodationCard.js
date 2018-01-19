@@ -1,11 +1,7 @@
 import { connect } from "react-redux";
-import Grid from "material-ui/Grid";
 
 import {
-    fetchAccommodations,
-    fetchAccommodationsWithoutAuth,
-    setCurrentAccommodation,
-    showList,
+    fetchAccommodationsWithoutAuth
 } from "../actions/accommodation";
 
 import AccommodationCardComponent from "../ui/AccommodationCard.jsx";
@@ -27,8 +23,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-    onFetchAccommodations: () => dispatch(fetchAccommodationsWithoutAuth()),
-    onShowListClicked: () => dispatch(showList()),
+    onFetchAccommodations: () => dispatch(fetchAccommodationsWithoutAuth())
 });
 
 const AccommodationCard = connect(

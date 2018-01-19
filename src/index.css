@@ -57,6 +57,10 @@ button.btn-white {
 
 .accommodation-card{
     width: 100%;
+    padding:25px;
+}
+
+.accommodation-card .card-wrapper{
     border: 1px solid #292929;
     background-color: #ffffff;
 }

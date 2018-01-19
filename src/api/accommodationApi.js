@@ -15,10 +15,6 @@ function update(accommodation) {
     return generateFetch("accommodations", "PUT", accommodation.id, accommodation);
 }
 
-function getAccommodations() {
-    return generateFetchWithoutAuth("accommodations", null);
-}
-
 const accommodationApi = {
     fetchAll: () => {
         return generateFetch("accommodations", "GET").then((parsed) => {

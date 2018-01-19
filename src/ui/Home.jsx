@@ -6,10 +6,10 @@ import Typography from "material-ui/Typography";
 import HomeSearchForm from "./HomeSearchForm.jsx";
 import ArticleWithMedia from "./ArticleWithMedia.jsx";
 import AccommodationCard from "../containers/AccommodationCard.js";
-import Accommodation from "../containers/Accommodation.js";
+import "animate.css/animate.min.css";
+import ScrollAnimation from 'react-animate-on-scroll';
 
 const Home = (props) => {
-    console.log('props', props);
     const { classes } = props;
     const titleService = "Our Service";
     const lead = "Stay in distinctive private homes in over 180 destinations - with an unprecedented level of service.";
@@ -18,21 +18,23 @@ const Home = (props) => {
         <div>
             <div className={classes.backgroundImg}>
                 <div>
-                    <img
-                        className={classes.homeLogo}
-                        alt="Devaway Logo"
-                        src={`${process.env.PUBLIC_URL}/img/logo.png`}
-                    />
-                    <img
-                        className={classes.homeTitle}
-                        alt="Devaway Title"
-                        src={`${process.env.PUBLIC_URL}/img/devawaytitle.png`}
-                    />
-                    <hr className="hr small-hr"/>
-                    <div className={classes.homePlWrapper}>
-                        <span className="home-pl">Use our skills to share a human</span>
-                        <span className="home-pl">experience, it's a win-win</span>
-                    </div>
+                    <ScrollAnimation animateIn="fadeIn">
+                        <img
+                            className={classes.homeLogo}
+                            alt="Devaway Logo"
+                            src={`${process.env.PUBLIC_URL}/img/logo.png`}
+                        />
+                        <img
+                            className={classes.homeTitle}
+                            alt="Devaway Title"
+                            src={`${process.env.PUBLIC_URL}/img/devawaytitle.png`}
+                        />
+                        <hr className="hr small-hr"/>
+                        <div className={classes.homePlWrapper}>
+                            <span className="home-pl">Use our skills to share a human</span>
+                            <span className="home-pl">experience, it's a win-win</span>
+                        </div>
+                    </ScrollAnimation>
                 </div>
             </div>
             <HomeSearchForm />
@@ -45,25 +47,25 @@ const Home = (props) => {
                 article4={article}
             />
             <div className={classes.brandRibon}>
-                <div>
-                    <img
-                        className={classes.brandRibonImg + " " + classes.brandRibonEsgiImg}
-                        alt="Esgi Logo"
-                        src={`${process.env.PUBLIC_URL}/img/esgilogo.png`}
-                    />
-                </div>
-                <div>
-                    <img
-                        className={classes.brandRibonImg + " " + classes.brandRibonImgLogo}
-                        alt="Devaway Logo"
-                        src={`${process.env.PUBLIC_URL}/img/logo.png`}
-                    />
-                    <img
-                        className={classes.brandRibonImg}
-                        alt="Devaway title"
-                        src={`${process.env.PUBLIC_URL}/img/devawaytitleblack.png`}
-                    />
-                </div>
+                <ScrollAnimation className="vertical-align" animateIn="fadeInLeft">
+                    <div className="vertical-align">
+                        <img
+                            className={classes.brandRibonImg + " " + classes.brandRibonEsgiImg}
+                            alt="Esgi Logo"
+                            src={`${process.env.PUBLIC_URL}/img/esgilogo.png`}
+                        />
+                        <img
+                            className={classes.brandRibonImg + " " + classes.brandRibonImgLogo}
+                            alt="Devaway Logo"
+                            src={`${process.env.PUBLIC_URL}/img/logo.png`}
+                        />
+                        <img
+                            className={classes.brandRibonImg}
+                            alt="Devaway title"
+                            src={`${process.env.PUBLIC_URL}/img/devawaytitleblack.png`}
+                        />
+                    </div>
+                </ScrollAnimation>
             </div>
             <div className={classes.subSection + " " + classes.subSectionDestination}>
                 <div className="d-block">
@@ -76,7 +78,7 @@ const Home = (props) => {
                     </Typography>
                     <hr className={"hr medium-hr black " + classes.subSectionHr } />
                 </div>
-                <img className={classes.destinationsImg} src={`${process.env.PUBLIC_URL}/img/SoonDestinations.png`}/>
+                <img alt="Destinations" className={classes.destinationsImg} src={`${process.env.PUBLIC_URL}/img/SoonDestinations.png`}/>
             </div>
             <div className={classes.subSection}>
                 <div className="d-block">
@@ -117,7 +119,7 @@ const Home = (props) => {
                 <Typography
                     type="subheading"
                 >
-                    <span className="d-block"> Public Cloud by <a href="https://github.com/esgiprojetninja/workaway" target="_blank">ESGI Ninja</a></span>
+                    <span className="d-block"> Public Cloud by <a href="https://github.com/esgiprojetninja/workaway" rel="noopener noreferrer" target="_blank">ESGI Ninja</a></span>
                 </Typography>
             </footer>
         </div>

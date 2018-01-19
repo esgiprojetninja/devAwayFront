@@ -3,6 +3,8 @@ import * as T from "prop-types";
 import { withStyles } from "material-ui/styles";
 import Grid from "material-ui/Grid";
 import Typography from "material-ui/Typography";
+import "animate.css/animate.min.css";
+import ScrollAnimation from 'react-animate-on-scroll';
 
 const ArticleWithMedia = (props) => {
     const {
@@ -27,70 +29,72 @@ const ArticleWithMedia = (props) => {
                     </Typography>
                     <hr className="hr medium-hr black" />
                 </div>
-                <Grid container className={classes.sectionContainer}>
-                    <Grid
-                        item
-                        sm={4}
-                        className={classes.sectionImg}
-                    >
+                <ScrollAnimation animateIn="fadeInRight">
+                    <Grid container className={classes.sectionContainer}>
+                        <Grid
+                            item
+                            sm={4}
+                            className={classes.sectionImg}
+                        >
+                        </Grid>
+                        <Grid
+                            item
+                            sm={8}
+                            className={classes.articleTextContainer}
+                        >
+                            <div>
+                                <Typography
+                                    type="subheading"
+                                    align="center"
+                                    className={classes.lead}
+                                >
+                                    {lead}
+                                </Typography>
+                                <Grid
+                                    container
+                                    className={classes.articleBox}
+                                >
+                                    <Grid item sm={6} className={classes.articleWrapper}>
+                                        <hr className="hr xsmall-hr black"/>
+                                        <Typography
+                                            className={classes.article}
+                                            type="body2"
+                                        >
+                                            {article1}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item sm={6} className={classes.articleWrapper}>
+                                        <hr className="hr xsmall-hr black"/>
+                                        <Typography
+                                            className={classes.article}
+                                            type="body2"
+                                        >
+                                            {article2}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item sm={6} className={classes.articleWrapper}>
+                                        <hr className="hr xsmall-hr black"/>
+                                        <Typography
+                                            className={classes.article}
+                                            type="body2"
+                                        >
+                                            {article3}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item sm={6} className={classes.articleWrapper}>
+                                        <hr className="hr xsmall-hr black"/>
+                                        <Typography
+                                            className={classes.article}
+                                            type="body2"
+                                        >
+                                            {article4}
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                            </div>
+                        </Grid>
                     </Grid>
-                    <Grid
-                        item
-                        sm={8}
-                        className={classes.articleTextContainer}
-                    >
-                        <div>
-                            <Typography
-                                type="subheading"
-                                align="center"
-                                className={classes.lead}
-                            >
-                                {lead}
-                            </Typography>
-                            <Grid
-                                container
-                                className={classes.articleBox}
-                            >
-                                <Grid item sm={6} className={classes.articleWrapper}>
-                                    <hr className="hr xsmall-hr black"/>
-                                    <Typography
-                                        className={classes.article}
-                                        type="body2"
-                                    >
-                                        {article1}
-                                    </Typography>
-                                </Grid>
-                                <Grid item sm={6} className={classes.articleWrapper}>
-                                    <hr className="hr xsmall-hr black"/>
-                                    <Typography
-                                        className={classes.article}
-                                        type="body2"
-                                    >
-                                        {article2}
-                                    </Typography>
-                                </Grid>
-                                <Grid item sm={6} className={classes.articleWrapper}>
-                                    <hr className="hr xsmall-hr black"/>
-                                    <Typography
-                                        className={classes.article}
-                                        type="body2"
-                                    >
-                                        {article3}
-                                    </Typography>
-                                </Grid>
-                                <Grid item sm={6} className={classes.articleWrapper}>
-                                    <hr className="hr xsmall-hr black"/>
-                                    <Typography
-                                        className={classes.article}
-                                        type="body2"
-                                    >
-                                        {article4}
-                                    </Typography>
-                                </Grid>
-                            </Grid>
-                        </div>
-                    </Grid>
-                </Grid>
+                </ScrollAnimation>
             </Grid>
         </Grid>
     );

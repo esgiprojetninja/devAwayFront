@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "animate.css": "^3.5.2",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "isomorphic-fetch": "^2.2.1",
@@ -11,6 +12,7 @@
     "moment": "^2.20.1",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
+    "react-animate-on-scroll": "^1.6.0",
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.6",
     "react-router": "^4.2.0",
@@ -47,6 +49,6 @@
       "src/api/**/*.{js,jsx}",
       "!**/node_modules/**",
       "!**/vendor/**"
-      ]
+    ]
   }
 }
