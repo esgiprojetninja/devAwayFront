@@ -18,8 +18,7 @@ describe("ui <Guard />", function () {
 
     it("should render with main items", () => {
         const wrapper = mount(<Guard {...this.initialProps} />);
-        expect(wrapper.find("#email").filter("TextField").length).toBe(1);
-        expect(wrapper.find("#password").filter("TextField").length).toBe(1);
+        expect(wrapper.find("Button").length).toBe(1);
         wrapper.unmount();
     });
 
@@ -27,12 +26,6 @@ describe("ui <Guard />", function () {
         this.initialProps.isLoading = true;
         const wrapper = mount(<Guard {...this.initialProps} />);
         expect(wrapper.find("LinearProgress").length).toBe(1);
-    });
-
-    it("should handleChange", () => {
-        const wrapper = mount(<Guard {...this.initialProps} />);
-        wrapper.find("#email").filter("input").simulate("change");
-        expect(this.initialProps.onCredentialChange).toBeCalled();
     });
 
     it("should handleSubmit", () => {

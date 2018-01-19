@@ -36,6 +36,9 @@ const profileApi = {
     },
     deleteItem: (id) => {
         return generateFetch("profiles", "DELETE", id);
+    },
+    getMe: () => {
+        return generateFetch("users/me", "GET");
     }
 };
 

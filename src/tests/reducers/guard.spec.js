@@ -4,12 +4,19 @@ import {
     UPDATE_CREDENTIALS,
     CHECK_GUARD_REQUEST,
     CHECK_GUARD_SUCCESS,
-    CHECK_GUARD_FAILURE
+    CHECK_GUARD_FAILURE,
+    CREATE_GUARD_REQUEST,
+    CREATE_GUARD_SUCCESS,
+    CREATE_GUARD_FAILURE
 } from "../../actions/guard";
 
 describe("Reducer guard", () => {
     const initialSate = {
-        data: {},
+        data: {
+            email: "",
+            password: "",
+            code: 0
+        },
         isLoading: false,
         hasError: false,
         errorText: ""
@@ -29,6 +36,7 @@ describe("Reducer guard", () => {
         )).toEqual({
             ...initialSate,
             data: {
+                ...initialSate.data,
                 email: "toto@toto.toto"
             }
         });
@@ -52,14 +60,14 @@ describe("Reducer guard", () => {
             },
             {
                 type: CHECK_GUARD_SUCCESS,
-                payload: 123456
+                payload: { token: "toto" }
             }
         )).toEqual({
             ...initialSate,
             isLoading: false,
             data: {
                 ...initialSate.data,
-                code: 123456
+                token: "toto"
             }
         });
     });
@@ -72,6 +80,54 @@ describe("Reducer guard", () => {
             },
             {
                 type: CHECK_GUARD_FAILURE,
+                payload: "Oops"
+            }
+        )).toEqual({
+            ...initialSate,
+            isLoading: false,
+            hasError: true,
+            errorText: "Oops"
+        });
+    });
+
+    it("should CREATE_GUARD_REQUEST", () => {
+        expect(guardReducer(
+            undefined,
+            { type: CREATE_GUARD_REQUEST }
+        )).toEqual({
+            ...initialSate,
+            isLoading: true
+        });
+    });
+
+    it("should CREATE_GUARD_SUCCESS", () => {
+        expect(guardReducer(
+            {
+                ...initialSate,
+                isLoading: true
+            },
+            {
+                type: CREATE_GUARD_SUCCESS,
+                payload: { code: 123456 }
+            }
+        )).toEqual({
+            ...initialSate,
+            isLoading: false,
+            data: {
+                ...initialSate.data,
+                code: 123456
+            }
+        });
+    });
+
+    it("should CREATE_GUARD_FAILURE", () => {
+        expect(guardReducer(
+            {
+                ...initialSate,
+                isLoading: true
+            },
+            {
+                type: CREATE_GUARD_FAILURE,
                 payload: "Oops"
             }
         )).toEqual({

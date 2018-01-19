@@ -4,7 +4,10 @@ import {
     FETCH_PROFILES_FAILURE,
     SAVE_PROFILE_REQUEST,
     SAVE_PROFILE_SUCCESS,
-    SAVE_PROFILE_FAILURE
+    SAVE_PROFILE_FAILURE,
+    GET_ME_REQUEST,
+    GET_ME_SUCCESS,
+    GET_ME_FAILURE
 } from "../actions/profile";
 
 const initialSate = {
@@ -58,6 +61,33 @@ const profile = (state = initialSate, action) => {
             }
         };
     case SAVE_PROFILE_FAILURE:
+        return {
+            ...state,
+            hasError: true,
+            errorText: payload,
+            current: {
+                ...state.current,
+                isLoading: false
+            }
+        };
+    case GET_ME_REQUEST:
+        return {
+            ...state,
+            current: {
+                ...state.current,
+                isLoading: true
+            }
+        };
+    case GET_ME_SUCCESS:
+        return {
+            ...state,
+            current: {
+                ...state.current,
+                isLoading: false,
+                data: payload
+            }
+        };
+    case GET_ME_FAILURE:
         return {
             ...state,
             hasError: true,

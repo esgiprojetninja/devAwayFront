@@ -2,7 +2,10 @@ import {
     UPDATE_CREDENTIALS,
     CHECK_GUARD_REQUEST,
     CHECK_GUARD_SUCCESS,
-    CHECK_GUARD_FAILURE
+    CHECK_GUARD_FAILURE,
+    CREATE_GUARD_REQUEST,
+    CREATE_GUARD_SUCCESS,
+    CREATE_GUARD_FAILURE
 } from "../actions/guard";
 
 const initialSate = {
@@ -38,10 +41,31 @@ const guard = (state = initialSate, action) => {
             isLoading: false,
             data: {
                 ...state.data,
-                code: payload
+                token: payload.token
             }
         };
     case CHECK_GUARD_FAILURE:
+        return {
+            ...state,
+            isLoading: false,
+            hasError: true,
+            errorText: payload
+        };
+    case CREATE_GUARD_REQUEST:
+        return {
+            ...state,
+            isLoading: true
+        };
+    case CREATE_GUARD_SUCCESS:
+        return {
+            ...state,
+            isLoading: false,
+            data: {
+                ...state.data,
+                code: payload.code
+            }
+        };
+    case CREATE_GUARD_FAILURE:
         return {
             ...state,
             isLoading: false,

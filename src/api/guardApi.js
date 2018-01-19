@@ -1,10 +1,10 @@
 import {
-    generateAnonymFetch
+    generateFetch
 } from "./utils/utils";
 
 const guardApi = {
-    checkGuard: (credentials) => {
-        return generateAnonymFetch("check_guard", "POST", credentials);
+    createGuard: () => {
+        return generateFetch("guard_code/create", "POST", undefined, {}, "json");
     }
 };
 

@@ -1,8 +1,7 @@
 import { connect } from "react-redux";
 
 import {
-    updateCredentials,
-    checkGuard
+    createGuard
 } from "../actions/guard";
 
 import GuardComponent from "../ui/Guard.jsx";
@@ -12,8 +11,7 @@ export const mapStateToProps = (state) => {
 };
 
 export const mapDispatchToProps = dispatch => ({
-    onCredentialChange: (property, value) => dispatch(updateCredentials(property, value)),
-    onFormSubmit: () => dispatch(checkGuard())
+    onFormSubmit: () => dispatch(createGuard())
 });
 
 const Guard = connect(

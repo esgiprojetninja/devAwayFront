@@ -6,6 +6,7 @@ import { render } from "react-dom";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { Provider } from "react-redux";
 import { MuiThemeProvider } from "material-ui/styles";
+import Reboot from "material-ui/Reboot";
 
 import {
     defaultTheme
@@ -14,6 +15,8 @@ import {
 import MainReducer from "./reducers";
 import Home from "./containers/Home";
 import Guard from "./containers/Guard";
+import Profile from "./containers/Profile";
+import Navbar from "./ui/Navbar.jsx";
 import API from "./api/mainApi";
 
 
@@ -29,13 +32,18 @@ function startApp(node) {
     );
     render(
         <MuiThemeProvider theme={defaultTheme}>
+            <Reboot />
             <Provider store={store}>
-                <BrowserRouter>
-                    <Switch>
-                        <Route exact path="/" component={Home} />
-                        <Route path="/guard" component={Guard} />
-                    </Switch>
-                </BrowserRouter>
+                <div>
+                    <Navbar />
+                    <BrowserRouter>
+                        <Switch>
+                            <Route exact path="/" component={Home} />
+                            <Route path="/guard" component={Guard} />
+                            <Route path="/profile" component={Profile} />
+                        </Switch>
+                    </BrowserRouter>
+                </div>
             </Provider>
         </MuiThemeProvider>
         ,

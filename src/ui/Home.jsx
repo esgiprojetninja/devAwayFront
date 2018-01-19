@@ -1,10 +1,8 @@
 import * as React from "react";
 import * as T from "prop-types";
-import Reboot from "material-ui/Reboot";
 import { withStyles } from "material-ui/styles";
 import Typography from "material-ui/Typography";
 
-import Navbar from "./Navbar.jsx";
 import HomeSearchForm from "./HomeSearchForm.jsx";
 import ArticleWithMedia from "./ArticleWithMedia.jsx";
 
@@ -15,8 +13,6 @@ const Home = (props) => {
     const article = "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...";
     return (
         <div>
-            <Reboot />
-            <Navbar />
             <div className={classes.backgroundImg}>
                 <Typography
                     align="center"
