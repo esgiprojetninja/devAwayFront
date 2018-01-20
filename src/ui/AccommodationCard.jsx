@@ -1,8 +1,8 @@
 import React from "react";
 import * as T from "prop-types";
-import GroupIcon from 'material-ui-icons/Group';
-import LocalHotelIcon from 'material-ui-icons/LocalHotel';
-import HotTubIcon from 'material-ui-icons/HotTub';
+import GroupIcon from "material-ui-icons/Group";
+import LocalHotelIcon from "material-ui-icons/LocalHotel";
+import HotTubIcon from "material-ui-icons/HotTub";
 import Grid from "material-ui/Grid";
 
 import {
@@ -13,8 +13,13 @@ export default class AccommodationCard extends React.PureComponent {
     static propTypes = {
         accommodations: T.arrayOf(accommodationPropTypes).isRequired,
         isLoading: T.bool.isRequired,
+        current: T.shape({
+            data: accommodationPropTypes,
+            isLoading: T.bool
+        }).isRequired,
         hasError: T.bool.isRequired,
         errorText: T.string.isRequired,
+        mode: T.oneOf(["list", "edit"]).isRequired,
         onFetchAccommodations: T.func.isRequired
     }
 
