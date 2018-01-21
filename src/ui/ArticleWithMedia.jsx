@@ -19,7 +19,7 @@ const ArticleWithMedia = (props) => {
     } = props;
     return (
         <Grid className={classes.containerWrapper}>
-            <Grid item sm={8} className={classes.container}>
+            <Grid container className={classes.container}>
                 <div className="full-width">
                     <Typography
                         type="headline"
@@ -42,6 +42,7 @@ const ArticleWithMedia = (props) => {
                         </Hidden>
                         <Grid
                             item
+                            xs={12}
                             sm={12}
                             md={8}
                             className={classes.articleTextContainer}
@@ -58,7 +59,7 @@ const ArticleWithMedia = (props) => {
                                     container
                                     className={classes.articleBox}
                                 >
-                                    <Grid item sm={6} className={classes.articleWrapper}>
+                                    <Grid item xs={6} sm={6} className={classes.articleWrapper}>
                                         <hr className="hr xsmall-hr black"/>
                                         <Typography
                                             className={classes.article}
@@ -67,7 +68,7 @@ const ArticleWithMedia = (props) => {
                                             {article1}
                                         </Typography>
                                     </Grid>
-                                    <Grid item sm={6} className={classes.articleWrapper}>
+                                    <Grid item xs={6} sm={6} className={classes.articleWrapper}>
                                         <hr className="hr xsmall-hr black"/>
                                         <Typography
                                             className={classes.article}
@@ -76,7 +77,7 @@ const ArticleWithMedia = (props) => {
                                             {article2}
                                         </Typography>
                                     </Grid>
-                                    <Grid item sm={6} className={classes.articleWrapper}>
+                                    <Grid item xs={6} sm={6} className={classes.articleWrapper}>
                                         <hr className="hr xsmall-hr black"/>
                                         <Typography
                                             className={classes.article}
@@ -85,7 +86,7 @@ const ArticleWithMedia = (props) => {
                                             {article3}
                                         </Typography>
                                     </Grid>
-                                    <Grid item sm={6} className={classes.articleWrapper}>
+                                    <Grid item xs={6} sm={6} className={classes.articleWrapper}>
                                         <hr className="hr xsmall-hr black"/>
                                         <Typography
                                             className={classes.article}
@@ -130,10 +131,10 @@ export default withStyles(theme => ({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: "50px 0"
+        padding: "70px 0"
     },
     container: {
-        overflow: "hidden"
+        width: "80%"
     },
     img: {
         width: "100%",
@@ -150,10 +151,10 @@ export default withStyles(theme => ({
     },
     sectionImg: {
         background: `url('${process.env.PUBLIC_URL}/img/people-working.jpg') center`,
-        backgroundSize: "cover"
+        backgroundSize: "cover",
+        minHeight: "500px"
     },
     sectionContainer: {
-        minHeight: "75vh",
         marginTop: "35px"
     },
     sectionTitle: {
