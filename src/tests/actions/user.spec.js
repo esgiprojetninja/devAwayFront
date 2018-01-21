@@ -23,7 +23,7 @@ describe("Actions user", () => {
         expect(userActions.logout()).toEqual(expextedAction);
     });
 
-    it("should logout", () => {
+    it("should login", () => {
         const expextedActions = [
             { type: userActionTypes.LOGIN_REQUEST },
             { type: userActionTypes.LOGIN_SUCCESS, payload: { token: "prout" } }
@@ -37,12 +37,12 @@ describe("Actions user", () => {
         });
     });
 
-    it("Should create a user", () => {
+    it("should create a user", () => {
         const expectedAction = [
             { type: userActionTypes.USER_REQUEST },
             {
                 type: userActionTypes.ADD_USER_SUCCESS,
-                payload: basicUser
+                payload: { user: basicUser }
             }
         ];
         const store = mockStore();

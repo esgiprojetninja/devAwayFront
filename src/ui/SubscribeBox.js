@@ -107,10 +107,14 @@ export default class SubscribeBox extends React.PureComponent {
             <FormControl>
                 <TextField
                     error={this.props.hasError.passwordCheck}
+                    required
                     label={this.props.hasError.passwordCheck ? this.props.errorText.passwordCheck : "Repeat password"}
                     type="password"
                     name="passwordCheck"
                     margin="normal"
+                    multiline
+                    fullWidth
+                    rows="2"
                     onChange={this.handlePasswordCheckChange}
                 />
             </FormControl>
@@ -122,9 +126,13 @@ export default class SubscribeBox extends React.PureComponent {
             <FormControl>
                 <TextField
                     error={this.props.hasError.password}
+                    required
                     label={this.props.hasError.password ? this.props.errorText.password : "Password"}
                     type="password"
                     name="password"
+                    multiline
+                    fullWidth
+                    rows="2"
                     margin="normal"
                     onChange={this.handlePasswordChange}
                 />
@@ -137,9 +145,12 @@ export default class SubscribeBox extends React.PureComponent {
             <FormControl>
                 <TextField
                     error={this.props.hasError.username}
+                    required
                     label={this.props.hasError.username ? this.props.errorText.username : "User name"}
                     type="text"
                     name="userName"
+                    multiline
+                    rows="2"
                     margin="normal"
                     onChange={(ev) => {
                         this.handleChange("username", ev);
@@ -154,9 +165,13 @@ export default class SubscribeBox extends React.PureComponent {
             <FormControl>
                 <TextField
                     error={this.props.hasError.email}
+                    required
                     label={this.props.hasError.email ? this.props.errorText.email : "Email"}
                     type="email"
                     name="email"
+                    multiline
+                    fullWidth
+                    rows="2"
                     margin="normal"
                     onChange={this.handleEmailChange}
                 />

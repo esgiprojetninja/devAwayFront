@@ -47,21 +47,21 @@ export function login(credentials) {
 
 const addUserSuccess = user => ({
     type: types.ADD_USER_SUCCESS,
-    payload: user
+    payload: { user }
 });
 
 const addUserFailure = err => ({
     type: types.ADD_USER_FAILURE,
-    payload: err
+    payload: { errorText: err }
 });
 
-export function addUser(user) {
+export const addUser = (user) => {
     return (dispatch, getState, API) => {
         dispatch(userRequest());
         return API.userApi.addUser(user)
             .then(
                 (res) => {
-                    if (objectsHaveSameKeys({ ...res, password: "" }, user)) {
+                    if (objectsHaveSameKeys({ ...res, password: "" }, { ...user, id: "" })) {
                         return dispatch(addUserSuccess(res));
                     }
                     return dispatch(addUserFailure(res));
