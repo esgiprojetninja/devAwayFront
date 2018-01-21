@@ -4,7 +4,7 @@ import {
 
 import {
     generateFetch,
-    generateFetchWithoutAuth
+    generateAnonymousFetch
 } from "./utils/utils";
 
 function create(accommodation) {
@@ -32,7 +32,7 @@ const accommodationApi = {
         });
     },
     fetchAllWithoutAuth: () => {
-        return generateFetchWithoutAuth("accommodations", "GET").then((parsed) => {
+        return generateAnonymousFetch("accommodations", "GET", {}, undefined, true).then((parsed) => {
             if (parsed.hasError) {
                 return parsed;
             }
