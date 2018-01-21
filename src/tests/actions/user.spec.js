@@ -5,6 +5,7 @@ import * as userActionTypes from "../../actions/types/user";
 import * as userActions from "../../actions/user";
 
 import { mockAPI } from "../mock/API";
+import { createUser, basicUser } from "../mock/body/user";
 
 const mockStore = configureMockStore([thunk.withExtraArgument(mockAPI)]);
 
@@ -33,6 +34,20 @@ describe("Actions user", () => {
             password: "secret"
         })).then(() => {
             expect(store.getActions()).toEqual(expextedActions);
+        });
+    });
+
+    it("Should create a user", () => {
+        const expectedAction = [
+            { type: userActionTypes.USER_REQUEST },
+            {
+                type: userActionTypes.ADD_USER_SUCCESS,
+                payload: basicUser
+            }
+        ];
+        const store = mockStore();
+        return store.dispatch(userActions.addUser(createUser)).then(() => {
+            expect(store.getActions()).toEqual(expectedAction);
         });
     });
 });
