@@ -78,7 +78,9 @@ export const Home = (props) => {
                     </Typography>
                     <hr className={"hr medium-hr black " + classes.subSectionHr } />
                 </div>
-                <img alt="Destinations" className={classes.destinationsImg} src={`${process.env.PUBLIC_URL}/img/SoonDestinations.png`}/>
+                <div className={classes.destinationWrapper}>
+                    <img alt="Destinations" className={classes.destinationsImg} src={`${process.env.PUBLIC_URL}/img/SoonDestinations.png`}/>
+                </div>
             </div>
             <div className={classes.subSection}>
                 <div className="d-block">
@@ -154,8 +156,15 @@ export default withStyles(theme => ({
         padding: "25px",
         backgroundColor: "white"
     },
+    destinationWrapper: {
+        padding: "25px",
+        overflow: "hidden",
+        width: "100%"
+    },
     destinationsImg: {
-        opacity: 0.5
+        opacity: 0.5,
+        backgroundSize: "cover",
+        width: "100%"
     },
     subSectionDestination: {
         paddingTop: "50px",

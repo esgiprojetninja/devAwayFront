@@ -5,6 +5,7 @@ import Grid from "material-ui/Grid";
 import Typography from "material-ui/Typography";
 import "animate.css/animate.min.css";
 import ScrollAnimation from 'react-animate-on-scroll';
+import Hidden from 'material-ui/Hidden';
 
 const ArticleWithMedia = (props) => {
     const {
@@ -31,15 +32,18 @@ const ArticleWithMedia = (props) => {
                 </div>
                 <ScrollAnimation animateIn="fadeInRight">
                     <Grid container className={classes.sectionContainer}>
+                        <Hidden only={['xs', 'sm']}>
+                            <Grid
+                                item
+                                md={4}
+                                className={classes.sectionImg}
+                            >
+                            </Grid>
+                        </Hidden>
                         <Grid
                             item
-                            sm={4}
-                            className={classes.sectionImg}
-                        >
-                        </Grid>
-                        <Grid
-                            item
-                            sm={8}
+                            sm={12}
+                            md={8}
                             className={classes.articleTextContainer}
                         >
                             <div>

@@ -13,13 +13,8 @@ export default class AccommodationCard extends React.PureComponent {
     static propTypes = {
         accommodations: T.arrayOf(accommodationPropTypes).isRequired,
         isLoading: T.bool.isRequired,
-        current: T.shape({
-            data: accommodationPropTypes,
-            isLoading: T.bool
-        }).isRequired,
         hasError: T.bool.isRequired,
         errorText: T.string.isRequired,
-        mode: T.oneOf(["list", "edit"]).isRequired,
         onFetchAccommodations: T.func.isRequired
     }
 
@@ -39,7 +34,7 @@ export default class AccommodationCard extends React.PureComponent {
             .map(allAccommodations => allAccommodations)
             .filter((filteredAccommodations, i) => i < 3)
             .map(a => (
-                <Grid item xs={12} sm={4} key={a.id}>
+                <Grid item xs={12} sm={6} md={4} key={a.id}>
                     <div
                         className="accommodation-card"
                     >
