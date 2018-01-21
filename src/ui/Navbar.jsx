@@ -3,7 +3,6 @@ import * as T from "prop-types";
 import AppBar from "material-ui/AppBar";
 import Toolbar from "material-ui/Toolbar";
 import { withStyles } from "material-ui/styles";
-import Typography from "material-ui/Typography";
 import IconButton from "material-ui/IconButton";
 import MenuIcon from "material-ui-icons/Menu";
 
@@ -23,6 +22,7 @@ class NavBar extends React.PureComponent {
     render() {
         const { classes } = this.props;
         const navbarClasses = [
+            classes.navStyle,
             classes.dropDown
         ];
         navbarClasses.push(this.state.open ? classes.dropDown_in : classes.dropDown_out);
@@ -30,9 +30,13 @@ class NavBar extends React.PureComponent {
             <div className={classes.root}>
                 <AppBar position="fixed" className={navbarClasses.join(" ")}>
                     <Toolbar className={classes.toolbar}>
-                        <Typography type="title" color="inherit" className={classes.flex}>
-                            Dev away
-                        </Typography>
+                        <div className="full-width">
+                            <img
+                                className={classes.logo}
+                                alt="Devaway Logo"
+                                src={`${process.env.PUBLIC_URL}/img/logowhite.png`}
+                            />
+                        </div>
                         <LogBox />
                     </Toolbar>
                 </AppBar>
@@ -64,6 +68,10 @@ export default withStyles(theme => ({
     flex: {
         flex: 1
     },
+    logo: {
+        display: "flex",
+        maxHeight: "25px"
+    },
     menuButton: {
         marginLeft: -12,
         marginRight: 20
@@ -71,6 +79,9 @@ export default withStyles(theme => ({
     dropDown: {
         transition: "all ease 0.2s",
         transformOrigin: "top"
+    },
+    navStyle: {
+        backgroundColor: "#fe5858",
     },
     dropDown_in: {
         transform: "scaleY(1)"

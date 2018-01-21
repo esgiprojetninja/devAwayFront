@@ -32,12 +32,16 @@ export function generateAnonymousFetch(
     path,
     verb,
     data,
-    param
+    param,
+    isJson
 ) {
     const baseUrl = process.env.REACT_APP_API_URL;
     let url = `http://${baseUrl}/api/${path}`;
     if (param) {
         url = `${url}/${param}`;
+    }
+    if (isJson) {
+        url = `${url}.json`;
     }
     return fetch(url, {
         method: verb,
@@ -55,3 +59,4 @@ export function generateAnonymousFetch(
         return response.json();
     });
 }
+
