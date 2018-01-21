@@ -3,19 +3,19 @@ import * as T from "prop-types";
 import { withStyles } from "material-ui/styles";
 import Typography from "material-ui/Typography";
 
+import "animate.css/animate.min.css";
+import ScrollAnimation from "react-animate-on-scroll";
 import HomeSearchForm from "./HomeSearchForm.jsx";
 import ArticleWithMedia from "./ArticleWithMedia.jsx";
 import AccommodationCard from "../containers/AccommodationCard.js";
-import "animate.css/animate.min.css";
-import ScrollAnimation from 'react-animate-on-scroll';
 
-const Home = (props) => {
+export const Home = (props) => {
     const { classes } = props;
     const titleService = "Our Service";
     const lead = "Stay in distinctive private homes in over 180 destinations - with an unprecedented level of service.";
     const article = "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...";
     return (
-        <div>
+        <div id="home-container">
             <div className={classes.backgroundImg}>
                 <div>
                     <ScrollAnimation animateIn="fadeIn">
@@ -147,7 +147,7 @@ export default withStyles(theme => ({
     sectionTitle: {
         textTransform: "uppercase",
         fontSize: "25px",
-        letterSpacing: "2px",
+        letterSpacing: "2px"
     },
     subSection: {
         textAlign: "center",
