@@ -2,8 +2,6 @@ import fetch from "isomorphic-fetch";
 
 const baseUrl = process.env.REACT_APP_API_URL;
 
-console.log(process);
-
 const userApi = {
     login: credentials => (fetch(`http://${baseUrl}/api/login_check`, {
         method: "POST",

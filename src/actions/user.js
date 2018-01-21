@@ -1,6 +1,5 @@
 /* global window */
 import * as types from "./types/user";
-import objectsHaveSameKeys from "../utils/object";
 
 export const logout = () => {
     window.localStorage.removeItem("authToken");
@@ -61,7 +60,7 @@ export const addUser = (user) => {
         return API.userApi.addUser(user)
             .then(
                 (res) => {
-                    if (objectsHaveSameKeys({ ...res, password: "" }, { ...user, id: "" })) {
+                    if (res && res.id && res.email && res.username) {
                         return dispatch(addUserSuccess(res));
                     }
                     return dispatch(addUserFailure(res));
@@ -71,4 +70,8 @@ export const addUser = (user) => {
                 }
             );
     };
-}
+};
+
+export const noticeSnack = () => ({
+    type: types.NOTICE_USER_SNACK
+});

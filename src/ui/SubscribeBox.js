@@ -1,6 +1,7 @@
 import React from "react";
 import * as T from "prop-types";
 import Button from "material-ui/Button";
+import { withStyles } from "material-ui/styles";
 import TextField from "material-ui/TextField";
 import { CircularProgress } from "material-ui/Progress";
 import Dialog, {
@@ -9,13 +10,31 @@ import Dialog, {
     DialogTitle
 } from "material-ui/Dialog";
 import { FormControl } from "material-ui/Form";
+import { SnackbarContent } from "material-ui/Snackbar";
 
 const passwordInputProps = {
     type: "password"
 };
 
-export default class SubscribeBox extends React.PureComponent {
+const styles = theme => ({
+    snackbar: {
+        margin: theme.spacing.unit
+    }
+});
+
+const initialState = {
+    email: "",
+    password: "",
+    passwordCheck: "",
+    username: "",
+    open: false
+};
+
+class SubscribeBox extends React.PureComponent {
     static propTypes = {
+        classes: T.shape({
+            snackbar: T.shape.isRequired
+        }).isRequired,
         isLoggedIn: T.bool.isRequired,
         isLoading: T.bool.isRequired,
         hasError: T.shape({
@@ -30,27 +49,25 @@ export default class SubscribeBox extends React.PureComponent {
             password: T.string.isRequired,
             passwordCheck: T.string.isRequired
         }).isRequired,
-        onSubmit: T.func.isRequired
+        onSubmit: T.func.isRequired,
+        noticeSnack: T.func.isRequired,
+        snackText: T.string.isRequired
     };
 
     constructor(props) {
         super(props);
         this.state = {
-            email: "",
-            password: "",
-            passwordCheck: "",
-            username: "",
-            open: false
+            ...initialState
         };
 
         this.handleEmailChange = this.handleChange.bind(this, "email");
         this.handlePasswordChange = this.handleChange.bind(this, "password");
         this.handlePasswordCheckChange = this.handleChange.bind(this, "passwordCheck");
-        this.handleUsernameChange = this.handleChange.bind(this, "username");
     }
 
     onSubmit = (e) => {
         e.preventDefault();
+        this.onClose();
         const {
             email,
             username,
@@ -60,6 +77,9 @@ export default class SubscribeBox extends React.PureComponent {
         this.props.onSubmit({
             email, username, password, passwordCheck
         });
+        this.state = {
+            ...initialState
+        };
     }
 
     onClose = () => {
@@ -86,15 +106,15 @@ export default class SubscribeBox extends React.PureComponent {
             return;
         }
         case "username": {
-            const hasErr = !(value.length >= 5 && value.length <= 15);
+            const hasErr = !(value.length >= 5 || value.length > 20);
             this.props.hasError.username = hasErr;
             this.props.errorText.username = hasErr ? "Username must be between 5 & 15 characters long" : "";
             return;
         }
         case "password": {
-            const hasErr = !(value.length >= 5 && value.length <= 50);
+            const hasErr = value.length < 6 || value.length > 20;
             this.props.hasError.password = hasErr;
-            this.props.errorText.password = hasErr ? "Password must be between 5 & 50 characters long" : "";
+            this.props.errorText.password = hasErr ? "Password must be between 6 & 20 characters long" : "";
             return;
         }
         case "passwordCheck": {
@@ -218,6 +238,19 @@ export default class SubscribeBox extends React.PureComponent {
         );
     }
 
+    renderSubscribSuccessSnack() {
+        console.log("coucou snack", this.props);
+        if (this.props.snackText) {
+            return (
+                <SnackbarContent
+                    className={this.props.classes.snackbar}
+                    message={this.props.snackText}
+                    onClose={this.props.noticeSnack}
+                />);
+        }
+        return null;
+    }
+
     render() {
         if (this.props.isLoggedIn) {
             return null;
@@ -231,7 +264,10 @@ export default class SubscribeBox extends React.PureComponent {
                 Inscription
                 </Button>
                 {this.renderDialog()}
+                {this.renderSubscribSuccessSnack()}
             </div>
         );
     }
 }
+
+export default withStyles(styles)(SubscribeBox);

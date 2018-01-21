@@ -10,13 +10,14 @@ const initialSate = {
         languages: "",
         skills: "",
         createdAt: "",
-        updateAt: "",
+        updatedAt: "",
         username: ""
     },
     isLoggedIn: false,
     isLoading: false,
     hasError: false,
-    errorText: ""
+    errorText: "",
+    snackText: ""
 };
 
 const userReducer = (state = initialSate, action) => {
@@ -58,15 +59,23 @@ const userReducer = (state = initialSate, action) => {
         return {
             ...state,
             isLoading: false,
+            isLoggedIn: false,
             hasError: false,
-            data: payload.user
+            data: payload.user,
+            snackText: `Successfully subscribed as ${payload.user.username}`
         };
     case types.ADD_USER_FAILURE:
         return {
             ...state,
             isLoading: false,
             hasError: true,
+            snackText: "",
             errorText: payload.errorText
+        };
+    case types.NOTICE_USER_SNACK:
+        return {
+            ...state,
+            snackText: ""
         };
     default:
         return state;

@@ -1,6 +1,7 @@
 import { connect } from "react-redux";
 import {
-    addUser
+    addUser,
+    noticeSnack
 } from "../actions/user";
 import SubscribeBoxComponent from "../ui/SubscribeBox";
 
@@ -16,6 +17,7 @@ const mapDispatchToProps = dispatch => ({
             email: data.email,
             username: data.username,
             password: data.password,
+            confirm_password: data.passwordCheck,
             lastName: "",
             firstName: "",
             languages: "en",
@@ -23,6 +25,9 @@ const mapDispatchToProps = dispatch => ({
             createdAt: d,
             updatedAt: d
         }));
+    },
+    noticeSnack() {
+        dispatch(noticeSnack());
     },
     hasError: {
         email: false,

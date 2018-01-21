@@ -50,4 +50,9 @@ describe("Actions user", () => {
             expect(store.getActions()).toEqual(expectedAction);
         });
     });
+
+    it("should empty snackbar msg", () => {
+        const expectedAction = { type: userActionTypes.NOTICE_USER_SNACK };
+        expect(userActions.noticeSnack()).toEqual(expectedAction);
+    });
 });

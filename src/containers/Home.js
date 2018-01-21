@@ -3,7 +3,7 @@ import HomeComponent from "../ui/Home.jsx";
 
 const mapStateToProps = state => state;
 
-const mapDispatchToProps = (): {} => ({});
+const mapDispatchToProps = () => ({});
 
 const Home = connect(
     mapStateToProps,

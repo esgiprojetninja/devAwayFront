@@ -3,7 +3,8 @@ import userReducer from "../../reducers/user";
 import {
     USER_REQUEST,
     ADD_USER_SUCCESS,
-    ADD_USER_FAILURE
+    ADD_USER_FAILURE,
+    NOTICE_USER_SNACK
 } from "../../actions/types/user";
 
 describe("Reducer USER", () => {
@@ -16,13 +17,14 @@ describe("Reducer USER", () => {
             languages: "",
             skills: "",
             createdAt: "",
-            updateAt: "",
+            updatedAt: "",
             username: ""
         },
         isLoggedIn: false,
         isLoading: false,
         hasError: false,
-        errorText: ""
+        errorText: "",
+        snackText: ""
     };
 
     it("should return initialSate", () => {
@@ -44,21 +46,23 @@ describe("Reducer USER", () => {
             isLoading: false
         };
 
+        const payload = {
+            user: {
+                id: 0,
+                email: "",
+                lastName: "",
+                firstName: "",
+                languages: "",
+                skills: "",
+                createdAt: "",
+                updateAt: "",
+                username: ""
+            }
+        };
+
         expect(userReducer(state, {
             type: ADD_USER_SUCCESS,
-            payload: {
-                user: {
-                    id: 0,
-                    email: "",
-                    lastName: "",
-                    firstName: "",
-                    languages: "",
-                    skills: "",
-                    createdAt: "",
-                    updateAt: "",
-                    username: ""
-                }
-            }
+            payload
         })).toEqual({
             ...state,
             isLoading: false,
@@ -72,7 +76,8 @@ describe("Reducer USER", () => {
                 createdAt: "",
                 updateAt: "",
                 username: ""
-            }
+            },
+            snackText: `Successfully subscribed as ${payload.user.username}`
         });
     });
 
@@ -90,6 +95,20 @@ describe("Reducer USER", () => {
             isLoading: false,
             hasError: true,
             errorText: "error, bitch"
+        });
+    });
+
+    it("should dispatch NOTICE_USER_SNACK", () => {
+        const state = {
+            ...initialSate,
+            snackText: "snack msg to display"
+        };
+
+        expect(userReducer(state, {
+            type: NOTICE_USER_SNACK
+        })).toEqual({
+            ...state,
+            snackText: ""
         });
     });
 });
