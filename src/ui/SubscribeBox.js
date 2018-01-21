@@ -2,6 +2,7 @@ import React from "react";
 import * as T from "prop-types";
 import Button from "material-ui/Button";
 import TextField from "material-ui/TextField";
+import { CircularProgress } from "material-ui/Progress";
 import Dialog, {
     DialogActions,
     DialogContent,
@@ -9,9 +10,14 @@ import Dialog, {
 } from "material-ui/Dialog";
 import { FormControl } from "material-ui/Form";
 
+const passwordInputProps = {
+    type: "password"
+};
+
 export default class SubscribeBox extends React.PureComponent {
     static propTypes = {
         isLoggedIn: T.bool.isRequired,
+        isLoading: T.bool.isRequired,
         hasError: T.shape({
             email: T.bool.isRequired,
             username: T.bool.isRequired,
@@ -67,7 +73,6 @@ export default class SubscribeBox extends React.PureComponent {
     }
 
     handleChange(property, ev) {
-        console.log("coucou fdp", property, ev.target.value);
         let { value } = ev.target;
         value = value.trim();
         this.setState({
@@ -110,11 +115,9 @@ export default class SubscribeBox extends React.PureComponent {
                     required
                     label={this.props.hasError.passwordCheck ? this.props.errorText.passwordCheck : "Repeat password"}
                     type="password"
+                    inputProps={passwordInputProps}
                     name="passwordCheck"
                     margin="normal"
-                    multiline
-                    fullWidth
-                    rows="2"
                     onChange={this.handlePasswordCheckChange}
                 />
             </FormControl>
@@ -129,10 +132,8 @@ export default class SubscribeBox extends React.PureComponent {
                     required
                     label={this.props.hasError.password ? this.props.errorText.password : "Password"}
                     type="password"
+                    inputProps={passwordInputProps}
                     name="password"
-                    multiline
-                    fullWidth
-                    rows="2"
                     margin="normal"
                     onChange={this.handlePasswordChange}
                 />
@@ -180,6 +181,9 @@ export default class SubscribeBox extends React.PureComponent {
     }
 
     renderDialogContent() {
+        if (this.props.isLoading) {
+            return <CircularProgress color="accent" />;
+        }
         return (
             <DialogContent>
                 {this.renderEmailField()}

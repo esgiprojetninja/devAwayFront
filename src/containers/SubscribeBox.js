@@ -8,7 +8,21 @@ const mapStateToProps = state => state.user;
 
 const mapDispatchToProps = dispatch => ({
     onSubmit: (data) => {
-        dispatch(addUser(data));
+        const d = new Date().toISOString();
+        dispatch(addUser({
+            roles: [
+                "ROLE_USER"
+            ],
+            email: data.email,
+            username: data.username,
+            password: data.password,
+            lastName: "",
+            firstName: "",
+            languages: "en",
+            skills: "",
+            createdAt: d,
+            updatedAt: d
+        }));
     },
     hasError: {
         email: false,
