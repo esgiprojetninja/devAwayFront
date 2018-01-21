@@ -141,7 +141,9 @@ export default class SubscribeBox extends React.PureComponent {
                     type="text"
                     name="userName"
                     margin="normal"
-                    onChange={this.handleUserNameChange}
+                    onChange={(ev) => {
+                        this.handleChange("username", ev);
+                    }}
                 />
             </FormControl>
         );
