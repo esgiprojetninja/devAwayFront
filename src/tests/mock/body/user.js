@@ -1,4 +1,4 @@
-export const basicUser = {
+const user = {
     email: "sezfze@efze.fez",
     roles: [
         "ROLE_USER"
@@ -12,7 +12,12 @@ export const basicUser = {
     updatedAt: "2018-01-20T23:25:15.396Z"
 };
 
+export const basicUser = {
+    ...user,
+    id: "coucouID"
+};
+
 export const createUser = {
-    ...basicUser,
+    ...user,
     password: "niktamere"
 };

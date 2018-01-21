@@ -12,4 +12,11 @@ export const User = T.shape({
     username: T.string.isRequired
 });
 
+export const CreationUser = T.shape({
+    email: T.string.isRequired,
+    password: T.string.isRequired,
+    password_check: T.string.isRequired,
+    username: T.string.isRequired
+});
+
 export const toto = "toto";

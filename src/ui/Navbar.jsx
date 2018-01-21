@@ -8,6 +8,7 @@ import IconButton from "material-ui/IconButton";
 import MenuIcon from "material-ui-icons/Menu";
 
 import LogBox from "../containers/LogBox";
+import SubscribeBox from "../containers/SubscribeBox";
 
 class NavBar extends React.PureComponent {
     state = {
@@ -33,6 +34,7 @@ class NavBar extends React.PureComponent {
                         <Typography type="title" color="inherit" className={classes.flex}>
                             Dev away
                         </Typography>
+                        <SubscribeBox />
                         <LogBox />
                     </Toolbar>
                 </AppBar>
