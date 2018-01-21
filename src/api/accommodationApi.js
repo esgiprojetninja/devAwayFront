@@ -3,7 +3,8 @@ import {
 } from "../parsers/entityParsers";
 
 import {
-    generateFetch
+    generateFetch,
+    generateAnonymousFetch
 } from "./utils/utils";
 
 function create(accommodation) {
@@ -17,6 +18,21 @@ function update(accommodation) {
 const accommodationApi = {
     fetchAll: () => {
         return generateFetch("accommodations", "GET").then((parsed) => {
+            if (parsed.hasError) {
+                return parsed;
+            }
+            const {
+                byID,
+                data
+            } = parseCollectionFromApi(parsed);
+            return {
+                byID,
+                data
+            };
+        });
+    },
+    fetchAllWithoutAuth: () => {
+        return generateAnonymousFetch("accommodations", "GET", {}, undefined, true).then((parsed) => {
             if (parsed.hasError) {
                 return parsed;
             }

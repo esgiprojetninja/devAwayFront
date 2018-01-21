@@ -84,7 +84,7 @@ export default class LogBox extends React.PureComponent {
     renderLogBox() {
         return (
             <div>
-                <Button onClick={this.handleClickOpen}>Log in</Button>
+                <Button className="btn-white" onClick={this.handleClickOpen}>Log in</Button>
                 <Dialog
                     open={this.state.open}
                     onClose={this.handleClose}

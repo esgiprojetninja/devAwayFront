@@ -1,6 +1,9 @@
 import { basicUser } from "./body/user";
 
 export const mockAPI = {
+    accommodationApi: {
+        fetchAll: () => Promise.resolve([])
+    },
     userApi: {
         login: () => Promise.resolve({ token: "prout" }),
         addUser: () => Promise.resolve(basicUser)
@@ -29,6 +32,12 @@ export const mockAPI = {
 
 
 export const mockAPIWithErrors = {
+    accommodationApi: {
+        fetchAll: () => Promise.resolve({
+            hasError: true,
+            message: "Naupe !"
+        })
+    },
     missionApi: {
         fetchAll: () => Promise.resolve({
             hasError: true,

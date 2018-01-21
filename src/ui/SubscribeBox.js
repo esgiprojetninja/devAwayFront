@@ -77,9 +77,7 @@ class SubscribeBox extends React.PureComponent {
         this.props.onSubmit({
             email, username, password, passwordCheck
         });
-        this.state = {
-            ...initialState
-        };
+        this.setState(initialState);
     }
 
     onClose = () => {

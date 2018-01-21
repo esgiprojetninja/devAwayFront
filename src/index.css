@@ -3,3 +3,126 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+.d-block {
+    display: block;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.full-height {
+    height: 100%;
+}
+
+.vertical-align {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hr {
+    color: white;
+    height: 2px;
+}
+
+.hr.small-hr {
+    width: 100px;
+}
+
+.hr.medium-hr {
+    width: 250px;
+}
+
+.hr.xsmall-hr {
+    width: 50px;
+}
+
+.hr.black {
+    color: #292929;
+}
+
+button.btn-white {
+    color: white;
+}
+
+.home-pl {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 2.5px 10px;
+    font-size: 3vh;
+}
+
+.accommodation-card{
+    width: 100%;
+    padding:25px;
+}
+
+.accommodation-card .card-wrapper{
+    border: 1px solid #b3b3b3;
+    background-color: #ffffff;
+}
+
+.accommodation-card .card-img img{
+    width: 100%;
+    background-size: cover;
+}
+
+.accommodation-card .card-body{
+    padding: 25px;
+}
+
+.accommodation-card .card-img{
+    display: block;
+    width: 100%;
+}
+
+.accommodation-card .card-title {
+    display: block;
+    padding: 10px;
+    text-align: center;
+    font-weight: 800;
+    color: #fe5858;
+    text-transform: uppercase;
+}
+
+.accommodation-card .card-subtitle{
+    display: block;
+    padding: 10px;
+    text-align: center;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.accommodation-card .card-description{
+    display: block;
+    padding: 10px;
+    text-align: justify;
+    height: 80px;
+    overflow-y: auto;
+}
+
+.accommodation-card .card-icon-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.accommodation-card .card-icon-wrapper{
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.accommodation-card .card-icon{
+    vertical-align: middle;
+    margin-right: 10px;
+}
+
+.accommodation-card .card-icon-value{
+    vertical-align: middle;
+}

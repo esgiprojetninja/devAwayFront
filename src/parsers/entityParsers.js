@@ -1,7 +1,7 @@
 export function parseCollectionFromApi(items) {
     const data = [];
     const byID = new Map();
-    items.forEach((item) => {
+    Array.from(items).forEach((item) => {
         data.push(item.id);
         byID.set(item.id, item);
     });
