@@ -244,6 +244,8 @@ class SubscribeBox extends React.PureComponent {
                     className={this.props.classes.snackbar}
                     message={this.props.snackText}
                     onClose={this.props.noticeSnack}
+                    autoHideDuration={4000}
+                    open={!!this.props.snackText}
                 />);
         }
         return null;

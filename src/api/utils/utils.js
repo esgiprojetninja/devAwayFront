@@ -4,7 +4,6 @@ import "isomorphic-fetch";
 
 export function generateFetch(entity, verb, id, data, format) {
     const baseUrl = process.env.REACT_APP_API_URL;
-    console.log("COUCOU FDP", process);
     const token = window.localStorage.getItem("authToken");
     const isJson = (verb === "DELETE" || format === "json") ? "" : ".json";
     let url = `http://${baseUrl}/api/${entity}`;
