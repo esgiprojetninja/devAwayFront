@@ -26,7 +26,7 @@ const initialState = {
     open: false
 };
 
-class SubscribeBox extends React.PureComponent {
+export class SubscribeBox extends React.PureComponent {
     static propTypes = {
         isLoggedIn: T.bool.isRequired,
         isLoading: T.bool.isRequired,
