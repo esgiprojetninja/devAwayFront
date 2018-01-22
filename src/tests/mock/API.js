@@ -1,9 +1,12 @@
+import { basicUser } from "./body/user";
+
 export const mockAPI = {
     accommodationApi: {
         fetchAll: () => Promise.resolve([])
     },
     userApi: {
-        login: () => Promise.resolve({ token: "prout" })
+        login: () => Promise.resolve({ token: "prout" }),
+        addUser: () => Promise.resolve(basicUser)
     },
     missionApi: {
         fetchAll: () => Promise.resolve([]),
@@ -22,7 +25,7 @@ export const mockAPI = {
         getMe: () => Promise.resolve({ some: "user" })
     },
     guardApi: {
-        checkGuard: () => Promise.resolve({token: "prout" }),
+        checkGuard: () => Promise.resolve({ token: "prout" }),
         createGuard: () => Promise.resolve({ code: 123456 })
     }
 };

@@ -16,7 +16,7 @@ describe("ui <LogBox />", function () {
             languages: "",
             skills: "",
             createdAt: "",
-            updateAt: "",
+            updatedAt: "",
             username: ""
         },
         isLoading: false,

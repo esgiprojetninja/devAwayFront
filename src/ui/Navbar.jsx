@@ -7,6 +7,7 @@ import IconButton from "material-ui/IconButton";
 import MenuIcon from "material-ui-icons/Menu";
 
 import LogBox from "../containers/LogBox";
+import SubscribeBox from "../containers/SubscribeBox";
 
 class NavBar extends React.PureComponent {
     state = {
@@ -37,6 +38,7 @@ class NavBar extends React.PureComponent {
                                 src={`${process.env.PUBLIC_URL}/img/logowhite.png`}
                             />
                         </div>
+                        <SubscribeBox />
                         <LogBox />
                     </Toolbar>
                 </AppBar>

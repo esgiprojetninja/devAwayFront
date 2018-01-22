@@ -95,7 +95,6 @@ export default class LogBox extends React.PureComponent {
                         onSubmit={this.handleSubmit}
                     >
                         <DialogContent>
-
                             <FormControl>
                                 <TextField
                                     error={this.props.hasError}

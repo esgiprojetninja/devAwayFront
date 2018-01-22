@@ -10,7 +10,7 @@ const initialSate = {
         languages: "",
         skills: "",
         createdAt: "",
-        updateAt: "",
+        updatedAt: "",
         username: ""
     },
     isLoggedIn: false,
@@ -22,6 +22,11 @@ const initialSate = {
 const userReducer = (state = initialSate, action) => {
     const { payload } = action;
     switch (action.type) {
+    case types.USER_REQUEST:
+        return {
+            ...state,
+            isLoading: true
+        };
     case types.LOGOUT:
         return {
             ...state,
@@ -48,6 +53,21 @@ const userReducer = (state = initialSate, action) => {
             error: payload,
             isLoading: false,
             hasError: true
+        };
+    case types.ADD_USER_SUCCESS:
+        return {
+            ...state,
+            isLoading: false,
+            isLoggedIn: false,
+            hasError: false,
+            data: payload.user
+        };
+    case types.ADD_USER_FAILURE:
+        return {
+            ...state,
+            isLoading: false,
+            hasError: true,
+            errorText: payload.errorText
         };
     default:
         return state;

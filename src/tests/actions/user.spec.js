@@ -3,8 +3,9 @@ import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import * as userActionTypes from "../../actions/types/user";
 import * as userActions from "../../actions/user";
-
+import { SET_SNACK_MSG } from "../../actions/types/snack";
 import { mockAPI } from "../mock/API";
+import { createUser, basicUser } from "../mock/body/user";
 
 const mockStore = configureMockStore([thunk.withExtraArgument(mockAPI)]);
 
@@ -22,7 +23,7 @@ describe("Actions user", () => {
         expect(userActions.logout()).toEqual(expextedAction);
     });
 
-    it("should logout", () => {
+    it("should login", () => {
         const expextedActions = [
             { type: userActionTypes.LOGIN_REQUEST },
             { type: userActionTypes.LOGIN_SUCCESS, payload: { token: "prout" } }
@@ -35,4 +36,26 @@ describe("Actions user", () => {
             expect(store.getActions()).toEqual(expextedActions);
         });
     });
+
+    it("should create a user", () => {
+        const expectedAction = [
+            { type: userActionTypes.USER_REQUEST },
+            {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: `Account created with ${createUser.username}`,
+                    snackDuration: undefined
+                }
+            },
+            {
+                type: userActionTypes.ADD_USER_SUCCESS,
+                payload: { user: basicUser }
+            }
+        ];
+        const store = mockStore();
+        return store.dispatch(userActions.addUser(createUser)).then(() => {
+            expect(store.getActions()).toEqual(expectedAction);
+        });
+    });
+
 });

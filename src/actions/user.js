@@ -1,5 +1,6 @@
 /* global window */
 import * as types from "./types/user";
+import { displaySnackMsg } from "./snack";
 
 export const logout = () => {
     window.localStorage.removeItem("authToken");
@@ -8,6 +9,10 @@ export const logout = () => {
         type: types.LOGOUT
     };
 };
+
+const userRequest = () => ({
+    type: types.USER_REQUEST
+});
 
 const loginRequest = () => ({
     type: types.LOGIN_REQUEST
@@ -39,3 +44,35 @@ export function login(credentials) {
             );
     };
 }
+
+const addUserSuccess = user => ({
+    type: types.ADD_USER_SUCCESS,
+    payload: { user }
+});
+
+const addUserFailure = err => ({
+    type: types.ADD_USER_FAILURE,
+    payload: { errorText: err }
+});
+
+export const addUser = (user) => {
+    return (dispatch, getState, API) => {
+        dispatch(userRequest());
+        return API.userApi.addUser(user)
+            .then(
+                (res) => {
+                    if (res && res.id && res.email && res.username) {
+                        dispatch(displaySnackMsg(`Account created with ${res.username}`));
+                        return dispatch(addUserSuccess(res));
+                    }
+                    dispatch(displaySnackMsg("Account creation failure"));
+                    return dispatch(addUserFailure(res));
+                }, (err) => {
+                    console.error("addUser error", err);
+                    dispatch(displaySnackMsg("Account creation failure, see console"));
+                    return dispatch(addUserFailure(err));
+                }
+            );
+    };
+};
+

@@ -8,7 +8,7 @@ export const User = T.shape({
     languages: T.string.isRequired,
     skills: T.string.isRequired,
     createdAt: T.string.isRequired,
-    updateAt: T.string.isRequired,
+    updatedAt: T.string.isRequired,
     username: T.string.isRequired
 });
 
