@@ -14,7 +14,18 @@ describe("ui <Home />", () => {
     };
 
     it("should render with main items", () => {
-        const wrapper = shallow(<Home classes={{}} />);
+        const wrapper = shallow(
+            <Home
+                classes={{
+                    snackbar: ""
+                }}
+                snack={{
+                    snackText: "",
+                    hasSnack: false,
+                    snackDuration: 4000
+                }}
+                closeSnack={() => {}}
+            />);
         expect(wrapper.find(ArticleWithMedia).length).toBe(1);
         expect(wrapper.find(HomeSearchForm).length).toBe(1);
     });

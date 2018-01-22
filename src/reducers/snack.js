@@ -1,8 +1,8 @@
 import * as types from "../actions/types/snack";
 
 const initialSate = {
-    hasSnack: true,
-    snackText: "dev mode",
+    hasSnack: false,
+    snackText: "",
     snackQueue: [],
     snackDuration: 4000
 };
@@ -13,13 +13,15 @@ const snackReducer = (state = initialSate, action) => {
     case types.SET_SNACK_MSG:
         return {
             ...state,
-            snackQueue: state.hasSnack ? state.snackQueue.push({
+            snackQueue: state.hasSnack ? state.snackQueue.concat([{
                 snackText: payload.msg,
                 snackDuration: payload.snackDuration || initialSate.snackDuration
-            }) : [],
+            }]) : [],
             hasSnack: true,
-            snackText: state.snackQueue.length === 0 ? payload.msg : state.snackText,
-            snackDuration: payload.duration || initialSate.snackDuration
+            snackText: state.hasSnack ? state.snackText : payload.msg,
+            snackDuration: state.hasSnack ?
+                state.snackDuration :
+                payload.snackDuration || initialSate.snackDuration
         };
     case types.RM_SNACK_MSG:
         return {
@@ -29,9 +31,9 @@ const snackReducer = (state = initialSate, action) => {
                 state.snackQueue
                     .filter(nextSnack => nextSnack.snackText !== state.snackQueue[0].snackText),
             hasSnack: !!(state.snackQueue.length),
-            snackText: state.snackQueue.length === 0 ? "" : state.snackQueue[0].snackText,
-            snackDuration: state.snackQueue.length === 0 ?
-                initialSate.snackDuration : state.snackQueue[0].snackDuration
+            snackText: state.snackQueue.length !== 0 ? state.snackQueue[0].snackText : "",
+            snackDuration: state.snackQueue.length !== 0 ?
+                state.snackQueue[0].snackDuration : initialSate.snackDuration
         };
     default:
         return state;

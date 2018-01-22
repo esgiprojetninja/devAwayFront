@@ -3,8 +3,7 @@ import userReducer from "../../reducers/user";
 import {
     USER_REQUEST,
     ADD_USER_SUCCESS,
-    ADD_USER_FAILURE,
-    NOTICE_USER_SNACK
+    ADD_USER_FAILURE
 } from "../../actions/types/user";
 
 describe("Reducer USER", () => {
@@ -23,8 +22,7 @@ describe("Reducer USER", () => {
         isLoggedIn: false,
         isLoading: false,
         hasError: false,
-        errorText: "",
-        snackText: ""
+        errorText: ""
     };
 
     it("should return initialSate", () => {
@@ -76,8 +74,7 @@ describe("Reducer USER", () => {
                 createdAt: "",
                 updateAt: "",
                 username: ""
-            },
-            snackText: `Successfully subscribed as ${payload.user.username}`
+            }
         });
     });
 
@@ -95,20 +92,6 @@ describe("Reducer USER", () => {
             isLoading: false,
             hasError: true,
             errorText: "error, bitch"
-        });
-    });
-
-    it("should dispatch NOTICE_USER_SNACK", () => {
-        const state = {
-            ...initialSate,
-            snackText: "snack msg to display"
-        };
-
-        expect(userReducer(state, {
-            type: NOTICE_USER_SNACK
-        })).toEqual({
-            ...state,
-            snackText: ""
         });
     });
 });

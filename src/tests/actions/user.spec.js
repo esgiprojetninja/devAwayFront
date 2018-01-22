@@ -3,7 +3,7 @@ import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import * as userActionTypes from "../../actions/types/user";
 import * as userActions from "../../actions/user";
-
+import { SET_SNACK_MSG } from "../../actions/types/snack";
 import { mockAPI } from "../mock/API";
 import { createUser, basicUser } from "../mock/body/user";
 
@@ -41,6 +41,13 @@ describe("Actions user", () => {
         const expectedAction = [
             { type: userActionTypes.USER_REQUEST },
             {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: `Account created with ${createUser.username}`,
+                    snackDuration: undefined
+                }
+            },
+            {
                 type: userActionTypes.ADD_USER_SUCCESS,
                 payload: { user: basicUser }
             }
@@ -51,8 +58,4 @@ describe("Actions user", () => {
         });
     });
 
-    it("should empty snackbar msg", () => {
-        const expectedAction = { type: userActionTypes.NOTICE_USER_SNACK };
-        expect(userActions.noticeSnack()).toEqual(expectedAction);
-    });
 });
