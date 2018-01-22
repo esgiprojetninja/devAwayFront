@@ -16,7 +16,7 @@ const titleService = "Our Service";
 const lead = "Stay in distinctive private homes in over 180 destinations - with an unprecedented level of service.";
 const article = "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...";
 
-class Home extends React.PureComponent {
+export class Home extends React.PureComponent {
     static propTypes = {
         classes: T.shape({
             root: T.string,
@@ -49,7 +49,6 @@ class Home extends React.PureComponent {
     };
 
     componentDidMount() {
-        console.log("HEEEEY HEEEY");
         this.props.onInit();
     }
 

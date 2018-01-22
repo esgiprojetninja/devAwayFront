@@ -150,13 +150,10 @@ describe("ui <LogBox />", function () {
     });
 
     it("should render logout button", () => {
-        global.localStorage = {
-            getItem: jest.fn(() => "toto")
-        };
         const wrapper = mount(<LogBox
             data={defaultProps.data}
             isLoading={defaultProps.isLoading}
-            isLoggedIn={defaultProps.isLoggedIn}
+            isLoggedIn={!""}
             hasError={defaultProps.hasError}
             errorText={defaultProps.errorText}
             onSubmit={defaultProps.onSubmit}

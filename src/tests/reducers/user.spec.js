@@ -17,7 +17,8 @@ describe("Reducer USER", () => {
             skills: "",
             createdAt: "",
             updatedAt: "",
-            username: ""
+            username: "",
+            token: ""
         },
         isLoggedIn: false,
         isLoading: false,

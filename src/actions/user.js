@@ -103,9 +103,12 @@ export const addUser = (user) => {
 
 export const loadSessionUser = () => {
     return (dispatch) => {
-        const token = window.localStorage.getItem("authToken");
-        if (token) {
-            dispatch(getMe());
-        }
+        return new Promise((resolve) => {
+            const token = window.localStorage.getItem("authToken");
+            if (token) {
+                dispatch(getMe());
+            }
+            resolve();
+        }).then(() => {});
     };
 };
