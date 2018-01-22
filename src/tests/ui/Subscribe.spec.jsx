@@ -4,42 +4,34 @@ import {
     mount,
     shallow
 } from "enzyme";
-import LogBox from "../../ui/LogBox.jsx";
+import { SubscribeBox } from "../../ui/SubscribeBox";
 
-describe("ui <LogBox />", function () {
+describe("ui <SubscribeBox />", function () {
     const defaultProps = {
-        data: {
-            id: 0,
-            email: "",
-            lastName: "",
-            firstName: "",
-            languages: "",
-            skills: "",
-            createdAt: "",
-            updatedAt: "",
-            username: ""
-        },
-        isLoading: false,
         isLoggedIn: false,
-        hasError: false,
-        errorText: "",
-        onSubmit: jest.fn(),
-        onLogoutClicked: jest.fn()
-    };
-
-    global.localStorage = {
-        getItem: jest.fn()
+        isLoading: false,
+        hasError: {
+            email: false,
+            username: false,
+            password: false,
+            passwordCheck: false
+        },
+        errorText: {
+            email: "",
+            username: "",
+            password: "",
+            passwordCheck: ""
+        },
+        onSubmit: () => {}
     };
 
     beforeEach(() => {
-        this.wrapper = mount(<LogBox
-            data={defaultProps.data}
+        this.wrapper = mount(<SubscribeBox
             isLoading={defaultProps.isLoading}
             isLoggedIn={defaultProps.isLoggedIn}
             hasError={defaultProps.hasError}
             errorText={defaultProps.errorText}
             onSubmit={defaultProps.onSubmit}
-            onLogoutClicked={defaultProps.onLogoutClicked}
         />);
     });
 
@@ -47,7 +39,7 @@ describe("ui <LogBox />", function () {
         this.wrapper.unmount();
     });
 
-    it("should render a login button", () => {
+    it("should render an inscription button", () => {
         expect(this.wrapper.find("Button").length).toBe(1);
     });
 
@@ -58,37 +50,34 @@ describe("ui <LogBox />", function () {
     });
 
     it("should render a spinner", () => {
-        const wrapper = mount(<LogBox
-            data={defaultProps.data}
-            isLoading
+        const wrapper = mount(<SubscribeBox
+            isLoading={!defaultProps.isLoading}
             isLoggedIn={defaultProps.isLoggedIn}
             hasError={defaultProps.hasError}
             errorText={defaultProps.errorText}
             onSubmit={defaultProps.onSubmit}
-            onLogoutClicked={defaultProps.onLogoutClicked}
         />);
         expect(wrapper.find("CircularProgress").length).toBe(1);
     });
 
     it("should handleClickOpen & handleClose", () => {
-        this.wrapper.instance().handleClickOpen();
+        this.wrapper.instance().toggleBtnHandler();
         expect(this.wrapper.state("open")).toBe(true);
-        this.wrapper.instance().handleClose();
+        this.wrapper.instance().toggleBtnHandler();
         expect(this.wrapper.state("open")).toBe(false);
     });
 
-    it("shouldn't open", () => {
-        const wrapper = mount(<LogBox
-            data={defaultProps.data}
-            isLoading
-            isLoggedIn
+    it("should toggle open", () => {
+        const wrapper = mount(<SubscribeBox
+            isLoading={defaultProps.isLoading}
+            isLoggedIn={defaultProps.isLoggedIn}
             hasError={defaultProps.hasError}
             errorText={defaultProps.errorText}
             onSubmit={defaultProps.onSubmit}
-            onLogoutClicked={defaultProps.onLogoutClicked}
         />);
-        wrapper.instance().handleClickOpen();
-        expect(wrapper.state("open")).toBe(false);
+        const toggledOpen = wrapper.state("open");
+        wrapper.instance().toggleBtnHandler();
+        expect(wrapper.state("open")).toBe(!toggledOpen);
     });
 
     it("should handleChange", () => {
@@ -97,16 +86,24 @@ describe("ui <LogBox />", function () {
     });
 
     it("should render errors", () => {
-        const wrapper = mount(<LogBox
-            data={defaultProps.data}
+        const wrapper = mount(<SubscribeBox
             isLoading={defaultProps.isLoading}
             isLoggedIn={defaultProps.isLoggedIn}
-            hasError
-            errorText="Oops"
+            hasError={{
+                email: true,
+                username: true,
+                password: true,
+                passwordCheck: true
+            }}
+            errorText={{
+                email: "goderror",
+                username: "goderror",
+                password: "goderror",
+                passwordCheck: "goderror"
+            }}
             onSubmit={defaultProps.onSubmit}
-            onLogoutClicked={defaultProps.onLogoutClicked}
         />);
-        expect(wrapper.instance().renderErrors()).not.toBe(null);
+        expect(JSON.stringify(wrapper.instance().renderPasswordField())).toContain("goderror");
     });
 
     it("should handleSubmit", () => {
@@ -114,51 +111,35 @@ describe("ui <LogBox />", function () {
         const mockEv = {
             preventDefault: jest.fn()
         };
-        const wrapper = mount(<LogBox
-            data={defaultProps.data}
+        const wrapper = mount(<SubscribeBox
             isLoading={defaultProps.isLoading}
             isLoggedIn={defaultProps.isLoggedIn}
             hasError={defaultProps.hasError}
             errorText={defaultProps.errorText}
             onSubmit={mockSubmit}
-            onLogoutClicked={defaultProps.onLogoutClicked}
         />);
         wrapper.instance().handleChange("username", { target: { value: "Toto" } });
         wrapper.instance().handleChange("password", { target: { value: "Secret" } });
-        wrapper.instance().handleSubmit(mockEv);
+        wrapper.instance().handleChange("passwordCheck", { target: { value: "Secret" } });
+        wrapper.instance().handleChange("email", { target: { value: "myemail@email.zu" } });
+        wrapper.instance().onSubmit(mockEv);
         expect(mockEv.preventDefault).toBeCalled();
         expect(mockSubmit).toBeCalledWith({
+            email: "myemail@email.zu",
             username: "Toto",
-            password: "Secret"
+            password: "Secret",
+            passwordCheck: "Secret"
         });
     });
 
-    it("should renderLoggedBox", () => {
-        const wrapper = shallow(<LogBox
-            data={{
-                ...defaultProps.data,
-                username: "Apu"
-            }}
+    it("should NOT render", () => {
+        const wrapper = shallow(<SubscribeBox
             isLoading={defaultProps.isLoading}
-            isLoggedIn
+            isLoggedIn={!defaultProps.isLoggedIn}
             hasError={defaultProps.hasError}
             errorText={defaultProps.errorText}
             onSubmit={defaultProps.onSubmit}
-            onLogoutClicked={defaultProps.onLogoutClicked}
         />);
-        expect(wrapper.contains("Apu")).toBe(true);
-    });
-
-    it("should render logout button", () => {
-        const wrapper = mount(<LogBox
-            data={defaultProps.data}
-            isLoading={defaultProps.isLoading}
-            isLoggedIn={!""}
-            hasError={defaultProps.hasError}
-            errorText={defaultProps.errorText}
-            onSubmit={defaultProps.onSubmit}
-            onLogoutClicked={defaultProps.onLogoutClicked}
-        />);
-        expect(wrapper.contains("Logout")).toBe(true);
+        expect(wrapper.instance().render()).toBe(null);
     });
 });

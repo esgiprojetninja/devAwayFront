@@ -22,7 +22,12 @@ export const mockAPI = {
         fetchAll: () => Promise.resolve([]),
         createOrUpdate: () => Promise.resolve({}),
         deleteItem: () => Promise.resolve({}),
-        getMe: () => Promise.resolve({ some: "user" })
+        getMe: () => Promise.resolve({
+            some: "user",
+            id: 1,
+            email: "coucou",
+            username: "azy"
+        })
     },
     guardApi: {
         checkGuard: () => Promise.resolve({ token: "prout" }),
@@ -92,6 +97,14 @@ export const mockAPIWithErrors = {
         createGuard: () => Promise.resolve({
             hasError: true,
             message: "Yoops"
+        })
+    },
+    userApi: {
+        login: () => Promise.resolve({
+            hasError: true
+        }),
+        addUser: () => Promise.resolve({
+            hasError: true
         })
     }
 };

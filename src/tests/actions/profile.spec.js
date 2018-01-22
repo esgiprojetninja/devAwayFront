@@ -112,7 +112,15 @@ describe("Actions profile", () => {
     it("should get me", () => {
         const expectedActions = [
             { type: GET_ME_REQUEST },
-            { type: GET_ME_SUCCESS, payload: { some: "user" } }
+            {
+                type: GET_ME_SUCCESS,
+                payload: {
+                    some: "user",
+                    id: 1,
+                    email: "coucou",
+                    username: "azy"
+                }
+            }
         ];
         const store = mockStore();
         return store.dispatch(getMe()).then(() => {

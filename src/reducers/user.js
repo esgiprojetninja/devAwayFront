@@ -11,7 +11,8 @@ const initialSate = {
         skills: "",
         createdAt: "",
         updatedAt: "",
-        username: ""
+        username: "",
+        token: ""
     },
     isLoggedIn: false,
     isLoading: false,
@@ -44,6 +45,10 @@ const userReducer = (state = initialSate, action) => {
         return {
             ...state,
             isLoggedIn: true,
+            data: {
+                ...state.data,
+                ...payload.data
+            },
             isLoading: false
         };
     case types.LOGIN_FAILURE:

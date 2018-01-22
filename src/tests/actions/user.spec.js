@@ -12,6 +12,7 @@ const mockStore = configureMockStore([thunk.withExtraArgument(mockAPI)]);
 describe("Actions user", () => {
     global.localStorage = {
         removeItem: jest.fn(),
+        getItem: jest.fn(),
         setItem: jest.fn()
     };
 
@@ -26,11 +27,35 @@ describe("Actions user", () => {
     it("should login", () => {
         const expextedActions = [
             { type: userActionTypes.LOGIN_REQUEST },
-            { type: userActionTypes.LOGIN_SUCCESS, payload: { token: "prout" } }
+            {
+                type: userActionTypes.LOGIN_SUCCESS,
+                payload: {
+                    data: { token: "prout" }
+                }
+            },
+            { type: userActionTypes.USER_REQUEST },
+            {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "Logged in as azy",
+                    snackDuration: undefined
+                }
+            },
+            {
+                type: userActionTypes.LOGIN_SUCCESS,
+                payload: {
+                    data: {
+                        some: "user",
+                        id: 1,
+                        email: "coucou",
+                        username: "azy"
+                    }
+                }
+            }
         ];
         const store = mockStore();
         return store.dispatch(userActions.login({
-            username: "toto",
+            username: "azy",
             password: "secret"
         })).then(() => {
             expect(store.getActions()).toEqual(expextedActions);
@@ -58,4 +83,40 @@ describe("Actions user", () => {
         });
     });
 
+    it("should NOT load user session", () => {
+        const store = mockStore();
+        return store.dispatch(userActions.loadSessionUser())
+            .then(() => {
+                expect(store.getActions()).toEqual([]);
+            });
+    });
+
+
+    it("should get user profile", () => {
+        const expectedAction = [
+            { type: userActionTypes.USER_REQUEST },
+            {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "Logged in as azy",
+                    snackDuration: undefined
+                }
+            },
+            {
+                type: userActionTypes.LOGIN_SUCCESS,
+                payload: {
+                    data: {
+                        some: "user",
+                        id: 1,
+                        email: "coucou",
+                        username: "azy"
+                    }
+                }
+            }
+        ];
+        const store = mockStore();
+        return store.dispatch(userActions.getMe()).then(() => {
+            expect(store.getActions()).toEqual(expectedAction);
+        });
+    });
 });

@@ -17,7 +17,25 @@ describe("ui <Home />", () => {
         const wrapper = shallow(
             <Home
                 classes={{
-                    snackbar: ""
+                    root: "",
+                    brandRibon: "",
+                    backgroundImg: "",
+                    snackbar: "",
+                    footer: "",
+                    footerList: "",
+                    footerListItem: "",
+                    homeLogo: "",
+                    brandRibonImg: "",
+                    brandRibonEsgiImg: "",
+                    brandRibonImgLogo: "",
+                    subSection: "",
+                    subSectionDestination: "",
+                    sectionTitle: "",
+                    subSectionHr: "",
+                    homeTitle: "",
+                    homePlWrapper: "",
+                    destinationWrapper: "",
+                    destinationsImg: ""
                 }}
                 snack={{
                     snackText: "",
@@ -25,6 +43,7 @@ describe("ui <Home />", () => {
                     snackDuration: 4000
                 }}
                 closeSnack={() => {}}
+                onInit={() => {}}
             />);
         expect(wrapper.find(ArticleWithMedia).length).toBe(1);
         expect(wrapper.find(HomeSearchForm).length).toBe(1);
