@@ -1,5 +1,6 @@
 /* global window */
 import * as types from "./types/user";
+import { displaySnackMsg } from "./snack";
 
 export const logout = () => {
     window.localStorage.removeItem("authToken");
@@ -61,17 +62,17 @@ export const addUser = (user) => {
             .then(
                 (res) => {
                     if (res && res.id && res.email && res.username) {
+                        dispatch(displaySnackMsg(`Account created with ${res.username}`));
                         return dispatch(addUserSuccess(res));
                     }
+                    dispatch(displaySnackMsg("Account creation failure"));
                     return dispatch(addUserFailure(res));
                 }, (err) => {
                     console.error("addUser error", err);
+                    dispatch(displaySnackMsg("Account creation failure, see console"));
                     return dispatch(addUserFailure(err));
                 }
             );
     };
 };
 
-export const noticeSnack = () => ({
-    type: types.NOTICE_USER_SNACK
-});

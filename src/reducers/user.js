@@ -16,8 +16,7 @@ const initialSate = {
     isLoggedIn: false,
     isLoading: false,
     hasError: false,
-    errorText: "",
-    snackText: ""
+    errorText: ""
 };
 
 const userReducer = (state = initialSate, action) => {
@@ -61,21 +60,14 @@ const userReducer = (state = initialSate, action) => {
             isLoading: false,
             isLoggedIn: false,
             hasError: false,
-            data: payload.user,
-            snackText: `Successfully subscribed as ${payload.user.username}`
+            data: payload.user
         };
     case types.ADD_USER_FAILURE:
         return {
             ...state,
             isLoading: false,
             hasError: true,
-            snackText: "",
             errorText: payload.errorText
-        };
-    case types.NOTICE_USER_SNACK:
-        return {
-            ...state,
-            snackText: ""
         };
     default:
         return state;

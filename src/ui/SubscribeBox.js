@@ -10,16 +10,12 @@ import Dialog, {
     DialogTitle
 } from "material-ui/Dialog";
 import { FormControl } from "material-ui/Form";
-import { SnackbarContent } from "material-ui/Snackbar";
 
 const passwordInputProps = {
     type: "password"
 };
 
-const styles = theme => ({
-    snackbar: {
-        margin: theme.spacing.unit
-    }
+const styles = theme => ({ // eslint-disable-line
 });
 
 const initialState = {
@@ -32,9 +28,6 @@ const initialState = {
 
 class SubscribeBox extends React.PureComponent {
     static propTypes = {
-        classes: T.shape({
-            snackbar: T.shape.isRequired
-        }).isRequired,
         isLoggedIn: T.bool.isRequired,
         isLoading: T.bool.isRequired,
         hasError: T.shape({
@@ -49,9 +42,7 @@ class SubscribeBox extends React.PureComponent {
             password: T.string.isRequired,
             passwordCheck: T.string.isRequired
         }).isRequired,
-        onSubmit: T.func.isRequired,
-        noticeSnack: T.func.isRequired,
-        snackText: T.string.isRequired
+        onSubmit: T.func.isRequired
     };
 
     constructor(props) {
@@ -236,21 +227,6 @@ class SubscribeBox extends React.PureComponent {
         );
     }
 
-    renderSubscribSuccessSnack() {
-        console.log("coucou snack", this.props);
-        if (this.props.snackText) {
-            return (
-                <SnackbarContent
-                    className={this.props.classes.snackbar}
-                    message={this.props.snackText}
-                    onClose={this.props.noticeSnack}
-                    autoHideDuration={4000}
-                    open={!!this.props.snackText}
-                />);
-        }
-        return null;
-    }
-
     render() {
         if (this.props.isLoggedIn) {
             return null;
@@ -264,7 +240,6 @@ class SubscribeBox extends React.PureComponent {
                 Inscription
                 </Button>
                 {this.renderDialog()}
-                {this.renderSubscribSuccessSnack()}
             </div>
         );
     }

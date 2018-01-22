@@ -1,9 +1,14 @@
 import { connect } from "react-redux";
+import { removeSnackMsg } from "../actions/snack";
 import HomeComponent from "../ui/Home.jsx";
 
 const mapStateToProps = state => state;
 
-const mapDispatchToProps = () => ({});
+const mapDispatchToProps = dispatch => ({
+    closeSnack() {
+        dispatch(removeSnackMsg());
+    }
+});
 
 const Home = connect(
     mapStateToProps,

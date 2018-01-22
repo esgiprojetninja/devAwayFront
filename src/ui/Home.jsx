@@ -2,6 +2,10 @@ import * as React from "react";
 import * as T from "prop-types";
 import { withStyles } from "material-ui/styles";
 import Typography from "material-ui/Typography";
+import Button from "material-ui/Button";
+import IconButton from "material-ui/IconButton";
+import CloseIcon from "material-ui-icons/Close";
+import Snackbar from "material-ui/Snackbar";
 import "animate.css/animate.min.css";
 import ScrollAnimation from "react-animate-on-scroll";
 import HomeSearchForm from "./HomeSearchForm.jsx";
@@ -28,10 +32,10 @@ export const Home = (props) => {
                             alt="Devaway Title"
                             src={`${process.env.PUBLIC_URL}/img/devawaytitle.png`}
                         />
-                        <hr className="hr small-hr"/>
+                        <hr className="hr small-hr" />
                         <div className={classes.homePlWrapper}>
                             <span className="home-pl">Use our skills to share a human</span>
-                            <span className="home-pl">experience, it's a win-win</span>
+                            <span className="home-pl">experience, it&apos;s a win-win</span>
                         </div>
                     </ScrollAnimation>
                 </div>
@@ -49,12 +53,12 @@ export const Home = (props) => {
                 <ScrollAnimation className="vertical-align" animateIn="fadeInLeft">
                     <div className="vertical-align">
                         <img
-                            className={classes.brandRibonImg + " " + classes.brandRibonEsgiImg}
+                            className={`${classes.brandRibonImg}   ${classes.brandRibonEsgiImg}`}
                             alt="Esgi Logo"
                             src={`${process.env.PUBLIC_URL}/img/esgilogo.png`}
                         />
                         <img
-                            className={classes.brandRibonImg + " " + classes.brandRibonImgLogo}
+                            className={`${classes.brandRibonImg}  ${classes.brandRibonImgLogo}`}
                             alt="Devaway Logo"
                             src={`${process.env.PUBLIC_URL}/img/logo.png`}
                         />
@@ -66,7 +70,7 @@ export const Home = (props) => {
                     </div>
                 </ScrollAnimation>
             </div>
-            <div className={classes.subSection + " " + classes.subSectionDestination}>
+            <div className={`${classes.subSection}  ${classes.subSectionDestination}`}>
                 <div className="d-block">
                     <Typography
                         type="headline"
@@ -75,10 +79,10 @@ export const Home = (props) => {
                     >
                         Destinations
                     </Typography>
-                    <hr className={"hr medium-hr black " + classes.subSectionHr } />
+                    <hr className={`hr medium-hr black  ${classes.subSectionHr}`} />
                 </div>
                 <div className={classes.destinationWrapper}>
-                    <img alt="Destinations" className={classes.destinationsImg} src={`${process.env.PUBLIC_URL}/img/SoonDestinations.png`}/>
+                    <img alt="Destinations" className={classes.destinationsImg} src={`${process.env.PUBLIC_URL}/img/SoonDestinations.png`} />
                 </div>
             </div>
             <div className={classes.subSection}>
@@ -90,10 +94,10 @@ export const Home = (props) => {
                     >
                         Accommodations
                     </Typography>
-                    <hr className={"hr medium-hr black " + classes.subSectionHr } />
+                    <hr className={`hr medium-hr black  ${classes.subSectionHr}`} />
                 </div>
                 <div className="vertical-align">
-                    <AccommodationCard/>
+                    <AccommodationCard />
                 </div>
             </div>
             <footer className={classes.footer}>
@@ -123,6 +127,31 @@ export const Home = (props) => {
                     <span className="d-block"> Public Cloud by <a href="https://github.com/esgiprojetninja/workaway" rel="noopener noreferrer" target="_blank">ESGI Ninja</a></span>
                 </Typography>
             </footer>
+
+            <Snackbar
+                message={props.snack.snackText}
+                autoHideDuration={props.snack.snackDuration}
+                open={props.snack.hasSnack}
+                anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center"
+                }}
+                className={classes.snackbar}
+                onClose={props.closeSnack}
+                action={[
+                    <Button key="undo" color="primary" dense onClick={props.closeSnack}>
+                        OK
+                    </Button>,
+                    <IconButton
+                        key="close"
+                        aria-label="Close"
+                        color="primary"
+                        onClick={props.closeSnack}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                ]}
+            />
         </div>
     );
 };
@@ -131,8 +160,15 @@ Home.propTypes = {
     classes: T.shape({
         root: T.string,
         brandRibon: T.string,
-        backgroundImg: T.string
-    }).isRequired
+        backgroundImg: T.string,
+        snackbar: T.string.isRequired
+    }).isRequired,
+    snack: T.shape({
+        snackText: T.string.isRequired,
+        hasSnack: T.bool.isRequired,
+        snackDuration: T.number.isRequired
+    }).isRequired,
+    closeSnack: T.func.isRequired
 };
 
 export default withStyles(theme => ({
@@ -160,7 +196,7 @@ export default withStyles(theme => ({
         overflow: "hidden",
         width: "100%"
     },
-    destinationsImg: {
+    destinationsImg: {
         opacity: 0.5,
         backgroundSize: "cover",
         width: "100%"
@@ -220,5 +256,10 @@ export default withStyles(theme => ({
     footerListItem: {
         marginLeft: 0,
         marginRight: "10px"
+    },
+    snackbar: {
+        margin: theme.spacing.unit,
+        width: "300px",
+        left: "calc(50% - 150px)"
     }
 }))(Home);

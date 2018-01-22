@@ -5,6 +5,7 @@ import mission from "./mission";
 import message from "./message";
 import profile from "./profile";
 import guard from "./guard";
+import snack from "./snack";
 
 const Main = combineReducers({
     accommodation,
@@ -12,7 +13,8 @@ const Main = combineReducers({
     mission,
     message,
     profile,
-    guard
+    guard,
+    snack
 });
 
 export default Main;
