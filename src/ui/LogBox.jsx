@@ -10,13 +10,9 @@ import Dialog, {
     DialogContent,
     DialogTitle
 } from "material-ui/Dialog";
-import {
-    User
-} from "../propTypes/userType";
 
 export default class LogBox extends React.PureComponent {
     static propTypes = {
-        data: User.isRequired,
         isLoading: T.bool.isRequired,
         isLoggedIn: T.bool.isRequired,
         hasError: T.bool.isRequired,
@@ -61,6 +57,7 @@ export default class LogBox extends React.PureComponent {
             username,
             password
         });
+        this.handleClose();
     }
 
     renderErrors() {
@@ -75,9 +72,12 @@ export default class LogBox extends React.PureComponent {
 
     renderLoggedBox() {
         return (
-            <Typography>
-                {this.props.data.username}
-            </Typography>
+            <Button
+                onClick={this.props.onLogoutClicked}
+                color="contrast"
+            >
+                Logout
+            </Button>
         );
     }
 
@@ -130,26 +130,10 @@ export default class LogBox extends React.PureComponent {
         );
     }
 
-    renderBox() {
+    render() {
         if (this.props.isLoading) {
             return <CircularProgress color="accent" />;
         }
         return this.props.isLoggedIn ? this.renderLoggedBox() : this.renderLogBox();
-    }
-
-    render() {
-        /* global window */
-        // TODO remove global and use this.props.data instead
-        if (window.localStorage.getItem("authToken")) {
-            return (
-                <Button
-                    onClick={this.props.onLogoutClicked}
-                    color="contrast"
-                >
-                    Logout
-                </Button>
-            );
-        }
-        return this.renderBox();
     }
 }

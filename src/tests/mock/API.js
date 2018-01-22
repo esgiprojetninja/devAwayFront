@@ -93,5 +93,13 @@ export const mockAPIWithErrors = {
             hasError: true,
             message: "Yoops"
         })
+    },
+    userApi: {
+        login: () => Promise.resolve({
+            hasError: true
+        }),
+        addUser: () => Promise.resolve({
+            hasError: true
+        })
     }
 };

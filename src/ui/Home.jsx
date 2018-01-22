@@ -12,112 +12,159 @@ import HomeSearchForm from "./HomeSearchForm.jsx";
 import ArticleWithMedia from "./ArticleWithMedia.jsx";
 import AccommodationCard from "../containers/AccommodationCard.js";
 
-export const Home = (props) => {
-    const { classes } = props;
-    const titleService = "Our Service";
-    const lead = "Stay in distinctive private homes in over 180 destinations - with an unprecedented level of service.";
-    const article = "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...";
-    return (
-        <div id="home-container">
-            <div className={classes.backgroundImg}>
+const titleService = "Our Service";
+const lead = "Stay in distinctive private homes in over 180 destinations - with an unprecedented level of service.";
+const article = "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...";
+
+class Home extends React.PureComponent {
+    static propTypes = {
+        classes: T.shape({
+            root: T.string,
+            brandRibon: T.string,
+            backgroundImg: T.string,
+            snackbar: T.string.isRequired,
+            footer: T.string.isRequired,
+            footerList: T.string.isRequired,
+            footerListItem: T.string.isRequired,
+            homeLogo: T.string.isRequired,
+            brandRibonImg: T.string.isRequired,
+            brandRibonEsgiImg: T.string.isRequired,
+            brandRibonImgLogo: T.string.isRequired,
+            subSection: T.string.isRequired,
+            subSectionDestination: T.string.isRequired,
+            sectionTitle: T.string.isRequired,
+            subSectionHr: T.string.isRequired,
+            homeTitle: T.string.isRequired,
+            homePlWrapper: T.string.isRequired,
+            destinationWrapper: T.string.isRequired,
+            destinationsImg: T.string.isRequired
+        }).isRequired,
+        snack: T.shape({
+            snackText: T.string.isRequired,
+            hasSnack: T.bool.isRequired,
+            snackDuration: T.number.isRequired
+        }).isRequired,
+        closeSnack: T.func.isRequired,
+        onInit: T.func.isRequired
+    };
+
+    componentDidMount() {
+        console.log("HEEEEY HEEEY");
+        this.props.onInit();
+    }
+
+    renderFirstBlock() {
+        return (
+            <div className={this.props.classes.backgroundImg}>
                 <div>
                     <ScrollAnimation animateIn="fadeIn">
                         <img
-                            className={classes.homeLogo}
+                            className={this.props.classes.homeLogo}
                             alt="Devaway Logo"
                             src={`${process.env.PUBLIC_URL}/img/logo.png`}
                         />
                         <img
-                            className={classes.homeTitle}
+                            className={this.props.classes.homeTitle}
                             alt="Devaway Title"
                             src={`${process.env.PUBLIC_URL}/img/devawaytitle.png`}
                         />
                         <hr className="hr small-hr" />
-                        <div className={classes.homePlWrapper}>
+                        <div className={this.props.classes.homePlWrapper}>
                             <span className="home-pl">Use our skills to share a human</span>
                             <span className="home-pl">experience, it&apos;s a win-win</span>
                         </div>
                     </ScrollAnimation>
                 </div>
             </div>
-            <HomeSearchForm />
-            <ArticleWithMedia
-                title={titleService}
-                lead={lead}
-                article1={article}
-                article2={article}
-                article3={article}
-                article4={article}
-            />
-            <div className={classes.brandRibon}>
+        );
+    }
+
+    renderBrandRibon() {
+        return (
+            <div className={this.props.classes.brandRibon}>
                 <ScrollAnimation className="vertical-align" animateIn="fadeInLeft">
                     <div className="vertical-align">
                         <img
-                            className={`${classes.brandRibonImg}   ${classes.brandRibonEsgiImg}`}
+                            className={`${this.props.classes.brandRibonImg}   ${this.props.classes.brandRibonEsgiImg}`}
                             alt="Esgi Logo"
                             src={`${process.env.PUBLIC_URL}/img/esgilogo.png`}
                         />
                         <img
-                            className={`${classes.brandRibonImg}  ${classes.brandRibonImgLogo}`}
+                            className={`${this.props.classes.brandRibonImg}  ${this.props.classes.brandRibonImgLogo}`}
                             alt="Devaway Logo"
                             src={`${process.env.PUBLIC_URL}/img/logo.png`}
                         />
                         <img
-                            className={classes.brandRibonImg}
+                            className={this.props.classes.brandRibonImg}
                             alt="Devaway title"
                             src={`${process.env.PUBLIC_URL}/img/devawaytitleblack.png`}
                         />
                     </div>
                 </ScrollAnimation>
             </div>
-            <div className={`${classes.subSection}  ${classes.subSectionDestination}`}>
+        );
+    }
+
+    renderDestinations() {
+        return (
+            <div className={`${this.props.classes.subSection}  ${this.props.classes.subSectionDestination}`}>
                 <div className="d-block">
                     <Typography
                         type="headline"
                         align="center"
-                        className={classes.sectionTitle}
+                        className={this.props.classes.sectionTitle}
                     >
                         Destinations
                     </Typography>
-                    <hr className={`hr medium-hr black  ${classes.subSectionHr}`} />
+                    <hr className={`hr medium-hr black  ${this.props.classes.subSectionHr}`} />
                 </div>
-                <div className={classes.destinationWrapper}>
-                    <img alt="Destinations" className={classes.destinationsImg} src={`${process.env.PUBLIC_URL}/img/SoonDestinations.png`} />
+                <div className={this.props.classes.destinationWrapper}>
+                    <img alt="Destinations" className={this.props.classes.destinationsImg} src={`${process.env.PUBLIC_URL}/img/SoonDestinations.png`} />
                 </div>
             </div>
-            <div className={classes.subSection}>
+        );
+    }
+
+    renderAccomodations() {
+        return (
+            <div className={this.props.classes.subSection}>
                 <div className="d-block">
                     <Typography
                         type="headline"
                         align="center"
-                        className={classes.sectionTitle}
+                        className={this.props.classes.sectionTitle}
                     >
                         Accommodations
                     </Typography>
-                    <hr className={`hr medium-hr black  ${classes.subSectionHr}`} />
+                    <hr className={`hr medium-hr black  ${this.props.classes.subSectionHr}`} />
                 </div>
                 <div className="vertical-align">
                     <AccommodationCard />
                 </div>
             </div>
-            <footer className={classes.footer}>
+        );
+    }
+
+    renderFooter() {
+        return (
+            <footer className={this.props.classes.footer}>
                 <Typography
                     type="subheading"
                 >
                     <span className="d-block"> d e v a w a y © provides you the best accommodations </span>
                     <span className="d-block"> with a sharing human experience. </span>
                 </Typography>
-                <ul className={classes.footerList}>
-                    <li className={classes.footerListItem}>
+                <ul className={this.props.classes.footerList}>
+                    <li className={this.props.classes.footerListItem}>
                         <a href="/#">Accommodations</a>
                     </li>
-                    <li className={classes.footerListItem}>
+                    <li className={this.props.classes.footerListItem}>
                         <a href="/#">Contact us</a>
                     </li>
-                    <li className={classes.footerListItem}>
+                    <li className={this.props.classes.footerListItem}>
                         <a href="/#">Cookies policy</a>
                     </li>
-                    <li className={classes.footerListItem}>
+                    <li className={this.props.classes.footerListItem}>
                         <a href="/#">Legal terms</a>
                     </li>
                 </ul>
@@ -127,49 +174,59 @@ export const Home = (props) => {
                     <span className="d-block"> Public Cloud by <a href="https://github.com/esgiprojetninja/workaway" rel="noopener noreferrer" target="_blank">ESGI Ninja</a></span>
                 </Typography>
             </footer>
+        );
+    }
 
+    renderSnackbar() {
+        return (
             <Snackbar
-                message={props.snack.snackText}
-                autoHideDuration={props.snack.snackDuration}
-                open={props.snack.hasSnack}
+                message={this.props.snack.snackText}
+                autoHideDuration={this.props.snack.snackDuration}
+                open={this.props.snack.hasSnack}
                 anchorOrigin={{
                     vertical: "bottom",
                     horizontal: "center"
                 }}
-                className={classes.snackbar}
-                onClose={props.closeSnack}
+                className={this.props.classes.snackbar}
+                onClose={this.props.closeSnack}
                 action={[
-                    <Button key="undo" color="primary" dense onClick={props.closeSnack}>
+                    <Button key="undo" color="primary" dense onClick={this.props.closeSnack}>
                         OK
                     </Button>,
                     <IconButton
                         key="close"
                         aria-label="Close"
                         color="primary"
-                        onClick={props.closeSnack}
+                        onClick={this.props.closeSnack}
                     >
                         <CloseIcon />
                     </IconButton>
                 ]}
             />
-        </div>
-    );
-};
+        );
+    }
 
-Home.propTypes = {
-    classes: T.shape({
-        root: T.string,
-        brandRibon: T.string,
-        backgroundImg: T.string,
-        snackbar: T.string.isRequired
-    }).isRequired,
-    snack: T.shape({
-        snackText: T.string.isRequired,
-        hasSnack: T.bool.isRequired,
-        snackDuration: T.number.isRequired
-    }).isRequired,
-    closeSnack: T.func.isRequired
-};
+    render() {
+        return (
+            <div id="home-container">
+                {this.renderFirstBlock()}
+                <HomeSearchForm />
+                <ArticleWithMedia
+                    title={titleService}
+                    lead={lead}
+                    article1={article}
+                    article2={article}
+                    article3={article}
+                    article4={article}
+                />
+                {this.renderBrandRibon()}
+                {this.renderDestinations()}
+                {this.renderAccomodations()}
+                {this.renderSnackbar()}
+            </div>
+        );
+    }
+}
 
 export default withStyles(theme => ({
     root: {

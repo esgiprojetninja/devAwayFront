@@ -231,6 +231,9 @@ class SubscribeBox extends React.PureComponent {
         if (this.props.isLoggedIn) {
             return null;
         }
+        if (this.props.isLoading) {
+            return <CircularProgress color="accent" />;
+        }
         return (
             <div>
                 <Button
