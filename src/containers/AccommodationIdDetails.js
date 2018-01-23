@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import {
-    fetchAccommodations,
+    fetchAccommodationsWithoutAuth,
     setCurrentAccommodation,
     showList,
     updateAccommodation,
@@ -8,7 +8,7 @@ import {
     deleteAccommodation
 } from "../actions/accommodation";
 
-import AccommodationDetailsComponent from "../ui/AccommodationDetails.jsx";
+import AccommodationIdDetailsComponent from "../ui/AccommodationIdDetails.jsx";
 
 const mapStateToProps = (state) => {
     const {
@@ -32,7 +32,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-    onFetchAccommodationsClicked: () => dispatch(fetchAccommodations()),
+    onFetchAccommodations: () => dispatch(fetchAccommodationsWithoutAuth()),
     onAccommodationDetailClicked: id => dispatch(setCurrentAccommodation(id)),
     onShowListClicked: () => dispatch(showList()),
     onAccommodationChanged: (property, value) => dispatch(updateAccommodation(property, value)),
@@ -40,9 +40,9 @@ const mapDispatchToProps = dispatch => ({
     onDeleteAccommodationClicked: id => dispatch(deleteAccommodation(id))
 });
 
-const AccommodationDetails = connect(
+const AccommodationIdDetails = connect(
     mapStateToProps,
     mapDispatchToProps,
-)(AccommodationDetailsComponent);
+)(AccommodationIdDetailsComponent);
 
-export default AccommodationDetails;
+export default AccommodationIdDetails;

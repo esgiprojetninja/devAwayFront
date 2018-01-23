@@ -104,7 +104,13 @@ export default class AccommodationDetail extends React.PureComponent {
                         color="accent"
                         onClick={() => this.props.onDeleteAccommodationClicked(accommodation.id)}
                     >
-                        Delete
+                    <h4>Delete</h4>
+                    <h4>Delete</h4>
+                    <h4>Delete</h4>
+                    <br>
+                    <br>
+                    <h4>Delete</h4>
+                    <h4>Delete</h4>
                     </Button>
                 </FormGroup>
             </form>
