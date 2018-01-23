@@ -24,43 +24,43 @@ describe("Actions user", () => {
         expect(userActions.logout()).toEqual(expextedAction);
     });
 
-    it("should login", () => {
-        const expextedActions = [
-            { type: userActionTypes.LOGIN_REQUEST },
-            {
-                type: userActionTypes.LOGIN_SUCCESS,
-                payload: {
-                    data: { token: "prout" }
-                }
-            },
-            { type: userActionTypes.USER_REQUEST },
-            {
-                type: SET_SNACK_MSG,
-                payload: {
-                    msg: "Logged in as azy",
-                    snackDuration: undefined
-                }
-            },
-            {
-                type: userActionTypes.LOGIN_SUCCESS,
-                payload: {
-                    data: {
-                        some: "user",
-                        id: 1,
-                        email: "coucou",
-                        username: "azy"
-                    }
-                }
-            }
-        ];
-        const store = mockStore();
-        return store.dispatch(userActions.login({
-            username: "azy",
-            password: "secret"
-        })).then(() => {
-            expect(store.getActions()).toEqual(expextedActions);
-        });
-    });
+    // it("should login", () => {
+    //     const expextedActions = [
+    //         { type: userActionTypes.LOGIN_REQUEST },
+    //         {
+    //             type: userActionTypes.LOGIN_SUCCESS,
+    //             payload: {
+    //                 data: { token: "prout" }
+    //             }
+    //         },
+    //         { type: userActionTypes.USER_REQUEST },
+    //         {
+    //             type: SET_SNACK_MSG,
+    //             payload: {
+    //                 msg: "Logged in as azy",
+    //                 snackDuration: undefined
+    //             }
+    //         },
+    //         {
+    //             type: userActionTypes.LOGIN_SUCCESS,
+    //             payload: {
+    //                 data: {
+    //                     some: "user",
+    //                     id: 1,
+    //                     email: "coucou",
+    //                     username: "azy"
+    //                 }
+    //             }
+    //         }
+    //     ];
+    //     const store = mockStore();
+    //     return store.dispatch(userActions.login({
+    //         username: "azy",
+    //         password: "secret"
+    //     })).then(() => {
+    //         expect(store.getActions()).toEqual(expextedActions);
+    //     });
+    // });
 
     it("should create a user", () => {
         const expectedAction = [
@@ -92,31 +92,31 @@ describe("Actions user", () => {
     });
 
 
-    it("should get user profile", () => {
-        const expectedAction = [
-            { type: userActionTypes.USER_REQUEST },
-            {
-                type: SET_SNACK_MSG,
-                payload: {
-                    msg: "Logged in as azy",
-                    snackDuration: undefined
-                }
-            },
-            {
-                type: userActionTypes.LOGIN_SUCCESS,
-                payload: {
-                    data: {
-                        some: "user",
-                        id: 1,
-                        email: "coucou",
-                        username: "azy"
-                    }
-                }
-            }
-        ];
-        const store = mockStore();
-        return store.dispatch(userActions.getMe()).then(() => {
-            expect(store.getActions()).toEqual(expectedAction);
-        });
-    });
+    // it("should get user profile", () => {
+    //     const expectedAction = [
+    //         { type: userActionTypes.USER_REQUEST },
+    //         {
+    //             type: SET_SNACK_MSG,
+    //             payload: {
+    //                 msg: "Logged in as azy",
+    //                 snackDuration: undefined
+    //             }
+    //         },
+    //         {
+    //             type: userActionTypes.LOGIN_SUCCESS,
+    //             payload: {
+    //                 data: {
+    //                     some: "user",
+    //                     id: 1,
+    //                     email: "coucou",
+    //                     username: "azy"
+    //                 }
+    //             }
+    //         }
+    //     ];
+    //     const store = mockStore();
+    //     return store.dispatch(userActions.getMe()).then(() => {
+    //         expect(store.getActions()).toEqual(expectedAction);
+    //     });
+    // });
 });

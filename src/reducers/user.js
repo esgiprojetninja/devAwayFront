@@ -32,7 +32,8 @@ const userReducer = (state = initialSate, action) => {
         return {
             ...state,
             data: initialSate.data,
-            isLoading: false
+            isLoading: false,
+            isLoggedIn: false
         };
     case types.LOGIN_REQUEST:
         return {

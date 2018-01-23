@@ -12,13 +12,13 @@ const mapStateToProps = (state) => {
         hasError,
         errorText,
         data,
-        byID,
+        byID
     } = state.accommodation;
     return {
         accommodations: data.map(id => byID.get(id)),
         isLoading,
         hasError,
-        errorText,
+        errorText
     };
 };
 

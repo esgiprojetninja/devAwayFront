@@ -1,23 +1,98 @@
 import * as React from "react";
+import { BrowserRouter as Router, NavLink } from "react-router-dom";
 import * as T from "prop-types";
 import AppBar from "material-ui/AppBar";
 import Toolbar from "material-ui/Toolbar";
 import { withStyles } from "material-ui/styles";
 import IconButton from "material-ui/IconButton";
+import Menu, { MenuItem } from "material-ui/Menu";
 import MenuIcon from "material-ui-icons/Menu";
+import MoreVertIcon from "material-ui-icons/MoreVert";
 
 import LogBox from "../containers/LogBox";
 import SubscribeBox from "../containers/SubscribeBox";
 
+const options = [
+    {
+        label: "Accommodations",
+        value: "/accommodations"
+    }
+];
+const ITEM_HEIGHT = 48;
+
+
 class NavBar extends React.PureComponent {
     state = {
-        open: false
+        open: false,
+        openUserMenuEl: null
     };
 
     toggleOpen(open) {
         this.setState({
             open: !open
         });
+    }
+
+    handleUserMenuClick = (ev) => {
+        this.setState({
+            openUserMenuEl: ev.currentTarget
+        });
+    }
+    handleUserMenuClose = () => {
+        this.setState({
+            openUserMenuEl: null
+        });
+    }
+
+    renderUserMenu() {
+        return (
+            <Router>
+                <Menu
+                    id="long-menu"
+                    anchorEl={this.state.openUserMenuEl}
+                    open={!!this.state.openUserMenuEl}
+                    onClose={this.handleUserMenuClose}
+                    PaperProps={{
+                        style: {
+                            maxHeight: ITEM_HEIGHT * 4.5,
+                            width: 200
+                        }
+                    }}
+                >
+                    {options.map(option => (
+                        <MenuItem
+                            key={option}
+                            selected={option.value === options[0].value}
+                            onClick={this.handleUserMenuClose}
+                        >
+                            <NavLink
+                                to={option.value}
+                                onClick={() => {
+                                    console.log("YO");
+                                    this.context.router.push("/accommodations", {PROUT: "PROUT"});
+                                }}
+                            >
+                                {option.label}
+                            </NavLink>
+                        </MenuItem>
+                    ))}
+                </Menu>
+            </Router>
+        );
+    }
+
+    renderMenuToggler() {
+        return (
+            <IconButton
+                aria-label="More"
+                aria-haspopup="true"
+                aria-owns={this.state.openUserMenuEl ? "long-menu" : null}
+                color="inherit"
+                onClick={this.handleUserMenuClick}
+            >
+                <MoreVertIcon />
+            </IconButton>
+        );
     }
 
     render() {
@@ -39,6 +114,8 @@ class NavBar extends React.PureComponent {
                             />
                         </div>
                         <SubscribeBox />
+                        {this.renderMenuToggler()}
+                        {this.renderUserMenu()}
                         <LogBox />
                     </Toolbar>
                 </AppBar>
@@ -83,7 +160,7 @@ export default withStyles(theme => ({
         transformOrigin: "top"
     },
     navStyle: {
-        backgroundColor: "#fe5858",
+        backgroundColor: "#fe5858"
     },
     dropDown_in: {
         transform: "scaleY(1)"
@@ -101,3 +178,4 @@ export default withStyles(theme => ({
         paddingRight: theme.spacing.unit * 6
     }
 }))(NavBar);
+

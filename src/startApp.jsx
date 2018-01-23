@@ -16,6 +16,7 @@ import MainReducer from "./reducers";
 import Home from "./containers/Home";
 import Guard from "./containers/Guard";
 import Profile from "./containers/Profile";
+import Accommodation from "./containers/Accommodation";
 import Navbar from "./ui/Navbar.jsx";
 import API from "./api/mainApi";
 
@@ -41,6 +42,7 @@ function startApp(node) {
                             <Route exact path="/" component={Home} />
                             <Route path="/guard" component={Guard} />
                             <Route path="/profile" component={Profile} />
+                            <Route path="/accommodations" component={Accommodation} />
                         </Switch>
                     </BrowserRouter>
                 </div>
