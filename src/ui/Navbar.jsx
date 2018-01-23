@@ -12,16 +12,9 @@ import MoreVertIcon from "material-ui-icons/MoreVert";
 import LogBox from "../containers/LogBox";
 import SubscribeBox from "../containers/SubscribeBox";
 
-const options = [
-    {
-        label: "Accommodations",
-        value: "/accommodations"
-    }
-];
 const ITEM_HEIGHT = 48;
 
-
-class NavBar extends React.PureComponent {
+export class NavBar extends React.PureComponent {
     state = {
         open: false,
         openUserMenuEl: null
@@ -45,6 +38,7 @@ class NavBar extends React.PureComponent {
     }
 
     renderUserMenu() {
+        if (!this.props.user.isLoggedIn) return null;
         return (
             <Router>
                 <Menu
@@ -59,29 +53,35 @@ class NavBar extends React.PureComponent {
                         }
                     }}
                 >
-                    {options.map(option => (
-                        <MenuItem
-                            key={option}
-                            selected={option.value === options[0].value}
-                            onClick={this.handleUserMenuClose}
+                    <MenuItem
+                        key="/accommodations"
+                        selected={false}
+                        onClick={this.handleUserMenuClose}
+                    >
+                        <NavLink
+                            to="/accommodations"
+                            onClick={() => {
+                                this.context.router.push("/accommodations");
+                            }}
                         >
-                            <NavLink
-                                to={option.value}
-                                onClick={() => {
-                                    console.log("YO");
-                                    this.context.router.push("/accommodations", {PROUT: "PROUT"});
-                                }}
-                            >
-                                {option.label}
-                            </NavLink>
-                        </MenuItem>
-                    ))}
+                            Accommodations
+                        </NavLink>
+                    </MenuItem>
+                    <MenuItem
+                        key="/createAccomodation"
+                        selected={false}
+                        onClick={() => {
+                            this.handleUserMenuClose();
+                        }}
+                    > Create Accommodation
+                    </MenuItem>
                 </Menu>
             </Router>
         );
     }
 
     renderMenuToggler() {
+        if (!this.props.user.isLoggedIn) return null;
         return (
             <IconButton
                 aria-label="More"
@@ -137,6 +137,9 @@ NavBar.propTypes = {
         root: T.string,
         flex: T.string,
         menuButton: T.string
+    }).isRequired,
+    user: T.shape({
+        isLoggedIn: T.bool.isRequired
     }).isRequired
 };
 

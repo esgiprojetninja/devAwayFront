@@ -17,7 +17,7 @@ import Home from "./containers/Home";
 import Guard from "./containers/Guard";
 import Profile from "./containers/Profile";
 import Accommodation from "./containers/Accommodation";
-import Navbar from "./ui/Navbar.jsx";
+import Navbar from "./containers/Navbar";
 import API from "./api/mainApi";
 
 

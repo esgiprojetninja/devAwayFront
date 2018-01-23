@@ -7,6 +7,7 @@ import {
     saveAccommodation,
     deleteAccommodation
 } from "../actions/accommodation";
+import { loadSessionUser } from "../actions/user";
 
 import AccommodationComponent from "../ui/Accommodation/Accommodation.jsx";
 
@@ -21,6 +22,7 @@ const mapStateToProps = (state) => {
         mode
     } = state.accommodation;
     return {
+        ...state,
         accommodations: data.map(id => byID.get(id)),
         selectedAccommodations: data.map(id => ({ id, selected: false })),
         isLoading,
@@ -37,7 +39,10 @@ const mapDispatchToProps = dispatch => ({
     onShowListClicked: () => dispatch(showList()),
     onAccommodationChanged: (property, value) => dispatch(updateAccommodation(property, value)),
     onSaveAccommodationClicked: () => dispatch(saveAccommodation()),
-    onDeleteAccommodationClicked: id => dispatch(deleteAccommodation(id))
+    onDeleteAccommodationClicked: id => dispatch(deleteAccommodation(id)),
+    onInit() {
+        dispatch(loadSessionUser());
+    }
 });
 
 const Accommodation = connect(
