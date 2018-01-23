@@ -76,7 +76,11 @@ const accommodation = (state = initialSate, action) => {
             ...state,
             isLoading: false,
             hasError: false,
-            errorText: ""
+            errorText: "",
+            data: payload.accommodation && payload.accommodation.id ?
+                state.data.concat([payload.accommodation]) : state.data,
+            byID: payload.accommodation && payload.accommodation ?
+                state.set(payload.accommodation.id, payload.accommodation) : state.byID
         };
     case SAVE_ACCOMMODATION_FAILURE:
         return {

@@ -71,8 +71,9 @@ const saveAccommodationRequest = () => ({
     type: types.SAVE_ACCOMMODATION_REQUEST
 });
 
-const saveAccommodationSuccess = () => ({
-    type: types.SAVE_ACCOMMODATION_SUCCESS
+const saveAccommodationSuccess = (accommodation = null) => ({
+    type: types.SAVE_ACCOMMODATION_SUCCESS,
+    payload: { accommodation }
 });
 
 const saveAccommodationFailure = payload => ({
@@ -93,7 +94,7 @@ export function saveAccommodation(newAccommodation = null) {
                     return dispatch(saveAccommodationFailure(res.message));
                 }
                 dispatch(displaySnackMsg("Accomodation created !"));
-                dispatch(saveAccommodationSuccess());
+                dispatch(saveAccommodationSuccess(res));
                 return dispatch(fetchAccommodations());
             }, (err) => {
                 const errMsg = err.detail ? err.detail : "Accomodation creation failed !";
