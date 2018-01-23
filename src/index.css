@@ -125,4 +125,77 @@ button.btn-white {
 
 .accommodation-card .card-icon-value{
     vertical-align: middle;
+    text-overflow: ellipsis !important;
+    width: 20px;
+    overflow: hidden;
+    white-psace: nowrap !important;
+}
+
+.accommodation-list-container{
+    padding: 100px 45px;
+}
+
+.color-black{
+    color: #292929;
+}
+
+.text-center{
+    text-align: center;
+}
+
+.btn-red{
+    margin-left: 5px;
+    background-color: #fe5858;
+    color: #ffffff;
+}
+
+.accommodation-details{
+    padding: 100px 50px 50px 50px;
+}
+
+.map-height{
+    height: 300px;
+}
+
+.details-title{
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+
+.details-city{
+    margin-bottom: 15px;
+    font-size: 30px;
+}
+
+.details-user{
+    margin-bottom: 15px;
+    margin-top: 15px;
+    font-size: 20px;
+}
+
+.details-address{
+    margin-bottom: 15px;
+}
+
+.details-description{
+    margin-bottom: 15px;
+}
+
+.details-img{
+    margin-bottom: 15px;
+}
+
+.details-btn{
+    margin-left: 5px;
+    background-color: #fe5858 !important;
+    color: #ffffff !important;
+    text-align: right !important;
+}
+
+.details-btnwrapper{
+    text-align: right;
+}
+
+.details-hr{
+    margin-bottom: 10px;
 }

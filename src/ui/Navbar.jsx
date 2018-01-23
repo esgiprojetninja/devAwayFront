@@ -3,6 +3,7 @@ import * as T from "prop-types";
 import AppBar from "material-ui/AppBar";
 import Toolbar from "material-ui/Toolbar";
 import { withStyles } from "material-ui/styles";
+import Button from "material-ui/Button";
 import IconButton from "material-ui/IconButton";
 import MenuIcon from "material-ui-icons/Menu";
 
@@ -11,7 +12,7 @@ import SubscribeBox from "../containers/SubscribeBox";
 
 class NavBar extends React.PureComponent {
     state = {
-        open: false
+        open: true
     };
 
     toggleOpen(open) {
@@ -37,6 +38,36 @@ class NavBar extends React.PureComponent {
                                 alt="Devaway Logo"
                                 src={`${process.env.PUBLIC_URL}/img/logowhite.png`}
                             />
+                        </div>
+                        <div style={{
+                            display: "flex",
+                            alignItems: "center",
+                            alignContent: "center",
+                            color: "white"
+                        }}
+                        >
+                            <a href="/">
+                                <Button
+                                    color="contrast"
+                                >
+                                    Home
+                                </Button>
+                            </a>
+                        </div>
+                        <div style={{
+                            display: "flex",
+                            alignItems: "center",
+                            alignContent: "center",
+                            color: "white"
+                        }}
+                        >
+                            <a href="/accommodations">
+                                <Button
+                                    color="contrast"
+                                >
+                                    Accommodations
+                                </Button>
+                            </a>
                         </div>
                         <SubscribeBox />
                         <LogBox />

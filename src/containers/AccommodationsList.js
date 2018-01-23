@@ -4,7 +4,7 @@ import {
     fetchAccommodationsWithoutAuth
 } from "../actions/accommodation";
 
-import AccommodationCardComponent from "../ui/AccommodationCard.jsx";
+import AccommodationsListComponent from "../ui/AccommodationsList.jsx";
 
 const mapStateToProps = (state) => {
     const {
@@ -26,9 +26,9 @@ const mapDispatchToProps = dispatch => ({
     onFetchAccommodations: () => dispatch(fetchAccommodationsWithoutAuth())
 });
 
-const AccommodationCard = connect(
+const AccommodationsList = connect(
     mapStateToProps,
     mapDispatchToProps,
-)(AccommodationCardComponent);
+)(AccommodationsListComponent);
 
-export default AccommodationCard;
+export default AccommodationsList;
