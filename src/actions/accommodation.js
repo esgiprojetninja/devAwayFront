@@ -83,16 +83,19 @@ const saveAccommodationFailure = payload => ({
     payload
 });
 
-export function saveAccommodation() {
+export function saveAccommodation(newAccommodation = null) {
     return (dispatch, getState, API) => {
         dispatch(saveAccommodationRequest());
-        return API.accommodationApi.createOrUpdate(getState().accommodation.current).then((res) => {
-            if (res.hasError) {
-                return dispatch(saveAccommodationFailure(res.message));
-            }
-            dispatch(saveAccommodationSuccess());
-            return dispatch(fetchAccommodations());
-        });
+        return API.accommodationApi.createOrUpdate(
+            newAccommodation
+            || getState().accommodation.current)
+            .then((res) => {
+                if (res.hasError) {
+                    return dispatch(saveAccommodationFailure(res.message));
+                }
+                dispatch(saveAccommodationSuccess());
+                return dispatch(fetchAccommodations());
+            });
     };
 }
 

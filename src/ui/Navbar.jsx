@@ -11,6 +11,7 @@ import MoreVertIcon from "material-ui-icons/MoreVert";
 
 import LogBox from "../containers/LogBox";
 import SubscribeBox from "../containers/SubscribeBox";
+import AccommodationCreation from "../containers/AccommodationCreation";
 
 const ITEM_HEIGHT = 48;
 
@@ -67,14 +68,7 @@ export class NavBar extends React.PureComponent {
                             Accommodations
                         </NavLink>
                     </MenuItem>
-                    <MenuItem
-                        key="/createAccomodation"
-                        selected={false}
-                        onClick={() => {
-                            this.handleUserMenuClose();
-                        }}
-                    > Create Accommodation
-                    </MenuItem>
+                    <AccommodationCreation />
                 </Menu>
             </Router>
         );
