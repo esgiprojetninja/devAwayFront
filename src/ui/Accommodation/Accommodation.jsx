@@ -31,7 +31,8 @@ export default class Accommodation extends React.PureComponent {
         onShowListClicked: T.func.isRequired,
         onAccommodationChanged: T.func.isRequired,
         onSaveAccommodationClicked: T.func.isRequired,
-        onDeleteAccommodationClicked: T.func.isRequired
+        onDeleteAccommodationClicked: T.func.isRequired,
+        onInit: T.func.isRequired
     }
 
     constructor(props) {
@@ -39,6 +40,10 @@ export default class Accommodation extends React.PureComponent {
         this.state = {
             snackOpen: this.props.hasError
         };
+    }
+
+    componentDidMount() {
+        this.props.onInit();
     }
 
     handleRequestClose() {
@@ -135,6 +140,7 @@ export default class Accommodation extends React.PureComponent {
     }
 
     render() {
+        console.log("coucou accom", this.props);
         return (
             <Card>
                 <CardContent>

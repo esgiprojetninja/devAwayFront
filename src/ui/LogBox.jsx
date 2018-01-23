@@ -75,8 +75,8 @@ export default class LogBox extends React.PureComponent {
 
     renderName() {
         return (
-            <Typography>
-                {this.props.data.username}
+            <Typography color="inherit">
+                {this.props.data.username},
             </Typography>
         );
     }
@@ -86,8 +86,7 @@ export default class LogBox extends React.PureComponent {
             <div style={{
                 display: "flex",
                 alignItems: "center",
-                alignContent: "center",
-                color: "white"
+                alignContent: "center"
             }}
             >
                 {this.renderName()}

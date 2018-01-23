@@ -1,6 +1,5 @@
 import * as types from "../actions/types/user";
 
-
 const initialSate = {
     data: {
         id: 0,
@@ -32,7 +31,8 @@ const userReducer = (state = initialSate, action) => {
         return {
             ...state,
             data: initialSate.data,
-            isLoading: false
+            isLoading: false,
+            isLoggedIn: false
         };
     case types.LOGIN_REQUEST:
         return {

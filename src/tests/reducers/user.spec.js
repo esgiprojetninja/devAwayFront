@@ -3,7 +3,10 @@ import userReducer from "../../reducers/user";
 import {
     USER_REQUEST,
     ADD_USER_SUCCESS,
-    ADD_USER_FAILURE
+    ADD_USER_FAILURE,
+    LOGIN_REQUEST,
+    LOGIN_FAILURE,
+    LOGIN_SUCCESS
 } from "../../actions/types/user";
 
 describe("Reducer USER", () => {
@@ -29,6 +32,58 @@ describe("Reducer USER", () => {
     it("should return initialSate", () => {
         expect(userReducer(undefined, {})).toEqual(initialSate);
     });
+
+    it("should dispatch LOGIN_REQUEST", () => {
+        expect(userReducer(initialSate, {
+            type: LOGIN_REQUEST
+        })).toEqual({
+            ...initialSate,
+            isLoading: true,
+            hasError: false,
+            error: ""
+        });
+    });
+
+    it("should dispatch LOGIN_SUCCESS", () => {
+        expect(userReducer(initialSate, {
+            type: LOGIN_SUCCESS,
+            payload: {
+                data: {
+                    id: 42,
+                    username: "dupoulay",
+                    email: "chillinmyass",
+                    token: "datauken"
+                }
+            }
+        })).toEqual({
+            ...initialSate,
+            isLoading: false,
+            isLoggedIn: true,
+            hasError: false,
+            data: {
+                ...initialSate.data,
+                id: 42,
+                username: "dupoulay",
+                email: "chillinmyass",
+                token: "datauken"
+            }
+        });
+    });
+
+
+    it("should dispatch LOGIN_FAILURE", () => {
+        expect(userReducer(initialSate, {
+            type: LOGIN_FAILURE,
+            payload: "chillinmyass"
+        })).toEqual({
+            ...initialSate,
+            isLoading: false,
+            isLoggedIn: false,
+            hasError: true,
+            error: "chillinmyass"
+        });
+    });
+
 
     it("should dispatch USER_REQUEST", () => {
         expect(userReducer(initialSate, {

@@ -2,7 +2,11 @@ import { basicUser } from "./body/user";
 
 export const mockAPI = {
     accommodationApi: {
-        fetchAll: () => Promise.resolve([])
+        fetchAll: () => Promise.resolve([]),
+        createOrUpdate: () => Promise.resolve({
+            id: 5,
+            title: "los singos"
+        })
     },
     userApi: {
         login: () => Promise.resolve({ token: "prout" }),
@@ -39,6 +43,10 @@ export const mockAPI = {
 export const mockAPIWithErrors = {
     accommodationApi: {
         fetchAll: () => Promise.resolve({
+            hasError: true,
+            message: "Naupe !"
+        }),
+        createOrUpdate: () => Promise.resolve({
             hasError: true,
             message: "Naupe !"
         })

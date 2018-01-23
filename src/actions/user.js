@@ -4,6 +4,7 @@ import { displaySnackMsg } from "./snack";
 
 export const logout = () => {
     window.localStorage.removeItem("authToken");
+    window.localStorage.removeItem("filledUser");
     return {
         payload: {},
         type: types.LOGOUT
@@ -28,7 +29,6 @@ const loginFailure = error => ({
     payload: error
 });
 
-
 export const getMe = () => {
     return (dispatch, getState, API) => {
         dispatch(userRequest());
@@ -37,6 +37,11 @@ export const getMe = () => {
                 (res) => {
                     if (res && res.id && res.email && res.username) {
                         dispatch(displaySnackMsg(`Logged in as ${res.username}`));
+                        const sessionUser = JSON.stringify({
+                            ...res,
+                            token: getState().user.data.token
+                        });
+                        window.localStorage.setItem("filledUser", sessionUser);
                         return dispatch(loginSuccess(res));
                     }
                     dispatch(displaySnackMsg("Log in failed"));
@@ -105,8 +110,11 @@ export const loadSessionUser = () => {
     return (dispatch) => {
         return new Promise((resolve) => {
             const token = window.localStorage.getItem("authToken");
-            if (token) {
+            const savedUser = window.localStorage.getItem("filledUser");
+            if (token && !savedUser) {
                 dispatch(getMe());
+            } else if (savedUser) {
+                dispatch(loginSuccess(JSON.parse(savedUser)));
             }
             resolve();
         }).then(() => {});

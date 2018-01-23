@@ -1,23 +1,92 @@
 import * as React from "react";
+import { BrowserRouter as Router, NavLink } from "react-router-dom";
 import * as T from "prop-types";
 import AppBar from "material-ui/AppBar";
 import Toolbar from "material-ui/Toolbar";
 import { withStyles } from "material-ui/styles";
 import IconButton from "material-ui/IconButton";
+import Menu, { MenuItem } from "material-ui/Menu";
 import MenuIcon from "material-ui-icons/Menu";
+import MoreVertIcon from "material-ui-icons/MoreVert";
 
 import LogBox from "../containers/LogBox";
 import SubscribeBox from "../containers/SubscribeBox";
+import AccommodationCreation from "../containers/AccommodationCreation";
 
-class NavBar extends React.PureComponent {
+const ITEM_HEIGHT = 48;
+
+export class NavBar extends React.PureComponent {
     state = {
-        open: false
+        open: false,
+        openUserMenuEl: null
     };
 
     toggleOpen(open) {
         this.setState({
             open: !open
         });
+    }
+
+    handleUserMenuClick = (ev) => {
+        this.setState({
+            openUserMenuEl: ev.currentTarget
+        });
+    }
+    handleUserMenuClose = () => {
+        this.setState({
+            openUserMenuEl: null
+        });
+    }
+
+    renderUserMenu() {
+        if (!this.props.user.isLoggedIn) return null;
+        return (
+            <Router>
+                <Menu
+                    id="long-menu"
+                    anchorEl={this.state.openUserMenuEl}
+                    open={!!this.state.openUserMenuEl}
+                    onClose={this.handleUserMenuClose}
+                    PaperProps={{
+                        style: {
+                            maxHeight: ITEM_HEIGHT * 4.5,
+                            width: 200
+                        }
+                    }}
+                >
+                    <MenuItem
+                        key="/accommodations"
+                        selected={false}
+                        onClick={this.handleUserMenuClose}
+                    >
+                        <NavLink
+                            to="/accommodations"
+                            onClick={() => {
+                                this.context.router.push("/accommodations");
+                            }}
+                        >
+                            Accommodations
+                        </NavLink>
+                    </MenuItem>
+                    <AccommodationCreation />
+                </Menu>
+            </Router>
+        );
+    }
+
+    renderMenuToggler() {
+        if (!this.props.user.isLoggedIn) return null;
+        return (
+            <IconButton
+                aria-label="More"
+                aria-haspopup="true"
+                aria-owns={this.state.openUserMenuEl ? "long-menu" : null}
+                color="inherit"
+                onClick={this.handleUserMenuClick}
+            >
+                <MoreVertIcon />
+            </IconButton>
+        );
     }
 
     render() {
@@ -39,6 +108,8 @@ class NavBar extends React.PureComponent {
                             />
                         </div>
                         <SubscribeBox />
+                        {this.renderMenuToggler()}
+                        {this.renderUserMenu()}
                         <LogBox />
                     </Toolbar>
                 </AppBar>
@@ -60,6 +131,9 @@ NavBar.propTypes = {
         root: T.string,
         flex: T.string,
         menuButton: T.string
+    }).isRequired,
+    user: T.shape({
+        isLoggedIn: T.bool.isRequired
     }).isRequired
 };
 
@@ -83,7 +157,7 @@ export default withStyles(theme => ({
         transformOrigin: "top"
     },
     navStyle: {
-        backgroundColor: "#fe5858",
+        backgroundColor: "#fe5858"
     },
     dropDown_in: {
         transform: "scaleY(1)"
@@ -101,3 +175,4 @@ export default withStyles(theme => ({
         paddingRight: theme.spacing.unit * 6
     }
 }))(NavBar);
+
