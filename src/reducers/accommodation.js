@@ -8,7 +8,7 @@ import {
     SAVE_ACCOMMODATION_REQUEST,
     SAVE_ACCOMMODATION_SUCCESS,
     SAVE_ACCOMMODATION_FAILURE
-} from "../actions/accommodation";
+} from "../actions/types/accommodation";
 
 const initialSate = {
     data: [],

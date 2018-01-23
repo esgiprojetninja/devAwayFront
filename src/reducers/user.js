@@ -1,6 +1,5 @@
 import * as types from "../actions/types/user";
 
-
 const initialSate = {
     data: {
         id: 0,

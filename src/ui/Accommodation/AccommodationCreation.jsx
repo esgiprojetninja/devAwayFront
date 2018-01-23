@@ -7,6 +7,7 @@ import Switch from "material-ui/Switch";
 import Divider from "material-ui/Divider";
 import AppBar from "material-ui/AppBar";
 import TextField from "material-ui/TextField";
+import { CircularProgress } from "material-ui/Progress";
 import Toolbar from "material-ui/Toolbar";
 import IconButton from "material-ui/IconButton";
 import Typography from "material-ui/Typography";
@@ -14,7 +15,6 @@ import CloseIcon from "material-ui-icons/Close";
 import Slide from "material-ui/transitions/Slide";
 import { MenuItem } from "material-ui/Menu";
 import { FormControlLabel, FormGroup, FormControl } from "material-ui/Form";
-
 
 const styles = theme => ({ // eslint-disable-line
     appBar: {
@@ -29,11 +29,17 @@ function Transition(props) {
     return <Slide direction="up" {...props} />;
 }
 
-
 export class AccommocationCreation extends React.PureComponent {
     static propTypes = {
         user: T.shape({
-            isLoggedIn: T.bool.isRequired
+            isLoggedIn: T.bool.isRequired,
+            isLoading: T.bool.isRequired,
+            data: T.shape({
+                id: T.number.isRequired
+            })
+        }).isRequired,
+        accommodation: T.shape({
+            isLoading: T.bool.isRequired
         }).isRequired,
         classes: T.shape({
             appBar: T.string.isRequired,
@@ -108,8 +114,12 @@ export class AccommocationCreation extends React.PureComponent {
     };
 
     handleSave = () => {
-        this.props.saveAccommodation(this.state);
-        // this.handleClose();
+        this.props.saveAccommodation({
+            ...this.state,
+            host: `/api/users/${this.props.user.data.id}`,
+            pictures: ""
+        });
+        this.handleClose();
     }
 
     handleClose = () => {
@@ -121,8 +131,7 @@ export class AccommocationCreation extends React.PureComponent {
     };
 
     handleChange(property, ev) {
-        let { value } = ev.target;
-        value = value.trim();
+        const { value } = ev.target;
         this.setState({
             [property]: value
         });
@@ -243,20 +252,38 @@ export class AccommocationCreation extends React.PureComponent {
         }
     }
 
+    renderCancelButton() {
+        if (this.props.accommodation.isLoading) {
+            return <CircularProgress color="accent" />;
+        }
+        return (
+            <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
+                <CloseIcon />
+            </IconButton>
+        );
+    }
+
+    renderSaveButton() {
+        if (this.props.accommodation.isLoading) {
+            return <CircularProgress color="accent" />;
+        }
+        return (
+            <Button color="inherit" onClick={this.handleSave}>
+                save
+            </Button>
+        );
+    }
+
     renderAppBar() {
         const { classes } = this.props;
         return (
             <AppBar className={classes.appBar}>
                 <Toolbar>
-                    <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
-                        <CloseIcon />
-                    </IconButton>
+                    {this.renderCancelButton()}
                     <Typography type="title" color="inherit" className={classes.flex}>
                         Accommodation creation
                     </Typography>
-                    <Button color="inherit" onClick={this.handleSave}>
-                        save
-                    </Button>
+                    {this.renderSaveButton()}
                 </Toolbar>
             </AppBar>
         );
@@ -603,7 +630,6 @@ export class AccommocationCreation extends React.PureComponent {
 
     render() {
         if (!this.props.user.isLoggedIn) return null;
-        console.log("fdp", this.state);
         return (
             <div>
                 <MenuItem
@@ -617,6 +643,13 @@ export class AccommocationCreation extends React.PureComponent {
                     open={this.state.open}
                     onClose={this.handleClose}
                     transition={Transition}
+                    disableEscapeKeyDown
+                    disableBackdropClick
+                    onKeyDown={(event) => {
+                        if (event.keyCode === 9) {
+                            event.stopPropagation();
+                        }
+                    }}
                 >
                     {this.renderAppBar()}
                     <DialogContent>
