@@ -125,4 +125,20 @@ button.btn-white {
 
 .accommodation-card .card-icon-value{
     vertical-align: middle;
+    text-overflow: ellipsis !important;
+    width: 20px;
+    overflow: hidden;
+    white-psace: nowrap !important;
+}
+
+.accommodation-list-container{
+    padding: 100px 45px;
+}
+
+.color-black{
+    color: #292929;
+}
+
+.text-center{
+    text-align: center;
 }
