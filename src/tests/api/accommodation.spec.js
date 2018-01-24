@@ -6,6 +6,8 @@ import {
     parseCollectionFromApi
 } from "../../parsers/entityParsers";
 
+global.fetch = fetchMock;
+
 describe("API accommodation", () => {
     const baseUrl = "toto.api";
 
@@ -21,6 +23,15 @@ describe("API accommodation", () => {
         fetchMock.get(`http://${baseUrl}/api/accommodations.json`, data);
         accommodationApi.fetchAllWithoutAuth().then((res) => {
             expect(res).toEqual(parseCollectionFromApi(data));
+            done();
+        });
+    });
+
+    it("should check create", (done) => {
+        const data = [{ id: 100, name: "Toto" }];
+        fetchMock.post(`http://${baseUrl}/api/accommodations.json`, data);
+        accommodationApi.createOrUpdate(data).then((res) => {
+            expect(res).toEqual(data);
             done();
         });
     });

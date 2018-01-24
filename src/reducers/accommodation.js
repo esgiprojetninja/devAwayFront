@@ -80,7 +80,7 @@ const accommodation = (state = initialSate, action) => {
             data: payload.accommodation && payload.accommodation.id ?
                 state.data.concat([payload.accommodation]) : state.data,
             byID: payload.accommodation && payload.accommodation ?
-                state.set(payload.accommodation.id, payload.accommodation) : state.byID
+                state.byID.set(payload.accommodation.id, payload.accommodation) : state.byID
         };
     case SAVE_ACCOMMODATION_FAILURE:
         return {

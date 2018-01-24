@@ -126,7 +126,6 @@ export function deleteAccommodation(id) {
             }
             dispatch(deleteAccommodationSuccess());
             dispatch(fetchAccommodations());
-            dispatch(fetchAccommodationsWithoutAuth());
             return dispatch(showList());
         });
     };

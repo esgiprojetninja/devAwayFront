@@ -117,4 +117,23 @@ describe("Actions Accommodations", () => {
             expect(store.getActions()).toEqual(expectedActions);
         });
     });
+
+    it("should deleteAccommodation", () => {
+        const expectedActions = [
+            { type: accoTypes.DELETE_ACCOMMODATION_REQUEST },
+            { type: accoTypes.DELETE_ACCOMMODATION_SUCCESS },
+            { type: accoTypes.FETCH_ACCOMMODATIONS_REQUEST },
+            {
+                type: accoTypes.SHOW_LIST
+            },
+            {
+                type: accoTypes.FETCH_ACCOMMODATIONS_SUCCESS,
+                payload: []
+            }
+        ];
+        const store = mockStore(mainReducer(undefined, {}));
+        return store.dispatch(accoActions.deleteAccommodation()).then(() => {
+            expect(store.getActions()).toEqual(expectedActions);
+        });
+    });
 });
