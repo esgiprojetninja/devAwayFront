@@ -6,6 +6,9 @@ export const mockAPI = {
         createOrUpdate: () => Promise.resolve({
             id: 5,
             title: "los singos"
+        }),
+        deleteItem: () => Promise.resolve({
+            deleted: true
         })
     },
     userApi: {
@@ -49,6 +52,10 @@ export const mockAPIWithErrors = {
         createOrUpdate: () => Promise.resolve({
             hasError: true,
             message: "Naupe !"
+        }),
+        deleteItem: () => Promise.resolve({
+            hasError: true,
+            message: "Couldn't delete"
         })
     },
     missionApi: {
