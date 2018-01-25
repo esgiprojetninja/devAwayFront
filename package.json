@@ -30,6 +30,7 @@
     "eject": "react-scripts eject",
     "heroku-postbuild": "npm install serve && serve -s build"
   },
+  "homepage": "https://esgiprojetninja.github.io/workaway/",
   "devDependencies": {
     "babel-eslint": "^8.2.1",
     "eslint": "^4.16.0",
