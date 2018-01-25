@@ -6,7 +6,8 @@ export function generateFetch(entity, verb, id, data, format) {
     const baseUrl = process.env.REACT_APP_API_URL;
     const token = window.localStorage.getItem("authToken");
     const isJson = (verb === "DELETE" || format === "json") ? "" : ".json";
-    let url = `http://${baseUrl}/api/${entity}`;
+    const protocole = process.env.NODE_ENV === "development" ? "http" : "https";
+    let url = `${protocole}://${baseUrl}/api/${entity}`;
     if (id) {
         url = `${url}/${id}`;
     }
@@ -36,7 +37,8 @@ export function generateAnonymousFetch(
     isJson
 ) {
     const baseUrl = process.env.REACT_APP_API_URL;
-    let url = `http://${baseUrl}/api/${path}`;
+    const protocole = process.env.NODE_ENV === "development" ? "http" : "https";
+    let url = `${protocole}://${baseUrl}/api/${path}`;
     if (param) {
         url = `${url}/${param}`;
     }

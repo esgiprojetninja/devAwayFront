@@ -20,7 +20,7 @@ describe("API accommodation", () => {
 
     it("should check accommodation", (done) => {
         const data = [{ id: 100, name: "Toto" }];
-        fetchMock.get(`http://${baseUrl}/api/accommodations.json`, data);
+        fetchMock.get(`https://${baseUrl}/api/accommodations.json`, data);
         accommodationApi.fetchAllWithoutAuth().then((res) => {
             expect(res).toEqual(parseCollectionFromApi(data));
             done();
@@ -29,7 +29,7 @@ describe("API accommodation", () => {
 
     it("should check create", (done) => {
         const data = [{ id: 100, name: "Toto" }];
-        fetchMock.post(`http://${baseUrl}/api/accommodations.json`, data);
+        fetchMock.post(`https://${baseUrl}/api/accommodations.json`, data);
         accommodationApi.createOrUpdate(data).then((res) => {
             expect(res).toEqual(data);
             done();

@@ -18,7 +18,7 @@ describe("API mission", () => {
 
     it("should fetchAll", (done) => {
         const data = [{ id: 100, name: "Toto" }];
-        fetchMock.get(`http://${baseUrl}/api/missions.json`, data);
+        fetchMock.get(`https://${baseUrl}/api/missions.json`, data);
         missionApi.fetchAll().then((res) => {
             expect(res).toEqual(parseCollectionFromApi(data));
             done();
@@ -29,7 +29,7 @@ describe("API mission", () => {
         const mission = {
             name: "prout"
         };
-        fetchMock.post(`http://${baseUrl}/api/missions.json`, mission);
+        fetchMock.post(`https://${baseUrl}/api/missions.json`, mission);
         missionApi.createOrUpdate(mission).then((res) => {
             expect(res).toEqual(mission);
             done();
@@ -41,7 +41,7 @@ describe("API mission", () => {
             id: 1000,
             name: "prout"
         };
-        fetchMock.put(`http://${baseUrl}/api/missions/1000.json`, mission);
+        fetchMock.put(`https://${baseUrl}/api/missions/1000.json`, mission);
         missionApi.createOrUpdate(mission).then((res) => {
             expect(res).toEqual(mission);
             done();
@@ -49,7 +49,7 @@ describe("API mission", () => {
     });
 
     it("should delete a mission", (done) => {
-        fetchMock.delete(`http://${baseUrl}/api/missions/20`, {});
+        fetchMock.delete(`https://${baseUrl}/api/missions/20`, {});
         missionApi.deleteItem(20).then((res) => {
             expect(res).toEqual({});
             done();
