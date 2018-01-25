@@ -2,8 +2,10 @@ import fetch from "isomorphic-fetch";
 
 const baseUrl = process.env.REACT_APP_API_URL;
 
+const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
+
 const userApi = {
-    login: credentials => (fetch(`http://${baseUrl}/api/login_check`, {
+    login: credentials => (fetch(`${protocol}://${baseUrl}/api/login_check`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -14,7 +16,7 @@ const userApi = {
         })
     })).then(res => res.json()),
 
-    addUser: user => (fetch(`http://${baseUrl}/api/users/add`, {
+    addUser: user => (fetch(`${protocol}://${baseUrl}/api/users/add`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
