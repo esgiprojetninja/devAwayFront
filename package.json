@@ -27,8 +27,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "test-cov": "test -- --coverage && codecov",
-    "eject": "react-scripts eject",
-    "heroku-postbuild": "npm install serve && serve -s build"
+    "eject": "react-scripts eject"
   },
   "homepage": "https://esgiprojetninja.github.io/workaway/",
   "devDependencies": {
