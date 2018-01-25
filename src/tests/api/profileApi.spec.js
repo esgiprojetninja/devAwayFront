@@ -18,7 +18,7 @@ describe("API profile", () => {
 
     it("should fetchAll", (done) => {
         const data = [{ id: 100, name: "Toto" }];
-        fetchMock.get(`http://${baseUrl}/api/profiles.json`, data);
+        fetchMock.get(`https://${baseUrl}/api/profiles.json`, data);
         profileApi.fetchAll().then((res) => {
             expect(res).toEqual(parseCollectionFromApi(data));
             done();
@@ -29,7 +29,7 @@ describe("API profile", () => {
         const profile = {
             name: "prout"
         };
-        fetchMock.post(`http://${baseUrl}/api/profiles.json`, profile);
+        fetchMock.post(`https://${baseUrl}/api/profiles.json`, profile);
         profileApi.createOrUpdate(profile).then((res) => {
             expect(res).toEqual(profile);
             done();
@@ -41,7 +41,7 @@ describe("API profile", () => {
             id: 1000,
             name: "prout"
         };
-        fetchMock.put(`http://${baseUrl}/api/profiles/1000.json`, profile);
+        fetchMock.put(`https://${baseUrl}/api/profiles/1000.json`, profile);
         profileApi.createOrUpdate(profile).then((res) => {
             expect(res).toEqual(profile);
             done();
@@ -49,7 +49,7 @@ describe("API profile", () => {
     });
 
     it("should delete a profile", (done) => {
-        fetchMock.delete(`http://${baseUrl}/api/profiles/20`, {});
+        fetchMock.delete(`https://${baseUrl}/api/profiles/20`, {});
         profileApi.deleteItem(20).then((res) => {
             expect(res).toEqual({});
             done();
@@ -57,7 +57,7 @@ describe("API profile", () => {
     });
 
     it("should get me", (done) => {
-        fetchMock.get(`http://${baseUrl}/api/users/me.json`, {});
+        fetchMock.get(`https://${baseUrl}/api/users/me.json`, {});
         profileApi.getMe().then((res) => {
             expect(res).toEqual({});
             done();

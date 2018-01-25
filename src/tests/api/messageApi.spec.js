@@ -18,7 +18,7 @@ describe("API message", () => {
 
     it("should fetchAll", (done) => {
         const data = [{ id: 100, name: "Toto" }];
-        fetchMock.get(`http://${baseUrl}/api/messages.json`, data);
+        fetchMock.get(`https://${baseUrl}/api/messages.json`, data);
         messageApi.fetchAll().then((res) => {
             expect(res).toEqual(parseCollectionFromApi(data));
             done();
@@ -29,7 +29,7 @@ describe("API message", () => {
         const message = {
             name: "prout"
         };
-        fetchMock.post(`http://${baseUrl}/api/messages.json`, message);
+        fetchMock.post(`https://${baseUrl}/api/messages.json`, message);
         messageApi.createOrUpdate(message).then((res) => {
             expect(res).toEqual(message);
             done();
@@ -41,7 +41,7 @@ describe("API message", () => {
             id: 1000,
             name: "prout"
         };
-        fetchMock.put(`http://${baseUrl}/api/messages/1000.json`, message);
+        fetchMock.put(`https://${baseUrl}/api/messages/1000.json`, message);
         messageApi.createOrUpdate(message).then((res) => {
             expect(res).toEqual(message);
             done();
@@ -49,7 +49,7 @@ describe("API message", () => {
     });
 
     it("should delete a message", (done) => {
-        fetchMock.delete(`http://${baseUrl}/api/messages/20`, {});
+        fetchMock.delete(`https://${baseUrl}/api/messages/20`, {});
         messageApi.deleteItem(20).then((res) => {
             expect(res).toEqual({});
             done();

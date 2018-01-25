@@ -22,6 +22,7 @@ import API from "./api/mainApi";
 
 
 function startApp(node) {
+    console.log(process.env);
     const middlewares = [thunk.withExtraArgument(API)];
     if (process.env.NODE_ENV === "development") {
         middlewares.push(createLogger({ collapsed: true }));
