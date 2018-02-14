@@ -1,16 +1,20 @@
 env:
   global:
-    - CC_TEST_REPORTER_ID=476a106a4ae7983a49ce2cff5df6aa11aff1b54b3858e494d7778056e676049a
+  - CC_TEST_REPORTER_ID=476a106a4ae7983a49ce2cff5df6aa11aff1b54b3858e494d7778056e676049a
 language: node_js
 node_js:
-  - "8"
+- '8'
 install:
-  - npm install
-  - npm install -g codecov
+- npm install
+- npm install -g codecov
 script:
-  - npm run test -- --coverage && codecov
+- npm run test -- --coverage && codecov
 after_success:
-  - bash <(curl -s https://codecov.io/bash) -e TRAVIS_NODE_VERSION
+- bash <(curl -s https://codecov.io/bash) -e TRAVIS_NODE_VERSION
 deploy:
   provider: heroku
-  on: master
+  api_key:
+    secure: sZauSOdWL0So/E+PhPjfOeLUZR591J5DE+adWcQOkWx5RRDRijYjpyEZkKbUXpn55VU4CDyrFDqyGo1CvSjUpihH6ll38EUnTv0abVmMsfFvfO+ksRqH4RFoduJEOnLr5O0hJSCDeIVLtZXnjhksSHMq4Z0Gcq0oqrolunO8ao+y5y/MDIGllIaJIYrsRNMOzIExDQa+d7MAR4pgk2GJvTfpWgakSpkaiZRN3JCj426qMiL9s2TWwfM+6zHPXImVlI05kdhJfEWYD+HRkWgmv/NjBKKzsqIAoXtWTDg6Aa4ifNLromY8fOCHEAfnSjFXYgFD2TF7VUSrPxg6utHzFyoFzh2sx11wjdhQGcn7xaviBVs4RvYeH1qKnZnWvHcVvJ2VfflUINRsx/Fl1wXT3/9F8MWWeR9wjTLCyVJK62SMiQPhCjg0Xc+Tr6puAzWqI1cCgTfE3SPvPwcPLKNRPhgP0L9sPV2zQH+ioNsSMtefNkj0jcXOB8ZXaQVevGXdkY7zwckdSwJvDE0lWrtX4wGoGk6bMtSH9301Ab117GP0vBMby8Vi2Sk1fseC24o6QY2g9ONJiOb58RFTgmlVb0wQFhlYsF06CdkcqKZryZMziyhlSqVLOYZ5CJWhNJGMHJNVMEkYQ4RDEGPUsAneqh6gtmWAVnwOp43TjTk7Sn8=
+  app: secret-dawn-52802
+  on:
+    repo: esgiprojetninja/workaway
