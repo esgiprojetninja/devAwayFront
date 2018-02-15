@@ -24,7 +24,6 @@ function prepare(name, state) {
 
 describe("Container Guard", () => {
     describe("mapDispatchToProps", () => {
-
         it("onFormSubmit", () => {
             const { store, fn } = prepare("onFormSubmit", mainReducer(undefined, {}));
             fn().then(() => {

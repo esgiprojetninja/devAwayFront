@@ -5,11 +5,10 @@ import configureMockStore from "redux-mock-store";
 import {
     mockAPI,
     mockAPIWithErrors
- } from "../mock/API";
+} from "../mock/API";
 
 import mainReducer from "../../reducers/index";
 import {
-    mapStateToProps,
     mapDispatchToProps
 } from "../../containers/Profile";
 
@@ -66,4 +65,4 @@ describe("Container Profile", () => {
             });
         });
     });
-})
+});
