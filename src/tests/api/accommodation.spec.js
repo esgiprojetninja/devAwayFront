@@ -18,10 +18,6 @@ describe("API accommodation", () => {
         };
     });
 
-    afterEach(() => {
-
-    })
-
     it("should check accommodation", (done) => {
         const data = [{ id: 100, name: "Toto" }];
         fetchMock.get(`https://${baseUrl}/api/accommodations.json`, data);
@@ -41,7 +37,7 @@ describe("API accommodation", () => {
     });
 
     it("should update", (done) => {
-        const data = { id: "0", name: "Toto" };
+        const data = { id: "100", name: "Toto" };
         fetchMock.put(`https://${baseUrl}/api/accommodations/100.json`, data);
         accommodationApi.createOrUpdate(data).then((res) => {
             expect(res).toEqual(data);
