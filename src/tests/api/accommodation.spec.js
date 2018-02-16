@@ -35,4 +35,13 @@ describe("API accommodation", () => {
             done();
         });
     });
+
+    it("should update", (done) => {
+        const data = { id: "100", name: "Toto" };
+        fetchMock.put(`https://${baseUrl}/api/accommodations/100.json`, data);
+        accommodationApi.createOrUpdate(data).then((res) => {
+            expect(res).toEqual(data);
+            done();
+        });
+    });
 });
