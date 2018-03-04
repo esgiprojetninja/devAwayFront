@@ -14,6 +14,7 @@ module.exports = {
       "quotes": [2, "double", "avoid-escape"],
       "import/no-extreaneous-dependencies": 0,
       "comma-dangle": [2, "never"],
-      "arrow-body-style": [0, "never"]
+      "arrow-body-style": [0, "never"],
+      "object-curly-newline": [0]
     }
 };
