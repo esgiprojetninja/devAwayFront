@@ -7,100 +7,88 @@ import {
     mockAPIWithErrors
 } from "../mock/API";
 
-import {
-    FETCH_MISSIONS_REQUEST,
-    FETCH_MISSIONS_SUCCESS,
-    FETCH_MISSIONS_FAILURE,
-    fetchMissions,
-    SAVE_MISSION_REQUEST,
-    SAVE_MISSION_SUCCESS,
-    SAVE_MISSION_FAILURE,
-    saveMission,
-    DELETE_MISSION_REQUEST,
-    DELETE_MISSION_SUCCESS,
-    DELETE_MISSION_FAILURE,
-    deleteMission
-} from "../../actions/mission";
+import * as missionTypes from "../../actions/types/mission";
+import * as missionActions from "../../actions/mission";
 
 const mockStore = configureMockStore([thunk.withExtraArgument(mockAPI)]);
 
 describe("Actions mission", () => {
     it("should fetch missions", () => {
         const expectedActions = [
-            { type: FETCH_MISSIONS_REQUEST },
-            { type: FETCH_MISSIONS_SUCCESS, payload: [] }
+            { type: missionTypes.FETCH_MISSIONS_REQUEST },
+            { type: missionTypes.FETCH_MISSIONS_SUCCESS, payload: [] }
         ];
         const store = mockStore();
-        return store.dispatch(fetchMissions()).then(() => {
+        return store.dispatch(missionActions.fetchMissions()).then(() => {
             expect(store.getActions()).toEqual(expectedActions);
         });
     });
 
     it("should fetch missions (error)", () => {
         const expectedActions = [
-            { type: FETCH_MISSIONS_REQUEST },
-            { type: FETCH_MISSIONS_FAILURE, payload: "Ooops" }
+            { type: missionTypes.FETCH_MISSIONS_REQUEST },
+            { type: missionTypes.FETCH_MISSIONS_FAILURE, payload: "Ooops" }
         ];
         const storeError = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)])();
-        return storeError.dispatch(fetchMissions()).then(() => {
+        return storeError.dispatch(missionActions.fetchMissions()).then(() => {
             expect(storeError.getActions()).toEqual(expectedActions);
         });
     });
 
     it("should savestoreError a mission", () => {
         const expectedActions = [
-            { type: SAVE_MISSION_REQUEST },
-            { type: SAVE_MISSION_SUCCESS }
+            { type: missionTypes.SAVE_MISSION_REQUEST },
+            { type: missionTypes.SAVE_MISSION_SUCCESS }
         ];
         const store = mockStore({
             mission: {
                 current: {}
             }
         });
-        return store.dispatch(saveMission()).then(() => {
+        return store.dispatch(missionActions.saveMission()).then(() => {
             expect(store.getActions()).toEqual(expectedActions);
         });
     });
 
     it("should save a mission (error)", () => {
         const expectedActions = [
-            { type: SAVE_MISSION_REQUEST },
-            { type: SAVE_MISSION_FAILURE, payload: "Won't save" }
+            { type: missionTypes.SAVE_MISSION_REQUEST },
+            { type: missionTypes.SAVE_MISSION_FAILURE, payload: "Won't save" }
         ];
         const storeError = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)])({
             mission: {
                 current: {}
             }
         });
-        return storeError.dispatch(saveMission()).then(() => {
+        return storeError.dispatch(missionActions.saveMission()).then(() => {
             expect(storeError.getActions()).toEqual(expectedActions);
         });
     });
 
     it("should delete a mission", () => {
         const expectedActions = [
-            { type: DELETE_MISSION_REQUEST },
-            { type: DELETE_MISSION_SUCCESS },
-            { type: FETCH_MISSIONS_REQUEST },
-            { type: FETCH_MISSIONS_SUCCESS, payload: [] }
+            { type: missionTypes.DELETE_MISSION_REQUEST },
+            { type: missionTypes.DELETE_MISSION_SUCCESS },
+            { type: missionTypes.FETCH_MISSIONS_REQUEST },
+            { type: missionTypes.FETCH_MISSIONS_SUCCESS, payload: [] }
         ];
         const store = mockStore();
-        return store.dispatch(deleteMission(1000)).then(() => {
+        return store.dispatch(missionActions.deleteMission(1000)).then(() => {
             expect(store.getActions()).toEqual(expectedActions);
         });
     });
 
     it("should delete a mission (error)", () => {
         const expectedActions = [
-            { type: DELETE_MISSION_REQUEST },
-            { type: DELETE_MISSION_FAILURE, payload: "Couldn't delete" }
+            { type: missionTypes.DELETE_MISSION_REQUEST },
+            { type: missionTypes.DELETE_MISSION_FAILURE, payload: "Couldn't delete" }
         ];
         const storeError = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)])({
             mission: {
                 current: {}
             }
         });
-        return storeError.dispatch(deleteMission(1000)).then(() => {
+        return storeError.dispatch(missionActions.deleteMission(1000)).then(() => {
             expect(storeError.getActions()).toEqual(expectedActions);
         });
     });
