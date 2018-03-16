@@ -4,7 +4,8 @@ import thunk from "redux-thunk";
 
 import {
     mockAPI,
-    mockAPIWithErrors
+    mockAPIWithErrors,
+    mockAPIWithServerFailure
 } from "../mock/API";
 
 import mainReducer from "../../reducers/index";
@@ -37,7 +38,7 @@ describe("Actions guard", () => {
         expect(store.getActions()).toEqual(expectedActions);
     });
 
-    it("should checkGuard", () => {
+    it("should checkGuard", async () => {
         const expectedActions = [
             { type: CHECK_GUARD_REQUEST },
             {
@@ -46,12 +47,11 @@ describe("Actions guard", () => {
             }
         ];
         const store = mockStore(mainReducer(undefined, {}));
-        return store.dispatch(checkGuard()).then(() => {
-            expect(store.getActions()).toEqual(expectedActions);
-        });
+        await store.dispatch(checkGuard());
+        expect(store.getActions()).toEqual(expectedActions);
     });
 
-    it("should checkGuard (error)", () => {
+    it("should checkGuard - API error", async () => {
         const expectedActions = [
             { type: CHECK_GUARD_REQUEST },
             {
@@ -62,12 +62,26 @@ describe("Actions guard", () => {
         const storeError = configureMockStore(
             [thunk.withExtraArgument(mockAPIWithErrors)]
         )(mainReducer(undefined, {}));
-        return storeError.dispatch(checkGuard()).then(() => {
-            expect(storeError.getActions()).toEqual(expectedActions);
-        });
+        await storeError.dispatch(checkGuard());
+        expect(storeError.getActions()).toEqual(expectedActions);
     });
 
-    it("should createGuard", () => {
+    it("should checkGuard - Server failure", async () => {
+        const expectedActions = [
+            { type: CHECK_GUARD_REQUEST },
+            {
+                type: CHECK_GUARD_FAILURE,
+                payload: new Error("gtfo")
+            }
+        ];
+        const storeError = configureMockStore(
+            [thunk.withExtraArgument(mockAPIWithServerFailure)]
+        )(mainReducer(undefined, {}));
+        await storeError.dispatch(checkGuard())
+        expect(storeError.getActions()).toEqual(expectedActions);
+    });
+
+    it("should createGuard", async () => {
         const expectedActions = [
             { type: CREATE_GUARD_REQUEST },
             {
@@ -78,12 +92,11 @@ describe("Actions guard", () => {
             }
         ];
         const store = mockStore(mainReducer(undefined, {}));
-        return store.dispatch(createGuard()).then(() => {
-            expect(store.getActions()).toEqual(expectedActions);
-        });
+        await store.dispatch(createGuard())
+        expect(store.getActions()).toEqual(expectedActions);
     });
 
-    it("should createGuard (error)", () => {
+    it("should createGuard - API error", async () => {
         const expectedActions = [
             { type: CREATE_GUARD_REQUEST },
             {
@@ -94,8 +107,22 @@ describe("Actions guard", () => {
         const storeError = configureMockStore(
             [thunk.withExtraArgument(mockAPIWithErrors)]
         )(mainReducer(undefined, {}));
-        return storeError.dispatch(createGuard()).then(() => {
-            expect(storeError.getActions()).toEqual(expectedActions);
-        });
+        await storeError.dispatch(createGuard());
+        expect(storeError.getActions()).toEqual(expectedActions);
+    });
+
+    it("should createGuard - Server failure", async () => {
+        const expectedActions = [
+            { type: CREATE_GUARD_REQUEST },
+            {
+                type: CREATE_GUARD_FAILURE,
+                payload: new Error("gtfo")
+            }
+        ];
+        const storeError = configureMockStore(
+            [thunk.withExtraArgument(mockAPIWithServerFailure)]
+        )(mainReducer(undefined, {}));
+        await storeError.dispatch(createGuard());
+        expect(storeError.getActions()).toEqual(expectedActions);
     });
 });

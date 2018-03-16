@@ -36,7 +36,7 @@ export function checkGuard() {
                     }
                     return dispatch(checkGuardSuccess(res));
                 },
-                error => console.log(error)
+                error => dispatch(checkGuardFailure(error))
             );
     };
 }
@@ -70,7 +70,7 @@ export function createGuard() {
                     }
                     return dispatch(createGuardSuccess(res));
                 },
-                error => console.log(error)
+                error => dispatch(createGuardFailure(error))
             );
     };
 }

@@ -151,6 +151,10 @@ export const mockAPIWithServerFailure = {
             message: "gtfo"
         }))
     },
+    guardApi: {
+        checkGuard: () => Promise.reject(new Error("gtfo")),
+        createGuard: () => Promise.reject(new Error("gtfo"))
+    },
     userApi: {
         login: () => Promise.reject(new Error({
             code: 500,
