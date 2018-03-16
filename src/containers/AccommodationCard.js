@@ -1,12 +1,12 @@
 import { connect } from "react-redux";
 
 import {
-    fetchAccommodationsWithoutAuth
+    fetchAccommodations
 } from "../actions/accommodation";
 
 import AccommodationCardComponent from "../ui/AccommodationCard.jsx";
 
-const mapStateToProps = (state) => {
+export const mapStateToProps = (state) => {
     const {
         isLoading,
         hasError,
@@ -22,8 +22,10 @@ const mapStateToProps = (state) => {
     };
 };
 
-const mapDispatchToProps = dispatch => ({
-    onFetchAccommodations: () => dispatch(fetchAccommodationsWithoutAuth())
+export const mapDispatchToProps = dispatch => ({
+    onInit() {
+        dispatch(fetchAccommodations());
+    }
 });
 
 const AccommodationCard = connect(

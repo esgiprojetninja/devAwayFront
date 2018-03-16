@@ -14,7 +14,7 @@ describe("ui <AccommodationCard />", function () {
             accommodations: [],
             current: {},
             mode: "list",
-            onFetchAccommodations: jest.fn()
+            onInit: jest.fn()
         };
     });
 
