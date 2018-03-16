@@ -58,8 +58,8 @@ const createGuardFailure = payload => ({
     payload
 });
 
-export function createGuard() {
-    return (dispatch, getState, API) => {
+export const createGuard = () =>
+    (dispatch, getState, API) => {
         dispatch(createGuardRequest());
         const { email, password } = getState().guard.data;
         return API.guardApi.createGuard({ email, password })
@@ -73,4 +73,4 @@ export function createGuard() {
                 error => dispatch(createGuardFailure(error))
             );
     };
-}
+

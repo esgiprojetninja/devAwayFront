@@ -26,7 +26,7 @@ export function fetchMessages() {
                     }
                     return dispatch(fetchMessagesSuccess(res));
                 },
-                error => console.log(error)
+                error => dispatch(fetchMessagesFailure(error))
             );
     };
 }
@@ -47,8 +47,8 @@ const saveMessageFailure = payload => ({
     payload
 });
 
-export function saveMessage() {
-    return (dispatch, getState, API) => {
+export const saveMessage = () =>
+    (dispatch, getState, API) => {
         dispatch(saveMessageRequest());
         return API.messageApi.createOrUpdate(getState().message.current)
             .then(
@@ -58,10 +58,9 @@ export function saveMessage() {
                     }
                     return dispatch(saveMessageSuccess());
                 },
-                error => console.log(error)
+                error => dispatch(saveMessageFailure(error))
             );
     };
-}
 
 export const DELETE_MESSAGE_REQUEST = "DELETE_MESSAGE_REQUEST";
 const deleteMessageRequest = () => ({
@@ -88,6 +87,6 @@ export function deleteMessage(id) {
             }
             dispatch(deleteMessageSuccess());
             return dispatch(fetchMessages());
-        });
+        }, err => dispatch(deleteMessageFailure(err)));
     };
 }

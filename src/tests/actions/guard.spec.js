@@ -77,7 +77,7 @@ describe("Actions guard", () => {
         const storeError = configureMockStore(
             [thunk.withExtraArgument(mockAPIWithServerFailure)]
         )(mainReducer(undefined, {}));
-        await storeError.dispatch(checkGuard())
+        await storeError.dispatch(checkGuard());
         expect(storeError.getActions()).toEqual(expectedActions);
     });
 
@@ -92,7 +92,7 @@ describe("Actions guard", () => {
             }
         ];
         const store = mockStore(mainReducer(undefined, {}));
-        await store.dispatch(createGuard())
+        await store.dispatch(createGuard());
         expect(store.getActions()).toEqual(expectedActions);
     });
 

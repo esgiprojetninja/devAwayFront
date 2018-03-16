@@ -133,6 +133,11 @@ export const mockAPIWithServerFailure = {
         createOrUpdate: () => Promise.reject(new Error("gtfo")),
         deleteItem: () => Promise.reject(new Error("gtfo"))
     },
+    messageApi: {
+        fetchAll: () => Promise.reject(new Error("gtfo")),
+        createOrUpdate: () => Promise.reject(new Error("gtfo")),
+        deleteItem: () => Promise.reject(new Error("gtfo"))
+    },
     profileApi: {
         fetchAll: () => Promise.reject(new Error({
             code: 500,
