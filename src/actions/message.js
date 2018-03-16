@@ -1,17 +1,16 @@
-export const FETCH_MESSAGES_REQUEST = "FETCH_MESSAGES_REQUEST";
+import * as messageTypes from "./types/message";
+
 const fetchMessagesRequest = () => ({
-    type: FETCH_MESSAGES_REQUEST
+    type: messageTypes.FETCH_MESSAGES_REQUEST
 });
 
-export const FETCH_MESSAGES_SUCCESS = "FETCH_MESSAGES_SUCCESS";
 const fetchMessagesSuccess = payload => ({
-    type: FETCH_MESSAGES_SUCCESS,
+    type: messageTypes.FETCH_MESSAGES_SUCCESS,
     payload
 });
 
-export const FETCH_MESSAGES_FAILURE = "FETCH_MESSAGES_FAILURE";
 const fetchMessagesFailure = payload => ({
-    type: FETCH_MESSAGES_FAILURE,
+    type: messageTypes.FETCH_MESSAGES_FAILURE,
     payload
 });
 
@@ -31,19 +30,16 @@ export function fetchMessages() {
     };
 }
 
-export const SAVE_MESSAGE_REQUEST = "SAVE_MESSAGE_REQUEST";
 const saveMessageRequest = () => ({
-    type: SAVE_MESSAGE_REQUEST
+    type: messageTypes.SAVE_MESSAGE_REQUEST
 });
 
-export const SAVE_MESSAGE_SUCCESS = "SAVE_MESSAGE_SUCCESS";
 const saveMessageSuccess = () => ({
-    type: SAVE_MESSAGE_SUCCESS
+    type: messageTypes.SAVE_MESSAGE_SUCCESS
 });
 
-export const SAVE_MESSAGE_FAILURE = "SAVE_MESSAGE_FAILURE";
 const saveMessageFailure = payload => ({
-    type: SAVE_MESSAGE_FAILURE,
+    type: messageTypes.SAVE_MESSAGE_FAILURE,
     payload
 });
 
@@ -62,19 +58,16 @@ export const saveMessage = () =>
             );
     };
 
-export const DELETE_MESSAGE_REQUEST = "DELETE_MESSAGE_REQUEST";
 const deleteMessageRequest = () => ({
-    type: DELETE_MESSAGE_REQUEST
+    type: messageTypes.DELETE_MESSAGE_REQUEST
 });
 
-export const DELETE_MESSAGE_SUCCESS = "DELETE_MESSAGE_SUCCESS";
 const deleteMessageSuccess = () => ({
-    type: DELETE_MESSAGE_SUCCESS
+    type: messageTypes.DELETE_MESSAGE_SUCCESS
 });
 
-export const DELETE_MESSAGE_FAILURE = "DELETE_MESSAGE_FAILURE";
 const deleteMessageFailure = payload => ({
-    type: DELETE_MESSAGE_FAILURE,
+    type: messageTypes.DELETE_MESSAGE_FAILURE,
     payload
 });
 
