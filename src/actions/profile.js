@@ -1,22 +1,21 @@
-export const FETCH_PROFILES_REQUEST = "FETCH_PROFILES_REQUEST";
+import * as profileTypes from "./types/profile";
+
 const fetchProfilesRequest = () => ({
-    type: FETCH_PROFILES_REQUEST
+    type: profileTypes.FETCH_PROFILES_REQUEST
 });
 
-export const FETCH_PROFILES_SUCCESS = "FETCH_PROFILES_SUCCESS";
 const fetchProfilesSuccess = payload => ({
-    type: FETCH_PROFILES_SUCCESS,
+    type: profileTypes.FETCH_PROFILES_SUCCESS,
     payload
 });
 
-export const FETCH_PROFILES_FAILURE = "FETCH_PROFILES_FAILURE";
 const fetchProfilesFailure = payload => ({
-    type: FETCH_PROFILES_FAILURE,
+    type: profileTypes.FETCH_PROFILES_FAILURE,
     payload
 });
 
-export function fetchProfiles() {
-    return (dispatch, getState, API) => {
+export const fetchProfiles = () =>
+    (dispatch, getState, API) => {
         dispatch(fetchProfilesRequest());
         return API.profileApi.fetchAll()
             .then(
@@ -29,26 +28,23 @@ export function fetchProfiles() {
                 error => console.log(error)
             );
     };
-}
 
-export const SAVE_PROFILE_REQUEST = "SAVE_PROFILE_REQUEST";
+
 const saveProfileRequest = () => ({
-    type: SAVE_PROFILE_REQUEST
+    type: profileTypes.SAVE_PROFILE_REQUEST
 });
 
-export const SAVE_PROFILE_SUCCESS = "SAVE_PROFILE_SUCCESS";
 const saveProfileSuccess = () => ({
-    type: SAVE_PROFILE_SUCCESS
+    type: profileTypes.SAVE_PROFILE_SUCCESS
 });
 
-export const SAVE_PROFILE_FAILURE = "SAVE_PROFILE_FAILURE";
 const saveProfileFailure = payload => ({
-    type: SAVE_PROFILE_FAILURE,
+    type: profileTypes.SAVE_PROFILE_FAILURE,
     payload
 });
 
-export function saveProfile() {
-    return (dispatch, getState, API) => {
+export const saveProfile = () =>
+    (dispatch, getState, API) => {
         dispatch(saveProfileRequest());
         return API.profileApi.createOrUpdate(getState().profile.current)
             .then(
@@ -61,26 +57,22 @@ export function saveProfile() {
                 error => console.log(error)
             );
     };
-}
 
-export const DELETE_PROFILE_REQUEST = "DELETE_PROFILE_REQUEST";
 const deleteProfileRequest = () => ({
-    type: DELETE_PROFILE_REQUEST
+    type: profileTypes.DELETE_PROFILE_REQUEST
 });
 
-export const DELETE_PROFILE_SUCCESS = "DELETE_PROFILE_SUCCESS";
 const deleteProfileSuccess = () => ({
-    type: DELETE_PROFILE_SUCCESS
+    type: profileTypes.DELETE_PROFILE_SUCCESS
 });
 
-export const DELETE_PROFILE_FAILURE = "DELETE_PROFILE_FAILURE";
 const deleteProfileFailure = payload => ({
-    type: DELETE_PROFILE_FAILURE,
+    type: profileTypes.DELETE_PROFILE_FAILURE,
     payload
 });
 
-export function deleteProfile(id) {
-    return (dispatch, getState, API) => {
+export const deleteProfile = id =>
+    (dispatch, getState, API) => {
         dispatch(deleteProfileRequest());
         return API.profileApi.deleteItem(id).then((res) => {
             if (res.hasError) {
@@ -90,27 +82,24 @@ export function deleteProfile(id) {
             return dispatch(fetchProfiles());
         });
     };
-}
 
-export const GET_ME_REQUEST = "GET_ME_REQUEST";
+
 const getMeRequest = () => ({
-    type: GET_ME_REQUEST
+    type: profileTypes.GET_ME_REQUEST
 });
 
-export const GET_ME_SUCCESS = "GET_ME_SUCCESS";
 const getMeSuccess = payload => ({
-    type: GET_ME_SUCCESS,
+    type: profileTypes.GET_ME_SUCCESS,
     payload
 });
 
-export const GET_ME_FAILURE = "GET_ME_FAILURE";
 const getMeFailure = payload => ({
-    type: GET_ME_FAILURE,
+    type: profileTypes.GET_ME_FAILURE,
     payload
 });
 
-export function getMe(id) {
-    return (dispatch, getState, API) => {
+export const getMe = id =>
+    (dispatch, getState, API) => {
         dispatch(getMeRequest());
         return API.profileApi.getMe(id).then((res) => {
             if (res.hasError) {
@@ -119,4 +108,3 @@ export function getMe(id) {
             return dispatch(getMeSuccess(res));
         });
     };
-}

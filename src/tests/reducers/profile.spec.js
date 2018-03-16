@@ -1,16 +1,6 @@
 /* eslint-env jest */
 import profileReducer from "../../reducers/profile";
-import {
-    FETCH_PROFILES_REQUEST,
-    FETCH_PROFILES_SUCCESS,
-    FETCH_PROFILES_FAILURE,
-    SAVE_PROFILE_REQUEST,
-    SAVE_PROFILE_SUCCESS,
-    SAVE_PROFILE_FAILURE,
-    GET_ME_REQUEST,
-    GET_ME_SUCCESS,
-    GET_ME_FAILURE
-} from "../../actions/profile";
+import * as profileTypes from "../../actions/types/profile";
 
 describe("Reducer profile", () => {
     const initialSate = {
@@ -31,7 +21,7 @@ describe("Reducer profile", () => {
 
     it("should FETCH_PROFILES_REQUEST", () => {
         expect(profileReducer(initialSate, {
-            type: FETCH_PROFILES_REQUEST
+            type: profileTypes.FETCH_PROFILES_REQUEST
         })).toEqual({
             ...initialSate,
             isLoading: true
@@ -46,7 +36,7 @@ describe("Reducer profile", () => {
         const byID = new Map();
         byID.set(1, { id: 1, name: "toto" });
         expect(profileReducer(state, {
-            type: FETCH_PROFILES_SUCCESS,
+            type: profileTypes.FETCH_PROFILES_SUCCESS,
             payload: {
                 data: [1],
                 byID
@@ -65,7 +55,7 @@ describe("Reducer profile", () => {
             isLoading: true
         };
         expect(profileReducer(state, {
-            type: FETCH_PROFILES_FAILURE,
+            type: profileTypes.FETCH_PROFILES_FAILURE,
             payload: "Sorry boss :/"
         })).toEqual({
             ...state,
@@ -77,7 +67,7 @@ describe("Reducer profile", () => {
 
     it("should SAVE_PROFILE_REQUEST", () => {
         expect(profileReducer(initialSate, {
-            type: SAVE_PROFILE_REQUEST
+            type: profileTypes.SAVE_PROFILE_REQUEST
         })).toEqual({
             ...initialSate,
             current: {
@@ -96,7 +86,7 @@ describe("Reducer profile", () => {
             }
         };
         expect(profileReducer(state, {
-            type: SAVE_PROFILE_SUCCESS,
+            type: profileTypes.SAVE_PROFILE_SUCCESS,
             payload: {
                 id: 1000,
                 name: "Toto"
@@ -122,7 +112,7 @@ describe("Reducer profile", () => {
             }
         };
         expect(profileReducer(state, {
-            type: SAVE_PROFILE_FAILURE,
+            type: profileTypes.SAVE_PROFILE_FAILURE,
             payload: "Won't save"
         })).toEqual({
             ...state,
@@ -137,7 +127,7 @@ describe("Reducer profile", () => {
 
     it("should GET_ME_REQUEST", () => {
         expect(profileReducer(initialSate, {
-            type: GET_ME_REQUEST
+            type: profileTypes.GET_ME_REQUEST
         })).toEqual({
             ...initialSate,
             current: {
@@ -149,7 +139,7 @@ describe("Reducer profile", () => {
 
     it("should GET_ME_SUCCESS", () => {
         expect(profileReducer(initialSate, {
-            type: GET_ME_SUCCESS,
+            type: profileTypes.GET_ME_SUCCESS,
             payload: {
                 some: "user"
             }
@@ -167,7 +157,7 @@ describe("Reducer profile", () => {
 
     it("should GET_ME_FAILURE", () => {
         expect(profileReducer(initialSate, {
-            type: GET_ME_FAILURE,
+            type: profileTypes.GET_ME_FAILURE,
             payload: "Error"
         })).toEqual({
             ...initialSate,

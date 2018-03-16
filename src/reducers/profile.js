@@ -1,14 +1,4 @@
-import {
-    FETCH_PROFILES_REQUEST,
-    FETCH_PROFILES_SUCCESS,
-    FETCH_PROFILES_FAILURE,
-    SAVE_PROFILE_REQUEST,
-    SAVE_PROFILE_SUCCESS,
-    SAVE_PROFILE_FAILURE,
-    GET_ME_REQUEST,
-    GET_ME_SUCCESS,
-    GET_ME_FAILURE
-} from "../actions/profile";
+import * as profileTypes from "../actions/types/profile";
 
 const initialSate = {
     data: [],
@@ -25,26 +15,26 @@ const initialSate = {
 const profile = (state = initialSate, action) => {
     const { payload } = action;
     switch (action.type) {
-    case FETCH_PROFILES_REQUEST:
+    case profileTypes.FETCH_PROFILES_REQUEST:
         return {
             ...state,
             isLoading: true
         };
-    case FETCH_PROFILES_SUCCESS:
+    case profileTypes.FETCH_PROFILES_SUCCESS:
         return {
             ...state,
             isLoading: false,
             data: payload.data,
             byID: payload.byID
         };
-    case FETCH_PROFILES_FAILURE:
+    case profileTypes.FETCH_PROFILES_FAILURE:
         return {
             ...state,
             isLoading: false,
             hasError: true,
             errorText: payload
         };
-    case SAVE_PROFILE_REQUEST:
+    case profileTypes.SAVE_PROFILE_REQUEST:
         return {
             ...state,
             current: {
@@ -52,7 +42,7 @@ const profile = (state = initialSate, action) => {
                 isLoading: true
             }
         };
-    case SAVE_PROFILE_SUCCESS:
+    case profileTypes.SAVE_PROFILE_SUCCESS:
         return {
             ...state,
             current: {
@@ -60,7 +50,7 @@ const profile = (state = initialSate, action) => {
                 isLoading: false
             }
         };
-    case SAVE_PROFILE_FAILURE:
+    case profileTypes.SAVE_PROFILE_FAILURE:
         return {
             ...state,
             hasError: true,
@@ -70,7 +60,7 @@ const profile = (state = initialSate, action) => {
                 isLoading: false
             }
         };
-    case GET_ME_REQUEST:
+    case profileTypes.GET_ME_REQUEST:
         return {
             ...state,
             current: {
@@ -78,7 +68,7 @@ const profile = (state = initialSate, action) => {
                 isLoading: true
             }
         };
-    case GET_ME_SUCCESS:
+    case profileTypes.GET_ME_SUCCESS:
         return {
             ...state,
             current: {
@@ -87,7 +77,7 @@ const profile = (state = initialSate, action) => {
                 data: payload
             }
         };
-    case GET_ME_FAILURE:
+    case profileTypes.GET_ME_FAILURE:
         return {
             ...state,
             hasError: true,
