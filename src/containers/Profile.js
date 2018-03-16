@@ -10,12 +10,12 @@ export const mapStateToProps = state => state.profile;
 
 export const mapDispatchToProps = dispatch => ({
     onGetMe: () => dispatch(getMe()),
-    onProfileChanged: () => {} // TODO
+    onProfileChanged: () => {} // @TODO
 });
 
-const Guard = connect(
+const Profile = connect(
     mapStateToProps,
     mapDispatchToProps
 )(ProfileComponent);
 
-export default Guard;
+export default Profile;
