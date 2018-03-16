@@ -11,7 +11,7 @@ import { loadSessionUser } from "../actions/user";
 
 import AccommodationComponent from "../ui/Accommodation/Accommodation.jsx";
 
-const mapStateToProps = (state) => {
+export const mapStateToProps = (state) => {
     const {
         isLoading,
         current,
@@ -33,7 +33,7 @@ const mapStateToProps = (state) => {
     };
 };
 
-const mapDispatchToProps = dispatch => ({
+export const mapDispatchToProps = dispatch => ({
     onFetchAccommodationsClicked: () => dispatch(fetchAccommodations()),
     onAccommodationDetailClicked: id => dispatch(setCurrentAccommodation(id)),
     onShowListClicked: () => dispatch(showList()),
