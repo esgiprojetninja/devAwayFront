@@ -4,38 +4,55 @@ import thunk from "redux-thunk";
 
 import {
     mockAPI,
-    mockAPIWithErrors
+    mockAPIWithErrors,
+    mockAPIWithServerFailure
 } from "../mock/API";
 
 import * as missionTypes from "../../actions/types/mission";
 import * as missionActions from "../../actions/mission";
 
-const mockStore = configureMockStore([thunk.withExtraArgument(mockAPI)]);
-
 describe("Actions mission", () => {
-    it("should fetch missions", () => {
+    let mockStore = null;
+
+    beforeEach(() => {
+        mockStore = configureMockStore([thunk.withExtraArgument(mockAPI)]);
+    });
+
+    it("should fetch missions", async () => {
         const expectedActions = [
             { type: missionTypes.FETCH_MISSIONS_REQUEST },
             { type: missionTypes.FETCH_MISSIONS_SUCCESS, payload: [] }
         ];
         const store = mockStore();
-        return store.dispatch(missionActions.fetchMissions()).then(() => {
-            expect(store.getActions()).toEqual(expectedActions);
-        });
+        await store.dispatch(missionActions.fetchMissions());
+        expect(store.getActions()).toEqual(expectedActions);
     });
 
-    it("should fetch missions (error)", () => {
+    it("should fetch missions - API error", async () => {
         const expectedActions = [
             { type: missionTypes.FETCH_MISSIONS_REQUEST },
             { type: missionTypes.FETCH_MISSIONS_FAILURE, payload: "Ooops" }
         ];
         const storeError = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)])();
-        return storeError.dispatch(missionActions.fetchMissions()).then(() => {
-            expect(storeError.getActions()).toEqual(expectedActions);
-        });
+        await storeError.dispatch(missionActions.fetchMissions());
+        expect(storeError.getActions()).toEqual(expectedActions);
     });
 
-    it("should savestoreError a mission", () => {
+    it("should fetch missions - Server failure", async () => {
+        const expectedActions = [
+            { type: missionTypes.FETCH_MISSIONS_REQUEST },
+            {
+                type: missionTypes.FETCH_MISSIONS_FAILURE,
+                payload: new Error("gtfo")
+            }
+        ];
+        mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithServerFailure)]);
+        const storeError = mockStore();
+        await storeError.dispatch(missionActions.fetchMissions());
+        expect(storeError.getActions()).toEqual(expectedActions);
+    });
+
+    it("should savestoreError a mission", async () => {
         const expectedActions = [
             { type: missionTypes.SAVE_MISSION_REQUEST },
             { type: missionTypes.SAVE_MISSION_SUCCESS }
@@ -45,12 +62,11 @@ describe("Actions mission", () => {
                 current: {}
             }
         });
-        return store.dispatch(missionActions.saveMission()).then(() => {
-            expect(store.getActions()).toEqual(expectedActions);
-        });
+        await store.dispatch(missionActions.saveMission());
+        expect(store.getActions()).toEqual(expectedActions);
     });
 
-    it("should save a mission (error)", () => {
+    it("should save a mission - API error", async () => {
         const expectedActions = [
             { type: missionTypes.SAVE_MISSION_REQUEST },
             { type: missionTypes.SAVE_MISSION_FAILURE, payload: "Won't save" }
@@ -60,12 +76,29 @@ describe("Actions mission", () => {
                 current: {}
             }
         });
-        return storeError.dispatch(missionActions.saveMission()).then(() => {
-            expect(storeError.getActions()).toEqual(expectedActions);
-        });
+        await storeError.dispatch(missionActions.saveMission());
+        expect(storeError.getActions()).toEqual(expectedActions);
     });
 
-    it("should delete a mission", () => {
+    it("should save a mission - Server failure", async () => {
+        const expectedActions = [
+            { type: missionTypes.SAVE_MISSION_REQUEST },
+            {
+                type: missionTypes.SAVE_MISSION_FAILURE,
+                payload: new Error("gtfo")
+            }
+        ];
+        mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithServerFailure)]);
+        const storeError = mockStore({
+            mission: {
+                current: {}
+            }
+        });
+        await storeError.dispatch(missionActions.saveMission());
+        expect(storeError.getActions()).toEqual(expectedActions);
+    });
+
+    it("should delete a mission", async () => {
         const expectedActions = [
             { type: missionTypes.DELETE_MISSION_REQUEST },
             { type: missionTypes.DELETE_MISSION_SUCCESS },
@@ -73,12 +106,11 @@ describe("Actions mission", () => {
             { type: missionTypes.FETCH_MISSIONS_SUCCESS, payload: [] }
         ];
         const store = mockStore();
-        return store.dispatch(missionActions.deleteMission(1000)).then(() => {
-            expect(store.getActions()).toEqual(expectedActions);
-        });
+        await store.dispatch(missionActions.deleteMission(1000));
+        expect(store.getActions()).toEqual(expectedActions);
     });
 
-    it("should delete a mission (error)", () => {
+    it("should delete a mission - API error", async () => {
         const expectedActions = [
             { type: missionTypes.DELETE_MISSION_REQUEST },
             { type: missionTypes.DELETE_MISSION_FAILURE, payload: "Couldn't delete" }
@@ -88,8 +120,24 @@ describe("Actions mission", () => {
                 current: {}
             }
         });
-        return storeError.dispatch(missionActions.deleteMission(1000)).then(() => {
-            expect(storeError.getActions()).toEqual(expectedActions);
+        await storeError.dispatch(missionActions.deleteMission(1000));
+        expect(storeError.getActions()).toEqual(expectedActions);
+    });
+
+    it("should delete a mission - Server failure", async () => {
+        const expectedActions = [
+            { type: missionTypes.DELETE_MISSION_REQUEST },
+            {
+                type: missionTypes.DELETE_MISSION_FAILURE,
+                payload: new Error("gtfo")
+            }
+        ];
+        const storeError = configureMockStore([thunk.withExtraArgument(mockAPIWithServerFailure)])({
+            mission: {
+                current: {}
+            }
         });
+        await storeError.dispatch(missionActions.deleteMission(1000));
+        expect(storeError.getActions()).toEqual(expectedActions);
     });
 });

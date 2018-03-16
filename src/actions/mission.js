@@ -25,7 +25,7 @@ export const fetchMissions = () =>
                     }
                     return dispatch(fetchMissionsSuccess(res));
                 },
-                error => console.log(error)
+                error => dispatch(fetchMissionsFailure(error))
             );
     };
 
@@ -53,10 +53,9 @@ export const saveMission = () =>
                     }
                     return dispatch(saveMissionSuccess());
                 },
-                error => console.log(error)
+                error => dispatch(saveMissionFailure(error))
             );
     };
-
 
 const deleteMissionRequest = () => ({
     type: missionTypes.DELETE_MISSION_REQUEST
@@ -80,5 +79,5 @@ export const deleteMission = id =>
             }
             dispatch(deleteMissionSuccess());
             return dispatch(fetchMissions());
-        });
+        }, err => dispatch(deleteMissionFailure(err)));
     };
