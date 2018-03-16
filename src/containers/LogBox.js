@@ -5,9 +5,9 @@ import {
 } from "../actions/user";
 import LogBoxComponent from "../ui/LogBox.jsx";
 
-const mapStateToProps = state => (state.user);
+export const mapStateToProps = state => state.user;
 
-const mapDispatchToProps = dispatch => ({
+export const mapDispatchToProps = dispatch => ({
     onSubmit: (data) => {
         dispatch(login(data));
     },
