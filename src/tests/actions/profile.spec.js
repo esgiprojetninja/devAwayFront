@@ -4,15 +4,21 @@ import thunk from "redux-thunk";
 
 import {
     mockAPI,
-    mockAPIWithErrors
+    mockAPIWithErrors,
+    mockAPIWithServerFailure
 } from "../mock/API";
 
+import { SET_SNACK_MSG } from "../../actions/types/snack";
 import * as profileTypes from "../../actions/types/profile";
 import * as profileActions from "../../actions/profile";
 
-const mockStore = configureMockStore([thunk.withExtraArgument(mockAPI)]);
-
 describe("Actions profile", () => {
+    let mockStore = null;
+
+    beforeEach(() => {
+        mockStore = configureMockStore([thunk.withExtraArgument(mockAPI)]);
+    });
+
     it("should fetch profiles", async () => {
         const expectedActions = [
             { type: profileTypes.FETCH_PROFILES_REQUEST },
@@ -23,12 +29,40 @@ describe("Actions profile", () => {
         expect(store.getActions()).toEqual(expectedActions);
     });
 
-    it("should fetch profiles (error)", async () => {
+    it("should fetch profiles - API error", async () => {
         const expectedActions = [
             { type: profileTypes.FETCH_PROFILES_REQUEST },
+            {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "Failed to refresh profile data",
+                    snackDuration: undefined
+                }
+            },
             { type: profileTypes.FETCH_PROFILES_FAILURE, payload: "Ooops" }
         ];
         const storeError = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)])();
+        await storeError.dispatch(profileActions.fetchProfiles());
+        expect(storeError.getActions()).toEqual(expectedActions);
+    });
+
+    it("should fetch profiles - Server failure", async () => {
+        const expectedActions = [
+            { type: profileTypes.FETCH_PROFILES_REQUEST },
+            {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "Failed to refresh profile data",
+                    snackDuration: undefined
+                }
+            },
+            {
+                type: profileTypes.FETCH_PROFILES_FAILURE,
+                payload: new Error("gtfo")
+            }
+        ];
+        mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithServerFailure)]);
+        const storeError = mockStore();
         await storeError.dispatch(profileActions.fetchProfiles());
         expect(storeError.getActions()).toEqual(expectedActions);
     });
@@ -47,9 +81,16 @@ describe("Actions profile", () => {
         expect(store.getActions()).toEqual(expectedActions);
     });
 
-    it("should save a profile (error)", async () => {
+    it("should save a profile - API error", async () => {
         const expectedActions = [
             { type: profileTypes.SAVE_PROFILE_REQUEST },
+            {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "Failed to save profile",
+                    snackDuration: undefined
+                }
+            },
             { type: profileTypes.SAVE_PROFILE_FAILURE, payload: "Won't save" }
         ];
         const storeError = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)])({
@@ -59,6 +100,30 @@ describe("Actions profile", () => {
         });
         await storeError.dispatch(profileActions.saveProfile());
         expect(storeError.getActions()).toEqual(expectedActions);
+    });
+
+    it("should save a profile - Server failure", async () => {
+        const expectedActions = [
+            { type: profileTypes.SAVE_PROFILE_REQUEST },
+            {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "Failed to save profile",
+                    snackDuration: undefined
+                }
+            },
+            {
+                type: profileTypes.SAVE_PROFILE_FAILURE,
+                payload: new Error("gtfo")
+            }
+        ];
+        const store = configureMockStore([thunk.withExtraArgument(mockAPIWithServerFailure)])({
+            profile: {
+                current: {}
+            }
+        });
+        await store.dispatch(profileActions.saveProfile());
+        expect(store.getActions()).toEqual(expectedActions);
     });
 
     it("should delete a profile", async () => {
@@ -73,9 +138,16 @@ describe("Actions profile", () => {
         expect(store.getActions()).toEqual(expectedActions);
     });
 
-    it("should delete a profile (error)", async () => {
+    it("should delete a profile - API error", async () => {
         const expectedActions = [
             { type: profileTypes.DELETE_PROFILE_REQUEST },
+            {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "Failed to delete profile",
+                    snackDuration: undefined
+                }
+            },
             { type: profileTypes.DELETE_PROFILE_FAILURE, payload: "Couldn't delete" }
         ];
         const storeError = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)])({
@@ -85,6 +157,30 @@ describe("Actions profile", () => {
         });
         await storeError.dispatch(profileActions.deleteProfile(1000));
         expect(storeError.getActions()).toEqual(expectedActions);
+    });
+
+    it("should delete a profile - Server failure", async () => {
+        const expectedActions = [
+            { type: profileTypes.DELETE_PROFILE_REQUEST },
+            {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "Failed to delete profile",
+                    snackDuration: undefined
+                }
+            },
+            {
+                type: profileTypes.DELETE_PROFILE_FAILURE,
+                payload: new Error("gtfo")
+            }
+        ];
+        const store = configureMockStore([thunk.withExtraArgument(mockAPIWithServerFailure)])({
+            profile: {
+                current: {}
+            }
+        });
+        await store.dispatch(profileActions.deleteProfile(1000));
+        expect(store.getActions()).toEqual(expectedActions);
     });
 
     it("should get me", async () => {
@@ -105,7 +201,7 @@ describe("Actions profile", () => {
         expect(store.getActions()).toEqual(expectedActions);
     });
 
-    it("should get me (error)", async () => {
+    it("should get me - API error", async () => {
         const expectedActions = [
             { type: profileTypes.GET_ME_REQUEST },
             {
@@ -114,6 +210,23 @@ describe("Actions profile", () => {
             }
         ];
         const storeError = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)])({
+            profile: {
+                current: {}
+            }
+        });
+        await storeError.dispatch(profileActions.getMe());
+        expect(storeError.getActions()).toEqual(expectedActions);
+    });
+
+    it("should get me - Server failure", async () => {
+        const expectedActions = [
+            { type: profileTypes.GET_ME_REQUEST },
+            {
+                type: profileTypes.GET_ME_FAILURE,
+                payload: new Error("gtfo")
+            }
+        ];
+        const storeError = configureMockStore([thunk.withExtraArgument(mockAPIWithServerFailure)])({
             profile: {
                 current: {}
             }

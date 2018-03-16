@@ -144,22 +144,10 @@ export const mockAPIWithServerFailure = {
         deleteItem: () => Promise.reject(new Error("gtfo"))
     },
     profileApi: {
-        fetchAll: () => Promise.reject(new Error({
-            code: 500,
-            message: "gtfo"
-        })),
-        createOrUpdate: () => Promise.reject(new Error({
-            code: 500,
-            message: "gtfo"
-        })),
-        deleteItem: () => Promise.reject(new Error({
-            code: 500,
-            message: "gtfo"
-        })),
-        getMe: () => Promise.reject(new Error({
-            code: 500,
-            message: "gtfo"
-        }))
+        fetchAll: () => Promise.reject(new Error("gtfo")),
+        createOrUpdate: () => Promise.reject(new Error("gtfo")),
+        deleteItem: () => Promise.reject(new Error("gtfo")),
+        getMe: () => Promise.reject(new Error("gtfo"))
     },
     guardApi: {
         checkGuard: () => Promise.reject(new Error("gtfo")),

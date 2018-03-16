@@ -303,10 +303,7 @@ describe("Actions user", () => {
                 type: userActionTypes.LOGOUT
             },
             {
-                payload: new Error({
-                    code: 500,
-                    message: "gtfo"
-                }),
+                payload: new Error("gtfo"),
                 type: userActionTypes.LOGIN_FAILURE
             }
         ];

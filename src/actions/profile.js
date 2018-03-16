@@ -1,4 +1,5 @@
 import * as profileTypes from "./types/profile";
+import { displaySnackMsg } from "./snack";
 
 const fetchProfilesRequest = () => ({
     type: profileTypes.FETCH_PROFILES_REQUEST
@@ -21,11 +22,15 @@ export const fetchProfiles = () =>
             .then(
                 (res) => {
                     if (res.hasError) {
+                        dispatch(displaySnackMsg("Failed to refresh profile data"));
                         return dispatch(fetchProfilesFailure(res.message));
                     }
                     return dispatch(fetchProfilesSuccess(res));
                 },
-                error => console.log(error)
+                (error) => {
+                    dispatch(displaySnackMsg("Failed to refresh profile data"));
+                    return dispatch(fetchProfilesFailure(error));
+                }
             );
     };
 
@@ -50,11 +55,15 @@ export const saveProfile = () =>
             .then(
                 (res) => {
                     if (res.hasError) {
+                        dispatch(displaySnackMsg("Failed to save profile"));
                         return dispatch(saveProfileFailure(res.message));
                     }
                     return dispatch(saveProfileSuccess());
                 },
-                error => console.log(error)
+                (error) => {
+                    dispatch(displaySnackMsg("Failed to save profile"));
+                    return dispatch(saveProfileFailure(error));
+                }
             );
     };
 
@@ -76,10 +85,14 @@ export const deleteProfile = id =>
         dispatch(deleteProfileRequest());
         return API.profileApi.deleteItem(id).then((res) => {
             if (res.hasError) {
+                dispatch(displaySnackMsg("Failed to delete profile"));
                 return dispatch(deleteProfileFailure(res.message));
             }
             dispatch(deleteProfileSuccess());
             return dispatch(fetchProfiles());
+        }, (err) => {
+            dispatch(displaySnackMsg("Failed to delete profile"));
+            return dispatch(deleteProfileFailure(err));
         });
     };
 
@@ -106,5 +119,5 @@ export const getMe = id =>
                 return dispatch(getMeFailure(res.message));
             }
             return dispatch(getMeSuccess(res));
-        });
+        }, err => dispatch(getMeFailure(err)));
     };
