@@ -46,11 +46,11 @@ export const mockAPIWithErrors = {
     accommodationApi: {
         fetchAll: () => Promise.resolve({
             hasError: true,
-            message: "Naupe !"
+            message: "Not gonna happen bruh"
         }),
         createOrUpdate: () => Promise.resolve({
             hasError: true,
-            message: "Naupe !"
+            message: "Hey hey, my my"
         }),
         deleteItem: () => Promise.resolve({
             hasError: true,
@@ -125,6 +125,14 @@ export const mockAPIWithErrors = {
 };
 
 export const mockAPIWithServerFailure = {
+    accommodationApi: {
+        fetchAll: () => Promise.reject(new Error({
+            code: 500,
+            message: "gtfo"
+        })),
+        createOrUpdate: () => Promise.reject(new Error("gtfo")),
+        deleteItem: () => Promise.reject(new Error("gtfo"))
+    },
     profileApi: {
         fetchAll: () => Promise.reject(new Error({
             code: 500,

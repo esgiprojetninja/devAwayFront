@@ -15,13 +15,13 @@ import { createUser, basicUser } from "../mock/body/user";
 describe("Actions user", () => {
     let mockStore = null;
     beforeEach(() => {
-        mockStore = configureMockStore([thunk.withExtraArgument(mockAPI)]);
         jest.clearAllMocks();
         global.localStorage = {
             removeItem: jest.fn(),
             getItem: jest.fn(),
             setItem: jest.fn()
         };
+        mockStore = configureMockStore([thunk.withExtraArgument(mockAPI)]);
     });
 
     it("should logout", () => {
