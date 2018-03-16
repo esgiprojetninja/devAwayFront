@@ -2,9 +2,9 @@ import { connect } from "react-redux";
 import { saveAccommodation } from "../actions/accommodation";
 import AccomodationCreationComponent from "../ui/Accommodation/AccommodationCreation";
 
-const mapStateToProps = state => state;
+export const mapStateToProps = state => state;
 
-const mapDispatchToProps = dispatch => ({
+export const mapDispatchToProps = dispatch => ({
     saveAccommodation(accommodation) {
         dispatch(saveAccommodation({
             title: accommodation.title.trim(),
