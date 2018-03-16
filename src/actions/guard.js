@@ -1,26 +1,24 @@
-export const UPDATE_CREDENTIALS = "UPDATE_CREDENTIALS";
+import * as types from "./types/guard";
+
 export const updateCredentials = (property, value) => ({
-    type: UPDATE_CREDENTIALS,
+    type: types.UPDATE_CREDENTIALS,
     payload: {
         property,
         value
     }
 });
 
-export const CHECK_GUARD_REQUEST = "CHECK_GUARD_REQUEST";
 const checkGuardRequest = () => ({
-    type: CHECK_GUARD_REQUEST
+    type: types.CHECK_GUARD_REQUEST
 });
 
-export const CHECK_GUARD_SUCCESS = "CHECK_GUARD_SUCCESS";
 const checkGuardSuccess = payload => ({
-    type: CHECK_GUARD_SUCCESS,
+    type: types.CHECK_GUARD_SUCCESS,
     payload
 });
 
-export const CHECK_GUARD_FAILURE = "CHECK_GUARD_FAILURE";
 const checkGuardFailure = payload => ({
-    type: CHECK_GUARD_FAILURE,
+    type: types.CHECK_GUARD_FAILURE,
     payload
 });
 
@@ -41,20 +39,17 @@ export function checkGuard() {
     };
 }
 
-export const CREATE_GUARD_REQUEST = "CREATE_GUARD_REQUEST";
 const createGuardRequest = () => ({
-    type: CREATE_GUARD_REQUEST
+    type: types.CREATE_GUARD_REQUEST
 });
 
-export const CREATE_GUARD_SUCCESS = "CREATE_GUARD_SUCCESS";
 const createGuardSuccess = payload => ({
-    type: CREATE_GUARD_SUCCESS,
+    type: types.CREATE_GUARD_SUCCESS,
     payload
 });
 
-export const CREATE_GUARD_FAILURE = "CREATE_GUARD_FAILURE";
 const createGuardFailure = payload => ({
-    type: CREATE_GUARD_FAILURE,
+    type: types.CREATE_GUARD_FAILURE,
     payload
 });
 
