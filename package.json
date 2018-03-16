@@ -27,7 +27,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "test-cov": "test -- --coverage && codecov",
+    "test-cov": "npm run test -- --coverage && codecov",
     "eject": "react-scripts eject",
     "lint": "eslint src/"
   },

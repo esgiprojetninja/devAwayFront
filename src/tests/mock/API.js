@@ -12,8 +12,20 @@ export const mockAPI = {
         })
     },
     userApi: {
-        login: () => Promise.resolve({ token: "prout" }),
-        addUser: () => Promise.resolve(basicUser)
+        login: (credentials) => {
+            if (credentials) {
+                return credentials.username && credentials.password ?
+                    Promise.resolve({ token: "prout" })
+                    : Promise.resolve({ code: 403, message: "Bad credentials" });
+            }
+            return Promise.reject(new Error("gtfo"));
+        },
+        addUser(user) {
+            if (user) {
+                return user.username && user.password ? Promise.resolve(basicUser) : Promise.resolve("gtfo");
+            }
+            return Promise.reject(new Error("gtfo"));
+        }
     },
     missionApi: {
         fetchAll: () => Promise.resolve([]),
@@ -29,12 +41,22 @@ export const mockAPI = {
         fetchAll: () => Promise.resolve([]),
         createOrUpdate: () => Promise.resolve({}),
         deleteItem: () => Promise.resolve({}),
-        getMe: () => Promise.resolve({
-            some: "user",
-            id: 1,
-            email: "coucou",
-            username: "azy"
-        })
+        getMe: (token) => {
+            if (token === "error") {
+                return Promise.reject(new Error("gtfo"));
+            } else if (token === "fail") {
+                return Promise.resolve({
+                    code: 403,
+                    message: "Fucked up token"
+                });
+            }
+            return Promise.resolve({
+                some: "user",
+                id: 1,
+                email: "coucou",
+                username: "azy"
+            });
+        }
     },
     guardApi: {
         checkGuard: () => Promise.resolve({ token: "prout" }),
