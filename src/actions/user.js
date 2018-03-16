@@ -32,7 +32,7 @@ const loginFailure = error => ({
 export const getMe = (token) => {
     return (dispatch, getState, API) => {
         dispatch(userRequest());
-        return API.profileApi.getMe(token) // sending token for test mock
+        return API.profileApi.getMe()
             .then(
                 (res) => {
                     if (res && res.id && res.email && res.username) {
@@ -44,14 +44,14 @@ export const getMe = (token) => {
                         window.localStorage.setItem("filledUser", sessionUser);
                         return dispatch(loginSuccess(res));
                     }
-                    dispatch(displaySnackMsg("Log in failed"));
+                    dispatch(displaySnackMsg("Login failed"));
                     dispatch(logout());
                     return dispatch(loginFailure(res.message));
-                }, () => {
+                }, (err) => {
                     // console.error("getMe error", err);
-                    dispatch(displaySnackMsg("Log in failed"));
+                    dispatch(displaySnackMsg("Login failed"));
                     dispatch(logout());
-                    return dispatch(loginFailure("Could not load profile data"));
+                    return dispatch(loginFailure(err));
                 }
             );
     };
@@ -63,7 +63,7 @@ export function login(credentials) {
         return API.userApi.login(credentials)
             .then(
                 (res) => {
-                    if (res && res.code && !res.token) {
+                    if (res && !res.token) {
                         return dispatch(loginFailure(res.message));
                     }
                     window.localStorage.setItem("authToken", res.token);
@@ -86,7 +86,7 @@ const addUserSuccess = user => ({
 
 const addUserFailure = err => ({
     type: types.ADD_USER_FAILURE,
-    payload: { errorText: err }
+    payload: err
 });
 
 export const addUser = (user) => {

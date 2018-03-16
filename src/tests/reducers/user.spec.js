@@ -26,7 +26,7 @@ describe("Reducer USER", () => {
         isLoggedIn: false,
         isLoading: false,
         hasError: false,
-        errorText: ""
+        error: ""
     };
 
     it("should return initialSate", () => {
@@ -142,12 +142,12 @@ describe("Reducer USER", () => {
 
         expect(userReducer(state, {
             type: ADD_USER_FAILURE,
-            payload: { errorText: "error, bitch" }
+            payload: "error, bitch"
         })).toEqual({
             ...state,
             isLoading: false,
             hasError: true,
-            errorText: "error, bitch"
+            error: "error, bitch"
         });
     });
 });

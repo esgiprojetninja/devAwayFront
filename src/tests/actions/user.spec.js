@@ -4,13 +4,18 @@ import thunk from "redux-thunk";
 import * as userActionTypes from "../../actions/types/user";
 import * as userActions from "../../actions/user";
 import { SET_SNACK_MSG } from "../../actions/types/snack";
-import { mockAPI } from "../mock/API";
+import {
+    mockAPI,
+    mockAPIWithErrors,
+    mockAPIWithServerFailure
+} from "../mock/API";
+
 import { createUser, basicUser } from "../mock/body/user";
 
-const mockStore = configureMockStore([thunk.withExtraArgument(mockAPI)]);
-
 describe("Actions user", () => {
+    let mockStore = null;
     beforeEach(() => {
+        mockStore = configureMockStore([thunk.withExtraArgument(mockAPI)]);
         jest.clearAllMocks();
         global.localStorage = {
             removeItem: jest.fn(),
@@ -65,14 +70,15 @@ describe("Actions user", () => {
         });
     });
 
-    it("should NOT login without all credentials data", () => {
+    it("should NOT login with API error", () => {
         const expextedActions = [
             { type: userActionTypes.LOGIN_REQUEST },
             {
                 type: userActionTypes.LOGIN_FAILURE,
-                payload: "Bad credentials"
+                payload: "No sir, you are not comin in"
             }
         ];
+        mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)]);
         const store = mockStore();
         return store.dispatch(userActions.login({
             username: "azy"
@@ -81,7 +87,7 @@ describe("Actions user", () => {
         });
     });
 
-    it("should NOT login without credentials", () => {
+    it("should NOT login with server failure", () => {
         const expextedActions = [
             { type: userActionTypes.LOGIN_REQUEST },
             {
@@ -93,9 +99,13 @@ describe("Actions user", () => {
             },
             {
                 type: userActionTypes.LOGIN_FAILURE,
-                payload: new Error("gtfo")
+                payload: new Error({
+                    code: 500,
+                    message: "gtfo"
+                })
             }
         ];
+        mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithServerFailure)]);
         const store = mockStore();
         return store.dispatch(userActions.login()).then(() => {
             expect(store.getActions()).toEqual(expextedActions);
@@ -136,10 +146,11 @@ describe("Actions user", () => {
             {
                 type: userActionTypes.ADD_USER_FAILURE,
                 payload: {
-                    errorText: "gtfo"
+                    hasError: true
                 }
             }
         ];
+        mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)]);
         const store = mockStore();
         return store.dispatch(userActions.addUser({ username: "chibar" })).then(() => {
             expect(store.getActions()).toEqual(expectedAction);
@@ -158,9 +169,13 @@ describe("Actions user", () => {
             },
             {
                 type: userActionTypes.ADD_USER_FAILURE,
-                payload: { errorText: new Error("gtfo") }
+                payload: new Error({
+                    code: 500,
+                    message: "gtfo"
+                })
             }
         ];
+        mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithServerFailure)]);
         const store = mockStore();
         return store.dispatch(userActions.addUser()).then(() => {
             expect(store.getActions()).toEqual(expectedAction);
@@ -253,7 +268,7 @@ describe("Actions user", () => {
             {
                 type: SET_SNACK_MSG,
                 payload: {
-                    msg: "Log in failed",
+                    msg: "Login failed",
                     snackDuration: undefined
                 }
             },
@@ -262,10 +277,11 @@ describe("Actions user", () => {
                 type: userActionTypes.LOGOUT
             },
             {
-                payload: "Fucked up token",
+                payload: "Who are you ?",
                 type: userActionTypes.LOGIN_FAILURE
             }
         ];
+        mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)]);
         const store = mockStore();
         return store.dispatch(userActions.getMe("fail")).then(() => {
             expect(store.getActions()).toEqual(expectedAction);
@@ -278,7 +294,7 @@ describe("Actions user", () => {
             {
                 type: SET_SNACK_MSG,
                 payload: {
-                    msg: "Log in failed",
+                    msg: "Login failed",
                     snackDuration: undefined
                 }
             },
@@ -287,12 +303,16 @@ describe("Actions user", () => {
                 type: userActionTypes.LOGOUT
             },
             {
-                payload: "Could not load profile data",
+                payload: new Error({
+                    code: 500,
+                    message: "gtfo"
+                }),
                 type: userActionTypes.LOGIN_FAILURE
             }
         ];
+        mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithServerFailure)]);
         const store = mockStore();
-        return store.dispatch(userActions.getMe("error")).then(() => {
+        return store.dispatch(userActions.getMe()).then(() => {
             expect(store.getActions()).toEqual(expectedAction);
         });
     });

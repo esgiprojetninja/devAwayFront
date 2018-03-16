@@ -16,7 +16,7 @@ const initialSate = {
     isLoggedIn: false,
     isLoading: false,
     hasError: false,
-    errorText: ""
+    error: ""
 };
 
 const userReducer = (state = initialSate, action) => {
@@ -72,7 +72,7 @@ const userReducer = (state = initialSate, action) => {
             ...state,
             isLoading: false,
             hasError: true,
-            errorText: payload.errorText
+            error: payload
         };
     default:
         return state;

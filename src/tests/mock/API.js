@@ -12,20 +12,8 @@ export const mockAPI = {
         })
     },
     userApi: {
-        login: (credentials) => {
-            if (credentials) {
-                return credentials.username && credentials.password ?
-                    Promise.resolve({ token: "prout" })
-                    : Promise.resolve({ code: 403, message: "Bad credentials" });
-            }
-            return Promise.reject(new Error("gtfo"));
-        },
-        addUser(user) {
-            if (user) {
-                return user.username && user.password ? Promise.resolve(basicUser) : Promise.resolve("gtfo");
-            }
-            return Promise.reject(new Error("gtfo"));
-        }
+        login: () => Promise.resolve({ token: "prout" }),
+        addUser: () => Promise.resolve(basicUser)
     },
     missionApi: {
         fetchAll: () => Promise.resolve([]),
@@ -41,29 +29,18 @@ export const mockAPI = {
         fetchAll: () => Promise.resolve([]),
         createOrUpdate: () => Promise.resolve({}),
         deleteItem: () => Promise.resolve({}),
-        getMe: (token) => {
-            if (token === "error") {
-                return Promise.reject(new Error("gtfo"));
-            } else if (token === "fail") {
-                return Promise.resolve({
-                    code: 403,
-                    message: "Fucked up token"
-                });
-            }
-            return Promise.resolve({
-                some: "user",
-                id: 1,
-                email: "coucou",
-                username: "azy"
-            });
-        }
+        getMe: () => Promise.resolve({
+            some: "user",
+            id: 1,
+            email: "coucou",
+            username: "azy"
+        })
     },
     guardApi: {
         checkGuard: () => Promise.resolve({ token: "prout" }),
         createGuard: () => Promise.resolve({ code: 123456 })
     }
 };
-
 
 export const mockAPIWithErrors = {
     accommodationApi: {
@@ -138,10 +115,42 @@ export const mockAPIWithErrors = {
     },
     userApi: {
         login: () => Promise.resolve({
-            hasError: true
+            hasError: true,
+            message: "No sir, you are not comin in"
         }),
         addUser: () => Promise.resolve({
             hasError: true
         })
+    }
+};
+
+export const mockAPIWithServerFailure = {
+    profileApi: {
+        fetchAll: () => Promise.reject(new Error({
+            code: 500,
+            message: "gtfo"
+        })),
+        createOrUpdate: () => Promise.reject(new Error({
+            code: 500,
+            message: "gtfo"
+        })),
+        deleteItem: () => Promise.reject(new Error({
+            code: 500,
+            message: "gtfo"
+        })),
+        getMe: () => Promise.reject(new Error({
+            code: 500,
+            message: "gtfo"
+        }))
+    },
+    userApi: {
+        login: () => Promise.reject(new Error({
+            code: 500,
+            message: "gtfo"
+        })),
+        addUser: () => Promise.reject(new Error({
+            code: 500,
+            message: "gtfo"
+        }))
     }
 };
