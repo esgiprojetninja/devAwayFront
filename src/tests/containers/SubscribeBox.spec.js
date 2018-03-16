@@ -10,7 +10,7 @@ import mainReducer from "../../reducers/index";
 import {
     mapStateToProps,
     mapDispatchToProps
-} from "../../containers/LogBox";
+} from "../../containers/SubscribeBox";
 
 const mockStore = configureMockStore([thunk.withExtraArgument(mockAPI)]);
 
@@ -28,19 +28,17 @@ describe("Container LogBox", () => {
     describe("mapDispatchToProps", () => {
         it("onSubmit", async () => {
             const { store, fn } = prepare("onSubmit");
-            await fn({ username: "jardin", password: "tomate" });
+            await fn({
+                username: "jardin",
+                password: "tomate",
+                passwordCheck: "tomate"
+            });
             const storeActions = await store.getActions();
-            expect(storeActions.map(a => a.type)).toEqual(["LOGIN_REQUEST"]);
-        });
-
-        it("onLogoutClicked", async () => {
-            global.localStorage = {
-                removeItem: jest.fn()
-            };
-            const { store, fn } = prepare("onLogoutClicked", mainReducer(undefined, {}));
-            await fn();
-            const storeActions = await store.getActions();
-            expect(storeActions.map(a => a.type)).toEqual(["LOGOUT"]);
+            expect(storeActions.map(a => a.type)).toEqual([
+                "USER_REQUEST",
+                "SET_SNACK_MSG",
+                "ADD_USER_SUCCESS"
+            ]);
         });
     });
     describe("mapStateToProps", () => {

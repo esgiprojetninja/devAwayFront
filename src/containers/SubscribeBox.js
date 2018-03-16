@@ -4,9 +4,9 @@ import {
 } from "../actions/user";
 import SubscribeBoxComponent from "../ui/SubscribeBox";
 
-const mapStateToProps = state => state.user;
+export const mapStateToProps = state => state.user;
 
-const mapDispatchToProps = dispatch => ({
+export const mapDispatchToProps = dispatch => ({
     onSubmit: (data) => {
         const d = new Date().toISOString();
         dispatch(addUser({

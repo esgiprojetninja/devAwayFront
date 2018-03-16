@@ -2,9 +2,10 @@ import { connect } from "react-redux";
 
 import NavbarComponent from "../ui/Navbar";
 
-const mapStateToProps = state => state;
+export const mapStateToProps = state => state;
 
-const mapDispatchToProps = () => ({
+export const mapDispatchToProps = () => ({
+    gtfo() {}
 });
 
 const Navbar = connect(
