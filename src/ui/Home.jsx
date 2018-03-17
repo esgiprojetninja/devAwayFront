@@ -221,6 +221,7 @@ export class Home extends React.PureComponent {
                 {this.renderBrandRibon()}
                 {this.renderDestinations()}
                 {this.renderAccomodations()}
+                {this.renderFooter()}
                 {this.renderSnackbar()}
             </div>
         );

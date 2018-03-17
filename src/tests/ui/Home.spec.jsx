@@ -6,7 +6,7 @@ import {
 import ArticleWithMedia from "../../ui/ArticleWithMedia.jsx";
 import HomeSearchForm from "../../ui/HomeSearchForm.jsx";
 
-import { Home } from "../../ui/Home.jsx";
+import HomeWithStyles, { Home } from "../../ui/Home.jsx";
 
 describe("ui <Home />", () => {
     global.localStorage = {
@@ -47,5 +47,19 @@ describe("ui <Home />", () => {
             />);
         expect(wrapper.find(ArticleWithMedia).length).toBe(1);
         expect(wrapper.find(HomeSearchForm).length).toBe(1);
+    });
+
+    it("should render with M-UI styles", () => {
+        const wrapper = shallow(
+            <HomeWithStyles
+                snack={{
+                    snackText: "",
+                    hasSnack: false,
+                    snackDuration: 4000
+                }}
+                closeSnack={() => { }}
+                onInit={() => { }}
+            />);
+        expect(wrapper.text()).toMatch(/Home/);
     });
 });
