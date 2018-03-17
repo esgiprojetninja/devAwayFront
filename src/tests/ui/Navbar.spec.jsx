@@ -104,13 +104,10 @@ describe("ui <NavBar />", () => {
         wrapper.setState({ open: false });
         wrapper.setState({ openUserMenuEl: null });
         const toggler = wrapper.find("#menu-toggler");
-        try {
-            toggler.simulate("click");
-        } catch (e) {
-            expect(e.message).toEqual("Cannot read property 'currentTarget' of undefined");
-            wrapper.setState({ openUserMenuEl: toggler });
-        }
-        expect(wrapper.instance().state.openUserMenuEl).not.toBeNull();
+        toggler.simulate("click", {
+            currentTarget: "coucou"
+        });
+        expect(wrapper.instance().state.openUserMenuEl).toBe("coucou");
     });
 
     it("should reset element menu", () => {

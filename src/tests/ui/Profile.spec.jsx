@@ -38,4 +38,19 @@ describe("ui <Profile />", function () {
         const wrapper = shallow(<Profile {...props} />);
         expect(wrapper.find("#getMeProgess").length).toBe(1);
     });
+
+    it("should call handleChange", () => {
+        const wrapper = shallow(
+            <Profile {...this.initialProps} />
+        );
+        wrapper.find("#email").simulate("change",
+            {
+                target: {
+                    value: "coucou",
+                    id: "chibar"
+                }
+            }
+        );
+        expect(this.initialProps.onProfileChanged).toHaveBeenCalled();
+    });
 });

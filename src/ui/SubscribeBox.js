@@ -190,9 +190,6 @@ export class SubscribeBox extends React.PureComponent {
     }
 
     renderDialogContent() {
-        if (this.props.isLoading) {
-            return <CircularProgress color="accent" />;
-        }
         return (
             <DialogContent>
                 {this.renderEmailField()}
