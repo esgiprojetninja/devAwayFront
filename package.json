@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "animate.css": "^3.5.2",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
     "eslint": "^4.17.0",
     "isomorphic-fetch": "^2.2.1",
     "material-ui": "^1.0.0-beta.22",
@@ -32,8 +34,6 @@
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",
-    "enzyme": "^3.3.0",
-    "enzyme-adapter-react-16": "^1.1.1",
     "eslint": "^4.16.0",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.8.0",
