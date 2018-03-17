@@ -6,7 +6,6 @@ import {
     mockAPI
 } from "../mock/API";
 
-import mainReducer from "../../reducers/index";
 import {
     mapStateToProps,
     mapDispatchToProps

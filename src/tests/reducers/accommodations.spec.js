@@ -2,7 +2,7 @@
 import accommodationReducer from "../../reducers/accommodation";
 import * as accoTypes from "../../actions/types/accommodation";
 
-describe("Reducer USER", () => {
+describe("Reducer ACCOMMODATION", () => {
     const initialSate = {
         data: [],
         byID: new Map(),
@@ -111,6 +111,16 @@ describe("Reducer USER", () => {
             ...initialSate,
             data: [{ id: "coucou", shwantz: "cannette" }],
             byID: new Map().set("coucou", { id: "coucou", shwantz: "cannette" })
+        });
+    });
+
+    it("should dispatch SAVE_ACCOMMODATION_SUCCESS while leaving data & byID unchanged", () => {
+        expect(accommodationReducer(initialSate, {
+            type: accoTypes.SAVE_ACCOMMODATION_SUCCESS,
+            payload: { accommodation: { shwantz: "cannette" } }
+
+        })).toEqual({
+            ...initialSate
         });
     });
 
