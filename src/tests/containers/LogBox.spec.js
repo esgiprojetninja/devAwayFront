@@ -27,15 +27,26 @@ const prepare = (name, state) => {
 describe("Container LogBox", () => {
     describe("mapDispatchToProps", () => {
         it("onSubmit", async () => {
+            global.localStorage = {
+                removeItem: jest.fn(),
+                setItem: jest.fn()
+            };
             const { store, fn } = prepare("onSubmit");
             await fn({ username: "jardin", password: "tomate" });
             const storeActions = await store.getActions();
-            expect(storeActions.map(a => a.type)).toEqual(["LOGIN_REQUEST"]);
+            expect(storeActions.map(a => a.type)).toEqual([
+                "LOGIN_REQUEST",
+                "LOGIN_SUCCESS",
+                "USER_REQUEST",
+                "SET_SNACK_MSG",
+                "LOGIN_SUCCESS"
+            ]);
         });
 
         it("onLogoutClicked", async () => {
             global.localStorage = {
-                removeItem: jest.fn()
+                removeItem: jest.fn(),
+                setItem: jest.fn()
             };
             const { store, fn } = prepare("onLogoutClicked", mainReducer(undefined, {}));
             await fn();
@@ -45,6 +56,10 @@ describe("Container LogBox", () => {
     });
     describe("mapStateToProps", () => {
         it("dispatch user state", () => {
+            global.localStorage = {
+                removeItem: jest.fn(),
+                setItem: jest.fn()
+            };
             expect(mapStateToProps({ user: "chibar" })).toEqual("chibar");
         });
     });
