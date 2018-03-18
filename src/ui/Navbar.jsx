@@ -15,7 +15,7 @@ import AccommodationCreation from "../containers/AccommodationCreation";
 
 const ITEM_HEIGHT = 48;
 
-export class NavBar extends React.PureComponent {
+export class NavBarComponent extends React.PureComponent {
     state = {
         open: false,
         openUserMenuEl: null
@@ -60,10 +60,8 @@ export class NavBar extends React.PureComponent {
                         onClick={this.handleUserMenuClose}
                     >
                         <NavLink
+                            id="accommodation-link"
                             to="/accommodations"
-                            onClick={() => {
-                                this.context.router.push("/accommodations");
-                            }}
                         >
                             Accommodations
                         </NavLink>
@@ -78,6 +76,7 @@ export class NavBar extends React.PureComponent {
         if (!this.props.user.isLoggedIn) return null;
         return (
             <IconButton
+                id="menu-toggler"
                 aria-label="More"
                 aria-haspopup="true"
                 aria-owns={this.state.openUserMenuEl ? "long-menu" : null}
@@ -114,6 +113,7 @@ export class NavBar extends React.PureComponent {
                     </Toolbar>
                 </AppBar>
                 <IconButton
+                    id="unlogged-toggler"
                     onClick={() => this.toggleOpen(this.state.open)}
                     color="contrast"
                     aria-label="Menu"
@@ -126,11 +126,18 @@ export class NavBar extends React.PureComponent {
     }
 }
 
-NavBar.propTypes = {
+NavBarComponent.propTypes = {
     classes: T.shape({
-        root: T.string,
-        flex: T.string,
-        menuButton: T.string
+        root: T.shape({
+            width: T.string
+        }),
+        flex: T.shape({
+            flex: T.number
+        }),
+        menuButton: T.shape({
+            marginLeft: T.number,
+            marginRight: T.number
+        })
     }).isRequired,
     user: T.shape({
         isLoggedIn: T.bool.isRequired
@@ -174,5 +181,4 @@ export default withStyles(theme => ({
     toolbar: {
         paddingRight: theme.spacing.unit * 6
     }
-}))(NavBar);
-
+}))(NavBarComponent);

@@ -28,6 +28,14 @@ describe("ui <Guard />", function () {
         expect(wrapper.find("LinearProgress").length).toBe(1);
     });
 
+    it("should render errorText", () => {
+        this.initialProps.hasError = true;
+        this.initialProps.errorText = "chibar";
+        const wrapper = mount(<Guard {...this.initialProps} />);
+        expect(wrapper.find("Typography").length).toBe(1);
+        expect(wrapper.text()).toMatch(/chibar/);
+    });
+
     it("should handleSubmit", () => {
         const wrapper = mount(<Guard {...this.initialProps} />);
         wrapper.find("form").simulate("submit");

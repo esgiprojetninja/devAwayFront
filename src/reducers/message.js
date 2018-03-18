@@ -1,11 +1,4 @@
-import {
-    FETCH_MESSAGES_REQUEST,
-    FETCH_MESSAGES_SUCCESS,
-    FETCH_MESSAGES_FAILURE,
-    SAVE_MESSAGE_REQUEST,
-    SAVE_MESSAGE_SUCCESS,
-    SAVE_MESSAGE_FAILURE
-} from "../actions/message";
+import * as messageTypes from "../actions/types/message";
 
 const initialSate = {
     data: [],
@@ -22,26 +15,26 @@ const initialSate = {
 const message = (state = initialSate, action) => {
     const { payload } = action;
     switch (action.type) {
-    case FETCH_MESSAGES_REQUEST:
+    case messageTypes.FETCH_MESSAGES_REQUEST:
         return {
             ...state,
             isLoading: true
         };
-    case FETCH_MESSAGES_SUCCESS:
+    case messageTypes.FETCH_MESSAGES_SUCCESS:
         return {
             ...state,
             isLoading: false,
             data: payload.data,
             byID: payload.byID
         };
-    case FETCH_MESSAGES_FAILURE:
+    case messageTypes.FETCH_MESSAGES_FAILURE:
         return {
             ...state,
             isLoading: false,
             hasError: true,
             errorText: payload
         };
-    case SAVE_MESSAGE_REQUEST:
+    case messageTypes.SAVE_MESSAGE_REQUEST:
         return {
             ...state,
             current: {
@@ -49,7 +42,7 @@ const message = (state = initialSate, action) => {
                 isLoading: true
             }
         };
-    case SAVE_MESSAGE_SUCCESS:
+    case messageTypes.SAVE_MESSAGE_SUCCESS:
         return {
             ...state,
             current: {
@@ -57,7 +50,7 @@ const message = (state = initialSate, action) => {
                 isLoading: false
             }
         };
-    case SAVE_MESSAGE_FAILURE:
+    case messageTypes.SAVE_MESSAGE_FAILURE:
         return {
             ...state,
             hasError: true,

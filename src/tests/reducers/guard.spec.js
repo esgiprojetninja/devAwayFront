@@ -1,14 +1,6 @@
 /* eslint-env jest */
 import guardReducer from "../../reducers/guard";
-import {
-    UPDATE_CREDENTIALS,
-    CHECK_GUARD_REQUEST,
-    CHECK_GUARD_SUCCESS,
-    CHECK_GUARD_FAILURE,
-    CREATE_GUARD_REQUEST,
-    CREATE_GUARD_SUCCESS,
-    CREATE_GUARD_FAILURE
-} from "../../actions/guard";
+import * as guardTypes from "../../actions/types/guard";
 
 describe("Reducer guard", () => {
     const initialSate = {
@@ -30,7 +22,7 @@ describe("Reducer guard", () => {
         expect(guardReducer(
             undefined,
             {
-                type: UPDATE_CREDENTIALS,
+                type: guardTypes.UPDATE_CREDENTIALS,
                 payload: { property: "email", value: "toto@toto.toto" }
             }
         )).toEqual({
@@ -45,7 +37,7 @@ describe("Reducer guard", () => {
     it("should CHECK_GUARD_REQUEST", () => {
         expect(guardReducer(
             undefined,
-            { type: CHECK_GUARD_REQUEST }
+            { type: guardTypes.CHECK_GUARD_REQUEST }
         )).toEqual({
             ...initialSate,
             isLoading: true
@@ -59,7 +51,7 @@ describe("Reducer guard", () => {
                 isLoading: true
             },
             {
-                type: CHECK_GUARD_SUCCESS,
+                type: guardTypes.CHECK_GUARD_SUCCESS,
                 payload: { token: "toto" }
             }
         )).toEqual({
@@ -79,7 +71,7 @@ describe("Reducer guard", () => {
                 isLoading: true
             },
             {
-                type: CHECK_GUARD_FAILURE,
+                type: guardTypes.CHECK_GUARD_FAILURE,
                 payload: "Oops"
             }
         )).toEqual({
@@ -93,7 +85,7 @@ describe("Reducer guard", () => {
     it("should CREATE_GUARD_REQUEST", () => {
         expect(guardReducer(
             undefined,
-            { type: CREATE_GUARD_REQUEST }
+            { type: guardTypes.CREATE_GUARD_REQUEST }
         )).toEqual({
             ...initialSate,
             isLoading: true
@@ -107,7 +99,7 @@ describe("Reducer guard", () => {
                 isLoading: true
             },
             {
-                type: CREATE_GUARD_SUCCESS,
+                type: guardTypes.CREATE_GUARD_SUCCESS,
                 payload: { code: 123456 }
             }
         )).toEqual({
@@ -127,7 +119,7 @@ describe("Reducer guard", () => {
                 isLoading: true
             },
             {
-                type: CREATE_GUARD_FAILURE,
+                type: guardTypes.CREATE_GUARD_FAILURE,
                 payload: "Oops"
             }
         )).toEqual({

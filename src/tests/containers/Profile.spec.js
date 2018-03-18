@@ -9,12 +9,13 @@ import {
 
 import mainReducer from "../../reducers/index";
 import {
+    mapStateToProps,
     mapDispatchToProps
 } from "../../containers/Profile";
 
 const mockStore = configureMockStore([thunk.withExtraArgument(mockAPI)]);
 
-function prepare(name, state) {
+const prepare = (name, state) => {
     const store = mockStore(state);
     return {
         store,
@@ -22,11 +23,11 @@ function prepare(name, state) {
         fn: (...args) =>
             Promise.resolve(mapDispatchToProps(store.dispatch)[name](...args))
     };
-}
+};
 
 const mockErrorStore = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)]);
 
-function prepareWithError(name, state) {
+const prepareWithError = (name, state) => {
     const store = mockErrorStore(state);
     return {
         store,
@@ -34,7 +35,7 @@ function prepareWithError(name, state) {
         fn: (...args) =>
             Promise.resolve(mapDispatchToProps(store.dispatch)[name](...args))
     };
-}
+};
 
 describe("Container Profile", () => {
     describe("mapDispatchToProps", () => {
@@ -63,6 +64,15 @@ describe("Container Profile", () => {
             fn().then(() => {
                 expect(store.getActions().map(a => a.type)).toEqual([]);
             });
+        });
+    });
+    describe("mapStateToProps", () => {
+        it("only dispatch profile state", () => {
+            expect(mapStateToProps(
+                {
+                    profile: "coucou"
+                }
+            )).toEqual("coucou");
         });
     });
 });

@@ -12,7 +12,7 @@ import {
 
 const mockStore = configureMockStore([thunk.withExtraArgument(mockAPI)]);
 
-function prepare(name, state) {
+const prepare = (name, state) => {
     const store = mockStore(state);
     return {
         store,
@@ -20,7 +20,7 @@ function prepare(name, state) {
         fn: (...args) =>
             Promise.resolve(mapDispatchToProps(store.dispatch)[name](...args))
     };
-}
+};
 
 describe("Container Guard", () => {
     describe("mapDispatchToProps", () => {

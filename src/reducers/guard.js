@@ -1,12 +1,4 @@
-import {
-    UPDATE_CREDENTIALS,
-    CHECK_GUARD_REQUEST,
-    CHECK_GUARD_SUCCESS,
-    CHECK_GUARD_FAILURE,
-    CREATE_GUARD_REQUEST,
-    CREATE_GUARD_SUCCESS,
-    CREATE_GUARD_FAILURE
-} from "../actions/guard";
+import * as guardTypes from "../actions/types/guard";
 
 const initialSate = {
     data: {
@@ -22,7 +14,7 @@ const initialSate = {
 const guard = (state = initialSate, action) => {
     const { payload } = action;
     switch (action.type) {
-    case UPDATE_CREDENTIALS:
+    case guardTypes.UPDATE_CREDENTIALS:
         return {
             ...state,
             data: {
@@ -30,12 +22,12 @@ const guard = (state = initialSate, action) => {
                 [payload.property]: payload.value
             }
         };
-    case CHECK_GUARD_REQUEST:
+    case guardTypes.CHECK_GUARD_REQUEST:
         return {
             ...state,
             isLoading: true
         };
-    case CHECK_GUARD_SUCCESS:
+    case guardTypes.CHECK_GUARD_SUCCESS:
         return {
             ...state,
             isLoading: false,
@@ -44,19 +36,19 @@ const guard = (state = initialSate, action) => {
                 token: payload.token
             }
         };
-    case CHECK_GUARD_FAILURE:
+    case guardTypes.CHECK_GUARD_FAILURE:
         return {
             ...state,
             isLoading: false,
             hasError: true,
             errorText: payload
         };
-    case CREATE_GUARD_REQUEST:
+    case guardTypes.CREATE_GUARD_REQUEST:
         return {
             ...state,
             isLoading: true
         };
-    case CREATE_GUARD_SUCCESS:
+    case guardTypes.CREATE_GUARD_SUCCESS:
         return {
             ...state,
             isLoading: false,
@@ -65,7 +57,7 @@ const guard = (state = initialSate, action) => {
                 code: payload.code
             }
         };
-    case CREATE_GUARD_FAILURE:
+    case guardTypes.CREATE_GUARD_FAILURE:
         return {
             ...state,
             isLoading: false,

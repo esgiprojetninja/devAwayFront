@@ -12,17 +12,18 @@ import Dialog, {
 } from "material-ui/Dialog";
 import { User } from "../propTypes/userType";
 
-
 export default class LogBox extends React.PureComponent {
     static propTypes = {
         isLoading: T.bool.isRequired,
         isLoggedIn: T.bool.isRequired,
         hasError: T.bool.isRequired,
-        errorText: T.string.isRequired,
+        error: T.string,
         onSubmit: T.func.isRequired,
         onLogoutClicked: T.func.isRequired,
         data: User.isRequired
     };
+
+    static defaultProps = { error: "" }
 
     constructor(props) {
         super(props);
@@ -67,7 +68,7 @@ export default class LogBox extends React.PureComponent {
         return this.props.hasError
             ? (
                 <Typography>
-                    {this.props.errorText}
+                    {this.props.error}
                 </Typography>
             )
             : null;

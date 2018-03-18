@@ -1,13 +1,6 @@
 /* eslint-env jest */
 import messageReducer from "../../reducers/message";
-import {
-    FETCH_MESSAGES_REQUEST,
-    FETCH_MESSAGES_SUCCESS,
-    FETCH_MESSAGES_FAILURE,
-    SAVE_MESSAGE_REQUEST,
-    SAVE_MESSAGE_SUCCESS,
-    SAVE_MESSAGE_FAILURE
-} from "../../actions/message";
+import * as messageTypes from "../../actions/types/message";
 
 describe("Reducer message", () => {
     const initialSate = {
@@ -28,7 +21,7 @@ describe("Reducer message", () => {
 
     it("should FETCH_MESSAGES_REQUEST", () => {
         expect(messageReducer(initialSate, {
-            type: FETCH_MESSAGES_REQUEST
+            type: messageTypes.FETCH_MESSAGES_REQUEST
         })).toEqual({
             ...initialSate,
             isLoading: true
@@ -43,7 +36,7 @@ describe("Reducer message", () => {
         const byID = new Map();
         byID.set(1, { id: 1, name: "toto" });
         expect(messageReducer(state, {
-            type: FETCH_MESSAGES_SUCCESS,
+            type: messageTypes.FETCH_MESSAGES_SUCCESS,
             payload: {
                 data: [1],
                 byID
@@ -62,7 +55,7 @@ describe("Reducer message", () => {
             isLoading: true
         };
         expect(messageReducer(state, {
-            type: FETCH_MESSAGES_FAILURE,
+            type: messageTypes.FETCH_MESSAGES_FAILURE,
             payload: "Sorry boss :/"
         })).toEqual({
             ...state,
@@ -74,7 +67,7 @@ describe("Reducer message", () => {
 
     it("should SAVE_MESSAGE_REQUEST", () => {
         expect(messageReducer(initialSate, {
-            type: SAVE_MESSAGE_REQUEST
+            type: messageTypes.SAVE_MESSAGE_REQUEST
         })).toEqual({
             ...initialSate,
             current: {
@@ -93,7 +86,7 @@ describe("Reducer message", () => {
             }
         };
         expect(messageReducer(state, {
-            type: SAVE_MESSAGE_SUCCESS,
+            type: messageTypes.SAVE_MESSAGE_SUCCESS,
             payload: {
                 id: 1000,
                 name: "Toto"
@@ -119,7 +112,7 @@ describe("Reducer message", () => {
             }
         };
         expect(messageReducer(state, {
-            type: SAVE_MESSAGE_FAILURE,
+            type: messageTypes.SAVE_MESSAGE_FAILURE,
             payload: "Won't save"
         })).toEqual({
             ...state,

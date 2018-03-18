@@ -118,6 +118,7 @@ describe("ui <SubscribeBox />", function () {
             errorText={defaultProps.errorText}
             onSubmit={mockSubmit}
         />);
+        wrapper.instance().handleChange("chibar", { target: { value: "Toto" } });
         wrapper.instance().handleChange("username", { target: { value: "Toto" } });
         wrapper.instance().handleChange("password", { target: { value: "Secret" } });
         wrapper.instance().handleChange("passwordCheck", { target: { value: "Secret" } });

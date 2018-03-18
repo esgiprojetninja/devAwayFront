@@ -29,7 +29,7 @@ const loginFailure = error => ({
     payload: error
 });
 
-export const getMe = () => {
+export const getMe = (token) => {
     return (dispatch, getState, API) => {
         dispatch(userRequest());
         return API.profileApi.getMe()
@@ -39,19 +39,19 @@ export const getMe = () => {
                         dispatch(displaySnackMsg(`Logged in as ${res.username}`));
                         const sessionUser = JSON.stringify({
                             ...res,
-                            token: getState().user.data.token
+                            token
                         });
                         window.localStorage.setItem("filledUser", sessionUser);
                         return dispatch(loginSuccess(res));
                     }
-                    dispatch(displaySnackMsg("Log in failed"));
-                    return dispatch(loginFailure(res.title || "Bad credentials"));
-                }, (err) => {
-                    console.error("getMe error", err);
-                    dispatch(displaySnackMsg("Log in failed, see console"));
+                    dispatch(displaySnackMsg("Login failed"));
                     dispatch(logout());
-                    const errMsg = typeof err === "string" ? err : "Bad credentials.";
-                    return dispatch(loginFailure(errMsg));
+                    return dispatch(loginFailure(res.message));
+                }, (err) => {
+                    // console.error("getMe error", err);
+                    dispatch(displaySnackMsg("Login failed"));
+                    dispatch(logout());
+                    return dispatch(loginFailure(err));
                 }
             );
     };
@@ -63,14 +63,18 @@ export function login(credentials) {
         return API.userApi.login(credentials)
             .then(
                 (res) => {
-                    if (res && res.code && !res.token) {
+                    if (res && !res.token) {
                         return dispatch(loginFailure(res.message));
                     }
                     window.localStorage.setItem("authToken", res.token);
                     dispatch(loginSuccess(res));
                     return dispatch(getMe(res.token));
                 },
-                error => console.log(error)
+                (error) => {
+                    // console.log(error);
+                    dispatch(displaySnackMsg("Failed to login"));
+                    return dispatch(loginFailure(error));
+                }
             );
     };
 }
@@ -82,7 +86,7 @@ const addUserSuccess = user => ({
 
 const addUserFailure = err => ({
     type: types.ADD_USER_FAILURE,
-    payload: { errorText: err }
+    payload: err
 });
 
 export const addUser = (user) => {
@@ -95,28 +99,21 @@ export const addUser = (user) => {
                         dispatch(displaySnackMsg(`Account created with ${res.username}`));
                         return dispatch(addUserSuccess(res));
                     }
-                    dispatch(displaySnackMsg("Account creation failure"));
+                    dispatch(displaySnackMsg("Uncomplete user info"));
                     return dispatch(addUserFailure(res));
                 }, (err) => {
-                    console.error("addUser error", err);
-                    dispatch(displaySnackMsg("Account creation failure, see console"));
+                    // console.error("addUser error", err);
+                    dispatch(displaySnackMsg("Account creation failure"));
                     return dispatch(addUserFailure(err));
                 }
             );
     };
 };
 
-export const loadSessionUser = () => {
-    return (dispatch) => {
-        return new Promise((resolve) => {
-            const token = window.localStorage.getItem("authToken");
-            const savedUser = window.localStorage.getItem("filledUser");
-            if (token && !savedUser) {
-                dispatch(getMe());
-            } else if (savedUser) {
-                dispatch(loginSuccess(JSON.parse(savedUser)));
-            }
-            resolve();
-        }).then(() => {});
+export const loadSessionUser = () =>
+    (dispatch) => {
+        const token = window.localStorage.getItem("authToken");
+        if (token) {
+            dispatch(getMe(token));
+        }
     };
-};

@@ -1,13 +1,6 @@
 /* eslint-env jest */
 import userReducer from "../../reducers/user";
-import {
-    USER_REQUEST,
-    ADD_USER_SUCCESS,
-    ADD_USER_FAILURE,
-    LOGIN_REQUEST,
-    LOGIN_FAILURE,
-    LOGIN_SUCCESS
-} from "../../actions/types/user";
+import * as userTypes from "../../actions/types/user";
 
 describe("Reducer USER", () => {
     const initialSate = {
@@ -26,16 +19,22 @@ describe("Reducer USER", () => {
         isLoggedIn: false,
         isLoading: false,
         hasError: false,
-        errorText: ""
+        error: ""
     };
 
     it("should return initialSate", () => {
         expect(userReducer(undefined, {})).toEqual(initialSate);
     });
 
+    it("should dispatch LOGOUT", () => {
+        expect(userReducer(initialSate, {
+            type: userTypes.LOGOUT
+        })).toEqual(initialSate);
+    });
+
     it("should dispatch LOGIN_REQUEST", () => {
         expect(userReducer(initialSate, {
-            type: LOGIN_REQUEST
+            type: userTypes.LOGIN_REQUEST
         })).toEqual({
             ...initialSate,
             isLoading: true,
@@ -46,7 +45,7 @@ describe("Reducer USER", () => {
 
     it("should dispatch LOGIN_SUCCESS", () => {
         expect(userReducer(initialSate, {
-            type: LOGIN_SUCCESS,
+            type: userTypes.LOGIN_SUCCESS,
             payload: {
                 data: {
                     id: 42,
@@ -70,10 +69,9 @@ describe("Reducer USER", () => {
         });
     });
 
-
     it("should dispatch LOGIN_FAILURE", () => {
         expect(userReducer(initialSate, {
-            type: LOGIN_FAILURE,
+            type: userTypes.LOGIN_FAILURE,
             payload: "chillinmyass"
         })).toEqual({
             ...initialSate,
@@ -84,10 +82,9 @@ describe("Reducer USER", () => {
         });
     });
 
-
     it("should dispatch USER_REQUEST", () => {
         expect(userReducer(initialSate, {
-            type: USER_REQUEST
+            type: userTypes.USER_REQUEST
         })).toEqual({
             ...initialSate,
             isLoading: true
@@ -115,7 +112,7 @@ describe("Reducer USER", () => {
         };
 
         expect(userReducer(state, {
-            type: ADD_USER_SUCCESS,
+            type: userTypes.ADD_USER_SUCCESS,
             payload
         })).toEqual({
             ...state,
@@ -141,13 +138,13 @@ describe("Reducer USER", () => {
         };
 
         expect(userReducer(state, {
-            type: ADD_USER_FAILURE,
-            payload: { errorText: "error, bitch" }
+            type: userTypes.ADD_USER_FAILURE,
+            payload: "error, bitch"
         })).toEqual({
             ...state,
             isLoading: false,
             hasError: true,
-            errorText: "error, bitch"
+            error: "error, bitch"
         });
     });
 });

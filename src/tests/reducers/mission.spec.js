@@ -1,13 +1,6 @@
 /* eslint-env jest */
 import missionReducer from "../../reducers/mission";
-import {
-    FETCH_MISSIONS_REQUEST,
-    FETCH_MISSIONS_SUCCESS,
-    FETCH_MISSIONS_FAILURE,
-    SAVE_MISSION_REQUEST,
-    SAVE_MISSION_SUCCESS,
-    SAVE_MISSION_FAILURE
-} from "../../actions/mission";
+import * as missionTypes from "../../actions/types/mission";
 
 describe("Reducer mission", () => {
     const initialSate = {
@@ -28,7 +21,7 @@ describe("Reducer mission", () => {
 
     it("should FETCH_MISSIONS_REQUEST", () => {
         expect(missionReducer(initialSate, {
-            type: FETCH_MISSIONS_REQUEST
+            type: missionTypes.FETCH_MISSIONS_REQUEST
         })).toEqual({
             ...initialSate,
             isLoading: true
@@ -43,7 +36,7 @@ describe("Reducer mission", () => {
         const byID = new Map();
         byID.set(1, { id: 1, name: "toto" });
         expect(missionReducer(state, {
-            type: FETCH_MISSIONS_SUCCESS,
+            type: missionTypes.FETCH_MISSIONS_SUCCESS,
             payload: {
                 data: [1],
                 byID
@@ -62,7 +55,7 @@ describe("Reducer mission", () => {
             isLoading: true
         };
         expect(missionReducer(state, {
-            type: FETCH_MISSIONS_FAILURE,
+            type: missionTypes.FETCH_MISSIONS_FAILURE,
             payload: "Sorry boss :/"
         })).toEqual({
             ...state,
@@ -74,7 +67,7 @@ describe("Reducer mission", () => {
 
     it("should SAVE_MISSION_REQUEST", () => {
         expect(missionReducer(initialSate, {
-            type: SAVE_MISSION_REQUEST
+            type: missionTypes.SAVE_MISSION_REQUEST
         })).toEqual({
             ...initialSate,
             current: {
@@ -93,7 +86,7 @@ describe("Reducer mission", () => {
             }
         };
         expect(missionReducer(state, {
-            type: SAVE_MISSION_SUCCESS,
+            type: missionTypes.SAVE_MISSION_SUCCESS,
             payload: {
                 id: 1000,
                 name: "Toto"
@@ -119,7 +112,7 @@ describe("Reducer mission", () => {
             }
         };
         expect(missionReducer(state, {
-            type: SAVE_MISSION_FAILURE,
+            type: missionTypes.SAVE_MISSION_FAILURE,
             payload: "Won't save"
         })).toEqual({
             ...state,

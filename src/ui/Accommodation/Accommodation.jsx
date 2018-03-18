@@ -3,9 +3,6 @@ import * as T from "prop-types";
 
 import Card, { CardActions, CardContent } from "material-ui/Card";
 import { CircularProgress } from "material-ui/Progress";
-import Snackbar from "material-ui/Snackbar";
-import IconButton from "material-ui/IconButton";
-import CloseIcon from "material-ui-icons/Close";
 import Button from "material-ui/Button";
 import Typography from "material-ui/Typography";
 
@@ -23,7 +20,6 @@ export default class Accommodation extends React.PureComponent {
             data: accommodationPropTypes,
             isLoading: T.bool
         }).isRequired,
-        hasError: T.bool.isRequired,
         errorText: T.string.isRequired,
         mode: T.oneOf(["list", "edit"]).isRequired,
         onFetchAccommodationsClicked: T.func.isRequired,
@@ -35,21 +31,8 @@ export default class Accommodation extends React.PureComponent {
         onInit: T.func.isRequired
     }
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            snackOpen: this.props.hasError
-        };
-    }
-
     componentDidMount() {
         this.props.onInit();
-    }
-
-    handleRequestClose() {
-        this.setState({
-            snackOpen: false
-        });
     }
 
     renderAccommodationList() {
@@ -79,54 +62,6 @@ export default class Accommodation extends React.PureComponent {
         return null;
     }
 
-    renderError() {
-        if (this.props.hasError) {
-            return (
-                <Snackbar
-                    anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "left"
-                    }}
-                    open={this.state.snackOpen}
-                    autoHideDuration={6000}
-                    onRequestClose={this.handleRequestClose}
-                    SnackbarContentProps={{
-                        "aria-describedby": "message-id"
-                    }}
-                    message={<span id="message-id">Note archived</span>}
-                    action={[
-                        <Button key="undo" color="accent" dense onClick={this.handleRequestClose}>
-                            UNDO
-                        </Button>,
-                        <IconButton
-                            key="close"
-                            aria-label="Close"
-                            color="inherit"
-                            onClick={this.handleRequestClose}
-                        >
-                            <CloseIcon />
-                        </IconButton>
-                    ]}
-                />
-            );
-        }
-        return null;
-    }
-
-    renderCurrentProp() {
-        const { data, isLoading } = this.props.current;
-        if (isLoading) {
-            return (
-                <CircularProgress />
-            );
-        }
-        return (
-            <div>
-                <p>{data.title} | #{data.id}</p>
-            </div>
-        );
-    }
-
     renderShowListButton() {
         return this.props.mode !== "list"
             ? (
@@ -140,7 +75,6 @@ export default class Accommodation extends React.PureComponent {
     }
 
     render() {
-        console.log("coucou accom", this.props);
         return (
             <Card>
                 <CardContent>
@@ -150,6 +84,7 @@ export default class Accommodation extends React.PureComponent {
                 </CardContent>
                 <CardActions>
                     <Button
+                        id="reload-accos-btn"
                         onClick={this.props.onFetchAccommodationsClicked}
                     >
                         Reload

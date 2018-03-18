@@ -42,16 +42,15 @@ export const mockAPI = {
     }
 };
 
-
 export const mockAPIWithErrors = {
     accommodationApi: {
         fetchAll: () => Promise.resolve({
             hasError: true,
-            message: "Naupe !"
+            message: "Not gonna happen bruh"
         }),
         createOrUpdate: () => Promise.resolve({
             hasError: true,
-            message: "Naupe !"
+            message: "Hey hey, my my"
         }),
         deleteItem: () => Promise.resolve({
             hasError: true,
@@ -116,10 +115,52 @@ export const mockAPIWithErrors = {
     },
     userApi: {
         login: () => Promise.resolve({
-            hasError: true
+            hasError: true,
+            message: "No sir, you are not comin in"
         }),
         addUser: () => Promise.resolve({
             hasError: true
         })
+    }
+};
+
+export const mockAPIWithServerFailure = {
+    accommodationApi: {
+        fetchAll: () => Promise.reject(new Error({
+            code: 500,
+            message: "gtfo"
+        })),
+        createOrUpdate: () => Promise.reject(new Error("gtfo")),
+        deleteItem: () => Promise.reject(new Error("gtfo"))
+    },
+    missionApi: {
+        fetchAll: () => Promise.reject(new Error("gtfo")),
+        createOrUpdate: () => Promise.reject(new Error("gtfo")),
+        deleteItem: () => Promise.reject(new Error("gtfo"))
+    },
+    messageApi: {
+        fetchAll: () => Promise.reject(new Error("gtfo")),
+        createOrUpdate: () => Promise.reject(new Error("gtfo")),
+        deleteItem: () => Promise.reject(new Error("gtfo"))
+    },
+    profileApi: {
+        fetchAll: () => Promise.reject(new Error("gtfo")),
+        createOrUpdate: () => Promise.reject(new Error("gtfo")),
+        deleteItem: () => Promise.reject(new Error("gtfo")),
+        getMe: () => Promise.reject(new Error("gtfo"))
+    },
+    guardApi: {
+        checkGuard: () => Promise.reject(new Error("gtfo")),
+        createGuard: () => Promise.reject(new Error("gtfo"))
+    },
+    userApi: {
+        login: () => Promise.reject(new Error({
+            code: 500,
+            message: "gtfo"
+        })),
+        addUser: () => Promise.reject(new Error({
+            code: 500,
+            message: "gtfo"
+        }))
     }
 };

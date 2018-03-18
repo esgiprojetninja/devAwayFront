@@ -39,28 +39,14 @@ export function fetchAccommodations() {
             .then(
                 (res) => {
                     if (res.hasError) {
-                        return dispatch(fetchAccommodationsFailure(res.message));
-                    }
-                    return dispatch(fetchAccommodationsSuccess(res));
-                },
-                error => console.log(error)
-            );
-    };
-}
-
-export function fetchAccommodationsWithoutAuth() {
-    return (dispatch, getState, API) => {
-        dispatch(fetchAccommodationsRequest());
-        return API.accommodationApi.fetchAll()
-            .then(
-                (res) => {
-                    if (res.hasError) {
+                        dispatch(displaySnackMsg("Failed to fetch accomodations"));
                         return dispatch(fetchAccommodationsFailure(res.message));
                     }
                     return dispatch(fetchAccommodationsSuccess(res));
                 },
                 (error) => {
-                    console.log(error);
+                    // console.log(error);
+                    dispatch(displaySnackMsg("Failed to fetch accomodations"));
                     return dispatch(fetchAccommodationsFailure(error));
                 }
             );
@@ -71,7 +57,7 @@ const saveAccommodationRequest = () => ({
     type: types.SAVE_ACCOMMODATION_REQUEST
 });
 
-const saveAccommodationSuccess = (accommodation = null) => ({
+const saveAccommodationSuccess = accommodation => ({
     type: types.SAVE_ACCOMMODATION_SUCCESS,
     payload: { accommodation }
 });
@@ -89,16 +75,14 @@ export function saveAccommodation(newAccommodation = null) {
             || getState().accommodation.current)
             .then((res) => {
                 if (res.hasError || res.trace) {
-                    const errMsg = res.detail ? res.detail : "Accomodation creation failed !";
-                    dispatch(displaySnackMsg(errMsg));
-                    return dispatch(saveAccommodationFailure(res.message));
+                    dispatch(displaySnackMsg("Accomodation creation failed !"));
+                    return dispatch(saveAccommodationFailure(res));
                 }
                 dispatch(displaySnackMsg("Accomodation created !"));
                 dispatch(saveAccommodationSuccess(res));
                 return dispatch(fetchAccommodations());
             }, (err) => {
-                const errMsg = err.detail ? err.detail : "Accomodation creation failed !";
-                dispatch(displaySnackMsg(errMsg));
+                dispatch(displaySnackMsg("Accomodation creation failed !"));
                 return dispatch(saveAccommodationFailure(err));
             });
     };
@@ -122,11 +106,15 @@ export function deleteAccommodation(id) {
         dispatch(deleteAccommodationRequest());
         return API.accommodationApi.deleteItem(id).then((res) => {
             if (res.hasError) {
+                dispatch(displaySnackMsg("Accomodation deleting failed !"));
                 return dispatch(deleteAccommodationFailure(res.message));
             }
             dispatch(deleteAccommodationSuccess());
             dispatch(fetchAccommodations());
             return dispatch(showList());
+        }, (err) => {
+            dispatch(displaySnackMsg("Accomodation deleting failed !"));
+            return dispatch(deleteAccommodationFailure(err));
         });
     };
 }

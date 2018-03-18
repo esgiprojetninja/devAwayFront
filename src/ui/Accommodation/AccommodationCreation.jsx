@@ -285,6 +285,7 @@ export class AccommocationCreation extends React.PureComponent {
                 > Create Accommodation
                 </MenuItem>
                 <Dialog
+                    id="acco-creation-dialog"
                     fullScreen
                     open={this.state.open}
                     onClose={this.handleClose}

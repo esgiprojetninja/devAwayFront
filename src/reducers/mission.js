@@ -1,11 +1,4 @@
-import {
-    FETCH_MISSIONS_REQUEST,
-    FETCH_MISSIONS_SUCCESS,
-    FETCH_MISSIONS_FAILURE,
-    SAVE_MISSION_REQUEST,
-    SAVE_MISSION_SUCCESS,
-    SAVE_MISSION_FAILURE
-} from "../actions/mission";
+import * as missionTypes from "../actions/types/mission";
 
 const initialSate = {
     data: [],
@@ -22,26 +15,26 @@ const initialSate = {
 const mission = (state = initialSate, action) => {
     const { payload } = action;
     switch (action.type) {
-    case FETCH_MISSIONS_REQUEST:
+    case missionTypes.FETCH_MISSIONS_REQUEST:
         return {
             ...state,
             isLoading: true
         };
-    case FETCH_MISSIONS_SUCCESS:
+    case missionTypes.FETCH_MISSIONS_SUCCESS:
         return {
             ...state,
             isLoading: false,
             data: payload.data,
             byID: payload.byID
         };
-    case FETCH_MISSIONS_FAILURE:
+    case missionTypes.FETCH_MISSIONS_FAILURE:
         return {
             ...state,
             isLoading: false,
             hasError: true,
             errorText: payload
         };
-    case SAVE_MISSION_REQUEST:
+    case missionTypes.SAVE_MISSION_REQUEST:
         return {
             ...state,
             current: {
@@ -49,7 +42,7 @@ const mission = (state = initialSate, action) => {
                 isLoading: true
             }
         };
-    case SAVE_MISSION_SUCCESS:
+    case missionTypes.SAVE_MISSION_SUCCESS:
         return {
             ...state,
             current: {
@@ -57,7 +50,7 @@ const mission = (state = initialSate, action) => {
                 isLoading: false
             }
         };
-    case SAVE_MISSION_FAILURE:
+    case missionTypes.SAVE_MISSION_FAILURE:
         return {
             ...state,
             hasError: true,
