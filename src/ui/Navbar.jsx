@@ -164,7 +164,7 @@ export default withStyles(theme => ({
         transformOrigin: "top"
     },
     navStyle: {
-        backgroundColor: "#fe5858"
+        backgroundColor: theme.palette.primary.light
     },
     dropDown_in: {
         transform: "scaleY(1)"
