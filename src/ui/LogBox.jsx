@@ -55,6 +55,7 @@ export default class LogBox extends React.PureComponent {
         this.state = {
             username: "",
             password: "",
+            noticedError: false,
             open: false
         };
     }
@@ -66,17 +67,19 @@ export default class LogBox extends React.PureComponent {
     };
 
     handleClose = () => {
-        this.setState({ open: false });
+        this.setState({ open: false, noticedError: false });
     };
 
     handleChange(property, ev) {
         this.setState({
-            [property]: ev.target.value
+            [property]: ev.target.value,
+            noticedError: true
         });
     }
 
     handleSubmit(ev) {
         ev.preventDefault();
+        this.setState({ noticedError: false });
         const { username, password } = this.state;
         this.props.onSubmit({
             username,
@@ -86,7 +89,7 @@ export default class LogBox extends React.PureComponent {
     }
 
     renderErrors() {
-        return this.props.hasError
+        return this.props.hasError && !this.state.noticedError
             ? (
                 <Typography>
                     {this.props.error}
@@ -140,7 +143,7 @@ export default class LogBox extends React.PureComponent {
                         <DialogContent>
                             <FormControl>
                                 <TextField
-                                    error={this.props.hasError}
+                                    error={this.props.hasError && !this.state.noticedError}
                                     type="text"
                                     label="Username"
                                     name="username"
@@ -151,7 +154,7 @@ export default class LogBox extends React.PureComponent {
                             </FormControl>
                             <FormControl>
                                 <TextField
-                                    error={this.props.hasError}
+                                    error={this.props.hasError && !this.state.noticedError}
                                     type="password"
                                     label="Password"
                                     name="pwd"
