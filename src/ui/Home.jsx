@@ -186,6 +186,9 @@ export class Home extends React.PureComponent {
                     vertical: "bottom",
                     horizontal: "center"
                 }}
+                style={{
+                    left: "calc(50%)"
+                }}
                 className={this.props.classes.snackbar}
                 onClose={this.props.closeSnack}
                 action={[

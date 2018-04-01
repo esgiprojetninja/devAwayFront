@@ -1,6 +1,6 @@
 import React from "react";
 import thunk from "redux-thunk";
-import { createStore, applyMiddleware } from "redux";
+import { createStore, applyMiddleware, compose } from "redux";
 import { createLogger } from "redux-logger";
 import { render } from "react-dom";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
@@ -26,10 +26,11 @@ function startApp(node) {
     if (process.env.NODE_ENV === "development") {
         middlewares.push(createLogger({ collapsed: true }));
     }
+    const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // eslint-disable-line
 
     const store = createStore(
         MainReducer,
-        applyMiddleware(...middlewares)
+        composeEnhancers(applyMiddleware(...middlewares)),
     );
     render(
         <MuiThemeProvider theme={defaultTheme}>
