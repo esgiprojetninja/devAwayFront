@@ -1,5 +1,5 @@
 import * as React from "react";
-import { BrowserRouter as Router, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import * as T from "prop-types";
 import AppBar from "material-ui/AppBar";
 import Toolbar from "material-ui/Toolbar";
@@ -41,34 +41,32 @@ export class NavBarComponent extends React.PureComponent {
     renderUserMenu() {
         if (!this.props.user.isLoggedIn) return null;
         return (
-            <Router>
-                <Menu
-                    id="long-menu"
-                    anchorEl={this.state.openUserMenuEl}
-                    open={!!this.state.openUserMenuEl}
-                    onClose={this.handleUserMenuClose}
-                    PaperProps={{
-                        style: {
-                            maxHeight: ITEM_HEIGHT * 4.5,
-                            width: 200
-                        }
-                    }}
+            <Menu
+                id="long-menu"
+                anchorEl={this.state.openUserMenuEl}
+                open={!!this.state.openUserMenuEl}
+                onClose={this.handleUserMenuClose}
+                PaperProps={{
+                    style: {
+                        maxHeight: ITEM_HEIGHT * 4.5,
+                        width: 200
+                    }
+                }}
+            >
+                <MenuItem
+                    key="/geszuihgvhui"
+                    selected={false}
+                    onClick={this.handleUserMenuClose}
                 >
-                    <MenuItem
-                        key="/accommodations"
-                        selected={false}
-                        onClick={this.handleUserMenuClose}
+                    <NavLink
+                        id="accommodation-link"
+                        to="/accommodations"
                     >
-                        <NavLink
-                            id="accommodation-link"
-                            to="/accommodations"
-                        >
-                            Accommodations
-                        </NavLink>
-                    </MenuItem>
-                    <AccommodationCreation />
-                </Menu>
-            </Router>
+                        Accommodations
+                    </NavLink>
+                </MenuItem>
+                <AccommodationCreation />
+            </Menu>
         );
     }
 
