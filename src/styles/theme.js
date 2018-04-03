@@ -1,8 +1,5 @@
 import { createMuiTheme } from "material-ui/styles";
-import {
-    blue,
-    amber
-} from "material-ui/colors";
+import { amber } from "material-ui/colors";
 
 const defaultMargin = "0.5em";
 
@@ -21,7 +18,12 @@ export const boxes = {
 
 export const defaultTheme = createMuiTheme({
     palette: {
-        primary: blue,
+        primary: {
+            light: "#FE5858",
+            main: "#E83232",
+            dark: "#BE1414",
+            contrastText: "#fff"
+        },
         secondary: amber
     }
 });

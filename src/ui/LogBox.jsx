@@ -10,7 +10,28 @@ import Dialog, {
     DialogContent,
     DialogTitle
 } from "material-ui/Dialog";
+import Icon from "material-ui/Icon";
 import { User } from "../propTypes/userType";
+import { defaultTheme } from "../styles/theme";
+
+const styles = {
+    loginSendBtn: {
+        margin: "auto",
+        marginLeft: "6px"
+    },
+    loginDialog: {
+        title: {
+            color: defaultTheme.palette.primary.dark
+        },
+        titleSeparator: {
+            margin: "auto",
+            width: "100%",
+            height: "1px",
+            display: "block",
+            backgroundColor: defaultTheme.palette.primary.dark
+        }
+    }
+};
 
 export default class LogBox extends React.PureComponent {
     static propTypes = {
@@ -34,6 +55,7 @@ export default class LogBox extends React.PureComponent {
         this.state = {
             username: "",
             password: "",
+            noticedError: false,
             open: false
         };
     }
@@ -45,17 +67,19 @@ export default class LogBox extends React.PureComponent {
     };
 
     handleClose = () => {
-        this.setState({ open: false });
+        this.setState({ open: false, noticedError: false });
     };
 
     handleChange(property, ev) {
         this.setState({
-            [property]: ev.target.value
+            [property]: ev.target.value,
+            noticedError: true
         });
     }
 
     handleSubmit(ev) {
         ev.preventDefault();
+        this.setState({ noticedError: false });
         const { username, password } = this.state;
         this.props.onSubmit({
             username,
@@ -65,7 +89,7 @@ export default class LogBox extends React.PureComponent {
     }
 
     renderErrors() {
-        return this.props.hasError
+        return this.props.hasError && !this.state.noticedError
             ? (
                 <Typography>
                     {this.props.error}
@@ -93,7 +117,6 @@ export default class LogBox extends React.PureComponent {
                 {this.renderName()}
                 <Button
                     onClick={this.props.onLogoutClicked}
-                    color="contrast"
                 >
                     Logout
                 </Button>
@@ -110,15 +133,19 @@ export default class LogBox extends React.PureComponent {
                     onClose={this.handleClose}
                     aria-labelledby="form-logbox-title"
                 >
-                    <DialogTitle id="form-logbox-title">Login</DialogTitle>
+                    <DialogTitle id="form-logbox-title">
+                        <span style={styles.loginDialog.title}>Login</span>
+                    </DialogTitle>
+                    <div style={styles.loginDialog.titleSeparator} />
                     <form
                         onSubmit={this.handleSubmit}
                     >
                         <DialogContent>
                             <FormControl>
                                 <TextField
-                                    error={this.props.hasError}
+                                    error={this.props.hasError && !this.state.noticedError}
                                     type="text"
+                                    label="Username"
                                     name="username"
                                     id="username"
                                     margin="normal"
@@ -127,8 +154,9 @@ export default class LogBox extends React.PureComponent {
                             </FormControl>
                             <FormControl>
                                 <TextField
-                                    error={this.props.hasError}
+                                    error={this.props.hasError && !this.state.noticedError}
                                     type="password"
+                                    label="Password"
                                     name="pwd"
                                     id="pwd"
                                     margin="normal"
@@ -140,8 +168,11 @@ export default class LogBox extends React.PureComponent {
                         <DialogActions>
                             <Button
                                 type="submit"
+                                variant="raised"
+                                style={styles.loginDialog.title}
                             >
-                                Login
+                                Log in
+                                <Icon style={styles.loginSendBtn} >send</Icon>
                             </Button>
                         </DialogActions>
                     </form>
