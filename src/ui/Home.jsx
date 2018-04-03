@@ -208,6 +208,7 @@ export class Home extends React.PureComponent {
         );
     }
 
+
     render() {
         return (
             <div id="home-container">
