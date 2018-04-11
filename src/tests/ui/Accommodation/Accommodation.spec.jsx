@@ -41,11 +41,11 @@ describe("ui <Accommodation />", function () {
         };
     });
 
-    it("should render wirth main items", () => {
+    it("should render with main items", () => {
         const wrapper = shallow(
             <Accommodation {...this.initialProps} />
         );
-        expect(wrapper.find("Card").length).toBe(1);
+        expect(wrapper.find("ul").length).toBe(1);
     });
 
     it("should trigger onInit on mount", () => {
@@ -53,14 +53,6 @@ describe("ui <Accommodation />", function () {
             <Accommodation {...this.initialProps} />
         );
         expect(this.initialProps.onInit).toHaveBeenCalled();
-    });
-
-    it("should trigger fetchAccommodations", () => {
-        const wrapper = shallow(
-            <Accommodation {...this.initialProps} />
-        );
-        wrapper.find("#reload-accos-btn").simulate("click");
-        expect(this.initialProps.onFetchAccommodationsClicked).toHaveBeenCalled();
     });
 
     it("should render spinner - renderAccommodationList", () => {
@@ -74,27 +66,5 @@ describe("ui <Accommodation />", function () {
         expect(
             wrapper.instance().renderAccommodationList().type.options.name
         ).toBe(CircularProgress.options.name);
-    });
-
-    it("should render accoEdit - renderAccommodationList", () => {
-        const props = {
-            ...this.initialProps,
-            mode: "edit"
-        };
-        const wrapper = shallow(
-            <Accommodation {...props} />
-        );
-        expect(wrapper.find("AccommodationDetail").length).toBe(1);
-    });
-
-    it("should NOT render - renderAccommodationList", () => {
-        const props = {
-            ...this.initialProps,
-            mode: "chibar"
-        };
-        const wrapper = shallow(
-            <Accommodation {...props} />
-        );
-        expect(wrapper.instance().renderAccommodationList()).toBeNull();
     });
 });

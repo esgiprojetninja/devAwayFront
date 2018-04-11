@@ -1,14 +1,6 @@
 import * as types from "./types/accommodation";
 import { displaySnackMsg } from "./snack";
 
-export const updateAccommodation = (property, value) => ({
-    type: types.UPDATE_ACCOMMODATION,
-    payload: {
-        property,
-        value
-    }
-});
-
 export const setCurrentAccommodation = accommodation => ({
     type: types.SET_CURRENT_ACCOMMODATION,
     payload: accommodation
