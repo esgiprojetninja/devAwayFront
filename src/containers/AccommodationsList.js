@@ -8,7 +8,7 @@ import {
 } from "../actions/accommodation";
 import { loadSessionUser } from "../actions/user";
 
-import AccommodationComponent from "../ui/Accommodation/Accommodation.jsx";
+import AccommodationsListComponent from "../ui/Accommodation/AccommodationsList.jsx";
 
 export const mapStateToProps = state => state;
 
@@ -23,9 +23,9 @@ export const mapDispatchToProps = dispatch => ({
     }
 });
 
-const Accommodation = connect(
+const AccommodationsList = connect(
     mapStateToProps,
     mapDispatchToProps,
-)(AccommodationComponent);
+)(AccommodationsListComponent);
 
-export default Accommodation;
+export default AccommodationsList;

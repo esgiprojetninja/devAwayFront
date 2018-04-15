@@ -11,7 +11,7 @@ import mainReducer from "../../reducers/index";
 import {
     mapStateToProps,
     mapDispatchToProps
-} from "../../containers/Accommodation";
+} from "../../containers/AccommodationsList";
 
 const mockStore = configureMockStore([thunk.withExtraArgument(mockAPI)]);
 

@@ -1,7 +1,7 @@
 import * as T from "prop-types";
 
 export const accommodationReducerShape = {
-    data: T.arrayOf(T.string).isRequired,
+    data: T.arrayOf(T.number).isRequired,
     byID: T.object.isRequired,
     isLoading: T.bool.isRequired,
     hasError: T.bool.isRequired,
