@@ -2,6 +2,8 @@
 import React from "react";
 import * as T from "prop-types";
 import GridList, { GridListTile, GridListTileBar } from "material-ui/GridList";
+import Subheader from "material-ui/List/ListSubheader";
+import Typography from "material-ui/Typography";
 import { CircularProgress } from "material-ui/Progress";
 import { accommodationReducerPropTypes } from "../../propTypes/accommodation.reducer.d";
 
@@ -33,7 +35,7 @@ const styles = {
         overflow: "hidden",
         backgroundColor: "#fff",
         margin: "auto",
-        marginTop: "90px",
+        marginTop: "70px",
         maxWidth: "1768px"
     },
     gridList: {
@@ -41,9 +43,20 @@ const styles = {
         height: "auto",
         margin: "auto"
     },
-    gridTile: {
-        width: "99%",
-        height: "auto"
+    gridListTitle: {
+        width: "100",
+        fontSize: "xx-large",
+        margin: "0 0",
+        paddingLeft: 0,
+        color: "rgba(8, 8, 8, 0.65)"
+    },
+    gridTileBar: {
+        background: "#fff",
+        textAlign: "left",
+        width: "100%",
+        paddingTop: "5px",
+        display: "flex",
+        alignItems: "start"
     }
 };
 
@@ -86,21 +99,51 @@ export default class AccommodationsList extends React.PureComponent {
         }
         const { accommodation } = this.props;
         return (
-            <GridList style={styles.gridList} spacing={8} cellHeight={180} cols={this.state.tileCols}>
+            <GridList
+                style={styles.gridList}
+                spacing={12}
+                cellHeight={220}
+                cols={this.state.tileCols}
+            >
+                <GridListTile key="Subheader" cols={4} style={{ height: "auto" }}>
+                    <Subheader style={styles.gridListTitle} component="div">Accommodations</Subheader>
+                </GridListTile>
                 {
                     accommodation.data.map((accoID) => {
                         const filledAcco = accommodation.byID.get(accoID);
-                        const img = "/img/accommodation.jpg";
+                        const img = "/img/accommodation.jpg"; // @TODO: Replace by the picture property when API fixed
                         return (
-                            <GridListTile key={filledAcco.id}>
+                            <GridListTile classes={styles.GridListTile} key={filledAcco.id}>
                                 <img src={img} alt={filledAcco.title} />
                                 <GridListTileBar
-                                    title={filledAcco.title}
-                                    subtitle={<span>In: {filledAcco.city}</span>}
+                                    style={styles.gridTileBar}
+                                    title={
+                                        <Typography
+                                            style={{
+                                                fontSize: "13px",
+                                                fontWeight: "700"
+                                            }}
+                                            color="rgba(8,8,8,.75)"
+                                            
+                                        >
+                                            {filledAcco.title}
+                                        </Typography>
+                                    }
+                                    subtitle={
+                                        <Typography
+                                            style={{
+                                                fontSize: "13px"
+                                            }}
+                                            color="rgba(8,8,8,.60)"
+                                            
+                                        >
+                                            {filledAcco.city}
+                                        </Typography>
+                                    }
                                 />
                             </GridListTile>
                         );
-                    }).slice(0, 12)
+                    }).slice(0, 12) // @TODO: Adapt to eventual server pagination
                 }
             </GridList>
         );
