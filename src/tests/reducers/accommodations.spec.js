@@ -7,13 +7,8 @@ describe("Reducer ACCOMMODATION", () => {
         data: [],
         byID: new Map(),
         isLoading: false,
-        current: {
-            data: {},
-            isLoading: false
-        },
         hasError: false,
-        errorText: "",
-        mode: "list"
+        errorText: ""
     };
 
     it("should return initialSate", () => {
@@ -55,40 +50,6 @@ describe("Reducer ACCOMMODATION", () => {
             hasError: true,
             errorText: "error msg",
             isLoading: false
-        });
-    });
-
-    it("should dispatch SET_CURRENT_ACCOMMODATION", () => {
-        expect(accommodationReducer(initialSate, {
-            type: accoTypes.SET_CURRENT_ACCOMMODATION,
-            payload: "coucou"
-
-        })).toEqual({
-            ...initialSate,
-            mode: "edit",
-            isLoading: false,
-            current: undefined
-        });
-    });
-
-    it("should dispatch UPDATE_ACCOMMODATION", () => {
-        expect(accommodationReducer(initialSate, {
-            type: accoTypes.UPDATE_ACCOMMODATION,
-            payload: { property: "chibar", value: "shwantz" }
-
-        })).toEqual({
-            ...initialSate,
-            current: { ...initialSate.current, chibar: "shwantz" }
-        });
-    });
-
-    it("should dispatch SHOW_LIST", () => {
-        expect(accommodationReducer(initialSate, {
-            type: accoTypes.SHOW_LIST
-
-        })).toEqual({
-            ...initialSate,
-            mode: "list"
         });
     });
 

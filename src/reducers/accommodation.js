@@ -4,13 +4,8 @@ const initialSate = {
     data: [],
     byID: new Map(),
     isLoading: false,
-    current: {
-        data: {},
-        isLoading: false
-    },
     hasError: false,
-    errorText: "",
-    mode: "list"
+    errorText: ""
 };
 
 const accommodation = (state = initialSate, action) => {
@@ -36,25 +31,6 @@ const accommodation = (state = initialSate, action) => {
             isLoading: false,
             hasError: true,
             errorText: payload
-        };
-    case accoTypes.SET_CURRENT_ACCOMMODATION:
-        return {
-            ...state,
-            mode: "edit",
-            current: state.byID.get(action.payload)
-        };
-    case accoTypes.UPDATE_ACCOMMODATION:
-        return {
-            ...state,
-            current: {
-                ...state.current,
-                [payload.property]: payload.value
-            }
-        };
-    case accoTypes.SHOW_LIST:
-        return {
-            ...state,
-            mode: "list"
         };
     case accoTypes.SAVE_ACCOMMODATION_REQUEST:
         return {

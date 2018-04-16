@@ -11,7 +11,7 @@ import mainReducer from "../../reducers/index";
 import {
     mapStateToProps,
     mapDispatchToProps
-} from "../../containers/Accommodation";
+} from "../../containers/AccommodationsList";
 
 const mockStore = configureMockStore([thunk.withExtraArgument(mockAPI)]);
 
@@ -74,14 +74,6 @@ describe("Container Accommodation", () => {
             ]);
         });
 
-        it("onAccommodationChanged", async () => {
-            const { store, fn } = prepare("onAccommodationChanged", mainReducer(undefined, {}));
-            await fn("poulay", "man");
-            expect(store.getActions().map(a => a.type)).toEqual([
-                "UPDATE_ACCOMMODATION"
-            ]);
-        });
-
         it("onSaveAccommodationClicked", async () => {
             const { store, fn } = prepare("onSaveAccommodationClicked", mainReducer(undefined, {}));
             await fn();
@@ -117,40 +109,8 @@ describe("Container Accommodation", () => {
     });
     describe("mapStateToProps", () => {
         it("dispatch accomodation specific state", () => {
-            const fakeAcco = { idchibar: "ohmyagad" };
-            const accommodation = {
-                isLoading: false,
-                current: "chibar",
-                hasError: false,
-                errorText: "chibar",
-                data: [fakeAcco],
-                byID: new WeakMap()
-                    .set(fakeAcco, { chibar: "chibar", selected: true }),
-                mode: "chibar"
-            };
-            expect(mapStateToProps(
-                {
-                    accommodation,
-                    coucou: "coucou"
-                }
-            )).toEqual({
-                isLoading: false,
-                current: "chibar",
-                hasError: false,
-                errorText: "chibar",
-                accommodation,
-                selectedAccommodations: [
-                    {
-                        id: { idchibar: "ohmyagad" },
-                        selected: false
-                    }],
-                accommodations: [{
-                    chibar: "chibar",
-                    selected: true
-                }],
-                mode: "chibar",
-                coucou: "coucou"
-            });
+            const state = { idchibar: "ohmyagad" };
+            expect(mapStateToProps(state)).toEqual(state);
         });
     });
 });

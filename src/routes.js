@@ -1,7 +1,7 @@
 import Home from "./containers/Home";
 import Guard from "./containers/Guard";
 import Profile from "./containers/Profile";
-import Accommodation from "./containers/Accommodation";
+import AccommodationsList from "./containers/AccommodationsList";
 
 export default [
     {
@@ -21,6 +21,6 @@ export default [
     },
     {
         path: "/accommodations",
-        component: Accommodation
+        component: AccommodationsList
     }
 ];

@@ -27,17 +27,6 @@ describe("Actions user", () => {
         };
     });
 
-    it("should update accomodation", () => {
-        const expextedAction = {
-            type: accoTypes.UPDATE_ACCOMMODATION,
-            payload: {
-                property: "hey",
-                value: "jude"
-            }
-        };
-        expect(accoActions.updateAccommodation("hey", "jude")).toEqual(expextedAction);
-    });
-
     it("should set current accomodation", () => {
         const expextedAction = {
             type: accoTypes.SET_CURRENT_ACCOMMODATION,
