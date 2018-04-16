@@ -11,7 +11,7 @@ import Typography from "material-ui/Typography";
 import { CircularProgress } from "material-ui/Progress";
 import { accommodationReducerPropTypes } from "../../propTypes/accommodation.reducer.d";
 
-const getAdaptedTileCols = () => {
+export const getAdaptedTileCols = () => {
     if (window.innerWidth <= 480) {
         return 1;
     } else if (window.innerWidth <= 768) {
@@ -22,7 +22,7 @@ const getAdaptedTileCols = () => {
     return 4;
 };
 
-const getAdaptedContainerWidth = () => {
+export const getAdaptedContainerWidth = () => {
     if (window.innerWidth <= 480) {
         return "100%";
     } else if (window.innerWidth <= 768) {
@@ -129,6 +129,11 @@ export default class AccommodationsList extends React.PureComponent {
             );
         }
         const { accommodation } = this.props;
+        if (!this.props.accommodation.data.length) {
+            return (
+                <p style={{ textAlign: "center", width: "100%" }}>No accomodations !</p>
+            );
+        }
         return (
             <GridList
                 style={styles.gridList}
@@ -148,12 +153,12 @@ export default class AccommodationsList extends React.PureComponent {
                                 <img src={img} alt={filledAcco.title} />
                                 <div style={styles.gridCustomDiv}>
                                     {filledAcco.hasInternet ?
-                                        <Connectivity style={styles.icon} /> :
-                                        <NoConnectivity style={styles.icon} />
+                                        <Connectivity className="connectivity-icon" style={styles.icon} /> :
+                                        <NoConnectivity className="no-connectivity-icon" style={styles.icon} />
                                     }
                                     {filledAcco.smokersAllowed ?
-                                        <Smoke style={styles.icon} /> :
-                                        <NoSmoke style={styles.icon} />
+                                        <Smoke className="smoke-icon" style={styles.icon} /> :
+                                        <NoSmoke className="no-smoke-icon" style={styles.icon} />
                                     }
                                     <p style={styles.descP}>{`${filledAcco.propertySize}`.charAt(0)} rooms</p>
                                 </div>
@@ -163,9 +168,9 @@ export default class AccommodationsList extends React.PureComponent {
                                         <Typography
                                             style={{
                                                 fontSize: "13px",
-                                                fontWeight: "700"
+                                                fontWeight: "700",
+                                                color: "rgba(8,8,8,.75)"
                                             }}
-                                            color="rgba(8,8,8,.75)"
                                         >
                                             {filledAcco.title}
                                         </Typography>
@@ -173,9 +178,9 @@ export default class AccommodationsList extends React.PureComponent {
                                     subtitle={
                                         <Typography
                                             style={{
-                                                fontSize: "13px"
+                                                fontSize: "13px",
+                                                color: "rgba(8,8,8,.60)"
                                             }}
-                                            color="rgba(8,8,8,.60)"
                                         >
                                             {filledAcco.city} - {filledAcco.country}
                                         </Typography>
