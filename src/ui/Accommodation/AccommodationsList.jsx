@@ -3,6 +3,10 @@ import React from "react";
 import * as T from "prop-types";
 import GridList, { GridListTile, GridListTileBar } from "material-ui/GridList";
 import Subheader from "material-ui/List/ListSubheader";
+import Connectivity from "material-ui-icons/NetworkWifi";
+import NoConnectivity from "material-ui-icons/WifiLock";
+import NoSmoke from "material-ui-icons/SmokeFree";
+import Smoke from "material-ui-icons/SmokingRooms";
 import Typography from "material-ui/Typography";
 import { CircularProgress } from "material-ui/Progress";
 import { accommodationReducerPropTypes } from "../../propTypes/accommodation.reducer.d";
@@ -57,6 +61,33 @@ const styles = {
         paddingTop: "5px",
         display: "flex",
         alignItems: "start"
+    },
+    gridCustomDiv: {
+        position: "absolute",
+        top: "0",
+        right: "0",
+        height: "70%",
+        width: "50%",
+        maxWidth: "60px",
+        background: "rgba(8, 8, 8, .6)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "flex-start",
+        flexDirection: "column",
+        padding: "10px 0"
+    },
+    icon: {
+        height: "22px",
+        width: "22px",
+        fill: "#fff"
+    },
+    descP: {
+        display: "flex",
+        alignItems: "center",
+        textAlign: "center",
+        justifyContent: "center",
+        width: "98%",
+        color: "#fff"
     }
 };
 
@@ -115,6 +146,17 @@ export default class AccommodationsList extends React.PureComponent {
                         return (
                             <GridListTile classes={styles.GridListTile} key={filledAcco.id}>
                                 <img src={img} alt={filledAcco.title} />
+                                <div style={styles.gridCustomDiv}>
+                                    {filledAcco.hasInternet ?
+                                        <Connectivity style={styles.icon} /> :
+                                        <NoConnectivity style={styles.icon} />
+                                    }
+                                    {filledAcco.smokersAllowed ?
+                                        <Smoke style={styles.icon} /> :
+                                        <NoSmoke style={styles.icon} />
+                                    }
+                                    <p style={styles.descP}>{`${filledAcco.propertySize}`.charAt(0)} rooms</p>
+                                </div>
                                 <GridListTileBar
                                     style={styles.gridTileBar}
                                     title={
@@ -124,7 +166,6 @@ export default class AccommodationsList extends React.PureComponent {
                                                 fontWeight: "700"
                                             }}
                                             color="rgba(8,8,8,.75)"
-                                            
                                         >
                                             {filledAcco.title}
                                         </Typography>
@@ -135,9 +176,8 @@ export default class AccommodationsList extends React.PureComponent {
                                                 fontSize: "13px"
                                             }}
                                             color="rgba(8,8,8,.60)"
-                                            
                                         >
-                                            {filledAcco.city}
+                                            {filledAcco.city} - {filledAcco.country}
                                         </Typography>
                                     }
                                 />
