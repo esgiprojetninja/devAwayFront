@@ -1,6 +1,23 @@
 [![Build Status](https://travis-ci.org/esgiprojetninja/devAwayFront.svg?branch=master)](https://travis-ci.org/esgiprojetninja/devAwayFront) ![Heroku](https://heroku-badge.herokuapp.com/?app=secret-dawn-52802) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a23a1a003edd43eeb6ee7a9a4ecec45a)](https://www.codacy.com/app/renaud.bellec.3/devAwayFront?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=esgiprojetninja/devAwayFront&amp;utm_campaign=Badge_Grade) [![codecov](https://codecov.io/gh/esgiprojetninja/devAwayFront/branch/master/graph/badge.svg)](https://codecov.io/gh/esgiprojetninja/devAwayFront)
 
 
+# Get Started
+## Requirements
+- docker
+- docker-compose
+## Launch
+```sh
+docker-compose up -d
+docker-compose exec node /bin/bash
+rm -rf node_modules
+npm install
+npm start
+```
+Open your favorite navigator and visit `http://localhost:3000/`
+
+You should now be able to contribute !
+
+--------------------------------------------------------
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
