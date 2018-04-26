@@ -117,6 +117,7 @@ export default class LogBox extends React.PureComponent {
                 {this.renderName()}
                 <Button
                     onClick={this.props.onLogoutClicked}
+                    color="contrast"
                 >
                     Logout
                 </Button>

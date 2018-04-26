@@ -16,15 +16,32 @@ import AccommodationCreation from "../containers/AccommodationCreation";
 const ITEM_HEIGHT = 48;
 
 export class NavBarComponent extends React.PureComponent {
-    state = {
-        open: false,
-        openUserMenuEl: null
+    static propTypes = {
+        burgerColor: T.string,
+        getSavedState: T.func.isRequired,
+        storeStateProp: T.func.isRequired,
+        removeStateProp: T.func.isRequired
     };
+
+    static defaultProps = { burgerColor: "contrast" }
+
+    constructor(props) {
+        super(props);
+        const defaultState = {
+            open: false,
+            openUserMenuEl: null
+        };
+        this.state = {
+            ...defaultState,
+            ...props.getSavedState(defaultState)
+        };
+    }
 
     toggleOpen(open) {
         this.setState({
             open: !open
         });
+        this.props.storeStateProp("open", open ? "" : 1);
     }
 
     handleUserMenuClick = (ev) => {
@@ -36,6 +53,7 @@ export class NavBarComponent extends React.PureComponent {
         this.setState({
             openUserMenuEl: null
         });
+        this.props.removeStateProp("openUserMenuEl");
     }
 
     renderUserMenu() {
@@ -93,6 +111,7 @@ export class NavBarComponent extends React.PureComponent {
             classes.dropDown
         ];
         navbarClasses.push(this.state.open ? classes.dropDown_in : classes.dropDown_out);
+        const burgerColor = this.state.open ? NavBarComponent.defaultProps.burgerColor : this.props.burgerColor;
         return (
             <div className={classes.root}>
                 <AppBar position="fixed" className={navbarClasses.join(" ")}>
@@ -113,7 +132,7 @@ export class NavBarComponent extends React.PureComponent {
                 <IconButton
                     id="unlogged-toggler"
                     onClick={() => this.toggleOpen(this.state.open)}
-                    color="contrast"
+                    color={burgerColor}
                     aria-label="Menu"
                     className={classes.toggleButton}
                 >

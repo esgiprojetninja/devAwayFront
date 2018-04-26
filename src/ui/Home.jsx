@@ -11,6 +11,7 @@ import ScrollAnimation from "react-animate-on-scroll";
 import HomeSearchForm from "./HomeSearchForm.jsx";
 import ArticleWithMedia from "./ArticleWithMedia.jsx";
 import AccommodationCard from "../containers/AccommodationCard.js";
+import Navbar from "../containers/Navbar";
 
 const titleService = "Our Service";
 const lead = "Stay in distinctive private homes in over 180 destinations - with an unprecedented level of service.";
@@ -211,22 +212,25 @@ export class Home extends React.PureComponent {
 
     render() {
         return (
-            <div id="home-container">
-                {this.renderFirstBlock()}
-                <HomeSearchForm />
-                <ArticleWithMedia
-                    title={titleService}
-                    lead={lead}
-                    article1={article}
-                    article2={article}
-                    article3={article}
-                    article4={article}
-                />
-                {this.renderBrandRibon()}
-                {this.renderDestinations()}
-                {this.renderAccomodations()}
-                {this.renderFooter()}
-                {this.renderSnackbar()}
+            <div>
+                <Navbar />
+                <div id="home-container">
+                    {this.renderFirstBlock()}
+                    <HomeSearchForm />
+                    <ArticleWithMedia
+                        title={titleService}
+                        lead={lead}
+                        article1={article}
+                        article2={article}
+                        article3={article}
+                        article4={article}
+                    />
+                    {this.renderBrandRibon()}
+                    {this.renderDestinations()}
+                    {this.renderAccomodations()}
+                    {this.renderFooter()}
+                    {this.renderSnackbar()}
+                </div>
             </div>
         );
     }

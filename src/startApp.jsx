@@ -14,7 +14,6 @@ import {
 } from "./styles/theme.js";
 
 import MainReducer from "./reducers";
-import Navbar from "./containers/Navbar";
 import API from "./api/mainApi";
 import routes from "./routes";
 
@@ -48,7 +47,6 @@ function startApp(node) {
             <BrowserRouter basename={routes[0].path} forceRefresh={!supportsHistory} >
                 <Provider store={store}>
                     <div>
-                        <Navbar />
                         {routes.map(route => (<RouteWithSubRoutes key={`${Date.now()}+${route.path}`} {...route} />))}
                     </div>
                 </Provider>

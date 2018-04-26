@@ -10,6 +10,7 @@ import Smoke from "material-ui-icons/SmokingRooms";
 import Typography from "material-ui/Typography";
 import { CircularProgress } from "material-ui/Progress";
 import { accommodationReducerPropTypes } from "../../propTypes/accommodation.reducer.d";
+import Navbar from "../../containers/Navbar";
 
 export const getAdaptedTileCols = () => {
     if (window.innerWidth <= 480) {
@@ -45,7 +46,8 @@ const styles = {
     gridList: {
         width: "100",
         height: "auto",
-        margin: "auto"
+        margin: "auto",
+        overflow: "hidden"
     },
     gridListTitle: {
         width: "100",
@@ -102,7 +104,8 @@ export default class AccommodationsList extends React.PureComponent {
         super();
         this.state = {
             tileCols: getAdaptedTileCols(),
-            containerWidth: getAdaptedContainerWidth()
+            containerWidth: getAdaptedContainerWidth(),
+            hoveredTile: null
         };
     }
 
@@ -148,8 +151,25 @@ export default class AccommodationsList extends React.PureComponent {
                     accommodation.data.map((accoID) => {
                         const filledAcco = accommodation.byID.get(accoID);
                         const img = "/img/accommodation.jpg"; // @TODO: Replace by the picture property when API fixed
+                        const basicStyle = {
+                            transition: "transform .2s ease-in-out, box-shadow .2s ease-in-out",
+                            cursor: "pointer"
+                        };
+                        const accoStyle = (this.state.hoveredTile === filledAcco.id) ? {
+                            ...basicStyle,
+                            transform: "scale(1.1, 1.1)",
+                            WebkitBoxShadow: "12px 13px 69px -17px rgba(255, 255, 255, 0.75)",
+                            MozBoxShadow: "12px 13px 69px -17px rgba(255, 255, 255, 0.75)",
+                            boxShadow: "12px 13px 69px -17px rgba(255, 255, 255, 0.75)",
+                            zIndex: "10"
+                        } : basicStyle;
                         return (
-                            <GridListTile classes={styles.GridListTile} key={filledAcco.id}>
+                            <GridListTile
+                                style={accoStyle}
+                                key={filledAcco.id}
+                                onMouseEnter={() => this.setState({ hoveredTile: filledAcco.id })}
+                                onMouseLeave={() => this.setState({ hoveredTile: null })}
+                            >
                                 <img src={img} alt={filledAcco.title} />
                                 <div style={styles.gridCustomDiv}>
                                     {filledAcco.hasInternet ?
@@ -195,13 +215,16 @@ export default class AccommodationsList extends React.PureComponent {
     }
 
     render() {
-        const style = {
+        const listStyle = {
             ...styles.root,
             width: this.state.containerWidth
         };
         return (
-            <div style={style}>
-                { this.renderAccommodationList() }
+            <div>
+                <Navbar burgerColor="#acacac" />
+                <div style={listStyle}>
+                    {this.renderAccommodationList()}
+                </div>
             </div>
         );
     }

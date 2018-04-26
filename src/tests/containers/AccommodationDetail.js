@@ -10,7 +10,7 @@ import mainReducer from "../../reducers/index";
 import {
     mapStateToProps,
     mapDispatchToProps
-} from "../../containers/AccommodationsList";
+} from "../../containers/AccommodationDetail";
 
 const mockStore = configureMockStore([thunk.withExtraArgument(mockAPI)]);
 
@@ -24,16 +24,8 @@ const prepare = (name, state) => {
     };
 };
 
-describe("Container AccommodationList", () => {
+describe("Container AccommodationDetail", () => {
     describe("mapDispatchToProps", () => {
-        it("onInit", async () => {
-            global.localStorage = {
-                getItem: jest.fn()
-            };
-            const { store, fn } = prepare("onInit", mainReducer(undefined, {}));
-            await fn();
-            expect(store.getActions().map(a => a.type)).toEqual([]);
-        });
     });
     describe("mapStateToProps", () => {
         it("dispatch accomodation specific state", () => {
