@@ -1,4 +1,5 @@
 /* eslint-env jest */
+/* global window */
 import React from "react";
 import {
     shallow
@@ -8,6 +9,11 @@ import mainReducer from "../../reducers/index";
 import StyledNav, { NavBarComponent } from "../../ui/Navbar.jsx";
 
 describe("ui <NavBar />", () => {
+    window.localStorage = {
+        getItem: jest.fn(),
+        setItem: jest.fn(),
+        removeItem: jest.fn()
+    };
     const initialState = mainReducer(undefined, {});
     const initialProps = {
         ...initialState,
@@ -56,7 +62,10 @@ describe("ui <NavBar />", () => {
             toolbar: {
                 paddingRight: 1
             }
-        }
+        },
+        getSavedState: jest.fn(() => ({})),
+        removeStateProp: jest.fn(),
+        storeStateProp: jest.fn()
     };
     let wrapper = null;
     beforeEach(() => {
@@ -71,6 +80,10 @@ describe("ui <NavBar />", () => {
     it("should render with main items", () => {
         expect(wrapper.text()).toContain("WithStyles(AppBar)");
         expect(wrapper.text()).toContain("WithStyles(IconButton)");
+    });
+
+    it("should retreive stored state on mount", () => {
+        expect(initialProps.getSavedState).toHaveBeenCalled();
     });
 
     it("should render user menu toggler", () => {
@@ -90,6 +103,13 @@ describe("ui <NavBar />", () => {
         const toggler = wrapper.find("#unlogged-toggler");
         toggler.simulate("click");
         expect(wrapper.instance().state.open).toBe(true);
+    });
+
+    it("should call the state storage func on state toggle", () => {
+        expect(wrapper.instance().state.open).toBe(false);
+        const toggler = wrapper.find("#unlogged-toggler");
+        toggler.simulate("click");
+        expect(initialProps.storeStateProp).toHaveBeenCalled();
     });
 
     it("should set element menu", () => {

@@ -2,14 +2,18 @@
 /* global window */
 import React from "react";
 import {
-    shallow,
-    mount
+    shallow
 } from "enzyme";
 import { CircularProgress } from "material-ui/Progress";
 import mainReducer from "../../../reducers/index";
 import AccommodationsList, { getAdaptedTileCols, getAdaptedContainerWidth } from "../../../ui/Accommodation/AccommodationsList.jsx";
 
 describe("ui <AccommodationsList />", function () {
+    window.localStorage = {
+        getItem: jest.fn(),
+        setItem: jest.fn(),
+        removeItem: jest.fn()
+    };
     const accos = new Map();
     const acco = {
         title: "ohmy",
@@ -52,13 +56,14 @@ describe("ui <AccommodationsList />", function () {
             ...initialState,
             onInit: jest.fn()
         };
+        accos.clear();
     });
 
     it("should render with no items", () => {
         const wrapper = shallow(
             <AccommodationsList {...this.initialProps} />
         );
-        expect(wrapper.text()).toBe("No accomodations !");
+        expect(wrapper.text()).toContain("No accomodations !");
     });
 
     it("should trigger onInit on mount", () => {
@@ -133,19 +138,35 @@ describe("ui <AccommodationsList />", function () {
 
     it("should show smoke icon", () => {
         const initialState = mainReducer(undefined, {});
-        accos.set(acco.id, acco);
-        this.initialProps = {
-            ...this.initialProps,
+        accos.set(acco.id, {
+            ...acco,
+            smokersAllowed: true
+        });
+
+        const state = {
+            ...initialState,
             accommodation: {
                 ...initialState.accommodation,
                 data: [acco.id],
-                byID: accos
+                byID: accos,
+                isLoading: false
             }
         };
-        const wrapper = mount(
+
+        this.initialProps = {
+            ...this.initialProps,
+            accommodation: {
+                ...state.accommodation,
+                data: [acco.id],
+                byID: accos
+            },
+            ...state
+        };
+        const wrapper = shallow(
             <AccommodationsList {...this.initialProps} />
         );
-        expect(wrapper.find("svg").get(1).props.className.split(" ").find(c => c === "smoke-icon")).toBe("smoke-icon");
+        expect(JSON.stringify(wrapper.instance().renderAccommodationList().props.children[1]["0"])).not.toContain("no-smoke-icon");
+        expect(JSON.stringify(wrapper.instance().renderAccommodationList().props.children[1]["0"])).toContain("smoke-icon");
     });
 
     it("should show NOsmoke icon", () => {
@@ -154,35 +175,63 @@ describe("ui <AccommodationsList />", function () {
             ...acco,
             smokersAllowed: false
         });
-        this.initialProps = {
-            ...this.initialProps,
+
+        const state = {
+            ...initialState,
             accommodation: {
                 ...initialState.accommodation,
                 data: [acco.id],
-                byID: accos
+                byID: accos,
+                isLoading: false
             }
         };
-        const wrapper = mount(
+
+        this.initialProps = {
+            ...this.initialProps,
+            accommodation: {
+                ...state.accommodation,
+                data: [acco.id],
+                byID: accos
+            },
+            ...state
+        };
+        const wrapper = shallow(
             <AccommodationsList {...this.initialProps} />
         );
-        expect(wrapper.find("svg").get(1).props.className.split(" ").find(c => c === "no-smoke-icon")).toBe("no-smoke-icon");
+        expect(JSON.stringify(wrapper.instance().renderAccommodationList().props.children[1]["0"])).toContain("no-smoke-icon");
     });
 
     it("should show connectivity icon", () => {
         const initialState = mainReducer(undefined, {});
-        accos.set(acco.id, acco);
-        this.initialProps = {
-            ...this.initialProps,
+        accos.set(acco.id, {
+            ...acco,
+            hasInternet: true
+        });
+
+        const state = {
+            ...initialState,
             accommodation: {
                 ...initialState.accommodation,
                 data: [acco.id],
-                byID: accos
+                byID: accos,
+                isLoading: false
             }
         };
-        const wrapper = mount(
+
+        this.initialProps = {
+            ...this.initialProps,
+            accommodation: {
+                ...state.accommodation,
+                data: [acco.id],
+                byID: accos
+            },
+            ...state
+        };
+        const wrapper = shallow(
             <AccommodationsList {...this.initialProps} />
         );
-        expect(wrapper.find("svg").get(0).props.className.split(" ").find(c => c === "connectivity-icon")).toBe("connectivity-icon");
+        expect(JSON.stringify(wrapper.instance().renderAccommodationList().props.children[1]["0"])).toContain("connectivity-icon");
+        expect(JSON.stringify(wrapper.instance().renderAccommodationList().props.children[1]["0"])).not.toContain("no-connectivity-icon");
     });
 
     it("should show NOconnectivity icon", () => {
@@ -191,23 +240,35 @@ describe("ui <AccommodationsList />", function () {
             ...acco,
             hasInternet: false
         });
-        this.initialProps = {
-            ...this.initialProps,
+
+        const state = {
+            ...initialState,
             accommodation: {
                 ...initialState.accommodation,
                 data: [acco.id],
-                byID: accos
+                byID: accos,
+                isLoading: false
             }
         };
-        const wrapper = mount(
+
+        this.initialProps = {
+            ...this.initialProps,
+            accommodation: {
+                ...state.accommodation,
+                data: [acco.id],
+                byID: accos
+            },
+            ...state
+        };
+        const wrapper = shallow(
             <AccommodationsList {...this.initialProps} />
         );
-        expect(wrapper.find("svg").get(0).props.className.split(" ").find(c => c === "no-connectivity-icon")).toBe("no-connectivity-icon");
+        expect(JSON.stringify(wrapper.instance().renderAccommodationList().props.children[1]["0"])).toContain("no-connectivity-icon");
     });
 
-    it("should show NOconnectivity icon", () => {
+    it("should adapt state to new dimensions", () => {
         window.innerWidth = 480;
-        const wrapper = mount(
+        const wrapper = shallow(
             <AccommodationsList {...this.initialProps} />
         );
         const instance = wrapper.instance();

@@ -9,7 +9,6 @@ export const navbarKeyStoragePrefix = "navbarKeyStoragePrefix";
 export const mapStateToProps = state => state;
 
 export const mapDispatchToProps = () => ({
-    gtfo() {},
     getSavedState(state) {
         return Object.keys(state).reduce((finalState, stateKey) => {
             return {

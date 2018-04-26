@@ -111,7 +111,9 @@ export class NavBarComponent extends React.PureComponent {
             classes.dropDown
         ];
         navbarClasses.push(this.state.open ? classes.dropDown_in : classes.dropDown_out);
-        const burgerColor = this.state.open ? NavBarComponent.defaultProps.burgerColor : this.props.burgerColor;
+        const burgerColor = this.state.open ?
+            NavBarComponent.defaultProps.burgerColor :
+            this.props.burgerColor;
         return (
             <div className={classes.root}>
                 <AppBar position="fixed" className={navbarClasses.join(" ")}>
