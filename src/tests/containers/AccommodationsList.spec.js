@@ -32,7 +32,10 @@ describe("Container AccommodationList", () => {
             };
             const { store, fn } = prepare("onInit", mainReducer(undefined, {}));
             await fn();
-            expect(store.getActions().map(a => a.type)).toEqual([]);
+            expect(store.getActions().map(a => a.type)).toEqual([
+                "FETCH_ACCOMMODATIONS_REQUEST",
+                "FETCH_ACCOMMODATIONS_SUCCESS"
+            ]);
         });
     });
     describe("mapStateToProps", () => {

@@ -18,6 +18,15 @@ const accommodation = (state = initialSate, action) => {
             hasError: false,
             errorText: ""
         };
+    case accoTypes.FETCH_ACCOMMODATION_SUCCESS:
+        return {
+            ...state,
+            data: state.data.find(accoId => accoId === payload.data.id) ?
+                state.data :
+                state.data.concat(payload.data.id),
+            byID: state.byID.set(payload.data.id, payload.data),
+            isLoading: false
+        };
     case accoTypes.FETCH_ACCOMMODATIONS_SUCCESS:
         return {
             ...state,

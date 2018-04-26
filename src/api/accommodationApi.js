@@ -52,6 +52,9 @@ const accommodationApi = {
     },
     deleteItem: (id) => {
         return generateFetch("accommodations", "DELETE", id);
+    },
+    fetchById: (id) => {
+        return generateFetch(`accommodations/${id}`, "GET");
     }
 };
 

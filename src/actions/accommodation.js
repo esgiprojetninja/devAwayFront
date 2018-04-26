@@ -110,3 +110,29 @@ export function deleteAccommodation(id) {
         });
     };
 }
+
+const fetchAccommodationSuccess = data => ({
+    type: types.FETCH_ACCOMMODATION_SUCCESS,
+    payload: { data }
+});
+
+
+export function fetchAccommodation(id) {
+    return (dispatch, getState, API) => {
+        dispatch(fetchAccommodationsRequest());
+        return API.accommodationApi.fetchById(id)
+            .then(
+                (res) => {
+                    if (res.hasError) {
+                        dispatch(displaySnackMsg("Failed to fetch accomodation"));
+                        return dispatch(fetchAccommodationsFailure(res.message));
+                    }
+                    return dispatch(fetchAccommodationSuccess(res));
+                },
+                (error) => {
+                    dispatch(displaySnackMsg("Failed to fetch accomodation"));
+                    return dispatch(fetchAccommodationsFailure(error));
+                }
+            );
+    };
+}
