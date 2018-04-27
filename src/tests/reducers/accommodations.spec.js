@@ -56,7 +56,6 @@ describe("Reducer ACCOMMODATION", () => {
     it("should dispatch SAVE_ACCOMMODATION_REQUEST", () => {
         expect(accommodationReducer(initialSate, {
             type: accoTypes.SAVE_ACCOMMODATION_REQUEST
-
         })).toEqual({
             ...initialSate,
             isLoading: true
@@ -70,7 +69,7 @@ describe("Reducer ACCOMMODATION", () => {
 
         })).toEqual({
             ...initialSate,
-            data: [{ id: "coucou", shwantz: "cannette" }],
+            data: ["coucou"],
             byID: new Map().set("coucou", { id: "coucou", shwantz: "cannette" })
         });
     });

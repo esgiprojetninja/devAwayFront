@@ -42,9 +42,9 @@ describe("Container AccommodationCreation", () => {
             });
             const storeActions = await store.getActions();
             expect(storeActions.map(a => a.type)).toEqual([
-                "FETCH_ACCOMMODATION_REQUEST",
+                "SAVE_ACCOMMODATION_REQUEST",
                 "SET_SNACK_MSG",
-                "FETCH_ACCOMMODATION_SUCCESS",
+                "SAVE_ACCOMMODATION_SUCCESS",
                 "FETCH_ACCOMMODATIONS_REQUEST",
                 "FETCH_ACCOMMODATIONS_SUCCESS"
             ]);
