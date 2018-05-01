@@ -53,7 +53,7 @@ const accommodation = (state = initialSate, action) => {
             hasError: false,
             errorText: "",
             data: payload.accommodation && payload.accommodation.id ?
-                state.data.concat([payload.accommodation]) : state.data,
+                state.data.concat([payload.accommodation.id]) : state.data,
             byID: payload.accommodation && payload.accommodation.id ?
                 state.byID.set(payload.accommodation.id, payload.accommodation) : state.byID
         };
