@@ -17,6 +17,7 @@ export const boxes = {
 };
 
 export const darkGrey = "#3f3f3f";
+export const midGrey = "#696969";
 export const lightGrey = "#acacac";
 
 export const defaultTheme = createMuiTheme({
