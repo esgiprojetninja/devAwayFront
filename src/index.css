@@ -16,6 +16,10 @@ body {
     height: 100%;
 }
 
+.capitalize {
+    text-transform: capitalize;
+}
+
 .vertical-align {
     display: flex;
     justify-content: center;

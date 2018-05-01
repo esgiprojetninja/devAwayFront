@@ -1,7 +1,9 @@
 /* global window */
 import React from "react";
 import * as T from "prop-types";
+import Grid from "material-ui/Grid";
 import { CircularProgress } from "material-ui/Progress";
+import Typography from "material-ui/Typography";
 import Navbar from "../../containers/Navbar";
 import { getAdaptedContainerWidth } from "./AccommodationsList";
 import { accommodationReducerPropTypes } from "../../propTypes/accommodation.reducer.d";
@@ -62,14 +64,33 @@ export default class AccommodationDetail extends React.PureComponent {
         );
     }
 
+    renderPlaceDescription() {
+        const id = Number(this.props.match.params.accoID);
+        if (Number.isNaN(id)) return null;
+        const acco = this.props.accommodation.byID.get(id) || null;
+        if (!acco) {
+            return (
+                <CircularProgress />
+            );
+        }
+        return (
+            <div>
+                <Typography className="display2" variant="headline" gutterBottom>
+                    {acco.title}
+                </Typography>
+            </div>
+        );
+    }
+
     renderCard() {
         const id = Number(this.props.match.params.accoID);
         if (Number.isNaN(id)) return null;
         const acco = this.props.accommodation.byID.get(id) || null;
         return (
-            <div className="full-width">
-                <div className="full-width" style={styles.accommodationCard}>{JSON.stringify(acco)}</div>
-            </div>
+            <Grid container spacing={24} className="full-width">
+                <Grid xs={12} sm={12} md={8} lg={9} xl={10} item className="full-width" style={styles.accommodationCard}>{this.renderPlaceDescription(acco)}</Grid>
+                <Grid xs={12} sm={12} md={4} lg={3} xl={2} item className="full-width" style={styles.accommodationCard}>MISSIONS</Grid>
+            </Grid>
         );
     }
 
