@@ -7,8 +7,10 @@ import Typography from "material-ui/Typography";
 import GuestsIcon from "material-ui-icons/People";
 import BedsIcon from "material-ui-icons/LocalHotel";
 import BathRoomsIcon from "material-ui-icons/InvertColors";
+import GMap from "google-map-react";
 import FloorsIcon from "material-ui-icons/ClearAll";
 import Navbar from "../../containers/Navbar";
+import Marker from "./AccommodationMarker";
 import { getAdaptedContainerWidth } from "./AccommodationsList";
 import { accommodationReducerPropTypes } from "../../propTypes/accommodation.reducer.d";
 import { midGrey, darkGrey } from "../../styles/theme";
@@ -23,7 +25,8 @@ const styles = {
         alignItems: "center",
         maxWidth: "1768px",
         background: "#fff",
-        color: midGrey
+        color: midGrey,
+        paddingBottom: "50px"
     },
     accommodationCard: {
         margin: "auto",
@@ -59,10 +62,15 @@ const styles = {
     },
     iconInfoItemText: {
         marginLeft: "6px"
+    },
+    gMapContainer: {
+        height: "300px"
     }
 };
 
-export const accordPluralToNumber = (number, word) => number <= 1 ? word : `${word}s`;
+export const accordPluralToNumber = (number, word) => {
+    return number <= 1 ? word : `${word}s`;
+};
 
 export default class AccommodationDetail extends React.PureComponent {
     static propTypes = {
@@ -110,30 +118,61 @@ export default class AccommodationDetail extends React.PureComponent {
         );
     }
 
+    renderMap() {
+        const acco = this.accommodation;
+        return (
+            <GMap
+                bootstrapURLKeys={{
+                    key: process.env.REACT_APP_GOOGLE_MAP_KEY,
+                    language: "en"
+                }}
+                center={{
+                    lat: 50,
+                    lng: 50
+                }}
+                zoom={8}
+            >
+                <Marker
+                    accommodation={acco}
+                />
+            </GMap>
+        );
+    }
+
+    renderDescription() {
+        return (
+            <div>
+                <Typography style={{ color: midGrey, fontWeight: 500 }}>
+                    {this.accommodation.description}
+                </Typography>
+            </div>
+        );
+    }
+
     renderIconsInfo() {
         const acco = this.accommodation;
         return (
             <div className="display-flex-row justify-start full-width">
                 <div className="display-flex-row">
-                    <GuestsIcon style={styles.iconInfoSVG}/>
+                    <GuestsIcon style={styles.iconInfoSVG} />
                     <span style={styles.iconInfoItemText}>
                         {acco.nbMaxGuest} {accordPluralToNumber(acco.nbMaxGuest, "traveler")}
                     </span>
                 </div>
                 <div style={styles.iconInfoItem} className="display-flex-row">
-                    <BedsIcon style={styles.iconInfoSVG}/>
-                    <span style={{ marginLeft: "6px"}}>
+                    <BedsIcon style={styles.iconInfoSVG} />
+                    <span style={{ marginLeft: "6px" }}>
                         {acco.nbBedroom} {accordPluralToNumber(acco.nbBedroom, "room")}
                     </span>
                 </div>
-                <div style={styles.iconInfoItem}  className="display-flex-row">
-                    <BathRoomsIcon style={styles.iconInfoSVG}/>
+                <div style={styles.iconInfoItem} className="display-flex-row">
+                    <BathRoomsIcon style={styles.iconInfoSVG} />
                     <span style={styles.iconInfoItemText}>
                         {acco.nbBathroom} {accordPluralToNumber(acco.nbBathroom, "bathroom")}
                     </span>
                 </div>
-                <div style={styles.iconInfoItem}  className="display-flex-row">
-                    <FloorsIcon style={styles.iconInfoSVG}/>
+                <div style={styles.iconInfoItem} className="display-flex-row">
+                    <FloorsIcon style={styles.iconInfoSVG} />
                     <span style={styles.iconInfoItemText}>
                         {acco.floor} {accordPluralToNumber(acco.floor, "floor")}
                     </span>
@@ -166,11 +205,9 @@ export default class AccommodationDetail extends React.PureComponent {
         );
     }
 
-    renderPlaceDescription() {
+    renderPlaceDetails() {
         if (!this.accommodation) {
-            return (
-                <CircularProgress />
-            );
+            return null;
         }
         return (
             <Grid className="full-width" container>
@@ -185,6 +222,12 @@ export default class AccommodationDetail extends React.PureComponent {
                 <Grid item xs={12} sm={12} md={6} lg={8} xl={8}>
                     {this.renderIconsInfo()}
                 </Grid>
+                <Grid item xs={12} sm={12} md={12} lg={9} xl={8}>
+                    {this.renderDescription()}
+                </Grid>
+                <Grid style={styles.gMapContainer} item xs={12} sm={12} md={12} lg={9} xl={8}>
+                    {this.renderMap()}
+                </Grid>
             </Grid>
         );
     }
@@ -192,7 +235,7 @@ export default class AccommodationDetail extends React.PureComponent {
     renderPlace() {
         return (
             <Grid container spacing={24} xs={12} sm={12} md={10} lg={8} xl={6}>
-                <Grid xs={12} sm={12} md={8} lg={9} xl={10} item className="full-width" style={styles.accommodationCard}>{this.renderPlaceDescription()}</Grid>
+                <Grid xs={12} sm={12} md={8} lg={9} xl={10} item className="full-width" style={styles.accommodationCard}>{this.renderPlaceDetails()}</Grid>
                 <Grid xs={12} sm={12} md={4} lg={3} xl={2} item className="full-width" style={styles.accommodationCard}>MISSIONS</Grid>
             </Grid>
         );
