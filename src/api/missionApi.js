@@ -36,6 +36,9 @@ const missionApi = {
     },
     deleteItem: (id) => {
         return generateFetch("missions", "DELETE", id);
+    },
+    applyToMission: (userId, missionId) => {
+        return new Promise(resolve => setTimeout(resolve, 2000));
     }
 };
 

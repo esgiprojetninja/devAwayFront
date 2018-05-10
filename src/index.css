@@ -56,6 +56,22 @@ body {
     margin: auto;
 }
 
+.text-right {
+    text-align: right;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-justify {
+    text-align: justify;
+}
+
 .no-margin {
     margin: 0;
 }

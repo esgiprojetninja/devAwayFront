@@ -8,6 +8,7 @@ import GuestsIcon from "material-ui-icons/People";
 import BedsIcon from "material-ui-icons/LocalHotel";
 import BathRoomsIcon from "material-ui-icons/InvertColors";
 import GMap from "google-map-react";
+import Button from "material-ui/Button";
 import FloorsIcon from "material-ui-icons/ClearAll";
 import Navbar from "../../containers/Navbar";
 import Marker from "./AccommodationMarker";
@@ -30,7 +31,14 @@ const styles = {
     },
     accommodationCard: {
         margin: "0",
-        wordBreak: "break-all"
+        overflowY: "auto",
+        wordBreak: "break-all",
+        height: "100%",
+        maxHeight: "70vh"
+    },
+    missionCard: {
+        padding: "16px 12px",
+        borderBottom: `2px solid ${midGrey}`
     },
     coverImg: {
         width: "100%",
@@ -80,7 +88,11 @@ export default class AccommodationDetail extends React.PureComponent {
             }).isRequired
         }).isRequired,
         onInit: T.func.isRequired,
-        accommodation: accommodationReducerPropTypes.isRequired
+        applyToMission: T.func.isRequired,
+        accommodation: accommodationReducerPropTypes.isRequired,
+        user: T.shape({
+            isLoggedIn: T.bool.isRequired
+        }).isRequired
     }
 
     constructor() {
@@ -106,7 +118,7 @@ export default class AccommodationDetail extends React.PureComponent {
     }
 
     get hasMissions() {
-        return this.accommodation.missions && this.accommodation.missions.length;
+        return true || (this.accommodation.missions && this.accommodation.missions.length);
     }
 
     updateDimensions() {
@@ -265,31 +277,66 @@ export default class AccommodationDetail extends React.PureComponent {
         );
     }
 
-    renderMissions() {
-        return "missions";
+    renderMission(mission) {
+        return (
+            <div style={styles.missionCard} className="full-width">
+                <Typography className="full-width text-center" style={{ color: darkGrey, fontWeight: 500, fontSize: "1.6em" }}>
+                    {mission.title}
+                </Typography>
+                <Typography className="full-width text-justify" style={{ color: midGrey, fontSize: "1.2em" }}>
+                    {mission.description}
+                </Typography>
+                {this.props.user.isLoggedIn ?
+                    <Button
+                        className="full-width margin-auto"
+                        style={{ maxWidth: "200px" }}
+                        onClick={() => this.props.applyToMission(mission)}
+                        color="primary"
+                    >
+                        Apply
+                    </Button>
+                    : null
+                }
+            </div>
+        );
     }
+
 
     renderPlace() {
         if (!this.accommodation) return null;
         if (!this.hasMissions) {
             return (
-                <div className="full-width">
+                <Grid container spacing={24} xs={12} sm={12} md={10} lg={8} xl={6}>
                     {this.renderPlaceDetails()}
                     <Typography style={{ color: midGrey, fontWeight: 500 }}>
                         There are no missions linked to this place yet !
                     </Typography>
-                </div>
+                </Grid>
             );
         }
         return (
-            <div>
+            <Grid container spacing={24} xs={12} sm={12} md={10} lg={8} xl={6}>
                 <Grid xs={12} sm={12} md={8} lg={9} xl={10} item container className="full-width" style={styles.accommodationCard}>
                     {this.renderPlaceDetails()}
                 </Grid>
                 <Grid xs={12} sm={12} md={4} lg={3} xl={2} item container className="full-width" style={styles.accommodationCard}>
-                    {this.renderMissions()}
+                    {
+                        Array.from(Array(5)).map((i, m) => {
+                            const mission = {
+                                nbPersons: Math.round(Math.random() * 10),
+                                id: `MissionID-${m}`,
+                                title: `Mission ${m}`,
+                                description: `description of the sheitan you KNOOW ${m}`,
+                                checkInDate: new Date().toISOString(),
+                                checkoutDate: new Date(Date.now() + (1000 * 3600 * 24 * 15)),
+                                isBooked: m % 2 === 0,
+                                isActive: m % 2 === 0
+                            };
+                            return this.renderMission(mission);
+                        })
+                    }
                 </Grid>
-            </div>
+            </Grid>
         );
     }
 
@@ -322,9 +369,7 @@ export default class AccommodationDetail extends React.PureComponent {
                 {this.renderImg()}
                 <div style={style}>
                     {this.renderFetchingSpinner()}
-                    <Grid container spacing={24} xs={12} sm={12} md={10} lg={8} xl={6}>
-                        {this.renderPlace()}
-                    </Grid>
+                    {this.renderPlace()}
                 </div>
             </div>
         );
