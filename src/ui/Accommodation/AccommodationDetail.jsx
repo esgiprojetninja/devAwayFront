@@ -29,7 +29,7 @@ const styles = {
         paddingBottom: "50px"
     },
     accommodationCard: {
-        margin: "auto",
+        margin: "0",
         wordBreak: "break-all"
     },
     coverImg: {
@@ -105,6 +105,10 @@ export default class AccommodationDetail extends React.PureComponent {
         return this.props.accommodation.byID.get(id) || null;
     }
 
+    get hasMissions() {
+        return this.accommodation.missions && this.accommodation.missions.length;
+    }
+
     updateDimensions() {
         return this.setState({
             containerWidth: getAdaptedContainerWidth()
@@ -127,13 +131,15 @@ export default class AccommodationDetail extends React.PureComponent {
                     language: "en"
                 }}
                 center={{
-                    lat: 50,
-                    lng: 50
+                    lat: acco.latitude,
+                    lng: acco.longitude
                 }}
                 zoom={8}
             >
                 <Marker
                     accommodation={acco}
+                    lat={acco.latitude}
+                    lng={acco.longitude}
                 />
             </GMap>
         );
@@ -206,38 +212,84 @@ export default class AccommodationDetail extends React.PureComponent {
     }
 
     renderPlaceDetails() {
-        if (!this.accommodation) {
-            return null;
-        }
         return (
-            <Grid className="full-width" container>
+            <Grid container className="full-width" style={styles.accommodationCard}>
                 <Grid className="relative" item xs={12}>
                     <Typography style={{ color: darkGrey, fontWeight: 500, fontSize: "1.875em" }} className="capitalize" variant="display1">
                         {this.accommodation.title}
                     </Typography>
                 </Grid>
-                <Grid className="relative" item xs={12} sm={12} md={12} lg={9} xl={8}>
+                <Grid
+                    className="relative"
+                    item
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    lg={this.hasMissions ? 9 : 12}
+                    xl={this.hasMissions ? 8 : 12}
+                >
                     {this.renderHostInfo()}
                 </Grid>
-                <Grid item xs={12} sm={12} md={6} lg={8} xl={8}>
+                <Grid
+                    item
+                    xs={12}
+                    sm={12}
+                    md={this.hasMissions ? 6 : 12}
+                    lg={this.hasMissions ? 8 : 12}
+                    xl={this.hasMissions ? 8 : 12}
+                >
                     {this.renderIconsInfo()}
                 </Grid>
-                <Grid item xs={12} sm={12} md={12} lg={9} xl={8}>
+                <Grid
+                    item
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    lg={this.hasMissions ? 9 : 12}
+                    xl={this.hasMissions ? 8 : 12}
+                >
                     {this.renderDescription()}
                 </Grid>
-                <Grid style={styles.gMapContainer} item xs={12} sm={12} md={12} lg={9} xl={8}>
+                <Grid
+                    style={styles.gMapContainer}
+                    item
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    lg={this.hasMissions ? 9 : 12}
+                    xl={this.hasMissions ? 8 : 12}
+                >
                     {this.renderMap()}
                 </Grid>
             </Grid>
         );
     }
 
+    renderMissions() {
+        return "missions";
+    }
+
     renderPlace() {
+        if (!this.accommodation) return null;
+        if (!this.hasMissions) {
+            return (
+                <div className="full-width">
+                    {this.renderPlaceDetails()}
+                    <Typography style={{ color: midGrey, fontWeight: 500 }}>
+                        There are no missions linked to this place yet !
+                    </Typography>
+                </div>
+            );
+        }
         return (
-            <Grid container spacing={24} xs={12} sm={12} md={10} lg={8} xl={6}>
-                <Grid xs={12} sm={12} md={8} lg={9} xl={10} item className="full-width" style={styles.accommodationCard}>{this.renderPlaceDetails()}</Grid>
-                <Grid xs={12} sm={12} md={4} lg={3} xl={2} item className="full-width" style={styles.accommodationCard}>MISSIONS</Grid>
-            </Grid>
+            <div>
+                <Grid xs={12} sm={12} md={8} lg={9} xl={10} item container className="full-width" style={styles.accommodationCard}>
+                    {this.renderPlaceDetails()}
+                </Grid>
+                <Grid xs={12} sm={12} md={4} lg={3} xl={2} item container className="full-width" style={styles.accommodationCard}>
+                    {this.renderMissions()}
+                </Grid>
+            </div>
         );
     }
 
@@ -270,7 +322,9 @@ export default class AccommodationDetail extends React.PureComponent {
                 {this.renderImg()}
                 <div style={style}>
                     {this.renderFetchingSpinner()}
-                    {this.renderPlace()}
+                    <Grid container spacing={24} xs={12} sm={12} md={10} lg={8} xl={6}>
+                        {this.renderPlace()}
+                    </Grid>
                 </div>
             </div>
         );

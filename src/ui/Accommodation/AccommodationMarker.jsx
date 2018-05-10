@@ -2,12 +2,12 @@ import React from "react";
 import House from "react-icons/lib/fa/home";
 import Building from "react-icons/lib/fa/building";
 import { accommodationPropTypes } from "../../propTypes/accommodationType.js";
-import { defaultTheme } from "../../styles/theme";
+import { darkGrey } from "../../styles/theme";
 
 const styles = {
     markerAppearance: {
-        color: defaultTheme.palette.primary.light,
-        fill: defaultTheme.palette.primary.light,
+        color: darkGrey,
+        fill: darkGrey,
         height: "70px",
         width: "70px"
     }
@@ -18,9 +18,12 @@ export default class AccommodationMarker extends React.PureComponent {
         accommodation: accommodationPropTypes.isRequired
     }
 
+    get acco() {
+        return this.props.accommodation ? this.props.accommodation : null;
+    }
+
     render() {
-        const acco = this.props.accommodation;
-        switch (acco.type) {
+        switch (this.acco.type) {
         case "appartment":
             return (
                 <Building

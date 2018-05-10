@@ -10,7 +10,7 @@ export const mapDispatchToProps = dispatch => ({
     async onInit(id) {
         const res = await dispatch(fetchAccommodation(id));
         if (res.payload && res.payload.data && res.payload.data.host) {
-            // @TODO adapat to API when it's finally f* fixed
+            // @TODO adapt to API when it's finally f* fixed
             const userId = res.payload.data.host.split("/");
             try {
                 const host = await userApi.getUser(userId[userId.length - 1]);

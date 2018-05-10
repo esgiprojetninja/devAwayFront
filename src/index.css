@@ -52,6 +52,10 @@ body {
     position: relative;
 }
 
+.margin-auto {
+    margin: auto;
+}
+
 .no-margin {
     margin: 0;
 }
