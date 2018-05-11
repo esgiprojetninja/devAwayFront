@@ -14,7 +14,7 @@ import Navbar from "../../containers/Navbar";
 import Marker from "./AccommodationMarker";
 import { getAdaptedContainerWidth } from "./AccommodationsList";
 import { accommodationReducerPropTypes } from "../../propTypes/accommodation.reducer.d";
-import { midGrey, darkGrey } from "../../styles/theme";
+import { lightGrey, midGrey, darkGrey } from "../../styles/theme";
 
 const styles = {
     container: {
@@ -38,7 +38,7 @@ const styles = {
     },
     missionCard: {
         padding: "16px 12px",
-        borderBottom: `2px solid ${midGrey}`
+        borderBottom: `1px solid ${lightGrey}`
     },
     coverImg: {
         width: "100%",
@@ -246,9 +246,9 @@ export default class AccommodationDetail extends React.PureComponent {
                     item
                     xs={12}
                     sm={12}
-                    md={this.hasMissions ? 6 : 12}
-                    lg={this.hasMissions ? 8 : 12}
-                    xl={this.hasMissions ? 8 : 12}
+                    md={this.hasMissions ? 8 : 12}
+                    lg={this.hasMissions ? 10 : 12}
+                    xl={this.hasMissions ? 10 : 12}
                 >
                     {this.renderIconsInfo()}
                 </Grid>
@@ -289,7 +289,7 @@ export default class AccommodationDetail extends React.PureComponent {
                 {this.props.user.isLoggedIn ?
                     <Button
                         className="full-width margin-auto"
-                        style={{ maxWidth: "200px" }}
+                        style={{ maxWidth: "200px", display: "flex" }}
                         onClick={() => this.props.applyToMission(mission)}
                         color="primary"
                     >
@@ -301,12 +301,11 @@ export default class AccommodationDetail extends React.PureComponent {
         );
     }
 
-
     renderPlace() {
         if (!this.accommodation) return null;
         if (!this.hasMissions) {
             return (
-                <Grid container spacing={24} xs={12} sm={12} md={10} lg={8} xl={6}>
+                <Grid container className="full-width">
                     {this.renderPlaceDetails()}
                     <Typography style={{ color: midGrey, fontWeight: 500 }}>
                         There are no missions linked to this place yet !
@@ -315,11 +314,11 @@ export default class AccommodationDetail extends React.PureComponent {
             );
         }
         return (
-            <Grid container spacing={24} xs={12} sm={12} md={10} lg={8} xl={6}>
-                <Grid xs={12} sm={12} md={8} lg={9} xl={10} item container className="full-width" style={styles.accommodationCard}>
+            <Grid container className="full-width">
+                <Grid xs={12} sm={12} md={8} lg={8} xl={8} item container className="full-width" style={styles.accommodationCard}>
                     {this.renderPlaceDetails()}
                 </Grid>
-                <Grid xs={12} sm={12} md={4} lg={3} xl={2} item container className="full-width" style={styles.accommodationCard}>
+                <Grid xs={12} sm={12} md={4} lg={4} xl={4} item container className="full-width" style={styles.accommodationCard}>
                     {
                         Array.from(Array(5)).map((i, m) => {
                             const mission = {

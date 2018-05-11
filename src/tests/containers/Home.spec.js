@@ -26,15 +26,6 @@ const prepare = (name, state) => {
 
 describe("Container Home", () => {
     describe("mapDispatchToProps", () => {
-        it("onInit", async () => {
-            global.localStorage = {
-                getItem: jest.fn()
-            };
-            const { store, fn } = prepare("onInit");
-            await fn();
-            expect(store.getActions().map(a => a.type)).toEqual([]);
-        });
-
         it("closeSnack", async () => {
             const { store, fn } = prepare("closeSnack", mainReducer(undefined, {}));
             await fn();

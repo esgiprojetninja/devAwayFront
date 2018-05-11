@@ -111,9 +111,9 @@ export const addUser = (user) => {
 };
 
 export const loadSessionUser = () =>
-    (dispatch) => {
+    (dispatch, getState) => {
         const token = window.localStorage.getItem("authToken");
-        if (token) {
+        if (token && (!getState().user || !getState().user.isLoggedIn)) {
             dispatch(getMe(token));
         }
     };

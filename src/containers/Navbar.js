@@ -1,14 +1,14 @@
 /* global window */
 
 import { connect } from "react-redux";
-
+import { loadSessionUser } from "../actions/user";
 import NavbarComponent from "../ui/Navbar";
 
 export const navbarKeyStoragePrefix = "navbarKeyStoragePrefix";
 
 export const mapStateToProps = state => state;
 
-export const mapDispatchToProps = () => ({
+export const mapDispatchToProps = dispatch => ({
     getSavedState(state) {
         return Object.keys(state).reduce((finalState, stateKey) => {
             return {
@@ -22,6 +22,9 @@ export const mapDispatchToProps = () => ({
     },
     removeStateProp(stateKey) {
         window.localStorage.removeItem(`${navbarKeyStoragePrefix}${stateKey}`);
+    },
+    async onInit() {
+        return dispatch(loadSessionUser());
     }
 });
 

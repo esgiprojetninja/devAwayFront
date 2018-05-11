@@ -45,13 +45,8 @@ export class Home extends React.PureComponent {
             hasSnack: T.bool.isRequired,
             snackDuration: T.number.isRequired
         }).isRequired,
-        closeSnack: T.func.isRequired,
-        onInit: T.func.isRequired
+        closeSnack: T.func.isRequired
     };
-
-    componentDidMount() {
-        this.props.onInit();
-    }
 
     renderFirstBlock() {
         return (
