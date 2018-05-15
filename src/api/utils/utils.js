@@ -2,16 +2,15 @@
 import "isomorphic-fetch";
 
 
-export function generateFetch(entity, verb, id, data, format) {
+export function generateFetch(entity, verb, id, data) {
     const baseUrl = process.env.REACT_APP_API_URL;
     const token = window.localStorage.getItem("authToken");
-    const isJson = (verb === "DELETE" || format === "json") ? "" : ".json";
     const protocole = process.env.NODE_ENV === "development" ? "http" : "https";
     let url = `${protocole}://${baseUrl}/api/${entity}`;
     if (id) {
         url = `${url}/${id}`;
     }
-    return fetch(`${url}${isJson}`, {
+    return fetch(`${url}`, {
         method: verb,
         headers: {
             "Content-Type": "application/json",
@@ -33,17 +32,13 @@ export function generateAnonymousFetch(
     path,
     verb,
     data,
-    param,
-    isJson
+    param
 ) {
     const baseUrl = process.env.REACT_APP_API_URL;
     const protocole = process.env.NODE_ENV === "development" ? "http" : "https";
     let url = `${protocole}://${baseUrl}/api/${path}`;
     if (param) {
         url = `${url}/${param}`;
-    }
-    if (isJson) {
-        url = `${url}.json`;
     }
     return fetch(url, {
         method: verb,

@@ -91,7 +91,10 @@ export default class AccommodationDetail extends React.PureComponent {
         applyToMission: T.func.isRequired,
         accommodation: accommodationReducerPropTypes.isRequired,
         user: T.shape({
-            isLoggedIn: T.bool.isRequired
+            isLoggedIn: T.bool.isRequired,
+            data: T.shape({
+                id: T.any.isRequired
+            }).isRequired
         }).isRequired
     }
 
@@ -279,7 +282,7 @@ export default class AccommodationDetail extends React.PureComponent {
 
     renderMission(mission) {
         return (
-            <div style={styles.missionCard} className="full-width">
+            <div key={mission.id} style={styles.missionCard} className="full-width">
                 <Typography className="full-width text-center" style={{ color: darkGrey, fontWeight: 500, fontSize: "1.6em" }}>
                     {mission.title}
                 </Typography>
@@ -290,7 +293,7 @@ export default class AccommodationDetail extends React.PureComponent {
                     <Button
                         className="full-width margin-auto"
                         style={{ maxWidth: "200px", display: "flex" }}
-                        onClick={() => this.props.applyToMission(mission)}
+                        onClick={() => this.props.applyToMission(this.props.user.data.id, mission)}
                         color="primary"
                     >
                         Apply

@@ -73,6 +73,7 @@ export function login(credentials) {
                 (error) => {
                     // console.log(error);
                     dispatch(displaySnackMsg("Failed to login"));
+                    window.localStorage.removeItem("authToken");
                     return dispatch(loginFailure(error));
                 }
             );

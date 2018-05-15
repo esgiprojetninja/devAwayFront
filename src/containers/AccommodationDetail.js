@@ -7,7 +7,7 @@ import missionApi from "../api/missionApi";
 
 export const mapStateToProps = state => state;
 
-export const mapDispatchToProps = (dispatch, getState) => ({
+export const mapDispatchToProps = dispatch => ({
     async onInit(id) {
         try {
             const res = await dispatch(fetchAccommodation(id));
@@ -27,6 +27,7 @@ export const mapDispatchToProps = (dispatch, getState) => ({
     async applyToMission(userId, mission) {
         try {
             const res = await missionApi.applyToMission(userId, mission.id);
+            console.log("I WAS DOING", res);
             return res;
         } catch (e) {
             console.error("applyToMission:: ", e);
