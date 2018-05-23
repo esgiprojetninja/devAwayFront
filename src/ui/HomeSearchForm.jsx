@@ -9,7 +9,6 @@ import Select from "material-ui/Select";
 import { MenuItem } from "material-ui/Menu";
 import Icon from "material-ui/Icon";
 import moment from "moment";
-import Hidden from 'material-ui/Hidden';
 import Grid from "material-ui/Grid";
 
 class HomeSearchForm extends React.PureComponent {
@@ -70,7 +69,7 @@ class HomeSearchForm extends React.PureComponent {
                     </Grid>
                     <Grid item xs={12} sm={3} md={1}>
                         <div className="vertical-align">
-                            <FormControl className={classes.formControl + " " + classes.formControlGuests}>
+                            <FormControl className={`${classes.formControl}${classes.formControlGuests}`}>
                                 <InputLabel htmlFor="guests">Guests</InputLabel>
                                 <Select
                                     value={this.state.nbGuests}

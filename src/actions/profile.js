@@ -1,3 +1,4 @@
+/* global window */
 import * as profileTypes from "./types/profile";
 import { displaySnackMsg } from "./snack";
 
@@ -116,8 +117,12 @@ export const getMe = id =>
         dispatch(getMeRequest());
         return API.profileApi.getMe(id).then((res) => {
             if (res.hasError) {
+                window.localStorage.removeItem("authToken");
                 return dispatch(getMeFailure(res.message));
             }
             return dispatch(getMeSuccess(res));
-        }, err => dispatch(getMeFailure(err)));
+        }, (err) => {
+            window.localStorage.removeItem("authToken");
+            return dispatch(getMeFailure(err));
+        });
     };

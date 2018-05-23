@@ -9,6 +9,9 @@ export const mockAPI = {
         }),
         deleteItem: () => Promise.resolve({
             deleted: true
+        }),
+        fetchById: () => Promise.resolve({
+            poulay: "man"
         })
     },
     userApi: {
@@ -18,7 +21,8 @@ export const mockAPI = {
     missionApi: {
         fetchAll: () => Promise.resolve([]),
         createOrUpdate: () => Promise.resolve({}),
-        deleteItem: () => Promise.resolve({})
+        deleteItem: () => Promise.resolve({}),
+        applyToMission: () => Promise.resolve({ poulay: "man" })
     },
     messageApi: {
         fetchAll: () => Promise.resolve([]),

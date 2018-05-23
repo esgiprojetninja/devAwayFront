@@ -26,6 +26,16 @@ const prepare = (name, state) => {
 
 describe("Container AccommodationDetail", () => {
     describe("mapDispatchToProps", () => {
+        it("onInit", async () => {
+            const { store, fn } = prepare("onInit", mainReducer(undefined, {}));
+            await fn();
+            expect(store.getActions().map(a => a.type)).toEqual(["FETCH_ACCOMMODATIONS_REQUEST", "FETCH_ACCOMMODATION_SUCCESS"]);
+        });
+        it("applyToMission", async () => {
+            const { store, fn } = prepare("applyToMission", mainReducer(undefined, {}));
+            await fn("coucou", { id: "coucou" });
+            expect(store.getActions().map(a => a.type)).toEqual([]);
+        });
     });
     describe("mapStateToProps", () => {
         it("dispatch accomodation specific state", () => {

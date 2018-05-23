@@ -46,7 +46,7 @@ function startApp(node) {
             <Reboot />
             <BrowserRouter basename={routes[0].path} forceRefresh={!supportsHistory} >
                 <Provider store={store}>
-                    <div>
+                    <div className="full-width">
                         {routes.map(route => (<RouteWithSubRoutes key={`${Date.now()}+${route.path}`} {...route} />))}
                     </div>
                 </Provider>

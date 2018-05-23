@@ -65,7 +65,8 @@ describe("ui <NavBar />", () => {
         },
         getSavedState: jest.fn(() => ({})),
         removeStateProp: jest.fn(),
-        storeStateProp: jest.fn()
+        storeStateProp: jest.fn(),
+        onInit: jest.fn()
     };
     let wrapper = null;
     beforeEach(() => {
@@ -80,6 +81,10 @@ describe("ui <NavBar />", () => {
     it("should render with main items", () => {
         expect(wrapper.text()).toContain("WithStyles(AppBar)");
         expect(wrapper.text()).toContain("WithStyles(IconButton)");
+    });
+
+    it("should call onInit prop after mount", () => {
+        expect(initialProps.onInit).toHaveBeenCalled();
     });
 
     it("should retreive stored state on mount", () => {

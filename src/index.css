@@ -16,10 +16,68 @@ body {
     height: 100%;
 }
 
+.capitalize {
+    text-transform: capitalize;
+}
+
+.display-flex-column {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.display-flex-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.justify-start{
+    justify-content: flex-start;
+}
+
+.space-around{
+    justify-content: space-around;
+}
+
 .vertical-align {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.relative {
+    position: relative;
+}
+
+.margin-auto {
+    margin: auto;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-justify {
+    text-align: justify;
+}
+
+.no-margin {
+    margin: 0;
+}
+
+.no-padding {
+    padding: 0;
 }
 
 .hr {
@@ -54,6 +112,7 @@ button.btn-white {
     padding: 2.5px 10px;
     font-size: 3vh;
 }
+
 
 .accommodation-card{
     width: 100%;

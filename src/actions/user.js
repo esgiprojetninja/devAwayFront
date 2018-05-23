@@ -73,6 +73,7 @@ export function login(credentials) {
                 (error) => {
                     // console.log(error);
                     dispatch(displaySnackMsg("Failed to login"));
+                    window.localStorage.removeItem("authToken");
                     return dispatch(loginFailure(error));
                 }
             );
@@ -111,9 +112,9 @@ export const addUser = (user) => {
 };
 
 export const loadSessionUser = () =>
-    (dispatch) => {
+    (dispatch, getState) => {
         const token = window.localStorage.getItem("authToken");
-        if (token) {
+        if (token && (!getState().user || !getState().user.isLoggedIn)) {
             dispatch(getMe(token));
         }
     };

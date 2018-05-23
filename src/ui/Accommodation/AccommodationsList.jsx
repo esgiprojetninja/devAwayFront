@@ -2,6 +2,7 @@
 import React from "react";
 import * as T from "prop-types";
 import GridList, { GridListTile, GridListTileBar } from "material-ui/GridList";
+import { NavLink } from "react-router-dom";
 import Subheader from "material-ui/List/ListSubheader";
 import Connectivity from "material-ui-icons/NetworkWifi";
 import NoConnectivity from "material-ui-icons/WifiLock";
@@ -38,7 +39,7 @@ const styles = {
         flexWrap: "wrap",
         justifyContent: "space-around",
         overflow: "hidden",
-        backgroundColor: "#fff",
+        backgroundColor: "inherit",
         margin: "auto",
         marginTop: "70px",
         maxWidth: "1768px"
@@ -57,7 +58,7 @@ const styles = {
         color: "rgba(8, 8, 8, 0.65)"
     },
     gridTileBar: {
-        background: "#fff",
+        background: "#fafafa",
         textAlign: "left",
         width: "100%",
         paddingTop: "5px",
@@ -104,8 +105,7 @@ export default class AccommodationsList extends React.PureComponent {
         super();
         this.state = {
             tileCols: getAdaptedTileCols(),
-            containerWidth: getAdaptedContainerWidth(),
-            hoveredTile: null
+            containerWidth: getAdaptedContainerWidth()
         };
     }
 
@@ -170,42 +170,46 @@ export default class AccommodationsList extends React.PureComponent {
                                 onMouseEnter={() => this.setState({ hoveredTile: filledAcco.id })}
                                 onMouseLeave={() => this.setState({ hoveredTile: null })}
                             >
-                                <img src={img} alt={filledAcco.title} />
-                                <div style={styles.gridCustomDiv}>
-                                    {filledAcco.hasInternet ?
-                                        <Connectivity className="connectivity-icon" style={styles.icon} /> :
-                                        <NoConnectivity className="no-connectivity-icon" style={styles.icon} />
-                                    }
-                                    {filledAcco.smokersAllowed ?
-                                        <Smoke className="smoke-icon" style={styles.icon} /> :
-                                        <NoSmoke className="no-smoke-icon" style={styles.icon} />
-                                    }
-                                    <p style={styles.descP}>{`${filledAcco.propertySize}`.charAt(0)} rooms</p>
-                                </div>
-                                <GridListTileBar
-                                    style={styles.gridTileBar}
-                                    title={
-                                        <Typography
-                                            style={{
-                                                fontSize: "13px",
-                                                fontWeight: "700",
-                                                color: "rgba(8,8,8,.75)"
-                                            }}
-                                        >
-                                            {filledAcco.title}
-                                        </Typography>
-                                    }
-                                    subtitle={
-                                        <Typography
-                                            style={{
-                                                fontSize: "13px",
-                                                color: "rgba(8,8,8,.60)"
-                                            }}
-                                        >
-                                            {filledAcco.city} - {filledAcco.country}
-                                        </Typography>
-                                    }
-                                />
+                                <NavLink
+                                    to={`/accommodations/${filledAcco.id}`}
+                                >
+                                    <img style={{ width: "100%", height: "auto" }} src={img} alt={filledAcco.title} />
+                                    <div style={styles.gridCustomDiv}>
+                                        {filledAcco.hasInternet ?
+                                            <Connectivity className="connectivity-icon" style={styles.icon} /> :
+                                            <NoConnectivity className="no-connectivity-icon" style={styles.icon} />
+                                        }
+                                        {filledAcco.smokersAllowed ?
+                                            <Smoke className="smoke-icon" style={styles.icon} /> :
+                                            <NoSmoke className="no-smoke-icon" style={styles.icon} />
+                                        }
+                                        <p style={styles.descP}>{`${filledAcco.propertySize}`.charAt(0)} rooms</p>
+                                    </div>
+                                    <GridListTileBar
+                                        style={styles.gridTileBar}
+                                        title={
+                                            <Typography
+                                                style={{
+                                                    fontSize: "13px",
+                                                    fontWeight: "700",
+                                                    color: "rgba(8,8,8,.75)"
+                                                }}
+                                            >
+                                                {filledAcco.title}
+                                            </Typography>
+                                        }
+                                        subtitle={
+                                            <Typography
+                                                style={{
+                                                    fontSize: "13px",
+                                                    color: "rgba(8,8,8,.60)"
+                                                }}
+                                            >
+                                                {filledAcco.city} - {filledAcco.country}
+                                            </Typography>
+                                        }
+                                    />
+                                </NavLink>
                             </GridListTile>
                         );
                     }).slice(0, 12) // @TODO: Adapt to eventual server pagination

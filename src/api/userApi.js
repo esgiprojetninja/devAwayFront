@@ -22,6 +22,13 @@ const userApi = {
             "Content-Type": "application/json"
         },
         body: JSON.stringify(user)
+    })).then(res => res.json()),
+
+    getUser: userId => (fetch(`${protocol}://${baseUrl}/api/users/${userId}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        }
     })).then(res => res.json())
 };
 

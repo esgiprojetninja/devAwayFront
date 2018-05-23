@@ -17,6 +17,9 @@ describe("Actions profile", () => {
 
     beforeEach(() => {
         mockStore = configureMockStore([thunk.withExtraArgument(mockAPI)]);
+        global.localStorage = {
+            removeItem: jest.fn()
+        };
     });
 
     it("should fetch profiles", async () => {
@@ -216,6 +219,7 @@ describe("Actions profile", () => {
         });
         await storeError.dispatch(profileActions.getMe());
         expect(storeError.getActions()).toEqual(expectedActions);
+        expect(global.localStorage.removeItem).toHaveBeenCalled();
     });
 
     it("should get me - Server failure", async () => {
@@ -233,5 +237,6 @@ describe("Actions profile", () => {
         });
         await storeError.dispatch(profileActions.getMe());
         expect(storeError.getActions()).toEqual(expectedActions);
+        expect(global.localStorage.removeItem).toHaveBeenCalled();
     });
 });

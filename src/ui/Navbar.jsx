@@ -20,7 +20,8 @@ export class NavBarComponent extends React.PureComponent {
         burgerColor: T.string,
         getSavedState: T.func.isRequired,
         storeStateProp: T.func.isRequired,
-        removeStateProp: T.func.isRequired
+        removeStateProp: T.func.isRequired,
+        onInit: T.func.isRequired
     };
 
     static defaultProps = { burgerColor: "contrast" }
@@ -35,6 +36,10 @@ export class NavBarComponent extends React.PureComponent {
             ...defaultState,
             ...props.getSavedState(defaultState)
         };
+    }
+
+    componentDidMount() {
+        this.props.onInit();
     }
 
     toggleOpen(open) {

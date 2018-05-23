@@ -37,6 +37,12 @@ describe("Container Navbar", () => {
     });
 
     describe("mapDispatchToProps", () => {
+        it("onInit", async () => {
+            const { store, fn } = prepare("onInit");
+            await fn();
+            expect(store.getActions().map(a => a.type)).toEqual([]);
+        });
+
         it("getSavedState", async () => {
             const { store, fn } = prepare("getSavedState");
             const storedState = await fn({ open: 1, chibawde: "ohmygad" });
