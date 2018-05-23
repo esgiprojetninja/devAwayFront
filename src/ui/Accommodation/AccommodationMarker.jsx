@@ -23,6 +23,7 @@ export default class AccommodationMarker extends React.PureComponent {
     }
 
     render() {
+        if (!this.acco) return null;
         switch (this.acco.type) {
         case "appartment":
             return (
