@@ -121,7 +121,7 @@ export default class AccommodationDetail extends React.PureComponent {
     }
 
     get hasMissions() {
-        return true || (this.accommodation.missions && this.accommodation.missions.length);
+        return this.accommodation.missions && this.accommodation.missions.length > 0;
     }
 
     updateDimensions() {
@@ -291,7 +291,7 @@ export default class AccommodationDetail extends React.PureComponent {
                 </Typography>
                 {this.props.user.isLoggedIn ?
                     <Button
-                        className="full-width margin-auto"
+                        className="devaway-apply-btn full-width margin-auto"
                         style={{ maxWidth: "200px", display: "flex" }}
                         onClick={() => this.props.applyToMission(this.props.user.data.id, mission)}
                         color="primary"
@@ -321,9 +321,9 @@ export default class AccommodationDetail extends React.PureComponent {
                 <Grid xs={12} sm={12} md={8} lg={8} xl={8} item container className="full-width" style={styles.accommodationCard}>
                     {this.renderPlaceDetails()}
                 </Grid>
-                <Grid xs={12} sm={12} md={4} lg={4} xl={4} item container className="full-width" style={styles.accommodationCard}>
+                <Grid xs={12} sm={12} md={4} lg={4} xl={4} item container className="devaway-missions-container full-width" style={styles.accommodationCard}>
                     {
-                        Array.from(Array(5)).map((i, m) => {
+                        this.accommodation.missions.map((i, m) => {
                             const mission = {
                                 nbPersons: Math.round(Math.random() * 10),
                                 id: `MissionID-${m}`,
