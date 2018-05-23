@@ -17,7 +17,7 @@ function update(accommodation) {
 
 const accommodationApi = {
     fetchAll: () => {
-        return generateFetch("accommodations", "GET").then((parsed) => {
+        return generateFetch("accommodations.json", "GET").then((parsed) => {
             if (parsed.hasError) {
                 return parsed;
             }
@@ -32,7 +32,7 @@ const accommodationApi = {
         });
     },
     fetchAllWithoutAuth: () => {
-        return generateAnonymousFetch("accommodations", "GET", {}, undefined, true).then((parsed) => {
+        return generateAnonymousFetch("accommodations.json", "GET").then((parsed) => {
             if (parsed.hasError) {
                 return parsed;
             }

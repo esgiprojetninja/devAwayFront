@@ -57,7 +57,7 @@ describe("API profile", () => {
     });
 
     it("should get me", (done) => {
-        fetchMock.get(`https://${baseUrl}/api/users/me`, {});
+        fetchMock.get(`https://${baseUrl}/api/users/me.json`, {});
         profileApi.getMe().then((res) => {
             expect(res).toEqual({});
             done();

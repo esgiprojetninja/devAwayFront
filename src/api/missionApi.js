@@ -37,7 +37,7 @@ const missionApi = {
     deleteItem: (id) => {
         return generateFetch("missions", "DELETE", id);
     },
-    applyToMission: (userId, missionId) => {
+    applyToMission: (userId, missionId) => { // eslint-disable-line
         return new Promise(resolve => setTimeout(resolve, 2000));
     }
 };

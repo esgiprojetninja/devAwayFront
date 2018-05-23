@@ -20,7 +20,7 @@ describe("API accommodation", () => {
 
     it("should check accommodation", (done) => {
         const data = [{ id: 100, name: "Toto" }];
-        fetchMock.get(`https://${baseUrl}/api/accommodations`, data);
+        fetchMock.get(`https://${baseUrl}/api/accommodations.json`, data);
         accommodationApi.fetchAllWithoutAuth().then((res) => {
             expect(res).toEqual(parseCollectionFromApi(data));
             done();
