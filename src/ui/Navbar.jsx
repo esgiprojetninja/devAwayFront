@@ -119,8 +119,12 @@ export class NavBarComponent extends React.PureComponent {
         const burgerColor = this.state.open ?
             NavBarComponent.defaultProps.burgerColor :
             this.props.burgerColor;
+
+        const containerStyle = {
+            height: this.state.open ? "70px" : "0"
+        };
         return (
-            <div className={classes.root}>
+            <div style={containerStyle} className={classes.root}>
                 <AppBar position="fixed" className={navbarClasses.join(" ")}>
                     <Toolbar className={classes.toolbar}>
                         <div className="full-width">
@@ -170,7 +174,8 @@ NavBarComponent.propTypes = {
 
 export default withStyles(theme => ({
     root: {
-        width: "100%"
+        width: "100%",
+        transition: "height .2s ease-in-out"
     },
     flex: {
         flex: 1

@@ -41,7 +41,6 @@ const styles = {
         overflow: "hidden",
         backgroundColor: "inherit",
         margin: "auto",
-        marginTop: "70px",
         maxWidth: "1768px"
     },
     gridList: {
