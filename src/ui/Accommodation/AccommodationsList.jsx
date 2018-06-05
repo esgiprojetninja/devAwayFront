@@ -11,7 +11,6 @@ import Smoke from "material-ui-icons/SmokingRooms";
 import Typography from "material-ui/Typography";
 import { CircularProgress } from "material-ui/Progress";
 import { accommodationReducerPropTypes } from "../../propTypes/accommodation.reducer.d";
-import Navbar from "../../containers/Navbar";
 
 export const getAdaptedTileCols = () => {
     if (window.innerWidth <= 480) {
@@ -223,11 +222,8 @@ export default class AccommodationsList extends React.PureComponent {
             width: this.state.containerWidth
         };
         return (
-            <div>
-                <Navbar burgerColor="#acacac" />
-                <div style={listStyle}>
-                    {this.renderAccommodationList()}
-                </div>
+            <div style={listStyle}>
+                {this.renderAccommodationList()}
             </div>
         );
     }
