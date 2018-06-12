@@ -7,7 +7,7 @@ import {
 } from "../../parsers/entityParsers";
 
 describe("API message", () => {
-    const baseUrl = "toto.api";
+    const baseUrl = "toto.api/api/v1";
 
     beforeAll(() => {
         process.env.REACT_APP_API_URL = "toto.api";
@@ -18,7 +18,7 @@ describe("API message", () => {
 
     it("should fetchAll", (done) => {
         const data = [{ id: 100, name: "Toto" }];
-        fetchMock.get(`https://${baseUrl}/api/messages`, data);
+        fetchMock.get(`https://${baseUrl}/messages`, data);
         messageApi.fetchAll().then((res) => {
             expect(res).toEqual(parseCollectionFromApi(data));
             done();
@@ -29,7 +29,7 @@ describe("API message", () => {
         const message = {
             name: "prout"
         };
-        fetchMock.post(`https://${baseUrl}/api/messages`, message);
+        fetchMock.post(`https://${baseUrl}/messages`, message);
         messageApi.createOrUpdate(message).then((res) => {
             expect(res).toEqual(message);
             done();
@@ -41,7 +41,7 @@ describe("API message", () => {
             id: 1000,
             name: "prout"
         };
-        fetchMock.put(`https://${baseUrl}/api/messages/1000`, message);
+        fetchMock.put(`https://${baseUrl}/messages/1000`, message);
         messageApi.createOrUpdate(message).then((res) => {
             expect(res).toEqual(message);
             done();
@@ -49,7 +49,7 @@ describe("API message", () => {
     });
 
     it("should delete a message", (done) => {
-        fetchMock.delete(`https://${baseUrl}/api/messages/20`, {});
+        fetchMock.delete(`https://${baseUrl}/messages/20`, {});
         messageApi.deleteItem(20).then((res) => {
             expect(res).toEqual({});
             done();

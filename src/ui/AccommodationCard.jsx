@@ -17,7 +17,6 @@ import {
 
 const styles = theme => ({
     card: {
-        maxWidth: 485,
         width: "100%",
         padding: theme.spacing.unit * 1.2,
     },
@@ -92,7 +91,7 @@ class AccommodationCard extends React.PureComponent {
             .map((a) => {
                 const imgUrl = a.pictures.length > 0 ? a.pictures[0].url : `${process.env.PUBLIC_URL}/img/accommodation.jpg`;
                 return (
-                    <Grid item xs={12} sm={6} md={4} key={a.id}>
+                    <Grid className="margin-auto accommodation-card-container" item xs={12} sm={6} md={4} key={a.id}>
                         <Card className={classes.card}>
                             <CardMedia
                                 className={classes.media}

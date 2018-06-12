@@ -33,26 +33,12 @@ describe("ui <AccommodationCard />", function () {
                 }
             ],
             current: {},
-            mode: "list",
             onInit: jest.fn()
         };
     });
 
     it("should render with main items", () => {
         const wrapper = shallow(<AccommodationCard {...this.initialProps} />);
-        expect(wrapper.find(".accommodation-card-container").length).toBe(1);
-    });
-
-    it("should not render with main items thus calling onInit prop", () => {
-        const coucouProps = {
-            ...this.initialState,
-            accommodations: [],
-            current: {},
-            mode: "list",
-            onInit: jest.fn()
-        };
-        const wrapper = shallow(<AccommodationCard {...coucouProps} />);
-        expect(wrapper.find(".accommodation-card-container").length).toBe(1);
-        expect(coucouProps.onInit).toHaveBeenCalled();
+        expect(wrapper.closest(".accommodation-card-container").length).toBe(1);
     });
 });

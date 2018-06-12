@@ -14,7 +14,7 @@ describe("API guard", () => {
     });
 
     it("should check guard", () => {
-        fetchMock.post(`https://${baseUrl}/api/guard_code/create`, "123456");
+        fetchMock.post(`https://${baseUrl}/api/v1/guard_code/create`, "123456");
         guardApi.createGuard().then((res) => {
             expect(res).toEqual(123456);
         });

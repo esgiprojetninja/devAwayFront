@@ -1,4 +1,5 @@
 /* eslint-env jest */
+/* global window */
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import * as userActionTypes from "../../actions/types/user";
@@ -16,6 +17,11 @@ describe("Actions user", () => {
     let mockStore = null;
     beforeEach(() => {
         jest.clearAllMocks();
+        window.localStorage = {
+            removeItem: jest.fn(),
+            getItem: jest.fn(),
+            setItem: jest.fn()
+        };
         global.localStorage = {
             removeItem: jest.fn(),
             getItem: jest.fn(),
@@ -73,6 +79,13 @@ describe("Actions user", () => {
     it("should NOT login with API error", () => {
         const expextedActions = [
             { type: userActionTypes.LOGIN_REQUEST },
+            {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "Failed to login",
+                    snackDuration: undefined
+                }
+            },
             {
                 type: userActionTypes.LOGIN_FAILURE,
                 payload: "No sir, you are not comin in"

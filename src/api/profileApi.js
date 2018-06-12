@@ -38,7 +38,7 @@ const profileApi = {
         return generateFetch("profiles", "DELETE", id);
     },
     getMe: () => {
-        return generateFetch("users/me.json", "GET");
+        return generateFetch("users/me", "GET");
     }
 };
 

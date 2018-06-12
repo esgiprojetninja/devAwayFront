@@ -63,15 +63,16 @@ export function login(credentials) {
         return API.userApi.login(credentials)
             .then(
                 (res) => {
-                    if (res && !res.token) {
+                    if (!res || !res.success || !res.success.token) {
+                        dispatch(displaySnackMsg("Failed to login"));
                         return dispatch(loginFailure(res.message));
                     }
-                    window.localStorage.setItem("authToken", res.token);
-                    dispatch(loginSuccess(res));
-                    return dispatch(getMe(res.token));
+                    window.localStorage.setItem("authToken", res.success.token);
+                    dispatch(loginSuccess(res.success));
+                    return dispatch(getMe(res.success.token));
                 },
                 (error) => {
-                    // console.log(error);
+                    // console.log("login error:: ", error);
                     dispatch(displaySnackMsg("Failed to login"));
                     window.localStorage.removeItem("authToken");
                     return dispatch(loginFailure(error));

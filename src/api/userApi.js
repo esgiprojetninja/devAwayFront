@@ -11,8 +11,8 @@ const userApi = {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            _username: credentials.username,
-            _password: credentials.password
+            email: credentials.username,
+            password: credentials.password
         })
     })).then(res => res.json()),
 

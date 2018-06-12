@@ -3,6 +3,7 @@ import { basicUser } from "./body/user";
 export const mockAPI = {
     accommodationApi: {
         fetchAll: () => Promise.resolve([]),
+        fetchAllWithoutAuth: () => Promise.resolve([]),
         createOrUpdate: () => Promise.resolve({
             id: 5,
             title: "los singos"
@@ -15,7 +16,7 @@ export const mockAPI = {
         })
     },
     userApi: {
-        login: () => Promise.resolve({ token: "prout" }),
+        login: () => Promise.resolve({ success: { token: "prout" } }),
         addUser: () => Promise.resolve(basicUser)
     },
     missionApi: {

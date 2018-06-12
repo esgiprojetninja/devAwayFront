@@ -1,4 +1,5 @@
 /* eslint-env jest */
+/* global window */
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
@@ -17,6 +18,9 @@ describe("Actions profile", () => {
 
     beforeEach(() => {
         mockStore = configureMockStore([thunk.withExtraArgument(mockAPI)]);
+        window.localStorage = {
+            removeItem: jest.fn()
+        };
         global.localStorage = {
             removeItem: jest.fn()
         };
