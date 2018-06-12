@@ -32,6 +32,7 @@ const styles = theme => ({
             color: theme.palette.primary.main,
         },
     },
+    tabSelected: {},
 });
 
 class AccommodationsTabs extends React.Component {
@@ -77,7 +78,7 @@ class AccommodationsTabs extends React.Component {
                             disableRipple
                             disabled={!this.props.user.isLoggedIn}
                             classes={{ root: classes.tabRoot }}
-                            label="Mine"
+                            label="Yours"
                         />
                     </Tabs>
                     {this.currentTabComponent}

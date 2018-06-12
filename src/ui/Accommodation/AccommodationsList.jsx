@@ -143,12 +143,12 @@ export default class AccommodationsList extends React.PureComponent {
                 cols={this.state.tileCols}
             >
                 <GridListTile key="Subheader" cols={4} style={{ height: "auto" }}>
-                    <Subheader style={styles.gridListTitle} component="div">Accommodations</Subheader>
+                    <Subheader style={styles.gridListTitle} component="div">All places</Subheader>
                 </GridListTile>
                 {
                     accommodation.data.map((accoID) => {
                         const filledAcco = accommodation.byID.get(accoID);
-                        const img = "/img/accommodation.jpg"; // @TODO: Replace by the picture property when API fixed
+                        const img = filledAcco.pictures.length > 0 ? filledAcco.pictures[0].url : "/img/accommodation.jpg"; // @TODO: Replace by the picture property when API fixed
                         const basicStyle = {
                             transition: "transform .2s ease-in-out, box-shadow .2s ease-in-out",
                             cursor: "pointer"

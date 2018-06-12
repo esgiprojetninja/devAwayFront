@@ -48,7 +48,9 @@ function Transition(props) {
 
 export class AccommocationCreation extends React.PureComponent {
     static propTypes = {
-        user: User.isRequired,
+        user: T.shape({
+            isLoggedIn: T.bool.isRequired
+        }).isRequired,
         accommodation: T.shape({
             isLoading: T.bool.isRequired
         }).isRequired,
