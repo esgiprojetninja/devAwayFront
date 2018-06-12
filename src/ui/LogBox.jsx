@@ -41,10 +41,10 @@ export default class LogBox extends React.PureComponent {
         error: T.string,
         onSubmit: T.func.isRequired,
         onLogoutClicked: T.func.isRequired,
-        data: User.isRequired
+        data: User
     };
 
-    static defaultProps = { error: "" }
+    static defaultProps = { error: "", data: {} }
 
     constructor(props) {
         super(props);

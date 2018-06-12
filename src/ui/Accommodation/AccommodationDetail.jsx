@@ -204,7 +204,7 @@ export default class AccommodationDetail extends React.PureComponent {
 
     renderHostInfo() {
         // @TODO add address badge verification on host
-        const imgUrl = "/img/accommodation.jpg"; // @TODO: Replace by the picture property when API fixed
+        const imgUrl = this.accommodation.host.avatar ? `data:image/gif;base64, ${this.accommodation.host.avatar}` : "/img/accommodation.jpg";
         const style = {
             ...styles.coverImg,
             backgroundImage: `url("${imgUrl}")`,
@@ -218,8 +218,7 @@ export default class AccommodationDetail extends React.PureComponent {
         return (
             <div>
                 <Typography style={{ color: midGrey, fontWeight: 500 }}>
-                    {/* @TODO: replace by real host when API fixed */}
-                    Host: <span style={{ letterSpacing: "1px" }}>{this.accommodation.host}</span>
+                    Host: <span style={{ letterSpacing: "1px" }}>{this.accommodation.host.username}</span>
                 </Typography>
                 <div style={style} />
             </div>
@@ -348,7 +347,7 @@ export default class AccommodationDetail extends React.PureComponent {
                 <div style={{ marginTop: "80px" }} />
             );
         }
-        const imgUrl = "/img/accommodation.jpg"; // @TODO: Replace by the picture property when API fixed
+        const imgUrl = this.accommodation.pictures.length > 0 ? this.accommodation.pictures[0].url : "/img/accommodation.jpg";
         const style = {
             ...styles.coverImg,
             backgroundImage: `url("${imgUrl}")`

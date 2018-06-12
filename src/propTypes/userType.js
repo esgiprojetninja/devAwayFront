@@ -9,6 +9,9 @@ export const User = T.shape({
     skills: T.string.isRequired,
     createdAt: T.string.isRequired,
     updatedAt: T.string.isRequired,
+    avatar: T.string,
+    roles: T.number,
+    isActive: T.number,
     username: T.string.isRequired
 });
 

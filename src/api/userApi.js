@@ -5,7 +5,7 @@ const baseUrl = process.env.REACT_APP_API_URL;
 const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
 
 const userApi = {
-    login: credentials => (fetch(`${protocol}://${baseUrl}/api/login_check`, {
+    login: credentials => (fetch(`${protocol}://${baseUrl}/api/login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

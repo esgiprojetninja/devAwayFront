@@ -1,4 +1,5 @@
 import * as T from "prop-types";
+import { User } from "./userType";
 
 export const accommodationShape = {
     title: T.string,
@@ -21,8 +22,14 @@ export const accommodationShape = {
     address: T.string,
     country: T.string,
     type: T.string,
-    pictures: T.string,
-    host: T.string,
+    pictures: T.arrayOf(T.shape({
+        id: T.number.isRequired,
+        url: T.string.isRequired,
+        created_at: T.string.isRequired,
+        updated_at: T.string.isRequired,
+        accommodation_id: T.number.isRequired,
+    })),
+    host: User.isRequired,
     animalsAllowed: T.bool,
     smokersAllowed: T.bool,
     hasInternet: T.bool,

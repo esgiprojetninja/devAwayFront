@@ -1,12 +1,20 @@
 /* global window, fetch */
 import "isomorphic-fetch";
 
+export const API_VERSION = "v1";
+
+const defaultErrorHandler = (err) => {
+    console.warn("NET ERROR:: ", err);
+    return Promise.resolve({
+        hasError: true,
+        message: (err && err.message) ? err.message : "Unknown server error",
+    });
+};
 
 export function generateFetch(entity, verb, id, data) {
     const baseUrl = process.env.REACT_APP_API_URL;
     const token = window.localStorage.getItem("authToken");
-    const protocole = process.env.NODE_ENV === "development" ? "http" : "https";
-    let url = `${protocole}://${baseUrl}/api/${entity}`;
+    let url = `https://${baseUrl}/api/${API_VERSION}/${entity}`;
     if (id) {
         url = `${url}/${id}`;
     }
@@ -14,8 +22,12 @@ export function generateFetch(entity, verb, id, data) {
         method: verb,
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${token}`,
         },
+        mode: "cors", // no-cors, cors, *same-origin
+        redirect: "error", // manual, *follow, error
+        referrer: "no-referrer", // *client, no-referrer
         body: JSON.stringify(data)
     }).then((response) => {
         if (!response.ok) {
@@ -25,7 +37,7 @@ export function generateFetch(entity, verb, id, data) {
             });
         }
         return response.json();
-    });
+    }).catch(defaultErrorHandler);
 }
 
 export function generateAnonymousFetch(
@@ -35,16 +47,19 @@ export function generateAnonymousFetch(
     param
 ) {
     const baseUrl = process.env.REACT_APP_API_URL;
-    const protocole = process.env.NODE_ENV === "development" ? "http" : "https";
-    let url = `${protocole}://${baseUrl}/api/${path}`;
+    let url = `https://${baseUrl}/api/${API_VERSION}/${path}`;
     if (param) {
         url = `${url}/${param}`;
     }
     return fetch(url, {
         method: verb,
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
         },
+        mode: "cors", // no-cors, cors, *same-origin
+        redirect: "error", // manual, *follow, error
+        referrer: "no-referrer", // *client, no-referrer
         body: JSON.stringify(data)
     }).then((response) => {
         if (!response.ok) {
@@ -54,6 +69,6 @@ export function generateAnonymousFetch(
             });
         }
         return response.json();
-    });
+    }).catch(defaultErrorHandler);
 }
 
