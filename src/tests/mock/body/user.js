@@ -1,8 +1,6 @@
 const user = {
     email: "sezfze@efze.fez",
-    roles: [
-        "ROLE_USER"
-    ],
+    roles: 1,
     username: "dydyFos",
     lastName: "tonpere",
     firstName: "suce",
@@ -14,7 +12,7 @@ const user = {
 
 export const basicUser = {
     ...user,
-    id: "coucouID"
+    id: 123456
 };
 
 export const createUser = {

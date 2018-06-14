@@ -16,7 +16,8 @@ const initialSate = {
     isLoggedIn: false,
     isLoading: false,
     hasError: false,
-    error: ""
+    error: "",
+    accommodations: {},
 };
 
 const userReducer = (state = initialSate, action) => {
@@ -73,6 +74,26 @@ const userReducer = (state = initialSate, action) => {
             isLoading: false,
             hasError: true,
             error: payload
+        };
+    case types.FETCH_USER_ACCOMMODATIONS_FAIL:
+        return {
+            ...state,
+            isLoading: false,
+            hasError: true,
+            error: payload.error,
+        };
+    case types.FETCH_USER_ACCOMMODATIONS_SUCCESS:
+        return {
+            ...state,
+            isLoading: false,
+            accommodations: payload.accommodations.reduce(
+                (stateAccos, currentAcc) =>
+                    ({
+                        ...stateAccos,
+                        [currentAcc.id]: currentAcc
+                    }),
+                state.accommodations
+            )
         };
     default:
         return state;

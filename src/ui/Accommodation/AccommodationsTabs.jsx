@@ -6,6 +6,7 @@ import Tab from "material-ui/Tabs/Tab";
 import Navbar from "../../containers/Navbar";
 import { User } from "../../propTypes/userType";
 import AccommodationsList from "../../containers/AccommodationsList";
+import AccommodationsPersonnalList from "../../containers/AccommodationsPersonnalList";
 
 const styles = theme => ({
     root: {
@@ -44,7 +45,8 @@ class AccommodationsTabs extends React.Component {
         switch (this.state.value) {
         case 0:
             return <AccommodationsList />;
-
+        case 1:
+            return <AccommodationsPersonnalList />;
         default:
             return <AccommodationsList />;
         }

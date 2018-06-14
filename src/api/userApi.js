@@ -1,4 +1,6 @@
-import fetch from "isomorphic-fetch";
+/* global fetch */
+import "isomorphic-fetch";
+import { generateFetch } from "./utils/utils";
 
 const baseUrl = process.env.REACT_APP_API_URL;
 
@@ -29,7 +31,9 @@ const userApi = {
         headers: {
             "Content-Type": "application/json"
         }
-    })).then(res => res.json())
+    })).then(res => res.json()),
+
+    getAccommodations: userId => generateFetch(`users/${userId}/accommodations`, "GET"),
 };
 
 export default userApi;

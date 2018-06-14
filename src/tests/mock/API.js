@@ -125,6 +125,9 @@ export const mockAPIWithErrors = {
         }),
         addUser: () => Promise.resolve({
             hasError: true
+        }),
+        getAccommodations: () => Promise.resolve({
+            hasError: true
         })
     }
 };
@@ -166,6 +169,10 @@ export const mockAPIWithServerFailure = {
         addUser: () => Promise.reject(new Error({
             code: 500,
             message: "gtfo"
-        }))
+        })),
+        getAccommodations: () => Promise.reject(new Error("gtfo", {
+            code: 500,
+            message: "gtfo",
+        })),
     }
 };

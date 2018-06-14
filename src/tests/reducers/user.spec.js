@@ -1,6 +1,7 @@
 /* eslint-env jest */
 import userReducer from "../../reducers/user";
 import * as userTypes from "../../actions/types/user";
+import { accommodationMock } from "../mock/body/accommodation";
 
 describe("Reducer USER", () => {
     const initialSate = {
@@ -19,7 +20,8 @@ describe("Reducer USER", () => {
         isLoggedIn: false,
         isLoading: false,
         hasError: false,
-        error: ""
+        error: "",
+        accommodations: {},
     };
 
     it("should return initialSate", () => {
@@ -145,6 +147,47 @@ describe("Reducer USER", () => {
             isLoading: false,
             hasError: true,
             error: "error, bitch"
+        });
+    });
+
+    it("should dispatch FETCH_USER_ACCOMMODATIONS_FAIL", () => {
+        const state = {
+            ...initialSate,
+            isLoading: true,
+            isLoggedIn: true,
+        };
+        expect(userReducer(state, {
+            type: userTypes.FETCH_USER_ACCOMMODATIONS_FAIL,
+            payload: { error: "chillinmyass" },
+        })).toEqual({
+            ...state,
+            isLoading: false,
+            hasError: true,
+            error: "chillinmyass"
+        });
+    });
+
+    it("should dispatch FETCH_USER_ACCOMMODATIONS_SUCCESS", () => {
+        const accommodations = Array.from(new Array(4))
+            .map(i => ({
+                ...accommodationMock,
+                id: i
+            }));
+
+        expect(userReducer(initialSate, {
+            type: userTypes.FETCH_USER_ACCOMMODATIONS_SUCCESS,
+            payload: { accommodations }
+        })).toEqual({
+            ...initialSate,
+            isLoading: false,
+            accommodations: accommodations.reduce(
+                (stateAccos, currentAcc) =>
+                    ({
+                        ...stateAccos,
+                        [currentAcc.id]: currentAcc
+                    }),
+                {}
+            )
         });
     });
 });

@@ -14,7 +14,6 @@ import CloseIcon from "material-ui-icons/Close";
 import Slide from "material-ui/transitions/Slide";
 import { MenuItem } from "material-ui/Menu";
 import { FormControlLabel, FormGroup, FormControl } from "material-ui/Form";
-import { User } from "../../propTypes/userType";
 
 const PROP_RULES = {
     title: { min: 6, max: 24 },
@@ -49,7 +48,10 @@ function Transition(props) {
 export class AccommocationCreation extends React.PureComponent {
     static propTypes = {
         user: T.shape({
-            isLoggedIn: T.bool.isRequired
+            isLoggedIn: T.bool.isRequired,
+            data: T.shape({
+                id: T.number
+            }),
         }).isRequired,
         accommodation: T.shape({
             isLoading: T.bool.isRequired

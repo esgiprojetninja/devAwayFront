@@ -119,3 +119,30 @@ export const loadSessionUser = () =>
             dispatch(getMe(token));
         }
     };
+
+const fetchUserAccommodationsFail = error => ({
+    type: types.FETCH_USER_ACCOMMODATIONS_FAIL,
+    payload: { error }
+});
+
+const fetchUserAccommodationsSuccess = accommodations => ({
+    type: types.FETCH_USER_ACCOMMODATIONS_SUCCESS,
+    payload: { accommodations }
+});
+
+export const fetchUserAccommodations = userId =>
+    async (dispatch, getState, API) => {
+        dispatch(userRequest());
+        const id = userId || getState().user.data.id;
+        try {
+            const res = await API.userApi.getAccommodations(id);
+            if (res.hasError || !Array.isArray(res)) {
+                dispatch(displaySnackMsg("Could not fetch user accommodations"));
+                return dispatch(fetchUserAccommodationsFail(res.message || "Error while fetching user places"));
+            }
+            return dispatch(fetchUserAccommodationsSuccess(res));
+        } catch (e) {
+            dispatch(displaySnackMsg("Failed to fetch user accommodations"));
+            return dispatch(fetchUserAccommodationsFail(e.message));
+        }
+    };

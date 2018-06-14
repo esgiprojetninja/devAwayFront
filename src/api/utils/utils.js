@@ -23,7 +23,7 @@ export function generateFetch(entity, verb, id, data) {
         headers: {
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
-            Authorization: `Bearer ${token}`,
+            "Authorization": `Bearer ${token}`, // eslint-disable-line
         },
         mode: "cors", // no-cors, cors, *same-origin
         redirect: "error", // manual, *follow, error

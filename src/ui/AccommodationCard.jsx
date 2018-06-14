@@ -9,11 +9,7 @@ import Card from "material-ui/Card";
 import CardMedia from "material-ui/Card/CardMedia";
 import CardContent from "material-ui/Card/CardContent";
 import Typography from "material-ui/Typography";
-
-import {
-    accommodationPropTypes
-} from "../propTypes/accommodationType";
-
+import { accommodationPropTypes } from "../propTypes/accommodationType";
 
 const styles = theme => ({
     card: {

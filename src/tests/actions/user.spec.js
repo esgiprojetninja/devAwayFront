@@ -326,4 +326,27 @@ describe("Actions user", () => {
             expect(store.getActions()).toEqual(expectedAction);
         });
     });
+
+    it("should NOT get user accommodations", async () => {
+        const expectedActions = [
+            {
+                type: userActionTypes.USER_REQUEST,
+            },
+            {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "Failed to fetch user accommodations",
+                    snackDuration: undefined
+                },
+            },
+            {
+                payload: { error: "gtfo" },
+                type: userActionTypes.FETCH_USER_ACCOMMODATIONS_FAIL
+            },
+        ];
+        mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithServerFailure)]);
+        const store = mockStore();
+        await store.dispatch(userActions.fetchUserAccommodations(123));
+        expect(store.getActions()).toEqual(expectedActions);
+    });
 });
