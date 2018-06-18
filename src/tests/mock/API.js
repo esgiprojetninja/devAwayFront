@@ -1,4 +1,5 @@
 import { basicUser } from "./body/user";
+import { accommodationMock } from "../mock/body/accommodation";
 
 export const mockAPI = {
     accommodationApi: {
@@ -17,7 +18,13 @@ export const mockAPI = {
     },
     userApi: {
         login: () => Promise.resolve({ success: { token: "prout" } }),
-        addUser: () => Promise.resolve(basicUser)
+        addUser: () => Promise.resolve(basicUser),
+        getAccommodations: () => Promise.resolve(
+            Array.from(new Array(1)).map((a, i) => ({
+                ...accommodationMock,
+                id: i
+            }))
+        )
     },
     missionApi: {
         fetchAll: () => Promise.resolve([]),

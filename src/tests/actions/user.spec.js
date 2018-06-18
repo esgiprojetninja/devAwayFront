@@ -12,6 +12,7 @@ import {
 } from "../mock/API";
 
 import { createUser, basicUser } from "../mock/body/user";
+import { accommodationMock } from "../mock/body/accommodation";
 
 describe("Actions user", () => {
     let mockStore = null;
@@ -327,7 +328,49 @@ describe("Actions user", () => {
         });
     });
 
-    it("should NOT get user accommodations", async () => {
+    it("should get user accommodations", async () => {
+        const expectedActions = [
+            {
+                type: userActionTypes.USER_REQUEST,
+            },
+            {
+                payload: {
+                    accommodations: Array.from(new Array(1)).map((a, i) => ({
+                        ...accommodationMock,
+                        id: i
+                    })) },
+                type: userActionTypes.FETCH_USER_ACCOMMODATIONS_SUCCESS
+            },
+        ];
+        const store = mockStore();
+        await store.dispatch(userActions.fetchUserAccommodations(123));
+        expect(store.getActions()).toEqual(expectedActions);
+    });
+
+    it("should NOT get user accommodations with API error", async () => {
+        const expectedActions = [
+            {
+                type: userActionTypes.USER_REQUEST,
+            },
+            {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "Could not fetch user accommodations",
+                    snackDuration: undefined
+                },
+            },
+            {
+                payload: { error: "Error while fetching user places" },
+                type: userActionTypes.FETCH_USER_ACCOMMODATIONS_FAIL
+            },
+        ];
+        mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)]);
+        const store = mockStore();
+        await store.dispatch(userActions.fetchUserAccommodations(123));
+        expect(store.getActions()).toEqual(expectedActions);
+    });
+
+    it("should NOT get user accommodations with server failure", async () => {
         const expectedActions = [
             {
                 type: userActionTypes.USER_REQUEST,

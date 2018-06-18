@@ -4,7 +4,6 @@ import { withStyles } from "material-ui/styles";
 import Tabs from "material-ui/Tabs";
 import Tab from "material-ui/Tabs/Tab";
 import Navbar from "../../containers/Navbar";
-import { User } from "../../propTypes/userType";
 import AccommodationsList from "../../containers/AccommodationsList";
 import AccommodationsPersonnalList from "../../containers/AccommodationsPersonnalList";
 
@@ -92,8 +91,9 @@ class AccommodationsTabs extends React.Component {
 
 AccommodationsTabs.propTypes = {
     classes: T.shape({}).isRequired,
-    // eslint-disable-next-line react/no-typos
-    user: User.isRequired,
+    user: T.shape({
+        isLoggedIn: T.bool.isRequired,
+    }).isRequired,
 };
 
 export default withStyles(styles)(AccommodationsTabs);

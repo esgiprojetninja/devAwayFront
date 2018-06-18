@@ -11,6 +11,7 @@ import Smoke from "material-ui-icons/SmokingRooms";
 import Typography from "material-ui/Typography";
 import { CircularProgress } from "material-ui/Progress";
 import { accommodationReducerPropTypes } from "../../propTypes/accommodation.reducer.d";
+import { getAccoImg } from "../../utils/accommodation";
 
 export const getAdaptedTileCols = () => {
     if (window.innerWidth <= 480) {
@@ -148,7 +149,6 @@ export default class AccommodationsList extends React.PureComponent {
                 {
                     accommodation.data.map((accoID) => {
                         const filledAcco = accommodation.byID.get(accoID);
-                        const img = filledAcco.pictures.length > 0 ? filledAcco.pictures[0].url : "/img/accommodation.jpg"; // @TODO: Replace by the picture property when API fixed
                         const basicStyle = {
                             transition: "transform .2s ease-in-out, box-shadow .2s ease-in-out",
                             cursor: "pointer"
@@ -171,7 +171,7 @@ export default class AccommodationsList extends React.PureComponent {
                                 <NavLink
                                     to={`/accommodations/${filledAcco.id}`}
                                 >
-                                    <img style={{ width: "100%", height: "auto" }} src={img} alt={filledAcco.title} />
+                                    <img style={{ width: "100%", height: "auto" }} src={getAccoImg(filledAcco)} alt={filledAcco.title} />
                                     <div style={styles.gridCustomDiv}>
                                         {filledAcco.hasInternet ?
                                             <Connectivity className="connectivity-icon" style={styles.icon} /> :

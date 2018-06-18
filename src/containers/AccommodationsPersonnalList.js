@@ -1,12 +1,13 @@
 import { connect } from "react-redux";
 
 import AccommodationsListComponent from "../ui/Accommodation/AccommodationsPersonnalList.jsx";
+import { fetchUserAccommodations } from "../actions/user";
 
 export const mapStateToProps = state => state;
 
-export const mapDispatchToProps = () => ({
+export const mapDispatchToProps = dispatch => ({
     onInit() {
-        console.log("Inited personnal accos component");
+        dispatch(fetchUserAccommodations());
     }
 });
 
