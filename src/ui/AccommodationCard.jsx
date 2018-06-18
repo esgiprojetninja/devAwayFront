@@ -1,14 +1,14 @@
 import React from "react";
 import * as T from "prop-types";
-import GroupIcon from "material-ui-icons/Group";
-import LocalHotelIcon from "material-ui-icons/LocalHotel";
-import HotTubIcon from "material-ui-icons/HotTub";
-import { withStyles } from "material-ui/styles";
-import Grid from "material-ui/Grid";
-import Card from "material-ui/Card";
-import CardMedia from "material-ui/Card/CardMedia";
-import CardContent from "material-ui/Card/CardContent";
-import Typography from "material-ui/Typography";
+import GroupIcon from "@material-ui/icons/Group";
+import LocalHotelIcon from "@material-ui/icons/LocalHotel";
+import HotTubIcon from "@material-ui/icons/HotTub";
+import { withStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import Card from "@material-ui/core/Card";
+import CardMedia from "@material-ui/core/CardMedia";
+import CardContent from "@material-ui/core/CardContent";
+import Typography from "@material-ui/core/Typography";
 import { accommodationPropTypes } from "../propTypes/accommodationType";
 
 const styles = theme => ({

@@ -1,8 +1,8 @@
 import React from "react";
 import * as T from "prop-types";
-import { withStyles } from "material-ui/styles";
-import Tabs from "material-ui/Tabs";
-import Tab from "material-ui/Tabs/Tab";
+import { withStyles } from "@material-ui/core/styles";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
 import Navbar from "../../containers/Navbar";
 import AccommodationsList from "../../containers/AccommodationsList";
 import AccommodationsPersonnalList from "../../containers/AccommodationsPersonnalList";

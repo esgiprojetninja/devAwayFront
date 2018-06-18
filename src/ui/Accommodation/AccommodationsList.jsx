@@ -1,15 +1,17 @@
 /* global window */
 import React from "react";
 import * as T from "prop-types";
-import GridList, { GridListTile, GridListTileBar } from "material-ui/GridList";
+import GridList from "@material-ui/core/GridList";
+import GridListTile from "@material-ui/core/GridListTile";
+import GridListTileBar from "@material-ui/core/GridListTileBar";
 import { NavLink } from "react-router-dom";
-import Subheader from "material-ui/List/ListSubheader";
-import Connectivity from "material-ui-icons/NetworkWifi";
-import NoConnectivity from "material-ui-icons/WifiLock";
-import NoSmoke from "material-ui-icons/SmokeFree";
-import Smoke from "material-ui-icons/SmokingRooms";
-import Typography from "material-ui/Typography";
-import { CircularProgress } from "material-ui/Progress";
+import ListSubheader from "@material-ui/core/ListSubheader";
+import Connectivity from "@material-ui/icons/NetworkWifi";
+import NoConnectivity from "@material-ui/icons/WifiLock";
+import NoSmoke from "@material-ui/icons/SmokeFree";
+import Smoke from "@material-ui/icons/SmokingRooms";
+import Typography from "@material-ui/core/Typography";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { accommodationReducerPropTypes } from "../../propTypes/accommodation.reducer.d";
 import { getAccoImg } from "../../utils/accommodation";
 
@@ -143,8 +145,8 @@ export default class AccommodationsList extends React.PureComponent {
                 cellHeight={220}
                 cols={this.state.tileCols}
             >
-                <GridListTile key="Subheader" cols={4} style={{ height: "auto" }}>
-                    <Subheader style={styles.gridListTitle} component="div">All places</Subheader>
+                <GridListTile cols={4} style={{ height: "auto" }}>
+                    <ListSubheader style={styles.gridListTitle} component="div">All places</ListSubheader>
                 </GridListTile>
                 {
                     accommodation.data.map((accoID) => {

@@ -1,10 +1,10 @@
 import React from "react";
 import * as T from "prop-types";
-import Grid from "material-ui/Grid";
-import Paper from "material-ui/Paper";
-import { LinearProgress } from "material-ui/Progress";
-import TextField from "material-ui/TextField";
-import { withStyles } from "material-ui/styles";
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import TextField from "@material-ui/core/TextField";
+import { withStyles } from "@material-ui/core/styles";
 
 import Guard from "../containers/Guard";
 
@@ -25,7 +25,7 @@ export class Profile extends React.PureComponent {
     renderProfile() {
         const { classes } = this.props;
         return (
-            <form action="">
+            <div>
                 <TextField
                     id="email"
                     label="Email"
@@ -85,7 +85,7 @@ export class Profile extends React.PureComponent {
                     fullWidth
                     multiline
                 />
-            </form>
+            </div>
         );
     }
 

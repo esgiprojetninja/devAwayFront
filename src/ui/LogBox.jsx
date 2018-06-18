@@ -1,16 +1,16 @@
 import React from "react";
 import * as T from "prop-types";
-import { CircularProgress } from "material-ui/Progress";
-import { FormControl } from "material-ui/Form";
-import Button from "material-ui/Button";
-import Typography from "material-ui/Typography";
-import TextField from "material-ui/TextField";
-import Dialog, {
-    DialogActions,
-    DialogContent,
-    DialogTitle
-} from "material-ui/Dialog";
-import Icon from "material-ui/Icon";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import FormControl from "@material-ui/core/FormControl";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Icon from "@material-ui/core/Icon";
 import { User } from "../propTypes/userType";
 import { defaultTheme } from "../styles/theme";
 
@@ -88,16 +88,6 @@ export default class LogBox extends React.PureComponent {
         this.handleClose();
     }
 
-    renderErrors() {
-        return this.props.hasError && !this.state.noticedError
-            ? (
-                <Typography>
-                    {this.props.error}
-                </Typography>
-            )
-            : null;
-    }
-
     renderName() {
         return (
             <Typography color="inherit">
@@ -117,7 +107,7 @@ export default class LogBox extends React.PureComponent {
                 {this.renderName()}
                 <Button
                     onClick={this.props.onLogoutClicked}
-                    color="contrast"
+                    color="primary"
                 >
                     Logout
                 </Button>
@@ -143,28 +133,26 @@ export default class LogBox extends React.PureComponent {
                     >
                         <DialogContent>
                             <FormControl>
-                                <TextField
+                                <InputLabel htmlFor="username">{this.props.hasError && !this.state.noticedError ? this.props.error : "Username"}</InputLabel>
+                                <Input
                                     error={this.props.hasError && !this.state.noticedError}
                                     type="text"
-                                    label="Username"
                                     name="username"
                                     id="username"
-                                    margin="normal"
                                     onChange={this.handleUsernameChange}
                                 />
                             </FormControl>
                             <FormControl>
-                                <TextField
+                                <InputLabel htmlFor="pwd">{this.props.hasError && !this.state.noticedError ? this.props.error : "Password"}</InputLabel>
+                                <Input
                                     error={this.props.hasError && !this.state.noticedError}
                                     type="password"
                                     label="Password"
                                     name="pwd"
                                     id="pwd"
-                                    margin="normal"
                                     onChange={this.handlePasswordChange}
                                 />
                             </FormControl>
-                            {this.renderErrors()}
                         </DialogContent>
                         <DialogActions>
                             <Button
@@ -184,7 +172,7 @@ export default class LogBox extends React.PureComponent {
 
     render() {
         if (this.props.isLoading) {
-            return <CircularProgress color="accent" />;
+            return <CircularProgress color="primary" />;
         }
         if (this.props.isLoggedIn) {
             return this.renderLoggedBox();

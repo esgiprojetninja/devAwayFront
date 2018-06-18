@@ -1,15 +1,15 @@
 /* global window */
 import React from "react";
 import * as T from "prop-types";
-import Grid from "material-ui/Grid";
-import { CircularProgress } from "material-ui/Progress";
-import Typography from "material-ui/Typography";
-import GuestsIcon from "material-ui-icons/People";
-import BedsIcon from "material-ui-icons/LocalHotel";
-import BathRoomsIcon from "material-ui-icons/InvertColors";
+import Grid from "@material-ui/core/Grid";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Typography from "@material-ui/core/Typography";
+import GuestsIcon from "@material-ui/icons/People";
+import BedsIcon from "@material-ui/icons/LocalHotel";
+import BathRoomsIcon from "@material-ui/icons/InvertColors";
 import GMap from "google-map-react";
-import Button from "material-ui/Button";
-import FloorsIcon from "material-ui-icons/ClearAll";
+import Button from "@material-ui/core/Button";
+import FloorsIcon from "@material-ui/icons/ClearAll";
 import Navbar from "../../containers/Navbar";
 import Marker from "./AccommodationMarker";
 import { getAdaptedContainerWidth } from "./AccommodationsList";

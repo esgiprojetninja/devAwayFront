@@ -1,15 +1,15 @@
 import React from "react";
 import * as T from "prop-types";
-import { withStyles } from "material-ui/styles";
-import Button from "material-ui/Button";
-import Input, { InputLabel } from "material-ui/Input";
-import { FormControl } from "material-ui/Form";
-import TextField from "material-ui/TextField";
-import Select from "material-ui/Select";
-import { MenuItem } from "material-ui/Menu";
-import Icon from "material-ui/Icon";
+import { withStyles } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import { MenuItem } from "@material-ui/core/Menu";
+import Icon from "@material-ui/core/Icon";
 import moment from "moment";
-import Grid from "material-ui/Grid";
+import Grid from "@material-ui/core/Grid";
 
 class HomeSearchForm extends React.PureComponent {
     state = {
@@ -27,10 +27,11 @@ class HomeSearchForm extends React.PureComponent {
                         <div className="vertical-align">
                             <FormControl className={classes.formControl}>
                                 <InputLabel htmlFor="location">Location</InputLabel>
-                                <TextField
+                                <Input
                                     id="location"
                                     className={classes.textFieldLocation}
                                     margin="normal"
+                                    type="text"
                                 />
                             </FormControl>
                         </div>
@@ -38,9 +39,9 @@ class HomeSearchForm extends React.PureComponent {
                     <Grid item xs={12} sm={3} md={3}>
                         <div className="vertical-align">
                             <FormControl className={classes.formControl}>
-                                <TextField
+                                <InputLabel htmlFor="fromDate">From</InputLabel>
+                                <Input
                                     id="fromDate"
-                                    label="From"
                                     type="date"
                                     defaultValue={this.state.startDate.format()}
                                     className={classes.textField}
@@ -54,9 +55,9 @@ class HomeSearchForm extends React.PureComponent {
                     <Grid item xs={12} sm={3} md={3}>
                         <div className="vertical-align">
                             <FormControl className={classes.formControl}>
-                                <TextField
+                                <InputLabel htmlFor="toDate">To</InputLabel>
+                                <Input
                                     id="toDate"
-                                    label="To"
                                     type="date"
                                     defaultValue={this.state.endDate.format()}
                                     className={classes.textField}

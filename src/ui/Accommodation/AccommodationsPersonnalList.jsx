@@ -1,18 +1,18 @@
 import React from "react";
 import * as T from "prop-types";
-import { withStyles } from "material-ui/styles";
-import Grid from "material-ui/Grid";
-import { CircularProgress } from "material-ui/Progress";
-import IconButton from "material-ui/IconButton";
-import Button from "material-ui/Button";
-import AddIcon from "material-ui-icons/Add";
-import RemoveIcon from "material-ui-icons/Remove";
-import Card from "material-ui/Card";
-import CardHeader from "material-ui/Card/CardHeader";
-import CardMedia from "material-ui/Card/CardMedia";
-import CardContent from "material-ui/Card/CardContent";
-import Avatar from "material-ui/Avatar";
-import Typography from "material-ui/Typography";
+import { withStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import IconButton from "@material-ui/core/IconButton";
+import Button from "@material-ui/core/Button";
+import AddIcon from "@material-ui/icons/Add";
+import RemoveIcon from "@material-ui/icons/Remove";
+import Card from "@material-ui/core/Card";
+import CardHeader from "@material-ui/core/CardHeader";
+import CardMedia from "@material-ui/core/CardMedia";
+import CardContent from "@material-ui/core/CardContent";
+import Avatar from "@material-ui/core/Avatar";
+import Typography from "@material-ui/core/Typography";
 
 import { getAccoImg } from "../../utils/accommodation";
 
@@ -76,6 +76,7 @@ class AccommodationsPersonnalList extends React.PureComponent {
                 <Grid container className={this.classes.accosContainer} spacing={24}>
                     {accos.map(acco => (
                         <Grid
+                            key={`${acco.createdAt}-${Math.floor(Math.random() * 1000)}`}
                             item
                             className={this.classes.acco}
                             xs={12}

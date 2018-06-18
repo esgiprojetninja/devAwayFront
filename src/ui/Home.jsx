@@ -1,11 +1,11 @@
 import * as React from "react";
 import * as T from "prop-types";
-import { withStyles } from "material-ui/styles";
-import Typography from "material-ui/Typography";
-import Button from "material-ui/Button";
-import IconButton from "material-ui/IconButton";
-import CloseIcon from "material-ui-icons/Close";
-import Snackbar from "material-ui/Snackbar";
+import { withStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import Snackbar from "@material-ui/core/Snackbar";
 import "animate.css/animate.min.css";
 import ScrollAnimation from "react-animate-on-scroll";
 import HomeSearchForm from "./HomeSearchForm.jsx";
