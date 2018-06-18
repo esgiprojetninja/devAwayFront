@@ -78,7 +78,7 @@ describe("ui <AccommodationDetail />", function () {
         const wrapper = shallow(
             <AccommodationDetail {...this.initialProps} />
         );
-        expect(wrapper.text()).toBe("<Connect(WithStyles(NavBarComponent)) /><WithStyles(GridWrapper) />");
+        expect(wrapper.text()).toBe("<Connect(WithStyles(NavBarComponent)) /><WithStyles(Grid) />");
     });
 
     it("should call onInit after component mount", () => {

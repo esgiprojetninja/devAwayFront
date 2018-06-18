@@ -88,6 +88,17 @@ export default class LogBox extends React.PureComponent {
         this.handleClose();
     }
 
+    renderErrors() {
+        if (!this.props.hasError || this.state.noticedError) {
+            return null;
+        }
+        return (
+            <Typography color="secondary">
+                {this.props.error},
+            </Typography>
+        );
+    }
+
     renderName() {
         return (
             <Typography color="inherit">
@@ -133,7 +144,7 @@ export default class LogBox extends React.PureComponent {
                     >
                         <DialogContent>
                             <FormControl>
-                                <InputLabel htmlFor="username">{this.props.hasError && !this.state.noticedError ? this.props.error : "Username"}</InputLabel>
+                                <InputLabel htmlFor="username">Username</InputLabel>
                                 <Input
                                     error={this.props.hasError && !this.state.noticedError}
                                     type="text"
@@ -143,7 +154,7 @@ export default class LogBox extends React.PureComponent {
                                 />
                             </FormControl>
                             <FormControl>
-                                <InputLabel htmlFor="pwd">{this.props.hasError && !this.state.noticedError ? this.props.error : "Password"}</InputLabel>
+                                <InputLabel htmlFor="pwd">Password</InputLabel>
                                 <Input
                                     error={this.props.hasError && !this.state.noticedError}
                                     type="password"

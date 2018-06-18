@@ -4,7 +4,7 @@ import React from "react";
 import {
     shallow
 } from "enzyme";
-import { CircularProgress } from "@material-ui/core/Progress";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import mainReducer from "../../../reducers/index";
 import AccommodationsList, { getAdaptedTileCols, getAdaptedContainerWidth } from "../../../ui/Accommodation/AccommodationsList.jsx";
 
