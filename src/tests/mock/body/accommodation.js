@@ -40,4 +40,10 @@ export const accommodationMock = {
     mission: []
 };
 
+export const genAccommodationsMock = (num = 4) => Array.from(new Array(num))
+    .map((undef, i) => ({
+        ...accommodationMock,
+        id: i
+    }));
+
 export const tutu = "tutu";

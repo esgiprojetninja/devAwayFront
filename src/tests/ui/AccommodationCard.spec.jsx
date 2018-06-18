@@ -5,33 +5,14 @@ import {
 } from "enzyme";
 import mainReducer from "../../reducers/index";
 import AccommodationCard from "../../ui/AccommodationCard.jsx";
+import { genAccommodationsMock } from "../mock/body/accommodation";
 
 describe("ui <AccommodationCard />", function () {
     beforeAll(() => {
         const initialState = mainReducer(undefined, {}).accommodation;
-        const fakeAcco = {
-            id: 2,
-            city: "tomate",
-            title: "jardin",
-            country: "public",
-            description: "sheitan",
-            nbMaxGuest: 7,
-            nbBedroom: 7,
-            nbBathroom: 7
-        };
         this.initialProps = {
             ...initialState,
-            accommodations: [
-                { ...fakeAcco },
-                {
-                    ...fakeAcco,
-                    id: 3
-                },
-                {
-                    ...fakeAcco,
-                    id: 4
-                }
-            ],
+            accommodations: genAccommodationsMock(),
             current: {},
             onInit: jest.fn()
         };

@@ -127,7 +127,7 @@ export class SubscribeBox extends React.PureComponent {
                     type="password"
                     inputProps={passwordInputProps}
                     name="passwordCheck"
-                    margin="normal"
+                    margin="dense"
                     onChange={this.handlePasswordCheckChange}
                 />
             </FormControl>
@@ -145,7 +145,7 @@ export class SubscribeBox extends React.PureComponent {
                     type="password"
                     inputProps={passwordInputProps}
                     name="password"
-                    margin="normal"
+                    margin="dense"
                     onChange={this.handlePasswordChange}
                 />
             </FormControl>
@@ -164,7 +164,7 @@ export class SubscribeBox extends React.PureComponent {
                     name="userName"
                     multiline
                     rows="2"
-                    margin="normal"
+                    margin="dense"
                     onChange={(ev) => {
                         this.handleChange("username", ev);
                     }}
@@ -187,7 +187,7 @@ export class SubscribeBox extends React.PureComponent {
                     multiline
                     fullWidth
                     rows="2"
-                    margin="normal"
+                    margin="dense"
                     onChange={this.handleEmailChange}
                 />
             </FormControl>

@@ -6,7 +6,7 @@ import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import { MenuItem } from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 import Icon from "@material-ui/core/Icon";
 import moment from "moment";
 import Grid from "@material-ui/core/Grid";
@@ -30,7 +30,6 @@ class HomeSearchForm extends React.PureComponent {
                                 <Input
                                     id="location"
                                     className={classes.textFieldLocation}
-                                    margin="normal"
                                     type="text"
                                 />
                             </FormControl>
@@ -45,9 +44,6 @@ class HomeSearchForm extends React.PureComponent {
                                     type="date"
                                     defaultValue={this.state.startDate.format()}
                                     className={classes.textField}
-                                    InputLabelProps={{
-                                        shrink: true
-                                    }}
                                 />
                             </FormControl>
                         </div>
@@ -61,9 +57,6 @@ class HomeSearchForm extends React.PureComponent {
                                     type="date"
                                     defaultValue={this.state.endDate.format()}
                                     className={classes.textField}
-                                    InputLabelProps={{
-                                        shrink: true
-                                    }}
                                 />
                             </FormControl>
                         </div>
@@ -88,7 +81,7 @@ class HomeSearchForm extends React.PureComponent {
                         <div className="vertical-align">
                             <Button
                                 className={classes.button}
-                                raised
+                                raised="true"
                                 type="submit"
                             >
                                 Search
