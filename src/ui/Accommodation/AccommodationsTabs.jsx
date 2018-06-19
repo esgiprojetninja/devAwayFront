@@ -71,11 +71,13 @@ class AccommodationsTabs extends React.Component {
                         centered
                     >
                         <Tab
+                            id="all-places-toggler"
                             disableRipple
                             classes={{ root: classes.tabRoot }}
                             label="All"
                         />
                         <Tab
+                            id="user-places-toggler"
                             disableRipple
                             disabled={!this.props.user.isLoggedIn}
                             classes={{ root: classes.tabRoot }}
