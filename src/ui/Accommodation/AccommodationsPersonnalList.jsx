@@ -3,17 +3,16 @@ import * as T from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
-import RemoveIcon from "@material-ui/icons/Remove";
 import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
+import CardActions from "@material-ui/core/CardActions";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
-import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
+import EditIcon from "react-icons/lib/fa/edit";
 
+import { midGrey } from "../../styles/theme";
 import { getAccoImg } from "../../utils/accommodation";
 
 const styles = theme => ({
@@ -28,17 +27,42 @@ const styles = theme => ({
         backgroundColor: theme.palette.background.paper,
         position: "relative",
     },
+    headTitle: {
+        display: "block",
+        width: "100%",
+        fontSize: "xx-large",
+        fontWeight: 500,
+        color: midGrey,
+        marginLeft: 5,
+    },
     progressSpinner: {
         position: "absolute",
         top: 10,
         left: "calc(50% - 20px)",
     },
+    container: {
+        width: "93%",
+    },
     accosContainer: {
-        width: "100%",
+        width: "calc(100% - 20px)",
+        padding: "0 10px",
         height: "100%",
         minHeight: "calc(100vh - 70px - 48px)",
     },
-    acco: {
+    cardMedia: {
+        height: 0,
+        paddingTop: "56.25%", // 16:9
+    },
+    controlBtn: {
+        margin: theme.spacing.unit,
+    },
+    accoDescription: {
+        height: 50,
+        wordBreak: "normal",
+        wordWrap: "break-word",
+    },
+    accoActionIcon: {
+        marginLeft: theme.spacing.unit,
     },
 });
 
@@ -73,44 +97,47 @@ class AccommodationsPersonnalList extends React.PureComponent {
         const accos = this.accomodations;
         if (accos.length > 0) {
             return (
-                <Grid container className={this.classes.accosContainer} spacing={24}>
-                    {accos.map(acco => (
-                        <Grid
-                            key={`${acco.createdAt}-${Math.floor(Math.random() * 1000)}`}
-                            item
-                            className={this.classes.acco}
-                            xs={12}
-                            sm={12}
-                            md={6}
-                            lg={5}
-                            xl={4}
-                        >
-                            <Card className="full-width">
-                                <CardHeader
-                                    avatar={
-                                        <Avatar aria-label="P">C</Avatar>
-                                    }
-                                    action={
-                                        <IconButton>
-                                            <RemoveIcon />
-                                        </IconButton>
-                                    }
-                                    title={acco.title}
-                                    subheader={acco.createdAt} // @TODO add moment to handle dates
-                                />
-                                <CardMedia
-                                    image={getAccoImg(acco)}
-                                    title="Place picture"
-                                />
-                                <CardContent>
-                                    <Typography component="p">
-                                        {acco.description}
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                    ))}
-                </Grid>
+                <div className={this.classes.container}>
+                    <Typography className={this.classes.headTitle} gutterBottom variant="headline" component="h1">
+                        Your places
+                    </Typography>
+                    <Grid container className={this.classes.accosContainer} spacing={24}>
+                        {accos.map(acco => (
+                            <Grid
+                                key={`${acco.createdAt}-${Math.floor(Math.random() * 1000)}`}
+                                item
+                                className={this.classes.acco}
+                                xs={12}
+                                sm={12}
+                                md={6}
+                                lg={5}
+                                xl={4}
+                            >
+                                <Card className="full-width">
+                                    <CardMedia
+                                        className={this.classes.cardMedia}
+                                        image={getAccoImg(acco)}
+                                        title="Place picture"
+                                    />
+                                    <CardContent>
+                                        <Typography gutterBottom variant="headline" component="h2">
+                                            {acco.title}
+                                        </Typography>
+                                        <Typography className={this.classes.accoDescription} component="p">
+                                            {acco.description}
+                                        </Typography>
+                                    </CardContent>
+                                    <CardActions>
+                                        <Button variant="contained" color="default" className={this.classes.controlBtn}>
+                                            Administrate
+                                            <EditIcon className={this.classes.accoActionIcon} />
+                                        </Button>
+                                    </CardActions>
+                                </Card>
+                            </Grid>
+                        ))}
+                    </Grid>
+                </div>
             );
         }
         return (
