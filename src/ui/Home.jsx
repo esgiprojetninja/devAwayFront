@@ -188,7 +188,7 @@ export class Home extends React.PureComponent {
                 className={this.props.classes.snackbar}
                 onClose={this.props.closeSnack}
                 action={[
-                    <Button key="undo" color="primary" dense onClick={this.props.closeSnack}>
+                    <Button key="undo" color="primary" onClick={this.props.closeSnack}>
                         OK
                     </Button>,
                     <IconButton

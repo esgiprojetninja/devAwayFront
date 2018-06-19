@@ -17,14 +17,14 @@ const ITEM_HEIGHT = 48;
 
 export class NavBarComponent extends React.PureComponent {
     static propTypes = {
-        // burgerColor: T.string,
+        burgerColor: T.string,
         getSavedState: T.func.isRequired,
         storeStateProp: T.func.isRequired,
         removeStateProp: T.func.isRequired,
         onInit: T.func.isRequired
     };
 
-    // static defaultProps = { burgerColor: "contrast" }
+    static defaultProps = { burgerColor: "#fff" }
 
     constructor(props) {
         super(props);
@@ -122,11 +122,13 @@ export class NavBarComponent extends React.PureComponent {
 
     render() {
         const { classes } = this.props;
-        // const burgerColor = this.state.open ?
-        //     NavBarComponent.defaultProps.burgerColor :
-        //     this.props.burgerColor;
         const containerStyle = {
-            height: this.state.open ? "70px" : "0"
+            height: this.state.open ? "60px" : "0"
+        };
+        const togglerStyle = {
+            color: this.state.open ?
+                NavBarComponent.defaultProps.burgerColor :
+                this.props.burgerColor
         };
         return (
             <div style={containerStyle} className={classes.root}>
@@ -148,8 +150,7 @@ export class NavBarComponent extends React.PureComponent {
                 <IconButton
                     id="unlogged-toggler"
                     onClick={() => this.toggleOpen(this.state.open)}
-                    // color={burgerColor}
-                    color="primary"
+                    style={togglerStyle}
                     aria-label="Menu"
                     className={classes.toggleButton}
                 >
@@ -188,6 +189,7 @@ export default withStyles(theme => ({
         marginRight: 20
     },
     navStyle: {
+        color: "#fff",
         backgroundColor: theme.palette.primary.light,
         transition: "all ease 0.2s",
         transformOrigin: "top",
@@ -196,7 +198,7 @@ export default withStyles(theme => ({
         position: "fixed",
         top: theme.spacing.unit,
         right: theme.spacing.unit,
-        zIndex: theme.zIndex.appBar + 1
+        zIndex: theme.zIndex.appBar + 1,
     },
     toolbar: {
         paddingRight: theme.spacing.unit * 6

@@ -240,7 +240,7 @@ export class SubscribeBox extends React.PureComponent {
             <div>
                 <Button
                     onClick={this.toggleBtnHandler}
-                    color="primary"
+                    color="inherit"
                 >
                 Inscription
                 </Button>
