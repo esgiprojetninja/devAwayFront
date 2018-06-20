@@ -1,5 +1,6 @@
 import React from "react";
 import * as T from "prop-types";
+import { NavLink } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -141,18 +142,19 @@ class AccommodationsPersonnalList extends React.PureComponent {
             );
         }
         return (
-            <Button
-                size="large"
-                id="create-first-accommodation"
-                color="primary"
-                className="margin-auto"
-                onClick={() => {
-                    console.log("POP THE MENU !");
-                }}
+            <NavLink
+                to="/accommodations/create"
             >
-                <AddIcon />
-                Create your very first place
-            </Button>
+                <Button
+                    size="large"
+                    id="create-first-accommodation"
+                    color="primary"
+                    className="margin-auto"
+                >
+                    <AddIcon />
+                    Create your very first place
+                </Button>
+            </NavLink>
         );
     }
 

@@ -40,7 +40,11 @@ class AccommodationsTabs extends React.Component {
         value: 0,
     };
 
-    get currentTabComponent() {
+    handleChange = (event, value) => {
+        this.setState({ value });
+    };
+
+    renderCurrentTab() {
         switch (this.state.value) {
         case 0:
             return <AccommodationsList />;
@@ -51,19 +55,16 @@ class AccommodationsTabs extends React.Component {
         }
     }
 
-    handleChange = (event, value) => {
-        this.setState({ value });
-    };
-
     render() {
         const { classes } = this.props;
         const { value } = this.state;
 
         return (
             <div>
-                <Navbar burgerColor="#acacac" />
+                <Navbar burgerColor="#acacac" {...this.props} />
                 <div className={classes.root}>
                     <Tabs
+                        id="ahokfdp"
                         value={value}
                         onChange={this.handleChange}
                         classes={{ root: classes.tabsRoot }}
@@ -75,6 +76,7 @@ class AccommodationsTabs extends React.Component {
                             disableRipple
                             classes={{ root: classes.tabRoot }}
                             label="All"
+                            value={0}
                         />
                         <Tab
                             id="user-places-toggler"
@@ -82,9 +84,10 @@ class AccommodationsTabs extends React.Component {
                             disabled={!this.props.user.isLoggedIn}
                             classes={{ root: classes.tabRoot }}
                             label="Yours"
+                            value={1}
                         />
                     </Tabs>
-                    {this.currentTabComponent}
+                    {this.renderCurrentTab()}
                 </div>
             </div>
         );
