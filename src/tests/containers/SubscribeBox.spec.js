@@ -23,7 +23,7 @@ const prepare = (name, state) => {
     };
 };
 
-describe("Container LogBox", () => {
+describe("Container SubscribeBox", () => {
     describe("mapDispatchToProps", () => {
         it("onSubmit", async () => {
             const { store, fn } = prepare("onSubmit");

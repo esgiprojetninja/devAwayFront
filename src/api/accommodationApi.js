@@ -46,7 +46,6 @@ const accommodationApi = {
             };
         });
     },
-    // TODO: check update and create methods when api is ok
     createOrUpdate: (accommodation) => {
         return accommodation.id > 0 ? update(accommodation) : create(accommodation);
     },

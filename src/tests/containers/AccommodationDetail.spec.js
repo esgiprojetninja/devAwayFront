@@ -3,9 +3,10 @@ import thunk from "redux-thunk";
 import configureMockStore from "redux-mock-store";
 
 import {
-    mockAPI
+    mockAPI,
+    mockAPIWithErrors,
 } from "../mock/API";
-
+import missionApi from "../../api/missionApi";
 import mainReducer from "../../reducers/index";
 import {
     mapStateToProps,
@@ -14,8 +15,8 @@ import {
 
 const mockStore = configureMockStore([thunk.withExtraArgument(mockAPI)]);
 
-const prepare = (name, state) => {
-    const store = mockStore(state);
+const prepare = (name, state, mockStr = mockStore) => {
+    const store = mockStr(state);
     return {
         store,
         // wrap in a promise to handle everything in the same way
@@ -26,15 +27,55 @@ const prepare = (name, state) => {
 
 describe("Container AccommodationDetail", () => {
     describe("mapDispatchToProps", () => {
-        it("onInit", async () => {
+        beforeEach(() => {
+            jest.clearAllMocks();
+        });
+        it("onInit - fetch success", async () => {
             const { store, fn } = prepare("onInit", mainReducer(undefined, {}));
-            await fn();
+            const res = await fn();
             expect(store.getActions().map(a => a.type)).toEqual(["FETCH_ACCOMMODATIONS_REQUEST", "FETCH_ACCOMMODATION_SUCCESS"]);
+            expect(res).toBe(true);
+        });
+        it("onInit - fetch response error", async () => {
+            const errorStore = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)]);
+            const { store, fn } = prepare("onInit", mainReducer(undefined, {}), errorStore);
+            const res = await fn();
+            expect(store.getActions().map(a => a.type)).toEqual(["FETCH_ACCOMMODATIONS_REQUEST", "SET_SNACK_MSG", "FETCH_ACCOMMODATIONS_FAILURE"]);
+            expect(res).toBe(false);
+        });
+        it("onInit - fetch server error", async () => {
+            const errorStore = configureMockStore(
+                [thunk.withExtraArgument({
+                    accommodationApi: {
+                        fetchById() { throw new Error("POULAY"); }
+                    }
+                })]
+            );
+            const { store, fn } = prepare("onInit", mainReducer(undefined, {}), errorStore);
+            const res = await fn();
+            expect(store.getActions().map(a => a.type)).toEqual(["FETCH_ACCOMMODATIONS_REQUEST", "FETCH_ACCOMMODATIONS_FAILURE"]);
+            expect(res).toBe(false);
         });
         it("applyToMission", async () => {
+            const spy = jest.spyOn(missionApi, "applyToMission");
             const { store, fn } = prepare("applyToMission", mainReducer(undefined, {}));
-            await fn("coucou", { id: "coucou" });
+            const res = await fn("coucou", { id: "coucou" });
             expect(store.getActions().map(a => a.type)).toEqual([]);
+            expect(spy).toHaveBeenCalled();
+            expect(res).toBe(true);
+        });
+        it("applyToMission - server error", async () => {
+            const oldMethod = missionApi.applyToMission;
+            missionApi.applyToMission = () => {
+                throw new Error("POULAY");
+            };
+            const spy = jest.spyOn(missionApi, "applyToMission");
+            const { store, fn } = prepare("applyToMission", mainReducer(undefined, {}));
+            const res = await fn("coucou", { id: "coucou" });
+            expect(store.getActions().map(a => a.type)).toEqual([]);
+            expect(spy).toHaveBeenCalled();
+            expect(res).toBe(false);
+            missionApi.applyToMission = oldMethod;
         });
     });
     describe("mapStateToProps", () => {

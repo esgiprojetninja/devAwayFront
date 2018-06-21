@@ -281,4 +281,91 @@ describe("Actions user", () => {
         await store.dispatch(accoActions.deleteAccommodation("chibar"));
         expect(store.getActions()).toEqual(expectedActions);
     });
+
+    it("should fetch ONE accommodation", async () => {
+        const expectedActions = [
+            {
+                type: accoTypes.FETCH_ACCOMMODATIONS_REQUEST
+            },
+            {
+                type: accoTypes.FETCH_ACCOMMODATION_SUCCESS,
+                payload: { data: { poulay: "man", host: "POULAAAY" } }
+            }
+        ];
+        const store = mockStore();
+        await store.dispatch(accoActions.fetchAccommodation("chibar"));
+        expect(store.getActions()).toEqual(expectedActions);
+    });
+
+    it("should NOT fetch ONE accommodation with API error", async () => {
+        const expectedActions = [
+            {
+                type: accoTypes.FETCH_ACCOMMODATIONS_REQUEST
+            },
+            {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "Failed to fetch accomodation",
+                    snackDuration: undefined
+                }
+            },
+            {
+                type: accoTypes.FETCH_ACCOMMODATIONS_FAILURE,
+                payload: "Fongalakwaki"
+            }
+        ];
+        mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)]);
+        const store = mockStore();
+        await store.dispatch(accoActions.fetchAccommodation("chibar"));
+        expect(store.getActions()).toEqual(expectedActions);
+    });
+
+    it("should NOT fetch ONE accommodation with server failure - 1", async () => {
+        const expectedActions = [
+            {
+                type: accoTypes.FETCH_ACCOMMODATIONS_REQUEST
+            },
+            {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "Failed to fetch accomodation",
+                    snackDuration: undefined
+                }
+            },
+            {
+                type: accoTypes.FETCH_ACCOMMODATIONS_FAILURE,
+                payload: "gtfo"
+            }
+        ];
+        mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithServerFailure)]);
+        const store = mockStore();
+        await store.dispatch(accoActions.fetchAccommodation("chibar"));
+        expect(store.getActions()).toEqual(expectedActions);
+    });
+
+    it("should NOT fetch ONE accommodation with server failure - 2", async () => {
+        const oldFetchById = mockAPIWithServerFailure.accommodationApi.fetchById;
+        mockAPIWithServerFailure.accommodationApi.fetchById = () => Promise.reject(new Error());
+        const expectedActions = [
+            {
+                type: accoTypes.FETCH_ACCOMMODATIONS_REQUEST
+            },
+            {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "Failed to fetch accomodation",
+                    snackDuration: undefined
+                }
+            },
+            {
+                type: accoTypes.FETCH_ACCOMMODATIONS_FAILURE,
+                payload: new Error()
+            }
+        ];
+        mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithServerFailure)]);
+        const store = mockStore();
+        await store.dispatch(accoActions.fetchAccommodation("chibar"));
+        expect(store.getActions()).toEqual(expectedActions);
+        mockAPIWithServerFailure.accommodationApi.fetchById = oldFetchById;
+    });
 });

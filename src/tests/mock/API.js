@@ -13,7 +13,8 @@ export const mockAPI = {
             deleted: true
         }),
         fetchById: () => Promise.resolve({
-            poulay: "man"
+            poulay: "man",
+            host: "POULAAAY",
         })
     },
     userApi: {
@@ -67,7 +68,11 @@ export const mockAPIWithErrors = {
         deleteItem: () => Promise.resolve({
             hasError: true,
             message: "Couldn't delete"
-        })
+        }),
+        fetchById: () => Promise.resolve({
+            hasError: true,
+            message: "Fongalakwaki"
+        }),
     },
     missionApi: {
         fetchAll: () => Promise.resolve({
@@ -146,7 +151,8 @@ export const mockAPIWithServerFailure = {
             message: "gtfo"
         })),
         createOrUpdate: () => Promise.reject(new Error("gtfo")),
-        deleteItem: () => Promise.reject(new Error("gtfo"))
+        deleteItem: () => Promise.reject(new Error("gtfo")),
+        fetchById: () => Promise.reject(new Error("gtfo")),
     },
     missionApi: {
         fetchAll: () => Promise.reject(new Error("gtfo")),
