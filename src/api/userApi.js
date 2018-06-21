@@ -1,18 +1,20 @@
-import fetch from "isomorphic-fetch";
+/* global fetch */
+import "isomorphic-fetch";
+import { generateFetch } from "./utils/utils";
 
 const baseUrl = process.env.REACT_APP_API_URL;
 
 const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
 
 const userApi = {
-    login: credentials => (fetch(`${protocol}://${baseUrl}/api/login_check`, {
+    login: credentials => (fetch(`${protocol}://${baseUrl}/api/login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            _username: credentials.username,
-            _password: credentials.password
+            email: credentials.username,
+            password: credentials.password
         })
     })).then(res => res.json()),
 
@@ -29,7 +31,9 @@ const userApi = {
         headers: {
             "Content-Type": "application/json"
         }
-    })).then(res => res.json())
+    })).then(res => res.json()),
+
+    getAccommodations: userId => generateFetch(`users/${userId}/accommodations`, "GET"),
 };
 
 export default userApi;

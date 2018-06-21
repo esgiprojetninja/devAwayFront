@@ -1,17 +1,17 @@
 import * as React from "react";
 import { NavLink } from "react-router-dom";
 import * as T from "prop-types";
-import AppBar from "material-ui/AppBar";
-import Toolbar from "material-ui/Toolbar";
-import { withStyles } from "material-ui/styles";
-import IconButton from "material-ui/IconButton";
-import Menu, { MenuItem } from "material-ui/Menu";
-import MenuIcon from "material-ui-icons/Menu";
-import MoreVertIcon from "material-ui-icons/MoreVert";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import { withStyles } from "@material-ui/core/styles";
+import IconButton from "@material-ui/core/IconButton";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import MenuIcon from "@material-ui/icons/Menu";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 import LogBox from "../containers/LogBox";
 import SubscribeBox from "../containers/SubscribeBox";
-import AccommodationCreation from "../containers/AccommodationCreation";
 
 const ITEM_HEIGHT = 48;
 
@@ -24,7 +24,7 @@ export class NavBarComponent extends React.PureComponent {
         onInit: T.func.isRequired
     };
 
-    static defaultProps = { burgerColor: "contrast" }
+    static defaultProps = { burgerColor: "#fff" }
 
     constructor(props) {
         super(props);
@@ -85,10 +85,21 @@ export class NavBarComponent extends React.PureComponent {
                         id="accommodation-link"
                         to="/accommodations"
                     >
-                        Accommodations
+                        All places
                     </NavLink>
                 </MenuItem>
-                <AccommodationCreation />
+                <MenuItem
+                    key="/poulafefzee"
+                    selected={false}
+                    onClick={this.handleUserMenuClose}
+                >
+                    <NavLink
+                        id="accommodation-creation-link"
+                        to="/accommodations/create"
+                    >
+                        New place
+                    </NavLink>
+                </MenuItem>
             </Menu>
         );
     }
@@ -111,17 +122,17 @@ export class NavBarComponent extends React.PureComponent {
 
     render() {
         const { classes } = this.props;
-        const navbarClasses = [
-            classes.navStyle,
-            classes.dropDown
-        ];
-        navbarClasses.push(this.state.open ? classes.dropDown_in : classes.dropDown_out);
-        const burgerColor = this.state.open ?
-            NavBarComponent.defaultProps.burgerColor :
-            this.props.burgerColor;
+        const containerStyle = {
+            height: this.state.open ? "60px" : "0"
+        };
+        const togglerStyle = {
+            color: this.state.open ?
+                NavBarComponent.defaultProps.burgerColor :
+                this.props.burgerColor
+        };
         return (
-            <div className={classes.root}>
-                <AppBar position="fixed" className={navbarClasses.join(" ")}>
+            <div style={containerStyle} className={classes.root}>
+                <AppBar position="fixed" style={this.state.open ? { transform: "scaleY(1)" } : { transform: "scaleY(0)" }} className={classes.navStyle}>
                     <Toolbar className={classes.toolbar}>
                         <div className="full-width">
                             <img
@@ -139,7 +150,7 @@ export class NavBarComponent extends React.PureComponent {
                 <IconButton
                     id="unlogged-toggler"
                     onClick={() => this.toggleOpen(this.state.open)}
-                    color={burgerColor}
+                    style={togglerStyle}
                     aria-label="Menu"
                     className={classes.toggleButton}
                 >
@@ -152,16 +163,9 @@ export class NavBarComponent extends React.PureComponent {
 
 NavBarComponent.propTypes = {
     classes: T.shape({
-        root: T.shape({
-            width: T.string
-        }),
-        flex: T.shape({
-            flex: T.number
-        }),
-        menuButton: T.shape({
-            marginLeft: T.number,
-            marginRight: T.number
-        })
+        root: T.any,
+        flex: T.any,
+        menuButton: T.any
     }).isRequired,
     user: T.shape({
         isLoggedIn: T.bool.isRequired
@@ -170,7 +174,8 @@ NavBarComponent.propTypes = {
 
 export default withStyles(theme => ({
     root: {
-        width: "100%"
+        width: "100%",
+        transition: "height .2s ease-in-out"
     },
     flex: {
         flex: 1
@@ -183,24 +188,17 @@ export default withStyles(theme => ({
         marginLeft: -12,
         marginRight: 20
     },
-    dropDown: {
-        transition: "all ease 0.2s",
-        transformOrigin: "top"
-    },
     navStyle: {
-        backgroundColor: theme.palette.primary.light
-    },
-    dropDown_in: {
-        transform: "scaleY(1)"
-    },
-    dropDown_out: {
-        transform: "scaleY(0)"
+        color: "#fff",
+        backgroundColor: theme.palette.primary.light,
+        transition: "all ease 0.2s",
+        transformOrigin: "top",
     },
     toggleButton: {
         position: "fixed",
         top: theme.spacing.unit,
         right: theme.spacing.unit,
-        zIndex: theme.zIndex.appBar + 1
+        zIndex: theme.zIndex.appBar + 1,
     },
     toolbar: {
         paddingRight: theme.spacing.unit * 6

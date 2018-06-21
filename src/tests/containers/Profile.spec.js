@@ -1,4 +1,5 @@
 /* eslint-env jest */
+/* global window */
 import thunk from "redux-thunk";
 import configureMockStore from "redux-mock-store";
 
@@ -39,6 +40,19 @@ const prepareWithError = (name, state) => {
 
 describe("Container Profile", () => {
     describe("mapDispatchToProps", () => {
+        beforeEach(() => {
+            jest.clearAllMocks();
+            window.localStorage = {
+                removeItem: jest.fn(),
+                getItem: jest.fn(),
+                setItem: jest.fn()
+            };
+            global.localStorage = {
+                removeItem: jest.fn(),
+                getItem: jest.fn(),
+                setItem: jest.fn()
+            };
+        });
         it("onGetMe", () => {
             const { store, fn } = prepare("onGetMe", mainReducer(undefined, {}));
             fn().then(() => {

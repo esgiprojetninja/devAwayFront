@@ -1,5 +1,5 @@
-import { createMuiTheme } from "material-ui/styles";
-import { amber } from "material-ui/colors";
+import { createMuiTheme } from "@material-ui/core/styles";
+import amber from "@material-ui/core/colors/amber";
 
 const defaultMargin = "0.5em";
 

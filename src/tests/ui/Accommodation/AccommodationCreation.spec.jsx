@@ -35,12 +35,11 @@ describe("ui <AccommocationCreation />", function () {
         };
     });
 
-    it("should render wirth main items", () => {
+    it("should render with main items", () => {
         const wrapper = shallow(
             <AccommocationCreation {...this.initialProps} />
         );
-        expect(wrapper.text()).toContain("WithStyles(MenuItem)");
-        expect(wrapper.text()).toContain("WithStyles(Dialog)");
+        expect(wrapper.instance().render()).not.toBeNull();
     });
 
     it("should not render - !loggedIn", () => {
@@ -55,17 +54,5 @@ describe("ui <AccommocationCreation />", function () {
             <AccommocationCreation {...props} />
         );
         expect(wrapper.instance().render()).toBeNull();
-    });
-
-    it("should prevent keyCode 9 to bubble up", () => {
-        const wrapper = shallow(
-            <AccommocationCreation {...this.initialProps} />
-        );
-        const event = {
-            keyCode: 9,
-            stopPropagation: jest.fn()
-        };
-        wrapper.find("#acco-creation-dialog").simulate("keydown", event);
-        expect(event.stopPropagation).toHaveBeenCalled();
     });
 });

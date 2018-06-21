@@ -1,19 +1,17 @@
 import React from "react";
 import * as T from "prop-types";
-import Button from "material-ui/Button";
-import { withStyles } from "material-ui/styles";
-import Dialog, { DialogContent } from "material-ui/Dialog";
-import Switch from "material-ui/Switch";
-import AppBar from "material-ui/AppBar";
-import TextField from "material-ui/TextField";
-import { CircularProgress } from "material-ui/Progress";
-import Toolbar from "material-ui/Toolbar";
-import IconButton from "material-ui/IconButton";
-import Typography from "material-ui/Typography";
-import CloseIcon from "material-ui-icons/Close";
-import Slide from "material-ui/transitions/Slide";
-import { MenuItem } from "material-ui/Menu";
-import { FormControlLabel, FormGroup, FormControl } from "material-ui/Form";
+import Button from "@material-ui/core/Button";
+import { withStyles } from "@material-ui/core/styles";
+import Switch from "@material-ui/core/Switch";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Typography from "@material-ui/core/Typography";
+import FormLabel from "@material-ui/core/FormLabel";
+import FormControl from "@material-ui/core/FormControl";
+import FormGroup from "@material-ui/core/FormGroup";
+
+import Navbar from "../../containers/Navbar";
 
 const PROP_RULES = {
     title: { min: 6, max: 24 },
@@ -32,40 +30,35 @@ const PROP_RULES = {
     propertySize: { min: 10, max: 10000, isNumber: true }
 };
 
-const styles = theme => ({ // eslint-disable-line
-    appBar: {
-        position: "relative"
-    },
+const styles = theme => ({
     flex: {
-        flex: 1
-    }
+        flex: 1,
+    },
+    title: {
+        fontSize: "xx-large",
+        margin: theme.spacing.unit
+    },
 });
-
-function Transition(props) {
-    return <Slide direction="up" {...props} />;
-}
 
 export class AccommocationCreation extends React.PureComponent {
     static propTypes = {
         user: T.shape({
             isLoggedIn: T.bool.isRequired,
-            isLoading: T.bool.isRequired,
             data: T.shape({
-                id: T.number.isRequired
-            })
+                id: T.number
+            }),
         }).isRequired,
         accommodation: T.shape({
             isLoading: T.bool.isRequired
         }).isRequired,
         classes: T.shape({
-            appBar: T.string.isRequired,
-            flex: T.string.isRequired
+            flex: T.any,
+            title: T.any,
         }).isRequired,
         saveAccommodation: T.func.isRequired
     };
 
     state = {
-        open: false,
         title: "",
         titleError: "",
         description: "",
@@ -106,22 +99,13 @@ export class AccommocationCreation extends React.PureComponent {
         updatedAt: new Date().toISOString() // eslint-disable-line
     }
 
-    handleClickOpen = () => {
-        this.setState({ open: true });
-    };
-
     handleSave = () => {
         this.props.saveAccommodation({
             ...this.state,
             host: `/api/users/${this.props.user.data.id}`,
             pictures: ""
         });
-        this.handleClose();
     }
-
-    handleClose = () => {
-        this.setState({ open: false });
-    };
 
     handleToggleBtn = name => (event, checked) => {
         this.setState({ [name]: checked });
@@ -145,58 +129,31 @@ export class AccommocationCreation extends React.PureComponent {
         }
     }
 
-    renderCancelButton() {
-        if (this.props.accommodation.isLoading) {
-            return <CircularProgress color="accent" />;
-        }
-        return (
-            <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
-                <CloseIcon />
-            </IconButton>
-        );
-    }
-
     renderSaveButton() {
         if (this.props.accommodation.isLoading) {
-            return <CircularProgress color="accent" />;
+            return <CircularProgress color="primary" />;
         }
         return (
-            <Button color="inherit" onClick={this.handleSave}>
-                save
-            </Button>
-        );
-    }
-
-    renderAppBar() {
-        const { classes } = this.props;
-        return (
-            <AppBar className={classes.appBar}>
-                <Toolbar>
-                    {this.renderCancelButton()}
-                    <Typography type="title" color="inherit" className={classes.flex}>
-                        Accommodation creation
-                    </Typography>
-                    {this.renderSaveButton()}
-                </Toolbar>
-            </AppBar>
+            <Button color="inherit" onClick={this.handleSave}>save</Button>
         );
     }
 
     renderTextProperty(propName, required = true, multi = false, rows = 1) {
         const capitalized = propName.charAt(0).toUpperCase() + propName.slice(1);
+        const id = `${capitalized}-${Math.floor(Math.random() * 2000)}`;
         return (
             <FormControl fullWidth >
-                <TextField
+                <InputLabel htmlFor={id}>{this.state[`${propName}Error`].length ? this.state[`${propName}Error`] : capitalized}</InputLabel>
+                <Input
                     error={!!this.state[`${propName}Error`].length}
+                    id={id}
                     required={required}
                     fullWidth
-                    label={this.state[`${propName}Error`].length ? this.state[`${propName}Error`] : capitalized}
                     type="text"
                     name={propName}
                     value={this.state[propName]}
                     multiline={multi}
                     rows={rows}
-                    margin="normal"
                     onChange={(ev) => {
                         this.handleChange(propName, ev);
                     }}
@@ -206,17 +163,18 @@ export class AccommocationCreation extends React.PureComponent {
     }
 
     renderNumberProperty(propName, defaultLegend, required = true) {
+        const capitalized = propName.charAt(0).toUpperCase() + propName.slice(1);
+        const id = `${capitalized}-${Math.floor(Math.random() * 2000)}`;
         return (
             <FormControl fullWidth >
-                <TextField
+                <InputLabel htmlFor={id}>{this.state[`${propName}Error`].length ? this.state[`${propName}Error`] : defaultLegend}</InputLabel>
+                <Input
                     error={!!this.state[`${propName}Error`].length}
                     required={required}
                     fullWidth
-                    label={this.state[`${propName}Error`].length ? this.state[`${propName}Error`] : defaultLegend}
                     type="number"
                     name={propName}
                     value={this.state[propName]}
-                    margin="normal"
                     max={PROP_RULES[propName].max}
                     min={PROP_RULES[propName].min}
                     onChange={(ev) => {
@@ -229,7 +187,7 @@ export class AccommocationCreation extends React.PureComponent {
 
     renderForm() {
         return (
-            <div>
+            <form action="">
                 {this.renderTextProperty("title", true, true, 2)}
                 {this.renderTextProperty("description", true, true, 4)}
                 {this.renderTextProperty("city", true, true, 4)}
@@ -245,7 +203,7 @@ export class AccommocationCreation extends React.PureComponent {
                 {this.renderNumberProperty("nbMaxAdult", "Hostable adults")}
                 {this.renderNumberProperty("propertySize", "Property size (m²)", true)}
                 <FormGroup>
-                    <FormControlLabel
+                    <FormLabel
                         control={
                             <Switch
                                 checked={this.state.animalsAllowed}
@@ -253,7 +211,7 @@ export class AccommocationCreation extends React.PureComponent {
                             />}
                         label="Animals allowed"
                     />
-                    <FormControlLabel
+                    <FormLabel
                         control={
                             <Switch
                                 checked={this.state.smokersAllowed}
@@ -261,7 +219,7 @@ export class AccommocationCreation extends React.PureComponent {
                             />}
                         label="Smokers allowed"
                     />
-                    <FormControlLabel
+                    <FormLabel
                         control={
                             <Switch
                                 checked={this.state.hasInternet}
@@ -270,7 +228,7 @@ export class AccommocationCreation extends React.PureComponent {
                         label="Internet access"
                     />
                 </FormGroup>
-            </div>
+            </form>
         );
     }
 
@@ -278,31 +236,12 @@ export class AccommocationCreation extends React.PureComponent {
         if (!this.props.user.isLoggedIn) return null;
         return (
             <div>
-                <MenuItem
-                    key="/createAccomodation"
-                    selected={false}
-                    onClick={this.handleClickOpen}
-                > Create Accommodation
-                </MenuItem>
-                <Dialog
-                    id="acco-creation-dialog"
-                    fullScreen
-                    open={this.state.open}
-                    onClose={this.handleClose}
-                    transition={Transition}
-                    disableEscapeKeyDown
-                    disableBackdropClick
-                    onKeyDown={(event) => {
-                        if (event.keyCode === 9) {
-                            event.stopPropagation();
-                        }
-                    }}
-                >
-                    {this.renderAppBar()}
-                    <DialogContent>
-                        {this.renderForm()}
-                    </DialogContent>
-                </Dialog>
+                <Navbar burgerColor="#acacac" />
+                <Typography className={this.props.classes.title} type="title" color="inherit" component="h2">
+                    Accommodation creation
+                </Typography>
+                {this.renderForm()}
+                {this.renderSaveButton()}
             </div>
         );
     }

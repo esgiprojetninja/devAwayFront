@@ -1,11 +1,11 @@
 import React from "react";
 import * as T from "prop-types";
-import { withStyles } from "material-ui/styles";
-import Grid from "material-ui/Grid";
-import Typography from "material-ui/Typography";
+import { withStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
 import "animate.css/animate.min.css";
-import ScrollAnimation from 'react-animate-on-scroll';
-import Hidden from 'material-ui/Hidden';
+import ScrollAnimation from "react-animate-on-scroll";
+import Hidden from "@material-ui/core/Hidden";
 
 const ArticleWithMedia = (props) => {
     const {
@@ -32,13 +32,12 @@ const ArticleWithMedia = (props) => {
                 </div>
                 <ScrollAnimation animateIn="fadeInRight">
                     <Grid container className={classes.sectionContainer}>
-                        <Hidden only={['xs', 'sm']}>
+                        <Hidden only={["xs", "sm"]}>
                             <Grid
                                 item
                                 md={4}
                                 className={classes.sectionImg}
-                            >
-                            </Grid>
+                            />
                         </Hidden>
                         <Grid
                             item
@@ -60,7 +59,7 @@ const ArticleWithMedia = (props) => {
                                     className={classes.articleBox}
                                 >
                                     <Grid item xs={6} sm={6} className={classes.articleWrapper}>
-                                        <hr className="hr xsmall-hr black"/>
+                                        <hr className="hr xsmall-hr black" />
                                         <Typography
                                             className={classes.article}
                                             type="body2"
@@ -69,7 +68,7 @@ const ArticleWithMedia = (props) => {
                                         </Typography>
                                     </Grid>
                                     <Grid item xs={6} sm={6} className={classes.articleWrapper}>
-                                        <hr className="hr xsmall-hr black"/>
+                                        <hr className="hr xsmall-hr black" />
                                         <Typography
                                             className={classes.article}
                                             type="body2"
@@ -78,7 +77,7 @@ const ArticleWithMedia = (props) => {
                                         </Typography>
                                     </Grid>
                                     <Grid item xs={6} sm={6} className={classes.articleWrapper}>
-                                        <hr className="hr xsmall-hr black"/>
+                                        <hr className="hr xsmall-hr black" />
                                         <Typography
                                             className={classes.article}
                                             type="body2"
@@ -87,7 +86,7 @@ const ArticleWithMedia = (props) => {
                                         </Typography>
                                     </Grid>
                                     <Grid item xs={6} sm={6} className={classes.articleWrapper}>
-                                        <hr className="hr xsmall-hr black"/>
+                                        <hr className="hr xsmall-hr black" />
                                         <Typography
                                             className={classes.article}
                                             type="body2"
@@ -146,7 +145,7 @@ export default withStyles(theme => ({
     title: {
         marginBottom: theme.spacing.unit * 4
     },
-    articleTextContainer: {
+    articleTextContainer: {
         padding: "0 25px 0 40px !important"
     },
     sectionImg: {

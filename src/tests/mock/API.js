@@ -1,8 +1,10 @@
 import { basicUser } from "./body/user";
+import { accommodationMock } from "../mock/body/accommodation";
 
 export const mockAPI = {
     accommodationApi: {
         fetchAll: () => Promise.resolve([]),
+        fetchAllWithoutAuth: () => Promise.resolve([]),
         createOrUpdate: () => Promise.resolve({
             id: 5,
             title: "los singos"
@@ -11,12 +13,19 @@ export const mockAPI = {
             deleted: true
         }),
         fetchById: () => Promise.resolve({
-            poulay: "man"
+            poulay: "man",
+            host: "POULAAAY",
         })
     },
     userApi: {
-        login: () => Promise.resolve({ token: "prout" }),
-        addUser: () => Promise.resolve(basicUser)
+        login: () => Promise.resolve({ success: { token: "prout" } }),
+        addUser: () => Promise.resolve(basicUser),
+        getAccommodations: () => Promise.resolve(
+            Array.from(new Array(1)).map((a, i) => ({
+                ...accommodationMock,
+                id: i
+            }))
+        )
     },
     missionApi: {
         fetchAll: () => Promise.resolve([]),
@@ -59,7 +68,11 @@ export const mockAPIWithErrors = {
         deleteItem: () => Promise.resolve({
             hasError: true,
             message: "Couldn't delete"
-        })
+        }),
+        fetchById: () => Promise.resolve({
+            hasError: true,
+            message: "Fongalakwaki"
+        }),
     },
     missionApi: {
         fetchAll: () => Promise.resolve({
@@ -124,6 +137,9 @@ export const mockAPIWithErrors = {
         }),
         addUser: () => Promise.resolve({
             hasError: true
+        }),
+        getAccommodations: () => Promise.resolve({
+            hasError: true
         })
     }
 };
@@ -135,7 +151,8 @@ export const mockAPIWithServerFailure = {
             message: "gtfo"
         })),
         createOrUpdate: () => Promise.reject(new Error("gtfo")),
-        deleteItem: () => Promise.reject(new Error("gtfo"))
+        deleteItem: () => Promise.reject(new Error("gtfo")),
+        fetchById: () => Promise.reject(new Error("gtfo")),
     },
     missionApi: {
         fetchAll: () => Promise.reject(new Error("gtfo")),
@@ -165,6 +182,10 @@ export const mockAPIWithServerFailure = {
         addUser: () => Promise.reject(new Error({
             code: 500,
             message: "gtfo"
-        }))
+        })),
+        getAccommodations: () => Promise.reject(new Error("gtfo", {
+            code: 500,
+            message: "gtfo",
+        })),
     }
 };

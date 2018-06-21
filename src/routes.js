@@ -1,8 +1,9 @@
 import Home from "./containers/Home";
 import Guard from "./containers/Guard";
 import Profile from "./containers/Profile";
-import AccommodationsList from "./containers/AccommodationsList";
 import AccommodationDetail from "./containers/AccommodationDetail";
+import AccommodationsTabs from "./containers/AccommodationsTabs";
+import AccommodationCreation from "./containers/AccommodationCreation";
 
 export default [
     {
@@ -23,7 +24,12 @@ export default [
     {
         path: "/accommodations",
         exact: true,
-        component: AccommodationsList
+        component: AccommodationsTabs
+    },
+    {
+        path: "/accommodations/create",
+        exact: true,
+        component: AccommodationCreation
     },
     {
         path: "/accommodations/:accoID",

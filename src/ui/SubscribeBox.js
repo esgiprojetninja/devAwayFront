@@ -1,15 +1,15 @@
 import React from "react";
 import * as T from "prop-types";
-import Button from "material-ui/Button";
-import { withStyles } from "material-ui/styles";
-import TextField from "material-ui/TextField";
-import { CircularProgress } from "material-ui/Progress";
-import Dialog, {
-    DialogActions,
-    DialogContent,
-    DialogTitle
-} from "material-ui/Dialog";
-import { FormControl } from "material-ui/Form";
+import Button from "@material-ui/core/Button";
+import { withStyles } from "@material-ui/core/styles";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogActions from "@material-ui/core/DialogActions";
+import Dialog from "@material-ui/core/Dialog";
+import FormControl from "@material-ui/core/FormControl";
 
 const passwordInputProps = {
     type: "password"
@@ -119,14 +119,15 @@ export class SubscribeBox extends React.PureComponent {
     renderPasswordCheckField() {
         return (
             <FormControl>
-                <TextField
+                <InputLabel htmlFor="devaway-subscribe-pwd-check">{this.props.hasError.passwordCheck ? this.props.errorText.passwordCheck : "Repeat password"}</InputLabel>
+                <Input
                     error={this.props.hasError.passwordCheck}
                     required
-                    label={this.props.hasError.passwordCheck ? this.props.errorText.passwordCheck : "Repeat password"}
+                    id="devaway-subscribe-pwd-check"
                     type="password"
                     inputProps={passwordInputProps}
                     name="passwordCheck"
-                    margin="normal"
+                    margin="dense"
                     onChange={this.handlePasswordCheckChange}
                 />
             </FormControl>
@@ -136,14 +137,15 @@ export class SubscribeBox extends React.PureComponent {
     renderPasswordField() {
         return (
             <FormControl>
-                <TextField
+                <InputLabel htmlFor="devaway-subscribe-pwd">{this.props.hasError.password ? this.props.errorText.password : "Password"}</InputLabel>
+                <Input
                     error={this.props.hasError.password}
                     required
-                    label={this.props.hasError.password ? this.props.errorText.password : "Password"}
+                    id="devaway-subscribe-pwd"
                     type="password"
                     inputProps={passwordInputProps}
                     name="password"
-                    margin="normal"
+                    margin="dense"
                     onChange={this.handlePasswordChange}
                 />
             </FormControl>
@@ -153,15 +155,16 @@ export class SubscribeBox extends React.PureComponent {
     renderUserNameField() {
         return (
             <FormControl>
-                <TextField
+                <InputLabel htmlFor="devaway-subscribe-name">{this.props.hasError.username ? this.props.errorText.username : "User name"}</InputLabel>
+                <Input
                     error={this.props.hasError.username}
                     required
-                    label={this.props.hasError.username ? this.props.errorText.username : "User name"}
+                    id="devaway-subscribe-name"
                     type="text"
                     name="userName"
                     multiline
                     rows="2"
-                    margin="normal"
+                    margin="dense"
                     onChange={(ev) => {
                         this.handleChange("username", ev);
                     }}
@@ -173,16 +176,18 @@ export class SubscribeBox extends React.PureComponent {
     renderEmailField() {
         return (
             <FormControl>
-                <TextField
+                <InputLabel htmlFor="devaway-subscribe-email">{this.props.hasError.email ? this.props.errorText.email : "Email"}</InputLabel>
+                <Input
                     error={this.props.hasError.email}
                     required
+                    id="devaway-subscribe-email"
                     label={this.props.hasError.email ? this.props.errorText.email : "Email"}
                     type="email"
                     name="email"
                     multiline
                     fullWidth
                     rows="2"
-                    margin="normal"
+                    margin="dense"
                     onChange={this.handleEmailChange}
                 />
             </FormControl>
@@ -229,13 +234,13 @@ export class SubscribeBox extends React.PureComponent {
             return null;
         }
         if (this.props.isLoading) {
-            return <CircularProgress color="accent" />;
+            return <CircularProgress color="primary" />;
         }
         return (
             <div>
                 <Button
                     onClick={this.toggleBtnHandler}
-                    color="contrast"
+                    color="inherit"
                 >
                 Inscription
                 </Button>

@@ -1,17 +1,19 @@
 /* global window */
 import React from "react";
 import * as T from "prop-types";
-import GridList, { GridListTile, GridListTileBar } from "material-ui/GridList";
+import GridList from "@material-ui/core/GridList";
+import GridListTile from "@material-ui/core/GridListTile";
+import GridListTileBar from "@material-ui/core/GridListTileBar";
 import { NavLink } from "react-router-dom";
-import Subheader from "material-ui/List/ListSubheader";
-import Connectivity from "material-ui-icons/NetworkWifi";
-import NoConnectivity from "material-ui-icons/WifiLock";
-import NoSmoke from "material-ui-icons/SmokeFree";
-import Smoke from "material-ui-icons/SmokingRooms";
-import Typography from "material-ui/Typography";
-import { CircularProgress } from "material-ui/Progress";
+import ListSubheader from "@material-ui/core/ListSubheader";
+import Connectivity from "@material-ui/icons/NetworkWifi";
+import NoConnectivity from "@material-ui/icons/WifiLock";
+import NoSmoke from "@material-ui/icons/SmokeFree";
+import Smoke from "@material-ui/icons/SmokingRooms";
+import Typography from "@material-ui/core/Typography";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { accommodationReducerPropTypes } from "../../propTypes/accommodation.reducer.d";
-import Navbar from "../../containers/Navbar";
+import { getAccoImg } from "../../utils/accommodation";
 
 export const getAdaptedTileCols = () => {
     if (window.innerWidth <= 480) {
@@ -41,7 +43,6 @@ const styles = {
         overflow: "hidden",
         backgroundColor: "inherit",
         margin: "auto",
-        marginTop: "70px",
         maxWidth: "1768px"
     },
     gridList: {
@@ -144,13 +145,12 @@ export default class AccommodationsList extends React.PureComponent {
                 cellHeight={220}
                 cols={this.state.tileCols}
             >
-                <GridListTile key="Subheader" cols={4} style={{ height: "auto" }}>
-                    <Subheader style={styles.gridListTitle} component="div">Accommodations</Subheader>
+                <GridListTile cols={4} style={{ height: "auto" }}>
+                    <ListSubheader style={styles.gridListTitle} component="div">All places</ListSubheader>
                 </GridListTile>
                 {
                     accommodation.data.map((accoID) => {
                         const filledAcco = accommodation.byID.get(accoID);
-                        const img = "/img/accommodation.jpg"; // @TODO: Replace by the picture property when API fixed
                         const basicStyle = {
                             transition: "transform .2s ease-in-out, box-shadow .2s ease-in-out",
                             cursor: "pointer"
@@ -173,7 +173,7 @@ export default class AccommodationsList extends React.PureComponent {
                                 <NavLink
                                     to={`/accommodations/${filledAcco.id}`}
                                 >
-                                    <img style={{ width: "100%", height: "auto" }} src={img} alt={filledAcco.title} />
+                                    <img style={{ width: "100%", height: "auto" }} src={getAccoImg(filledAcco)} alt={filledAcco.title} />
                                     <div style={styles.gridCustomDiv}>
                                         {filledAcco.hasInternet ?
                                             <Connectivity className="connectivity-icon" style={styles.icon} /> :
@@ -224,11 +224,8 @@ export default class AccommodationsList extends React.PureComponent {
             width: this.state.containerWidth
         };
         return (
-            <div>
-                <Navbar burgerColor="#acacac" />
-                <div style={listStyle}>
-                    {this.renderAccommodationList()}
-                </div>
+            <div style={listStyle}>
+                {this.renderAccommodationList()}
             </div>
         );
     }

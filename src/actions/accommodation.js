@@ -19,7 +19,7 @@ const fetchAccommodationsSuccess = data => ({
     payload: data
 });
 
-const fetchAccommodationsFailure = error => ({
+export const fetchAccommodationsFailure = error => ({
     type: types.FETCH_ACCOMMODATIONS_FAILURE,
     payload: error
 });
@@ -131,7 +131,7 @@ export function fetchAccommodation(id) {
                 },
                 (error) => {
                     dispatch(displaySnackMsg("Failed to fetch accomodation"));
-                    return dispatch(fetchAccommodationsFailure(error));
+                    return dispatch(fetchAccommodationsFailure(error.message || error));
                 }
             );
     };

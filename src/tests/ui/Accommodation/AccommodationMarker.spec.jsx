@@ -6,6 +6,7 @@ import {
     shallow
 } from "enzyme";
 import AccommodationMarker from "../../../ui/Accommodation/AccommodationMarker.jsx";
+import { basicUser } from "../../mock/body/user";
 
 describe("ui <AccommodationMarker />", function () {
     const acco = {
@@ -29,8 +30,7 @@ describe("ui <AccommodationMarker />", function () {
         address: "ohmy",
         country: "ohmy",
         type: "ohmy",
-        pictures: "ohmy",
-        host: "ohmy",
+        host: basicUser,
         animalsAllowed: true,
         smokersAllowed: true,
         hasInternet: true,
@@ -39,7 +39,8 @@ describe("ui <AccommodationMarker />", function () {
         updatedAt: "ohmy",
         checkinHour: "ohmy",
         checkoutHour: "ohmy",
-        mission: []
+        mission: [],
+        pictures: [],
     };
 
     beforeEach(() => {

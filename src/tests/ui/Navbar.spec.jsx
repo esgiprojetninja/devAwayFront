@@ -40,18 +40,10 @@ describe("ui <NavBar />", () => {
                 marginLeft: -12,
                 marginRight: 20
             },
-            dropDown: {
-                transition: "all ease 0.2s",
-                transformOrigin: "top"
-            },
             navStyle: {
-                backgroundColor: "#fe5858"
-            },
-            dropDown_in: {
-                transform: "scaleY(1)"
-            },
-            dropDown_out: {
-                transform: "scaleY(0)"
+                backgroundColor: "#fe5858",
+                transition: "all ease 0.2s",
+                transformOrigin: "top",
             },
             toggleButton: {
                 position: "fixed",
@@ -161,10 +153,7 @@ describe("ui <NavBar />", () => {
                 flex: "egerg",
                 logo: "reger",
                 menuButton: "gthrth",
-                dropDown: "ezfze",
                 navStyle: "ezfzef",
-                dropDown_in: "fgze",
-                dropDown_out: "ezfze",
                 toggleButton: "fedz",
                 toolbar: "ezdfze"
             }

@@ -15,7 +15,10 @@ const styles = {
 
 export default class AccommodationMarker extends React.PureComponent {
     static propTypes = {
-        accommodation: accommodationPropTypes.isRequired
+        accommodation: accommodationPropTypes
+    }
+    static defaultProps = {
+        accommodation: null
     }
 
     get acco() {

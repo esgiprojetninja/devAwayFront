@@ -17,7 +17,7 @@ function update(accommodation) {
 
 const accommodationApi = {
     fetchAll: () => {
-        return generateFetch("accommodations.json", "GET").then((parsed) => {
+        return generateFetch("accommodations", "GET").then((parsed) => {
             if (parsed.hasError) {
                 return parsed;
             }
@@ -32,7 +32,7 @@ const accommodationApi = {
         });
     },
     fetchAllWithoutAuth: () => {
-        return generateAnonymousFetch("accommodations.json", "GET").then((parsed) => {
+        return generateAnonymousFetch("accommodations", "GET").then((parsed) => {
             if (parsed.hasError) {
                 return parsed;
             }
@@ -46,7 +46,6 @@ const accommodationApi = {
             };
         });
     },
-    // TODO: check update and create methods when api is ok
     createOrUpdate: (accommodation) => {
         return accommodation.id > 0 ? update(accommodation) : create(accommodation);
     },

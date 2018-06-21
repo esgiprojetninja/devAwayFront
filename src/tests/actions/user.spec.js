@@ -1,4 +1,5 @@
 /* eslint-env jest */
+/* global window */
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import * as userActionTypes from "../../actions/types/user";
@@ -11,11 +12,17 @@ import {
 } from "../mock/API";
 
 import { createUser, basicUser } from "../mock/body/user";
+import { accommodationMock } from "../mock/body/accommodation";
 
 describe("Actions user", () => {
     let mockStore = null;
     beforeEach(() => {
         jest.clearAllMocks();
+        window.localStorage = {
+            removeItem: jest.fn(),
+            getItem: jest.fn(),
+            setItem: jest.fn()
+        };
         global.localStorage = {
             removeItem: jest.fn(),
             getItem: jest.fn(),
@@ -73,6 +80,13 @@ describe("Actions user", () => {
     it("should NOT login with API error", () => {
         const expextedActions = [
             { type: userActionTypes.LOGIN_REQUEST },
+            {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "Failed to login",
+                    snackDuration: undefined
+                }
+            },
             {
                 type: userActionTypes.LOGIN_FAILURE,
                 payload: "No sir, you are not comin in"
@@ -312,5 +326,70 @@ describe("Actions user", () => {
         return store.dispatch(userActions.getMe()).then(() => {
             expect(store.getActions()).toEqual(expectedAction);
         });
+    });
+
+    it("should get user accommodations", async () => {
+        const expectedActions = [
+            {
+                type: userActionTypes.USER_REQUEST,
+            },
+            {
+                payload: {
+                    accommodations: Array.from(new Array(1)).map((a, i) => ({
+                        ...accommodationMock,
+                        id: i
+                    })) },
+                type: userActionTypes.FETCH_USER_ACCOMMODATIONS_SUCCESS
+            },
+        ];
+        const store = mockStore();
+        await store.dispatch(userActions.fetchUserAccommodations(123));
+        expect(store.getActions()).toEqual(expectedActions);
+    });
+
+    it("should NOT get user accommodations with API error", async () => {
+        const expectedActions = [
+            {
+                type: userActionTypes.USER_REQUEST,
+            },
+            {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "Could not fetch user accommodations",
+                    snackDuration: undefined
+                },
+            },
+            {
+                payload: { error: "Error while fetching user places" },
+                type: userActionTypes.FETCH_USER_ACCOMMODATIONS_FAIL
+            },
+        ];
+        mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)]);
+        const store = mockStore();
+        await store.dispatch(userActions.fetchUserAccommodations(123));
+        expect(store.getActions()).toEqual(expectedActions);
+    });
+
+    it("should NOT get user accommodations with server failure", async () => {
+        const expectedActions = [
+            {
+                type: userActionTypes.USER_REQUEST,
+            },
+            {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "Failed to fetch user accommodations",
+                    snackDuration: undefined
+                },
+            },
+            {
+                payload: { error: "gtfo" },
+                type: userActionTypes.FETCH_USER_ACCOMMODATIONS_FAIL
+            },
+        ];
+        mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithServerFailure)]);
+        const store = mockStore();
+        await store.dispatch(userActions.fetchUserAccommodations(123));
+        expect(store.getActions()).toEqual(expectedActions);
     });
 });

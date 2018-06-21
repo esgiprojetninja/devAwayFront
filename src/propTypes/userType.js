@@ -7,8 +7,11 @@ export const User = T.shape({
     firstName: T.string.isRequired,
     languages: T.string.isRequired,
     skills: T.string.isRequired,
-    createdAt: T.string.isRequired,
-    updatedAt: T.string.isRequired,
+    createdAt: T.string,
+    updatedAt: T.string,
+    avatar: T.string,
+    roles: T.number,
+    isActive: T.number,
     username: T.string.isRequired
 });
 

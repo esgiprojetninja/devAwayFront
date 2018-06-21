@@ -6,8 +6,8 @@ import { createLogger } from "redux-logger";
 import { render } from "react-dom";
 import { BrowserRouter, Route } from "react-router-dom";
 import { Provider } from "react-redux";
-import { MuiThemeProvider } from "material-ui/styles";
-import Reboot from "material-ui/Reboot";
+import { MuiThemeProvider } from "@material-ui/core/styles";
+// import Reboot from "@material-ui/core/Reboot";
 
 import {
     defaultTheme
@@ -43,7 +43,6 @@ function startApp(node) {
 
     render(
         <MuiThemeProvider theme={defaultTheme}>
-            <Reboot />
             <BrowserRouter basename={routes[0].path} forceRefresh={!supportsHistory} >
                 <Provider store={store}>
                     <div className="full-width">

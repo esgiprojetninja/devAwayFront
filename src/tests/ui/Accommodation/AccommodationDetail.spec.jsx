@@ -6,6 +6,7 @@ import {
 } from "enzyme";
 import mainReducer from "../../../reducers/index";
 import AccommodationDetail, { accordPluralToNumber } from "../../../ui/Accommodation/AccommodationDetail.jsx";
+import { accommodationMock } from "../../mock/body/accommodation";
 
 describe("ui <AccommodationDetail />", function () {
     window.localStorage = {
@@ -17,42 +18,12 @@ describe("ui <AccommodationDetail />", function () {
     window.removeEventListener = jest.fn();
     window.addEventListener = jest.fn();
     const accos = new Map();
-    const accoID = "1";
-    const acco = {
-        title: "ohmy",
-        id: Number(accoID),
-        longitude: 1,
-        latitude: 1,
-        nbBedroom: 1,
-        nbBathroom: 1,
-        nbToilet: 1,
-        nbMaxBaby: 1,
-        nbMaxChild: 1,
-        nbMaxGuest: 1,
-        nbMaxAdult: 1,
-        propertySize: 1,
-        floor: 1,
-        minStay: 1,
-        maxStay: 1,
-        city: "ohmy",
-        region: "ohmy",
-        address: "ohmy",
-        country: "ohmy",
-        type: "ohmy",
-        pictures: "ohmy",
-        host: "ohmy",
-        animalsAllowed: true,
-        smokersAllowed: true,
-        hasInternet: true,
-        description: "ohmyifgozjregizojgioredescription",
-        createdAt: "ohmy",
-        updatedAt: "ohmy",
-        checkinHour: "ohmy",
-        checkoutHour: "ohmy",
-        mission: []
-    };
+    let accoID = null;
+    let acco = null;
 
     beforeEach(() => {
+        acco = accommodationMock;
+        accoID = accommodationMock.id;
         window.innerWidth = 1920;
         jest.clearAllMocks();
         const initialState = mainReducer(undefined, {});
@@ -62,7 +33,7 @@ describe("ui <AccommodationDetail />", function () {
             applyToMission: jest.fn(),
             match: {
                 params: {
-                    accoID
+                    accoID: `${accoID}`
                 }
             }
         };
@@ -107,7 +78,7 @@ describe("ui <AccommodationDetail />", function () {
         const wrapper = shallow(
             <AccommodationDetail {...this.initialProps} />
         );
-        expect(wrapper.text()).toBe("<Connect(WithStyles(NavBarComponent)) /><WithStyles(GridWrapper) />");
+        expect(wrapper.text()).toBe("<Connect(WithStyles(NavBarComponent)) /><WithStyles(Grid) />");
     });
 
     it("should call onInit after component mount", () => {
@@ -303,7 +274,7 @@ describe("ui <AccommodationDetail />", function () {
         const wrapper = shallow(
             <AccommodationDetail {...this.initialProps} />
         );
-        expect(wrapper.instance().renderDescription().props.children.props.children).toBe("ohmyifgozjregizojgioredescription");
+        expect(wrapper.instance().renderDescription().props.children.props.children).toBe("coucou description");
     });
 
     it("should render a mission button", () => {
