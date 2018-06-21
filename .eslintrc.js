@@ -15,6 +15,7 @@ module.exports = {
       "import/no-extreaneous-dependencies": 0,
       "comma-dangle": [0, "never"],
       "arrow-body-style": [0, "never"],
-      "object-curly-newline": [0]
+      "object-curly-newline": [0],
+      "react/jsx-curly-brace-presence": { props: "always", children: "always" }
     }
 };

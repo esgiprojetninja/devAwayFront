@@ -11,3 +11,5 @@ export function parseCollectionFromApi(items) {
         byID
     };
 }
+
+export const engrengregnr = "fejgerfezrg";

@@ -4,7 +4,6 @@ import "isomorphic-fetch";
 export const API_VERSION = "v1";
 
 const defaultErrorHandler = (err) => {
-    console.warn("NET ERROR:: ", err);
     return Promise.resolve({
         hasError: true,
         message: (err && err.message) ? err.message : "Unknown server error",
