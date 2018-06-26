@@ -11,6 +11,7 @@ import GMap from "google-map-react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import FloorsIcon from "@material-ui/icons/ClearAll";
+import Save from "@material-ui/icons/Save";
 import Navbar from "../../containers/Navbar";
 import Marker from "./AccommodationMarker";
 import { getAdaptedContainerWidth } from "./AccommodationsList";
@@ -73,11 +74,21 @@ const styles = {
     gMapContainer: {
         height: "300px"
     },
+    title: {
+        fontSize: "24px",
+        color: darkGrey,
+    },
+    saveBtn: {
+        position: "fixed",
+        right: 10,
+        bottom: 10,
+    },
 };
 
 export const accordPluralToNumber = (number, word) => {
     return number <= 1 ? word : `${word}s`;
 };
+
 
 export default class AccommodationDetail extends React.PureComponent {
     static propTypes = {
@@ -88,6 +99,7 @@ export default class AccommodationDetail extends React.PureComponent {
         }).isRequired,
         onInit: T.func.isRequired,
         applyToMission: T.func.isRequired,
+        updateAcco: T.func.isRequired,
         accommodation: accommodationReducerPropTypes.isRequired,
         user: T.shape({
             isLoggedIn: T.bool.isRequired,
@@ -101,6 +113,7 @@ export default class AccommodationDetail extends React.PureComponent {
         super();
         this.state = {
             containerWidth: getAdaptedContainerWidth(),
+            changedProperties: {},
         };
     }
 
@@ -132,9 +145,41 @@ export default class AccommodationDetail extends React.PureComponent {
         return this.accommodation.missions && this.accommodation.missions.length > 0;
     }
 
+    get hasAccoChanged() {
+        const acco = this.accommodation;
+        if (acco === null) {
+            return null;
+        }
+        const changedProps = Object.keys(this.state.changedProperties);
+        if (changedProps.length === 0) {
+            return false;
+        }
+        return !!changedProps.find(propName => acco[propName] !== changedProps[propName]);
+    }
+
+
     updateDimensions() {
         return this.setState({
             containerWidth: getAdaptedContainerWidth()
+        });
+    }
+
+    savePlace = async () => {
+        if (!this.isUserOwner || !this.hasAccoChanged) {
+            return;
+        }
+        await this.props.updateAcco({
+            ...this.accommodation,
+            ...this.state.changedProperties,
+        });
+    }
+
+    handleChange = propName => (event) => {
+        this.setState({
+            changedProperties: {
+                ...this.state.changedProperties,
+                [propName]: event.target.value
+            }
         });
     }
 
@@ -171,9 +216,23 @@ export default class AccommodationDetail extends React.PureComponent {
     renderDescription() {
         return (
             <div>
-                <Typography style={{ color: midGrey, fontWeight: 500 }}>
-                    {this.accommodation.description}
-                </Typography>
+                <TextField
+                    defaultValue={this.accommodation.description}
+                    fullWidth
+                    label=""
+                    name="description"
+                    disabled={!this.isUserOwner}
+                    onChange={this.handleChange("description")}
+                    InputProps={{
+                        disableUnderline: !this.isUserOwner,
+                    }}
+                    inputProps={{ // eslint-disable-line
+                        style: { color: midGrey, fontWeight: 500, fontSize: "1.175em" }
+                    }}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                />
             </div>
         );
     }
@@ -190,8 +249,12 @@ export default class AccommodationDetail extends React.PureComponent {
                         label={this.isUserOwner ? accordPluralToNumber(acco.nbMaxGuest, "traveler") : ""}
                         placeholder={`${acco.nbMaxGuest} ${accordPluralToNumber(acco.nbMaxGuest, "traveler")}`}
                         disabled={!this.isUserOwner}
+                        onChange={this.handleChange("nbMaxGuest")}
+                        name="nbMaxGuest"
                         InputProps={{
                             disableUnderline: !this.isUserOwner,
+                        }}
+                        inputProps={{ // eslint-disable-line
                             min: 1,
                             max: 99,
                         }}
@@ -208,8 +271,12 @@ export default class AccommodationDetail extends React.PureComponent {
                         label={this.isUserOwner ? accordPluralToNumber(acco.nbBedroom, "room") : ""}
                         placeholder={`${acco.nbBedroom} ${accordPluralToNumber(acco.nbBedroom, "room")}`}
                         disabled={!this.isUserOwner}
+                        onChange={this.handleChange("nbBedroom")}
+                        name="nbBedroom"
                         InputProps={{
                             disableUnderline: !this.isUserOwner,
+                        }}
+                        inputProps={{ // eslint-disable-line
                             min: 1,
                             max: 99,
                         }}
@@ -226,8 +293,12 @@ export default class AccommodationDetail extends React.PureComponent {
                         label={this.isUserOwner ? accordPluralToNumber(acco.nbBathroom, "bathroom") : ""}
                         placeholder={`${acco.nbBathroom} ${accordPluralToNumber(acco.nbBathroom, "bathroom")}`}
                         disabled={!this.isUserOwner}
+                        onChange={this.handleChange("nbBathroom")}
+                        name="nbBathroom"
                         InputProps={{
                             disableUnderline: !this.isUserOwner,
+                        }}
+                        inputProps={{ // eslint-disable-line
                             min: 0,
                             max: 99,
                         }}
@@ -244,8 +315,12 @@ export default class AccommodationDetail extends React.PureComponent {
                         label={this.isUserOwner ? accordPluralToNumber(acco.floor, "floor") : ""}
                         placeholder={`${acco.floor} ${accordPluralToNumber(acco.floor, "floor")}`}
                         disabled={!this.isUserOwner}
+                        onChange={this.handleChange("floor")}
+                        name="floor"
                         InputProps={{
                             disableUnderline: !this.isUserOwner,
+                        }}
+                        inputProps={{ // eslint-disable-line
                             min: 1,
                             max: 99,
                         }}
@@ -301,9 +376,14 @@ export default class AccommodationDetail extends React.PureComponent {
                         defaultValue={this.accommodation.title}
                         fullWidth
                         label=""
+                        name="title"
+                        onChange={this.handleChange("title")}
                         disabled={!this.isUserOwner}
                         InputProps={{
                             disableUnderline: !this.isUserOwner,
+                        }}
+                        inputProps={{ // eslint-disable-line
+                            style: styles.title
                         }}
                         InputLabelProps={{
                             shrink: true,
@@ -426,6 +506,23 @@ export default class AccommodationDetail extends React.PureComponent {
         );
     }
 
+    renderSaveBtn() {
+        if (!this.isUserOwner) {
+            return null;
+        }
+        return (
+            <Button
+                style={styles.saveBtn}
+                color="primary"
+                disabled={!this.hasAccoChanged || this.props.accommodation.isLoading}
+                onClick={this.savePlace}
+                variant="fab"
+            >
+                <Save />
+            </Button>
+        );
+    }
+
     render() {
         const style = {
             ...styles.container,
@@ -438,6 +535,7 @@ export default class AccommodationDetail extends React.PureComponent {
                 <div style={style}>
                     {this.renderFetchingSpinner()}
                     {this.renderPlace()}
+                    {this.renderSaveBtn()}
                 </div>
             </div>
         );

@@ -55,7 +55,11 @@ const accommodation = (state = initialSate, action) => {
             data: payload.accommodation && payload.accommodation.id ?
                 state.data.concat([payload.accommodation.id]) : state.data,
             byID: payload.accommodation && payload.accommodation.id ?
-                state.byID.set(payload.accommodation.id, payload.accommodation) : state.byID
+                state.byID.set(payload.accommodation.id, {
+                    ...state.byID.get(payload.accommodation.id),
+                    ...payload.accommodation,
+                }
+                ) : state.byID
         };
     case accoTypes.SAVE_ACCOMMODATION_FAILURE:
         return {

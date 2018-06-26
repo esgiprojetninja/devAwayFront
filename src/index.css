@@ -34,8 +34,16 @@ body {
     flex-direction: row;
 }
 
-.justify-start{
+.justify-start {
     justify-content: flex-start;
+}
+
+.justify-end {
+    justify-content: flex-end;
+}
+
+.align-items-end {
+    align-items: flex-end;
 }
 
 .space-around{

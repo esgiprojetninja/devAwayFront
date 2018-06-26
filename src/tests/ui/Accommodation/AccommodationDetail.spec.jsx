@@ -31,6 +31,7 @@ describe("ui <AccommodationDetail />", function () {
             ...initialState,
             onInit: jest.fn(),
             applyToMission: jest.fn(),
+            updateAcco: jest.fn(),
             match: {
                 params: {
                     accoID: `${accoID}`
@@ -274,7 +275,7 @@ describe("ui <AccommodationDetail />", function () {
         const wrapper = shallow(
             <AccommodationDetail {...this.initialProps} />
         );
-        expect(wrapper.instance().renderDescription().props.children.props.children).toBe("coucou description");
+        expect(wrapper.instance().renderDescription().props.children.props.defaultValue).toBe("coucou description");
     });
 
     it("should render a mission button", () => {
