@@ -13,6 +13,7 @@ import Button from "@material-ui/core/Button";
 import FloorsIcon from "@material-ui/icons/ClearAll";
 import Save from "@material-ui/icons/Save";
 import Navbar from "../../containers/Navbar";
+import CarouselImages from "../../containers/AccommodationDetailImages";
 import Marker from "./AccommodationMarker";
 import { getAdaptedContainerWidth } from "./AccommodationsList";
 import { accommodationReducerPropTypes } from "../../propTypes/accommodation.reducer.d";
@@ -156,7 +157,6 @@ export default class AccommodationDetail extends React.PureComponent {
         }
         return !!changedProps.find(propName => acco[propName] !== changedProps[propName]);
     }
-
 
     updateDimensions() {
         return this.setState({
@@ -334,7 +334,7 @@ export default class AccommodationDetail extends React.PureComponent {
     }
 
     renderHostInfo() {
-        // @TODO add address badge verification on host
+        // @TODO add address badge verification on place
         const imgUrl = this.accommodation.host.avatar ? `data:image/gif;base64, ${this.accommodation.host.avatar}` : "/img/accommodation.jpg";
         const style = {
             ...styles.coverImg,
@@ -488,24 +488,6 @@ export default class AccommodationDetail extends React.PureComponent {
         );
     }
 
-    renderImg() {
-        if (!this.accommodation) {
-            return (
-                <div style={{ marginTop: "80px" }} />
-            );
-        }
-        const imgUrl = this.accommodation.pictures.length > 0 ? this.accommodation.pictures[0].url : "/img/accommodation.jpg";
-        const style = {
-            ...styles.coverImg,
-            backgroundImage: `url("${imgUrl}")`
-        };
-        return (
-            <div style={style}>
-                <div style={styles.coverImgOpacifier} />
-            </div>
-        );
-    }
-
     renderSaveBtn() {
         if (!this.isUserOwner) {
             return null;
@@ -531,7 +513,7 @@ export default class AccommodationDetail extends React.PureComponent {
         return (
             <div className="relative full-width" style={{ background: "#fff" }}>
                 <Navbar burgerColor={darkGrey} />
-                {this.renderImg()}
+                <CarouselImages acco={this.accommodation} />
                 <div style={style}>
                     {this.renderFetchingSpinner()}
                     {this.renderPlace()}
