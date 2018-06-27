@@ -43,26 +43,10 @@ const styles = {
         padding: "16px 12px",
         borderBottom: `1px solid ${lightGrey}`
     },
-    coverImg: {
+    carousel: {
         width: "100%",
         position: "relative",
         height: "430px",
-        WebkitBackgroundSize: "cover",
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat no-repeat",
-        backgroundPosition: "center",
-        WebkitBoxShadow: "inset 0px -2px 10px -4px #fff",
-        MozBoxShadow: "inset 0px -2px 10px -4px #fff",
-        boxShadow: "inset 0px -2px 10px -4px #fff"
-    },
-    coverImgOpacifier: {
-        width: "100%",
-        height: "100%",
-        position: "absolute",
-        background: "#fff",
-        opacity: "0.15",
-        top: "0",
-        left: "0"
     },
     iconInfoItem: {
         marginLeft: "10px",
@@ -513,7 +497,11 @@ export default class AccommodationDetail extends React.PureComponent {
         return (
             <div className="relative full-width" style={{ background: "#fff" }}>
                 <Navbar burgerColor={darkGrey} />
-                <CarouselImages acco={this.accommodation} />
+                <CarouselImages
+                    style={styles.carousel}
+                    acco={this.accommodation}
+                    isUserOwner={this.isUserOwner}
+                />
                 <div style={style}>
                     {this.renderFetchingSpinner()}
                     {this.renderPlace()}
