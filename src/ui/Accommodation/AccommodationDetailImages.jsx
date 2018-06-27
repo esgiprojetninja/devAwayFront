@@ -2,6 +2,7 @@ import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Slider from "react-slick";
 import * as T from "prop-types";
+import AddImgIcon from "react-icons/lib/fa/file-image-o";
 import { accommodationPropTypes } from "../../propTypes/accommodationType";
 // import { lightGrey, midGrey, darkGrey } from "../../styles/theme";
 
@@ -10,17 +11,26 @@ const styles = theme => ({ // eslint-disable-line
         width: "100%",
         position: "relative",
         height: "430px",
+        overflow: "hidden",
     },
     imgContainer: {
         height: "430px",
-        WebkitBackgroundSize: "cover",
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat no-repeat",
-        backgroundPosition: "center",
         WebkitBoxShadow: "inset 0px -2px 10px -4px #fff",
         MozBoxShadow: "inset 0px -2px 10px -4px #fff",
         boxShadow: "inset 0px -2px 10px -4px #fff",
         overflow: "hidden",
+    },
+    noImgContainer: {
+        height: "430px",
+        WebkitBoxShadow: "inset 0px -2px 10px -4px #fff",
+        MozBoxShadow: "inset 0px -2px 10px -4px #fff",
+        boxShadow: "inset 0px -2px 10px -4px #fff",
+        overflow: "hidden",
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        justifyItems: "center",
+        flexDirection: "row",
     },
     img: {
         width: "100%",
@@ -28,6 +38,9 @@ const styles = theme => ({ // eslint-disable-line
         opacity: "0.7",
     }
 });
+
+const MAX_PICTURES = 7;
+const ADD_IMAGE_WARN = "HEY_POULAYMAN";
 
 const sliderSettings = {
     dots: true,
@@ -46,10 +59,23 @@ class AccommodationDetailImages extends React.PureComponent {
         return this.props.acco || null;
     }
 
+    handleAddImg = () => {
+        console.log("adding image");
+    }
+
+    renderAddImage(i) {
+        const { classes } = this.props;
+        return (
+            <div key={`${ADD_IMAGE_WARN}-${i}`} onClick={this.handleAddImg} className={classes.noImgContainer}>
+                <AddImgIcon />
+            </div>
+        );
+    }
+
     renderImage(pictureObj) {
         const { classes } = this.props;
         if (this.props.isUserOwner) {
-            console.log("HEY THIS PIC NEEDS TO BE CHANGEABLE");
+            // @TODO make image changeable
         }
         const imgUrl = pictureObj.url || "/img/accommodation.jpg";
         return (
@@ -67,7 +93,19 @@ class AccommodationDetailImages extends React.PureComponent {
         }
         return (
             <Slider className={this.props.classes.container} {...sliderSettings}>
-                {this.acco.pictures.map(pic => this.renderImage(pic))}
+                {
+                    this.acco.pictures.length >= MAX_PICTURES ?
+                        this.acco.pictures.map(pic => this.renderImage(pic))
+                        : this.acco.pictures.concat(Array.from(
+                            new Array(MAX_PICTURES - this.acco.pictures.length))
+                            .map(() => ADD_IMAGE_WARN)
+                        ).map((pic, i) => {
+                            if (pic === ADD_IMAGE_WARN) {
+                                return this.renderAddImage(i);
+                            }
+                            return this.renderImage(pic);
+                        })
+                }
             </Slider>
         );
     }
