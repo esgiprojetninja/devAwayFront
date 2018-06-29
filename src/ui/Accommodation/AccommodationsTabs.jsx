@@ -61,7 +61,7 @@ class AccommodationsTabs extends React.Component {
 
         return (
             <div>
-                <Navbar burgerColor="#acacac" {...this.props} />
+                <Navbar burgerColor="#acacac" />
                 <div className={classes.root}>
                     <Tabs
                         id="ahokfdp"

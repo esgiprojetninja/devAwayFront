@@ -2,9 +2,9 @@ import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Slider from "react-slick";
 import * as T from "prop-types";
-import AddImgIcon from "react-icons/lib/fa/file-image-o";
+import AddImgIcon from "react-icons/lib/go/plus";
 import { accommodationPropTypes } from "../../propTypes/accommodationType";
-// import { lightGrey, midGrey, darkGrey } from "../../styles/theme";
+import { darkGrey } from "../../styles/theme";
 
 const styles = theme => ({ // eslint-disable-line
     container: {
@@ -26,25 +26,53 @@ const styles = theme => ({ // eslint-disable-line
         MozBoxShadow: "inset 0px -2px 10px -4px #fff",
         boxShadow: "inset 0px -2px 10px -4px #fff",
         overflow: "hidden",
-        cursor: "pointer",
+    },
+    noImgWrapper: {
+        width: "100%",
+        height: "100%",
         display: "flex",
         alignItems: "center",
         justifyItems: "center",
         flexDirection: "row",
     },
+    addImgIcon: {
+        margin: "auto",
+        border: `1px solid ${darkGrey}`,
+        borderRadius: "100%",
+        color: darkGrey,
+        fill: darkGrey,
+        transition: "fill, color, background .2s ease-in-out",
+        cursor: "pointer",
+        "&:hover": {
+            color: "#fff",
+            fill: "#fff",
+            backgroundColor: darkGrey,
+        },
+    },
     img: {
         width: "100%",
         height: "auto",
         opacity: "0.7",
-    }
+    },
+    dotImgWrapper: {
+        width: "50px",
+        height: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyItems: "center",
+        flexDirection: "row",
+        cursor: "pointer",
+    },
 });
 
 const MAX_PICTURES = 7;
 const ADD_IMAGE_WARN = "HEY_POULAYMAN";
 
-const sliderSettings = {
+const SLIDER_SETTINGS = {
     dots: true,
     infinite: true,
+    arrows: true,
+    autoplay: false,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
@@ -59,15 +87,71 @@ class AccommodationDetailImages extends React.PureComponent {
         return this.props.acco || null;
     }
 
+    get sliderSettings() {
+        const style = {
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "row",
+            backgroundColor: "rgba(255, 255, 255, .7)",
+            height: "60px",
+            paddingBottom: "20px",
+        };
+        return {
+            ...SLIDER_SETTINGS,
+            appendDots: (dots) => {
+                return (
+                    <div style={style}>
+                        {dots.map((dot, index) => this.renderDot(dot, index))}
+                    </div>
+                );
+            }
+        };
+    }
+    slider = null;
+
     handleAddImg = () => {
         console.log("adding image");
     }
 
+    renderDot(dot, index) {
+        if (this.acco && this.acco.pictures[index] && this.acco.pictures[index].url) {
+            return (
+                <div
+                    onClick={() => {
+                        this.slider.slickGoTo(index);
+                    }}
+                    onKeyPress={() => {
+                        this.slider.slickGoTo(index);
+                    }}
+                    role="button"
+                    key={index}
+                    tabIndex={0}
+                    className={this.props.classes.dotImgWrapper}
+                >
+                    <img className={this.props.classes.img} src={this.acco.pictures[index].url} alt="dot" />
+                </div>
+            );
+        } else if (this.acco && !this.acco.pictures[index]) {
+            // retourner add Image
+        }
+        return dot;
+    }
+
     renderAddImage(i) {
+        if (!this.props.isUserOwner) {
+            return null;
+        }
         const { classes } = this.props;
         return (
-            <div key={`${ADD_IMAGE_WARN}-${i}`} onClick={this.handleAddImg} className={classes.noImgContainer}>
-                <AddImgIcon />
+            <div key={`${ADD_IMAGE_WARN}-${i}`} className={classes.noImgContainer}>
+                <div className={classes.noImgWrapper}>
+                    <AddImgIcon
+                        size={40}
+                        className={classes.addImgIcon}
+                        onClick={this.handleAddImg}
+                    />
+                </div>
             </div>
         );
     }
@@ -92,7 +176,11 @@ class AccommodationDetailImages extends React.PureComponent {
             );
         }
         return (
-            <Slider className={this.props.classes.container} {...sliderSettings}>
+            <Slider
+                ref={(sl) => { this.slider = sl; }}
+                className={this.props.classes.container}
+                {...this.sliderSettings}
+            >
                 {
                     this.acco.pictures.length >= MAX_PICTURES ?
                         this.acco.pictures.map(pic => this.renderImage(pic))
@@ -115,6 +203,8 @@ AccommodationDetailImages.propTypes = {
     classes: T.shape({
         container: T.string,
         imgContainer: T.string,
+        img: T.string,
+        dotImgWrapper: T.string,
     }).isRequired,
     // updatePicture: T.func.isRequired,
     acco: accommodationPropTypes,

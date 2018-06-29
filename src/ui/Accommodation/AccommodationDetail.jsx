@@ -74,7 +74,6 @@ export const accordPluralToNumber = (number, word) => {
     return number <= 1 ? word : `${word}s`;
 };
 
-
 export default class AccommodationDetail extends React.PureComponent {
     static propTypes = {
         match: T.shape({
