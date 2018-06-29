@@ -6,10 +6,10 @@ import AccommodationDetailImagesComponent from "../ui/Accommodation/Accommodatio
 
 export const mapStateToProps = state => state;
 
-export const mapDispatchToProps = dispatch => ({
-    async updatePicture(img) {
+export const mapDispatchToProps = dispatch => ({ // eslint-disable-line
+    async updatePicture(acco, pictureIndex, binaryImg) {
         // await dispatch(saveAccommodation(img));
-        console.log("POULAAAY", img);
+        console.log("POULAAAY", acco, pictureIndex, binaryImg);
     },
 });
 

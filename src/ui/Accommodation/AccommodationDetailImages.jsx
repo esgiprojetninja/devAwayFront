@@ -1,3 +1,4 @@
+/* global FileReader */
 import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Slider from "react-slick";
@@ -62,6 +63,16 @@ const styles = theme => ({ // eslint-disable-line
         justifyItems: "center",
         flexDirection: "row",
         cursor: "pointer",
+        position: "relative",
+    },
+    inputPicture: {
+        opacity: 0,
+        width: "100%",
+        height: "100%",
+        zIndex: 2,
+        top: 0,
+        left: 0,
+        position: "absolute",
     },
 });
 
@@ -110,11 +121,22 @@ class AccommodationDetailImages extends React.PureComponent {
     }
     slider = null;
 
-    handleAddImg = () => {
-        console.log("adding image");
+    handleAddImg = (e, pictureIndex) => {
+        e.preventDefault();
+        const reader = new FileReader();
+        const file = e.target.files[0];
+        reader.onloadend = () => {
+            if (reader.result.indexOf("data:image/") > -1) {
+                this.props.updatePicture(this.acco, pictureIndex, reader.result);
+            } else {
+                // @TODO only images accepted, moron
+            }
+        };
+        reader.readAsDataURL(file);
     }
 
     renderDot(dot, index) {
+        const { classes } = this.props;
         if (this.acco && this.acco.pictures[index] && this.acco.pictures[index].url) {
             return (
                 <div
@@ -127,13 +149,27 @@ class AccommodationDetailImages extends React.PureComponent {
                     role="button"
                     key={index}
                     tabIndex={0}
-                    className={this.props.classes.dotImgWrapper}
+                    className={classes.dotImgWrapper}
                 >
-                    <img className={this.props.classes.img} src={this.acco.pictures[index].url} alt="dot" />
+                    <img className={classes.img} src={this.acco.pictures[index].url} alt="dot" />
                 </div>
             );
-        } else if (this.acco && !this.acco.pictures[index]) {
-            // retourner add Image
+        } else if (this.props.isUserOwner && this.acco && !this.acco.pictures[index]) {
+            return (
+                <div key={index} className={classes.dotImgWrapper}>
+                    <AddImgIcon
+                        size={25}
+                        className={classes.addImgIcon}
+                    />
+                    <input
+                        type="file"
+                        name="placePictureUpload"
+                        accept="image/*"
+                        className={classes.inputPicture}
+                        onChange={e => this.handleAddImg(e, index)}
+                    />
+                </div>
+            );
         }
         return dot;
     }
@@ -182,12 +218,9 @@ class AccommodationDetailImages extends React.PureComponent {
                 {...this.sliderSettings}
             >
                 {
-                    this.acco.pictures.length >= MAX_PICTURES ?
+                    this.acco.pictures.length + 1 >= MAX_PICTURES ?
                         this.acco.pictures.map(pic => this.renderImage(pic))
-                        : this.acco.pictures.concat(Array.from(
-                            new Array(MAX_PICTURES - this.acco.pictures.length))
-                            .map(() => ADD_IMAGE_WARN)
-                        ).map((pic, i) => {
+                        : this.acco.pictures.concat([ADD_IMAGE_WARN]).map((pic, i) => {
                             if (pic === ADD_IMAGE_WARN) {
                                 return this.renderAddImage(i);
                             }
@@ -204,9 +237,10 @@ AccommodationDetailImages.propTypes = {
         container: T.string,
         imgContainer: T.string,
         img: T.string,
+        addImgIcon: T.string,
         dotImgWrapper: T.string,
     }).isRequired,
-    // updatePicture: T.func.isRequired,
+    updatePicture: T.func.isRequired,
     acco: accommodationPropTypes,
     isUserOwner: T.bool.isRequired,
 };
