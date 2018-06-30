@@ -7,14 +7,13 @@ import Typography from "@material-ui/core/Typography";
 import GuestsIcon from "@material-ui/icons/People";
 import BedsIcon from "@material-ui/icons/LocalHotel";
 import BathRoomsIcon from "@material-ui/icons/InvertColors";
-import GMap from "google-map-react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import FloorsIcon from "@material-ui/icons/ClearAll";
 import Save from "@material-ui/icons/Save";
 import Navbar from "../../containers/Navbar";
 import CarouselImages from "../../containers/AccommodationDetailImages";
-import Marker from "./AccommodationMarker";
+import PlaceMap from "../../containers/AccommodationDetailMap";
 import { getAdaptedContainerWidth } from "./AccommodationsList";
 import { accommodationReducerPropTypes } from "../../propTypes/accommodation.reducer.d";
 import { lightGrey, midGrey, darkGrey } from "../../styles/theme";
@@ -170,29 +169,6 @@ export default class AccommodationDetail extends React.PureComponent {
         if (!this.props.accommodation.isLoading) return null;
         return (
             <CircularProgress />
-        );
-    }
-
-    renderMap() {
-        const acco = this.accommodation;
-        return (
-            <GMap
-                bootstrapURLKeys={{
-                    key: process.env.REACT_APP_GOOGLE_MAP_KEY,
-                    language: "en"
-                }}
-                center={{
-                    lat: acco.latitude,
-                    lng: acco.longitude
-                }}
-                zoom={8}
-            >
-                <Marker
-                    accommodation={acco}
-                    lat={acco.latitude}
-                    lng={acco.longitude}
-                />
-            </GMap>
         );
     }
 
@@ -403,7 +379,7 @@ export default class AccommodationDetail extends React.PureComponent {
                     lg={this.hasMissions ? 9 : 12}
                     xl={this.hasMissions ? 8 : 12}
                 >
-                    {this.renderMap()}
+                    <PlaceMap acco={this.accommodation} isUserOwner={this.isUserOwner} />
                 </Grid>
             </Grid>
         );
