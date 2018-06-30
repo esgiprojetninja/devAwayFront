@@ -1,9 +1,10 @@
-/* global FileReader */
+/* global */
 import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Slider from "react-slick";
 import * as T from "prop-types";
 import AddImgIcon from "react-icons/lib/go/plus";
+import EditImgIcon from "react-icons/lib/go/pencil";
 import { accommodationPropTypes } from "../../propTypes/accommodationType";
 import { darkGrey } from "../../styles/theme";
 
@@ -16,6 +17,7 @@ const styles = theme => ({ // eslint-disable-line
     },
     imgContainer: {
         height: "430px",
+        position: "relative",
         WebkitBoxShadow: "inset 0px -2px 10px -4px #fff",
         MozBoxShadow: "inset 0px -2px 10px -4px #fff",
         boxShadow: "inset 0px -2px 10px -4px #fff",
@@ -73,6 +75,24 @@ const styles = theme => ({ // eslint-disable-line
         top: 0,
         left: 0,
         position: "absolute",
+        cursor: "pointer",
+    },
+    editPictureContainer: {
+        position: "absolute",
+        top: 6,
+        right: 4,
+        height: 50,
+        width: 50,
+        opacity: "0.7",
+        background: "#fff",
+        display: "flex",
+        cursor: "pointer",
+        transition: "opacity .2s ease-in-out",
+        zIndex: 1,
+        borderRadius: "100%",
+        "&:hover": {
+            opacity: 1
+        }
     },
 });
 
@@ -113,29 +133,28 @@ class AccommodationDetailImages extends React.PureComponent {
             appendDots: (dots) => {
                 return (
                     <div style={style}>
-                        {dots.map((dot, index) => this.renderDot(dot, index))}
+                        {dots.map((dot, index) => this.renderDot(index))}
                     </div>
                 );
             }
         };
     }
+
     slider = null;
 
     handleAddImg = (e, pictureIndex) => {
         e.preventDefault();
-        const reader = new FileReader();
+        const reader = new global.FileReader();
         const file = e.target.files[0];
         reader.onloadend = () => {
             if (reader.result.indexOf("data:image/") > -1) {
                 this.props.updatePicture(this.acco, pictureIndex, reader.result);
-            } else {
-                // @TODO only images accepted, moron
             }
         };
         reader.readAsDataURL(file);
     }
 
-    renderDot(dot, index) {
+    renderDot(index) {
         const { classes } = this.props;
         if (this.acco && this.acco.pictures[index] && this.acco.pictures[index].url) {
             return (
@@ -154,24 +173,22 @@ class AccommodationDetailImages extends React.PureComponent {
                     <img className={classes.img} src={this.acco.pictures[index].url} alt="dot" />
                 </div>
             );
-        } else if (this.props.isUserOwner && this.acco && !this.acco.pictures[index]) {
-            return (
-                <div key={index} className={classes.dotImgWrapper}>
-                    <AddImgIcon
-                        size={25}
-                        className={classes.addImgIcon}
-                    />
-                    <input
-                        type="file"
-                        name="placePictureUpload"
-                        accept="image/*"
-                        className={classes.inputPicture}
-                        onChange={e => this.handleAddImg(e, index)}
-                    />
-                </div>
-            );
         }
-        return dot;
+        return (
+            <div key={index} className={classes.dotImgWrapper}>
+                <AddImgIcon
+                    size={25}
+                    className={classes.addImgIcon}
+                />
+                <input
+                    type="file"
+                    name="placePictureEdit"
+                    accept="image/*"
+                    className={classes.inputPicture}
+                    onChange={e => this.handleAddImg(e, index)}
+                />
+            </div>
+        );
     }
 
     renderAddImage(i) {
@@ -192,14 +209,28 @@ class AccommodationDetailImages extends React.PureComponent {
         );
     }
 
-    renderImage(pictureObj) {
+    renderImage(pictureObj, index) {
         const { classes } = this.props;
-        if (this.props.isUserOwner) {
-            // @TODO make image changeable
-        }
         const imgUrl = pictureObj.url || "/img/accommodation.jpg";
         return (
             <div className={classes.imgContainer} key={pictureObj.url}>
+                {
+                    this.props.isUserOwner ?
+                        <div className={classes.editPictureContainer}>
+                            <EditImgIcon
+                                size={25}
+                                className={classes.addImgIcon}
+                            />
+                            <input
+                                type="file"
+                                name="placePictureUpload"
+                                accept="image/*"
+                                className={classes.inputPicture}
+                                onChange={e => this.handleAddImg(e, index)}
+                            />
+                        </div>
+                        : null
+                }
                 <img className={classes.img} src={imgUrl} alt={pictureObj.id} />
             </div>
         );
@@ -219,12 +250,12 @@ class AccommodationDetailImages extends React.PureComponent {
             >
                 {
                     this.acco.pictures.length + 1 >= MAX_PICTURES ?
-                        this.acco.pictures.map(pic => this.renderImage(pic))
+                        this.acco.pictures.map((pic, i) => this.renderImage(pic, i))
                         : this.acco.pictures.concat([ADD_IMAGE_WARN]).map((pic, i) => {
                             if (pic === ADD_IMAGE_WARN) {
                                 return this.renderAddImage(i);
                             }
-                            return this.renderImage(pic);
+                            return this.renderImage(pic, i);
                         })
                 }
             </Slider>
@@ -234,11 +265,11 @@ class AccommodationDetailImages extends React.PureComponent {
 
 AccommodationDetailImages.propTypes = {
     classes: T.shape({
-        container: T.string,
-        imgContainer: T.string,
-        img: T.string,
-        addImgIcon: T.string,
-        dotImgWrapper: T.string,
+        container: T.string.isRequired,
+        imgContainer: T.string.isRequired,
+        img: T.string.isRequired,
+        addImgIcon: T.string.isRequired,
+        dotImgWrapper: T.string.isRequired,
     }).isRequired,
     updatePicture: T.func.isRequired,
     acco: accommodationPropTypes,

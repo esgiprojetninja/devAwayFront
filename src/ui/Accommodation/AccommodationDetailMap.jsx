@@ -18,9 +18,9 @@ const styles = theme => ({
         height: "100%",
     },
     changeAddressPopup: {
-        padding: theme.spacing.unit,
+        padding: theme.spacing.unit * 2,
         width: "220px",
-        height: "120px",
+        height: "auto",
         position: "absolute",
         background: "#fff",
         top: 2,
@@ -30,6 +30,9 @@ const styles = theme => ({
         flexDirection: "column",
         justifyContent: "space-around",
         alignItems: "center",
+        "& > *": {
+            marginTop: theme.spacing.unit,
+        }
     },
     cancelAddressBtn: {
         position: "absolute",
@@ -123,14 +126,15 @@ class AccommodationDetailMap extends React.PureComponent {
             zoom: 13,
             mapTypeId: "roadmap"
         });
+
+        this.loadHomeMarker();
+
         if (!this.props.isUserOwner) {
             return;
         }
         this.searchBox = new google.maps.places.SearchBox(this.searchInput);
 
         const { map, searchBox, searchInput } = this;
-
-        this.loadHomeMarker();
 
         map.controls[google.maps.ControlPosition.TOP_LEFT].push(searchInput);
         map.addListener("bounds_changed", () => {
@@ -171,6 +175,9 @@ class AccommodationDetailMap extends React.PureComponent {
     }
 
     renderValidAddressPopup() {
+        if (!this.props.isUserOwner) {
+            return null;
+        }
         const { classes } = this.props;
         return (
             <div className={classes.changeAddressPopup}>

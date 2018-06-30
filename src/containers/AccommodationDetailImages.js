@@ -9,6 +9,7 @@ export const mapStateToProps = state => state;
 export const mapDispatchToProps = dispatch => ({ // eslint-disable-line
     async updatePicture(acco, pictureIndex, binaryImg) {
         // @TODO activate when api is ready to receive
+        // figure out picture Id if exists
         // await dispatch(saveAccommodation(img));
         console.log("POULAAAY", acco, pictureIndex, binaryImg);
     },
