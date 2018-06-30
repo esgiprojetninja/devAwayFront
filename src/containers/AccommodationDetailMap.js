@@ -8,7 +8,7 @@ export const mapStateToProps = state => state;
 export const mapDispatchToProps = dispatch => ({
     async updateAcco(acco) {
         const res = await dispatch(saveAccommodation(acco));
-        console.log("dispatched actions:: ", res);
+        return res;
     },
     extractAddressFromPlace(place) {
         const location = {
@@ -19,9 +19,7 @@ export const mapDispatchToProps = dispatch => ({
         const findAddressComp = (stringSearched, propName) => {
             const comp = place.address_components.find(
                 compo => compo.types.indexOf(stringSearched) > -1);
-            if (comp) {
-                location[propName] = comp.long_name;
-            }
+            location[propName] = comp ? comp.long_name : null;
         };
         findAddressComp("country", "country");
         findAddressComp("locality", "city");
