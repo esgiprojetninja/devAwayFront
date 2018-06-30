@@ -49,7 +49,7 @@ describe("ui <AccommodationDetail />", function () {
         const wrapper = shallow(
             <AccommodationDetail {...this.initialProps} />
         );
-        expect(wrapper.text()).toBe("<Connect(WithStyles(NavBarComponent)) />");
+        expect(wrapper.text()).toBe("<Connect(WithStyles(NavBarComponent)) /><Connect(WithStyles(AccommodationDetailImages)) />");
     });
 
     it("should render navbar and accommodation container", () => {
@@ -79,7 +79,7 @@ describe("ui <AccommodationDetail />", function () {
         const wrapper = shallow(
             <AccommodationDetail {...this.initialProps} />
         );
-        expect(wrapper.text()).toBe("<Connect(WithStyles(NavBarComponent)) /><WithStyles(Grid) />");
+        expect(wrapper.text()).toBe("<Connect(WithStyles(NavBarComponent)) /><Connect(WithStyles(AccommodationDetailImages)) /><WithStyles(Grid) />");
     });
 
     it("should call onInit after component mount", () => {
@@ -216,36 +216,6 @@ describe("ui <AccommodationDetail />", function () {
             <AccommodationDetail {...this.initialProps} />
         );
         expect(wrapper.instance().hasMissions).toBe(true);
-    });
-
-    it("should generate gmap", () => {
-        const initialState = mainReducer(undefined, {});
-        const map = new Map();
-        map.set(acco.id, acco);
-        const state = {
-            ...initialState,
-            accommodation: {
-                ...initialState.accommodation,
-                data: [acco.id],
-                byID: map,
-                isLoading: false
-            }
-        };
-
-        this.initialProps = {
-            ...this.initialProps,
-            accommodation: {
-                ...state.accommodation,
-                data: [acco.id],
-                byID: map
-            },
-            ...state
-        };
-
-        const wrapper = shallow(
-            <AccommodationDetail {...this.initialProps} />
-        );
-        expect(wrapper.instance().renderMap().props.googleMapLoader).not.toBeUndefined();
     });
 
     it("should render the accommodation's description", () => {
