@@ -48,10 +48,13 @@ const MAP_LOAD_DELAY = 3000;
 class AccommodationDetailMap extends React.PureComponent {
     static defaultProps = {
         acco: null,
+        state: {
+            placeSearched: null,
+        },
     }
 
     state = {
-        placeSearched: null
+        placeSearched: this.props.state.placeSearched || null
     };
 
     componentDidMount() {
@@ -63,20 +66,16 @@ class AccommodationDetailMap extends React.PureComponent {
     }
 
     componentWillUnmount() {
-        // https://developers.google.com/maps/documentation/javascript/events#removing
         google.maps.event.clearInstanceListeners(this.searchBox);
         clearTimeout(mapDelayedLoader);
     }
 
     onPlacesChanged = () => {
         const { map, searchBox } = this;
-
         const places = searchBox.getPlaces();
-
         if (places.length === 0) {
             return;
         }
-
         let markers = [];
         // Clear out the old markers.
         markers.forEach((marker) => {
@@ -128,7 +127,6 @@ class AccommodationDetailMap extends React.PureComponent {
         });
 
         this.loadHomeMarker();
-
         if (!this.props.isUserOwner) {
             return;
         }
@@ -151,6 +149,10 @@ class AccommodationDetailMap extends React.PureComponent {
     searchInput = null;
 
     loadHomeMarker() {
+        if (this.homeMarker !== null) {
+            this.homeMarker.setMap(null);
+            this.homeMarker = null;
+        }
         const { map } = this;
         const { acco } = this.props;
         this.homeMarker = new google.maps.Marker({
@@ -163,11 +165,14 @@ class AccommodationDetailMap extends React.PureComponent {
         });
     }
 
-    clearSearchedPlace = () => {
+    clearSearchedPlace() {
         this.setState({
             placeSearched: null,
         });
-        this.searchedMarker.setMap(null);
+        if (this.searchedMarker && this.searchedMarker.setMap) {
+            this.searchedMarker.setMap(null);
+        }
+        this.searchedMarker = null;
         const { acco } = this.props;
         const center = new google.maps.LatLng(acco.latitude, acco.longitude);
         this.map.panTo(center);
@@ -175,12 +180,12 @@ class AccommodationDetailMap extends React.PureComponent {
     }
 
     renderValidAddressPopup() {
-        if (!this.props.isUserOwner) {
+        if (this.props.isUserOwner !== true) {
             return null;
         }
         const { classes } = this.props;
         return (
-            <div className={classes.changeAddressPopup}>
+            <div id="devaway-address-pop" className={classes.changeAddressPopup}>
                 <Typography className="full-width text-center">
                     {
                         this.state.placeSearched ?
@@ -189,6 +194,7 @@ class AccommodationDetailMap extends React.PureComponent {
                     }
                 </Typography>
                 <Button
+                    id="devaway-change-address-btn"
                     className="full-width margin-auto"
                     disabled={
                         this.state.placeSearched === null ||
@@ -200,6 +206,7 @@ class AccommodationDetailMap extends React.PureComponent {
                             ...this.state.placeSearched,
                         });
                         this.clearSearchedPlace();
+                        this.loadHomeMarker();
                     }}
                     color="primary"
                     variant="contained"
@@ -245,6 +252,8 @@ class AccommodationDetailMap extends React.PureComponent {
 AccommodationDetailMap.propTypes = {
     classes: T.shape({
         mapContainer: T.string.isRequired,
+        wrapper: T.string.isRequired,
+        changeAddressPopup: T.string.isRequired,
     }).isRequired,
     updateAcco: T.func.isRequired,
     extractAddressFromPlace: T.func.isRequired,
@@ -254,7 +263,10 @@ AccommodationDetailMap.propTypes = {
     user: T.shape({
         isLoggedIn: T.bool.isRequired,
         isLoading: T.bool.isRequired,
-    }).isRequired
+    }).isRequired,
+    state: T.shape({
+        placeSearched: T.string,
+    }),
 };
 
 export default withStyles(styles)(AccommodationDetailMap);
