@@ -146,11 +146,11 @@ export default class AccommodationDetail extends React.PureComponent {
         });
     }
 
-    savePlace = async () => {
+    savePlace() {
         if (!this.isUserOwner || !this.hasAccoChanged) {
             return;
         }
-        await this.props.updateAcco({
+        this.props.updateAcco({
             ...this.accommodation,
             ...this.state.changedProperties,
         });
@@ -178,6 +178,7 @@ export default class AccommodationDetail extends React.PureComponent {
                 <TextField
                     defaultValue={this.accommodation.description}
                     fullWidth
+                    id="devaway-accommodation-description-input"
                     label=""
                     name="description"
                     disabled={!this.isUserOwner}
@@ -456,8 +457,9 @@ export default class AccommodationDetail extends React.PureComponent {
                 style={styles.saveBtn}
                 color="primary"
                 disabled={!this.hasAccoChanged || this.props.accommodation.isLoading}
-                onClick={this.savePlace}
+                onClick={() => this.savePlace()}
                 variant="fab"
+                id="devaway-edit-acco-btn"
             >
                 <Save />
             </Button>

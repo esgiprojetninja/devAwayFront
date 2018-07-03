@@ -7,6 +7,7 @@ import {
 import mainReducer from "../../../reducers/index";
 import AccommodationDetail, { accordPluralToNumber } from "../../../ui/Accommodation/AccommodationDetail.jsx";
 import { accommodationMock } from "../../mock/body/accommodation";
+import { basicUser } from "../../mock/body/user";
 
 describe("ui <AccommodationDetail />", function () {
     window.localStorage = {
@@ -455,5 +456,157 @@ describe("ui <AccommodationDetail />", function () {
             <AccommodationDetail {...this.initialProps} />
         );
         expect(JSON.stringify(wrapper.instance().renderPlace().props.children)).toContain("devaway-missions-container");
+    });
+
+    it("should render the save btn", () => {
+        const props = {
+            ...this.initialProps,
+            accommodation: {
+                ...this.initialProps.accommodation,
+                byID: new Map().set(acco.id, acco),
+            },
+            user: {
+                ...this.initialProps.user,
+                isLoggedIn: true,
+                data: basicUser
+            },
+        };
+        const wrapper = shallow(
+            <AccommodationDetail {...props} />
+        );
+        const instance = wrapper.instance();
+        const btn = instance.renderSaveBtn();
+        expect(btn).not.toBeNull();
+        expect(btn.props.variant).toBe("fab");
+        expect(btn.props.disabled).toBe(true);
+    });
+
+    it("should save the new acco", () => {
+        const props = {
+            ...this.initialProps,
+            accommodation: {
+                ...this.initialProps.accommodation,
+                byID: new Map().set(acco.id, acco),
+            },
+            user: {
+                ...this.initialProps.user,
+                isLoggedIn: true,
+                data: basicUser
+            },
+        };
+        const wrapper = shallow(
+            <AccommodationDetail {...props} />
+        );
+        const instance = wrapper.instance();
+        instance.setState({
+            changedProperties: {
+                title: "coucou new title"
+            }
+        });
+        const btn = instance.renderSaveBtn();
+        expect(btn.props.disabled).toBe(false);
+
+        wrapper.update();
+
+        const domBtn = wrapper.find("#devaway-edit-acco-btn");
+
+        instance.savePlace = jest.fn();
+        domBtn.simulate("click");
+        expect(instance.savePlace).toHaveBeenCalled();
+    });
+
+    it("should change description", () => {
+        const props = {
+            ...this.initialProps,
+            accommodation: {
+                ...this.initialProps.accommodation,
+                byID: new Map().set(acco.id, acco),
+            },
+            user: {
+                ...this.initialProps.user,
+                isLoggedIn: true,
+                data: basicUser
+            },
+        };
+        const wrapper = shallow(
+            <AccommodationDetail {...props} />
+        );
+        const instance = wrapper.instance();
+        const input = wrapper.find("#devaway-accommodation-description-input");
+
+        input.simulate("change", { target: { value: "NEW DESCRIPTION MOFO" } });
+        expect(instance.state.changedProperties.description).toBe("NEW DESCRIPTION MOFO");
+    });
+
+    it("should NOT save place - user is not owner", () => {
+        const props = {
+            ...this.initialProps,
+            accommodation: {
+                ...this.initialProps.accommodation,
+                byID: new Map().set(acco.id, acco),
+            },
+            user: {
+                ...this.initialProps.user,
+                isLoggedIn: true,
+                data: {
+                    ...basicUser,
+                    id: 23456789
+                }
+            },
+        };
+        const wrapper = shallow(
+            <AccommodationDetail {...props} />
+        );
+        const instance = wrapper.instance();
+        
+        expect(instance.savePlace()).toBe(undefined);
+    });
+
+    it("should NOT save place - acco not changed", () => {
+        const props = {
+            ...this.initialProps,
+            accommodation: {
+                ...this.initialProps.accommodation,
+                byID: new Map().set(acco.id, acco),
+            },
+            user: {
+                ...this.initialProps.user,
+                isLoggedIn: true,
+                data: basicUser,
+            },
+        };
+        const wrapper = shallow(
+            <AccommodationDetail {...props} />
+        );
+        const instance = wrapper.instance();
+        instance.setState({ changedProperties: {} });
+
+        expect(instance.savePlace()).toBe(undefined);
+    });
+
+    it("should save place", () => {
+        const props = {
+            ...this.initialProps,
+            accommodation: {
+                ...this.initialProps.accommodation,
+                byID: new Map().set(acco.id, acco),
+            },
+            user: {
+                ...this.initialProps.user,
+                isLoggedIn: true,
+                data: basicUser,
+            },
+        };
+        const wrapper = shallow(
+            <AccommodationDetail {...props} />
+        );
+        const instance = wrapper.instance();
+        instance.setState({ changedProperties: { description: "POULAYMAN" } });
+
+        expect(instance.savePlace()).toBe(undefined);
+        expect(this.initialProps.updateAcco).toHaveBeenCalledWith({
+            ...acco,
+            description: "POULAYMAN",
+        });
     });
 });
