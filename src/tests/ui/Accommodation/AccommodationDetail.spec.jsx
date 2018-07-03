@@ -558,7 +558,6 @@ describe("ui <AccommodationDetail />", function () {
             <AccommodationDetail {...props} />
         );
         const instance = wrapper.instance();
-        
         expect(instance.savePlace()).toBe(undefined);
     });
 
