@@ -69,7 +69,6 @@ describe("ui <AccommodationDetailImages />", function () {
         expect(wrapper.html()).toMatch(/AccommodationDetailImages-editPictureContainer-/);
     });
 
-
     it("should render NOT render an add image", () => {
         const wrapper = shallow(
             <AccommodationDetailImages {...this.initialProps} />
@@ -130,11 +129,13 @@ describe("ui <AccommodationDetailImages />", function () {
             0
         );
         expect(this.initialProps.updatePicture.mock.calls[0][0]).toEqual(this.initialProps.acco);
-        expect(this.initialProps.updatePicture.mock.calls[0][1]).toBe(0);
-        expect(this.initialProps.updatePicture.mock.calls[0][2]).toBe("data:image/png;coucoupoulay");
+        expect(this.initialProps.updatePicture.mock.calls[0][1])
+            .toBe(this.initialProps.acco.pictures[0].id);
+        expect(this.initialProps.updatePicture.mock.calls[0][2])
+            .toBe("data:image/png;coucoupoulay");
     });
 
-    it("should call updatePicture with dot addImg", () => {
+    it("should call updatePicture with creation intention", () => {
         global.FileReader = function () {
             return {
                 ...this,
@@ -162,21 +163,7 @@ describe("ui <AccommodationDetailImages />", function () {
             1
         );
         expect(this.initialProps.updatePicture.mock.calls[0][0]).toEqual(this.initialProps.acco);
-        expect(this.initialProps.updatePicture.mock.calls[0][1]).toBe(1);
+        expect(this.initialProps.updatePicture.mock.calls[0][1]).toBeNull();
         expect(this.initialProps.updatePicture.mock.calls[0][2]).toBe("data:image/png;coucoupoulay");
-    });
-
-    it("should call updatePicture with dot addImg", () => {
-        const wrapper = mount(
-            <AccommodationDetailImages {...{
-                ...this.initialProps,
-                isUserOwner: true,
-            }}
-            />
-        );
-        const fileInput = wrapper.find("div[role='button']");
-        fileInput.simulate("click");
-        fileInput.simulate("keypress");
-        expect(1).toBe(1);
     });
 });

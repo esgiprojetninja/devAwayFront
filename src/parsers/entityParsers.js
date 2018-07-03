@@ -12,7 +12,9 @@ export const remapAccoProps = (item) => {
     if (Object.prototype.hasOwnProperty.call(item, "pictures")) {
         acco.pictures = acco.pictures.map(pic => ({
             ...pic,
-            url: `data:image/jpeg;base64,${pic.url}`,
+            url: pic.url.includes("data:image") ?
+                pic.url
+                : `data:image/jpeg;base64,${pic.url}`
         }));
     }
     return acco;

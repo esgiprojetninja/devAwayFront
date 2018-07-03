@@ -11,6 +11,8 @@ import {
     mapStateToProps,
     mapDispatchToProps
 } from "../../containers/AccommodationDetailImages";
+import * as accoActions from "../../actions/accommodation";
+
 
 const mockStore = configureMockStore([thunk.withExtraArgument(mockAPI)]);
 
@@ -30,12 +32,10 @@ describe("Container AccommodationDetailImages", () => {
             jest.clearAllMocks();
         });
         it("updatePicture", async () => {
-            const logger = console.log;
-            console.log = jest.fn();
+            const spy = jest.spyOn(accoActions, "upsertPicture");
             const { fn } = prepare("updatePicture", mainReducer(undefined, {}));
             await fn(accommodationMock, 1, "binaryimgmotherfuckeeeer");
-            expect(console.log).toHaveBeenCalled();
-            console.log = logger;
+            expect(spy).toHaveBeenCalled();
         });
     });
     describe("mapStateToProps", () => {

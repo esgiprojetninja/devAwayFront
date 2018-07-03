@@ -368,4 +368,86 @@ describe("Actions user", () => {
         expect(store.getActions()).toEqual(expectedActions);
         mockAPIWithServerFailure.accommodationApi.fetchById = oldFetchById;
     });
+
+    it("should upsert an accommodation picture", async () => {
+        const expectedActions = [
+            {
+                type: accoTypes.SAVE_ACCOMMODATION_REQUEST
+            },
+            {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "Picture edited !",
+                    snackDuration: undefined
+                }
+            },
+            {
+                type: accoTypes.FETCH_ACCOMMODATIONS_REQUEST
+            },
+            {
+                type: accoTypes.FETCH_ACCOMMODATION_SUCCESS,
+                payload: { data: { poulay: "man", host: "POULAAAY" } }
+            }
+        ];
+        const store = mockStore();
+        await store.dispatch(accoActions.upsertPicture({
+            id: 1,
+            url: "poulay",
+            accommodation_id: 123,
+        }));
+        expect(store.getActions()).toEqual(expectedActions);
+    });
+
+    it("should NOT fetch ONE accommodation with API error", async () => {
+        const expectedActions = [
+            {
+                type: accoTypes.SAVE_ACCOMMODATION_REQUEST
+            },
+            {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "Picture editing failed !",
+                    snackDuration: undefined
+                }
+            },
+            {
+                type: accoTypes.SAVE_ACCOMMODATION_FAILURE,
+                payload: "such uglyness"
+            }
+        ];
+        mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)]);
+        const store = mockStore();
+        await store.dispatch(accoActions.upsertPicture({
+            id: 1,
+            url: "poulay",
+            accommodation_id: 123,
+        }));
+        expect(store.getActions()).toEqual(expectedActions);
+    });
+    it("should NOT fetch ONE accommodation with server failure - 1", async () => {
+        const expectedActions = [
+            {
+                type: accoTypes.SAVE_ACCOMMODATION_REQUEST
+            },
+            {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "Picture editing failed !",
+                    snackDuration: undefined
+                }
+            },
+            {
+                type: accoTypes.SAVE_ACCOMMODATION_FAILURE,
+                payload: "gtfo"
+            }
+        ];
+        mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithServerFailure)]);
+        const store = mockStore();
+        await store.dispatch(accoActions.upsertPicture({
+            id: 1,
+            url: "poulay",
+            accommodation_id: 123,
+        }));
+        expect(store.getActions()).toEqual(expectedActions);
+    });
 });

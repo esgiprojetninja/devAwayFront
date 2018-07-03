@@ -1,3 +1,4 @@
+/* global Number */
 import {
     parseCollectionFromApi
 } from "../parsers/entityParsers";
@@ -54,7 +55,12 @@ const accommodationApi = {
     },
     fetchById: (id) => {
         return generateFetch(`accommodations/${id}`, "GET");
-    }
+    },
+    upsertPicture: (picture) => {
+        return Number.isNaN(Number(picture.id)) ?
+            generateFetch("pictures", "POST", null, picture)
+            : generateFetch("pictures", "PUT", picture.id, picture);
+    },
 };
 
 export default accommodationApi;

@@ -15,7 +15,12 @@ export const mockAPI = {
         fetchById: () => Promise.resolve({
             poulay: "man",
             host: "POULAAAY",
-        })
+        }),
+        upsertPicture: () => Promise.resolve({
+            ok: true,
+            poulay: "man",
+            host: "POULAAAY",
+        }),
     },
     userApi: {
         login: () => Promise.resolve({ success: { token: "prout" } }),
@@ -72,6 +77,10 @@ export const mockAPIWithErrors = {
         fetchById: () => Promise.resolve({
             hasError: true,
             message: "Fongalakwaki"
+        }),
+        upsertPicture: () => Promise.resolve({
+            hasError: true,
+            message: "such uglyness"
         }),
     },
     missionApi: {
@@ -153,6 +162,7 @@ export const mockAPIWithServerFailure = {
         createOrUpdate: () => Promise.reject(new Error("gtfo")),
         deleteItem: () => Promise.reject(new Error("gtfo")),
         fetchById: () => Promise.reject(new Error("gtfo")),
+        upsertPicture: () => Promise.reject(new Error("gtfo")),
     },
     missionApi: {
         fetchAll: () => Promise.reject(new Error("gtfo")),

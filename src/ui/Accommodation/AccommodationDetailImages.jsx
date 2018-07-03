@@ -142,13 +142,13 @@ class AccommodationDetailImages extends React.PureComponent {
 
     slider = null;
 
-    handleAddImg = (e, pictureIndex) => {
+    handleAddImg = (e, pictureId) => {
         e.preventDefault();
         const reader = new global.FileReader();
         const file = e.target.files[0];
         reader.onloadend = () => {
             if (reader.result.indexOf("data:image/") > -1) {
-                this.props.updatePicture(this.acco, pictureIndex, reader.result);
+                this.props.updatePicture(this.acco, pictureId, reader.result);
             }
         };
         reader.readAsDataURL(file);
@@ -185,7 +185,7 @@ class AccommodationDetailImages extends React.PureComponent {
                     name="placePictureEdit"
                     accept="image/*"
                     className={classes.inputPicture}
-                    onChange={e => this.handleAddImg(e, index)}
+                    onChange={e => this.handleAddImg(e, null)}
                 />
             </div>
         );
@@ -209,7 +209,7 @@ class AccommodationDetailImages extends React.PureComponent {
         );
     }
 
-    renderImage(pictureObj, index) {
+    renderImage(pictureObj) {
         const { classes } = this.props;
         const imgUrl = pictureObj.url || "/img/accommodation.jpg";
         return (
@@ -226,7 +226,7 @@ class AccommodationDetailImages extends React.PureComponent {
                                 name="placePictureUpload"
                                 accept="image/*"
                                 className={classes.inputPicture}
-                                onChange={e => this.handleAddImg(e, index)}
+                                onChange={e => this.handleAddImg(e, pictureObj.id)}
                             />
                         </div>
                         : null
@@ -250,7 +250,7 @@ class AccommodationDetailImages extends React.PureComponent {
             >
                 {
                     this.acco.pictures.length + 1 >= MAX_PICTURES ?
-                        this.acco.pictures.map((pic, i) => this.renderImage(pic, i))
+                        this.acco.pictures.map(pic => this.renderImage(pic))
                         : this.acco.pictures.concat([ADD_IMAGE_WARN]).map((pic, i) => {
                             if (pic === ADD_IMAGE_WARN) {
                                 return this.renderAddImage(i);

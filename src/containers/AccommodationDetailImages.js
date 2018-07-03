@@ -1,17 +1,18 @@
 import { connect } from "react-redux";
 
 import AccommodationDetailImagesComponent from "../ui/Accommodation/AccommodationDetailImages.jsx";
-// import { saveAccommodation } from "../actions/accommodation";
-// import missionApi from "../api/missionApi";
+import { upsertPicture } from "../actions/accommodation";
 
 export const mapStateToProps = state => state;
 
 export const mapDispatchToProps = dispatch => ({ // eslint-disable-line
-    async updatePicture(acco, pictureIndex, binaryImg) {
-        // @TODO activate when api is ready to receive
-        // figure out picture Id if exists
-        // await dispatch(saveAccommodation(img));
-        console.log("POULAAAY", acco, pictureIndex, binaryImg);
+    async updatePicture(acco, pictureId, binaryImg) {
+        const picture = {
+            accommodation_id: acco.id,
+            url: binaryImg,
+            id: pictureId,
+        };
+        await dispatch(upsertPicture(picture));
     },
 });
 

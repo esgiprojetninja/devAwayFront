@@ -116,7 +116,6 @@ const fetchAccommodationSuccess = data => ({
     payload: { data }
 });
 
-
 export function fetchAccommodation(id) {
     return (dispatch, getState, API) => {
         dispatch(fetchAccommodationsRequest());
@@ -134,5 +133,23 @@ export function fetchAccommodation(id) {
                     return dispatch(fetchAccommodationsFailure(error.message || error));
                 }
             );
+    };
+}
+
+export function upsertPicture(picture) {
+    return (dispatch, getState, API) => {
+        dispatch(saveAccommodationRequest());
+        return API.accommodationApi.upsertPicture(picture)
+            .then((res) => {
+                if (res.hasError) {
+                    dispatch(displaySnackMsg("Picture editing failed !"));
+                    return dispatch(saveAccommodationFailure(res.message));
+                }
+                dispatch(displaySnackMsg("Picture edited !"));
+                return dispatch(fetchAccommodation(picture.accommodation_id));
+            }, (err) => {
+                dispatch(displaySnackMsg("Picture editing failed !"));
+                return dispatch(saveAccommodationFailure(err.message));
+            });
     };
 }
