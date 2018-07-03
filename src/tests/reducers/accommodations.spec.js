@@ -33,12 +33,12 @@ describe("Reducer ACCOMMODATION", function () {
             type: accoTypes.FETCH_ACCOMMODATIONS_SUCCESS,
             payload: {
                 data: "coucou",
-                byID: "coucou"
+                byID: new Map(),
             }
         })).toEqual({
             ...this.initialSate,
             data: "coucou",
-            byID: "coucou",
+            byID: new Map(),
             isLoading: false
         });
     });

@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 
-import { fetchAccommodation, fetchAccommodationsFailure } from "../actions/accommodation";
+import { fetchAccommodation, fetchAccommodationsFailure, saveAccommodation } from "../actions/accommodation";
 import AccommodationDetailComponent from "../ui/Accommodation/AccommodationDetail.jsx";
 import missionApi from "../api/missionApi";
 
@@ -29,6 +29,9 @@ export const mapDispatchToProps = dispatch => ({
             // console.error("applyToMission:: ", e);
             return false;
         }
+    },
+    async updateAcco(newAccommodation) {
+        await dispatch(saveAccommodation(newAccommodation));
     }
 });
 

@@ -52,4 +52,25 @@ describe("API accommodation", () => {
         const res = await accommodationApi.fetchById(id);
         expect(res).toEqual({ id, poulay: "man" });
     });
+
+    it("should create new picture", async () => {
+        const id = "100";
+        fetchMock.post(`https://${baseUrl}/api/v1/pictures`, { ok: "Okay poulay" });
+        const res = await accommodationApi.upsertPicture({
+            accommodation_id: id,
+            url: "man"
+        });
+        expect(res).toEqual({ ok: "Okay poulay" });
+    });
+
+    it("should update a picture", async () => {
+        const id = "100";
+        fetchMock.put(`https://${baseUrl}/api/v1/pictures/123`, { ok: "Okay poulay" });
+        const res = await accommodationApi.upsertPicture({
+            accommodation_id: id,
+            url: "man",
+            id: 123
+        });
+        expect(res).toEqual({ ok: "Okay poulay" });
+    });
 });

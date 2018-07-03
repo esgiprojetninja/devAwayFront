@@ -129,10 +129,14 @@ class AccommodationsPersonnalList extends React.PureComponent {
                                         </Typography>
                                     </CardContent>
                                     <CardActions>
-                                        <Button variant="contained" color="default" className={this.classes.controlBtn}>
-                                            Administrate
-                                            <EditIcon className={this.classes.accoActionIcon} />
-                                        </Button>
+                                        <NavLink
+                                            to={`/accommodations/${acco.id}`}
+                                        >
+                                            <Button variant="contained" color="default" className={this.classes.controlBtn}>
+                                                Administrate
+                                                <EditIcon className={this.classes.accoActionIcon} />
+                                            </Button>
+                                        </NavLink>
                                     </CardActions>
                                 </Card>
                             </Grid>

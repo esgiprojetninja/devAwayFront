@@ -7,11 +7,13 @@ import Typography from "@material-ui/core/Typography";
 import GuestsIcon from "@material-ui/icons/People";
 import BedsIcon from "@material-ui/icons/LocalHotel";
 import BathRoomsIcon from "@material-ui/icons/InvertColors";
-import GMap from "google-map-react";
+import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import FloorsIcon from "@material-ui/icons/ClearAll";
+import Save from "@material-ui/icons/Save";
 import Navbar from "../../containers/Navbar";
-import Marker from "./AccommodationMarker";
+import CarouselImages from "../../containers/AccommodationDetailImages";
+import PlaceMap from "../../containers/AccommodationDetailMap";
 import { getAdaptedContainerWidth } from "./AccommodationsList";
 import { accommodationReducerPropTypes } from "../../propTypes/accommodation.reducer.d";
 import { lightGrey, midGrey, darkGrey } from "../../styles/theme";
@@ -40,40 +42,31 @@ const styles = {
         padding: "16px 12px",
         borderBottom: `1px solid ${lightGrey}`
     },
-    coverImg: {
+    carousel: {
         width: "100%",
         position: "relative",
         height: "430px",
-        WebkitBackgroundSize: "cover",
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat no-repeat",
-        backgroundPosition: "center",
-        WebkitBoxShadow: "inset 0px -2px 10px -4px #fff",
-        MozBoxShadow: "inset 0px -2px 10px -4px #fff",
-        boxShadow: "inset 0px -2px 10px -4px #fff"
-    },
-    coverImgOpacifier: {
-        width: "100%",
-        height: "100%",
-        position: "absolute",
-        background: "#fff",
-        opacity: "0.15",
-        top: "0",
-        left: "0"
     },
     iconInfoItem: {
-        marginLeft: "10px"
+        marginLeft: "10px",
     },
     iconInfoSVG: {
         color: darkGrey,
-        fill: darkGrey
-    },
-    iconInfoItemText: {
-        marginLeft: "6px"
+        fill: darkGrey,
+        paddingRight: 10,
     },
     gMapContainer: {
         height: "300px"
-    }
+    },
+    title: {
+        fontSize: "24px",
+        color: darkGrey,
+    },
+    saveBtn: {
+        position: "fixed",
+        right: 10,
+        bottom: 10,
+    },
 };
 
 export const accordPluralToNumber = (number, word) => {
@@ -89,6 +82,7 @@ export default class AccommodationDetail extends React.PureComponent {
         }).isRequired,
         onInit: T.func.isRequired,
         applyToMission: T.func.isRequired,
+        updateAcco: T.func.isRequired,
         accommodation: accommodationReducerPropTypes.isRequired,
         user: T.shape({
             isLoggedIn: T.bool.isRequired,
@@ -101,7 +95,8 @@ export default class AccommodationDetail extends React.PureComponent {
     constructor() {
         super();
         this.state = {
-            containerWidth: getAdaptedContainerWidth()
+            containerWidth: getAdaptedContainerWidth(),
+            changedProperties: {},
         };
     }
 
@@ -114,6 +109,15 @@ export default class AccommodationDetail extends React.PureComponent {
         window.removeEventListener("resize", this.updateDimensions.bind(this));
     }
 
+    get isUserOwner() {
+        const acco = this.accommodation;
+        return this.props.user
+            && this.props.user.isLoggedIn
+            && acco !== null
+            && acco.host
+            && acco.host.id === this.props.user.data.id;
+    }
+
     get accommodation() {
         const id = Number(this.props.match.params.accoID);
         if (Number.isNaN(id)) return null;
@@ -124,9 +128,40 @@ export default class AccommodationDetail extends React.PureComponent {
         return this.accommodation.missions && this.accommodation.missions.length > 0;
     }
 
+    get hasAccoChanged() {
+        const acco = this.accommodation;
+        if (acco === null) {
+            return null;
+        }
+        const changedProps = Object.keys(this.state.changedProperties);
+        if (changedProps.length === 0) {
+            return false;
+        }
+        return !!changedProps.find(propName => acco[propName] !== changedProps[propName]);
+    }
+
     updateDimensions() {
         return this.setState({
             containerWidth: getAdaptedContainerWidth()
+        });
+    }
+
+    savePlace() {
+        if (!this.isUserOwner || !this.hasAccoChanged) {
+            return;
+        }
+        this.props.updateAcco({
+            ...this.accommodation,
+            ...this.state.changedProperties,
+        });
+    }
+
+    handleChange = propName => (event) => {
+        this.setState({
+            changedProperties: {
+                ...this.state.changedProperties,
+                [propName]: event.target.value
+            }
         });
     }
 
@@ -137,35 +172,27 @@ export default class AccommodationDetail extends React.PureComponent {
         );
     }
 
-    renderMap() {
-        const acco = this.accommodation;
-        return (
-            <GMap
-                bootstrapURLKeys={{
-                    key: process.env.REACT_APP_GOOGLE_MAP_KEY,
-                    language: "en"
-                }}
-                center={{
-                    lat: acco.latitude,
-                    lng: acco.longitude
-                }}
-                zoom={8}
-            >
-                <Marker
-                    accommodation={acco}
-                    lat={acco.latitude}
-                    lng={acco.longitude}
-                />
-            </GMap>
-        );
-    }
-
     renderDescription() {
         return (
             <div>
-                <Typography style={{ color: midGrey, fontWeight: 500 }}>
-                    {this.accommodation.description}
-                </Typography>
+                <TextField
+                    defaultValue={this.accommodation.description}
+                    fullWidth
+                    id="devaway-accommodation-description-input"
+                    label=""
+                    name="description"
+                    disabled={!this.isUserOwner}
+                    onChange={this.handleChange("description")}
+                    InputProps={{
+                        disableUnderline: !this.isUserOwner,
+                    }}
+                    inputProps={{ // eslint-disable-line
+                        style: { color: midGrey, fontWeight: 500, fontSize: "1.175em" }
+                    }}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                />
             </div>
         );
     }
@@ -174,36 +201,100 @@ export default class AccommodationDetail extends React.PureComponent {
         const acco = this.accommodation;
         return (
             <div className="display-flex-row justify-start full-width">
-                <div className="display-flex-row">
+                <div style={{ maxWidth: "140px" }} className="display-flex-row">
                     <GuestsIcon style={styles.iconInfoSVG} />
-                    <span style={styles.iconInfoItemText}>
-                        {acco.nbMaxGuest} {accordPluralToNumber(acco.nbMaxGuest, "traveler")}
-                    </span>
+                    <TextField
+                        defaultValue={!this.isUserOwner ? `${acco.nbMaxGuest} ${accordPluralToNumber(acco.nbMaxGuest, "traveler")}` : acco.nbMaxGuest}
+                        type={this.isUserOwner ? "number" : "text"}
+                        label={this.isUserOwner ? accordPluralToNumber(acco.nbMaxGuest, "traveler") : ""}
+                        placeholder={`${acco.nbMaxGuest} ${accordPluralToNumber(acco.nbMaxGuest, "traveler")}`}
+                        disabled={!this.isUserOwner}
+                        onChange={this.handleChange("nbMaxGuest")}
+                        name="nbMaxGuest"
+                        InputProps={{
+                            disableUnderline: !this.isUserOwner,
+                        }}
+                        inputProps={{ // eslint-disable-line
+                            min: 1,
+                            max: 99,
+                        }}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
                 </div>
-                <div style={styles.iconInfoItem} className="display-flex-row">
+                <div style={{ ...styles.iconInfoItem, maxWidth: "100px" }} className="display-flex-row">
                     <BedsIcon style={styles.iconInfoSVG} />
-                    <span style={{ marginLeft: "6px" }}>
-                        {acco.nbBedroom} {accordPluralToNumber(acco.nbBedroom, "room")}
-                    </span>
+                    <TextField
+                        defaultValue={!this.isUserOwner ? `${acco.nbBedroom} ${accordPluralToNumber(acco.nbBedroom, "room")}` : acco.nbBedroom}
+                        type={this.isUserOwner ? "number" : "text"}
+                        label={this.isUserOwner ? accordPluralToNumber(acco.nbBedroom, "room") : ""}
+                        placeholder={`${acco.nbBedroom} ${accordPluralToNumber(acco.nbBedroom, "room")}`}
+                        disabled={!this.isUserOwner}
+                        onChange={this.handleChange("nbBedroom")}
+                        name="nbBedroom"
+                        InputProps={{
+                            disableUnderline: !this.isUserOwner,
+                        }}
+                        inputProps={{ // eslint-disable-line
+                            min: 1,
+                            max: 99,
+                        }}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
                 </div>
-                <div style={styles.iconInfoItem} className="display-flex-row">
+                <div style={{ ...styles.iconInfoItem, maxWidth: "140px" }} className="display-flex-row">
                     <BathRoomsIcon style={styles.iconInfoSVG} />
-                    <span style={styles.iconInfoItemText}>
-                        {acco.nbBathroom} {accordPluralToNumber(acco.nbBathroom, "bathroom")}
-                    </span>
+                    <TextField
+                        defaultValue={!this.isUserOwner ? `${acco.nbBathroom} ${accordPluralToNumber(acco.nbBathroom, "bathroom")}` : acco.nbBathroom}
+                        type={this.isUserOwner ? "number" : "text"}
+                        label={this.isUserOwner ? accordPluralToNumber(acco.nbBathroom, "bathroom") : ""}
+                        placeholder={`${acco.nbBathroom} ${accordPluralToNumber(acco.nbBathroom, "bathroom")}`}
+                        disabled={!this.isUserOwner}
+                        onChange={this.handleChange("nbBathroom")}
+                        name="nbBathroom"
+                        InputProps={{
+                            disableUnderline: !this.isUserOwner,
+                        }}
+                        inputProps={{ // eslint-disable-line
+                            min: 0,
+                            max: 99,
+                        }}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
                 </div>
-                <div style={styles.iconInfoItem} className="display-flex-row">
+                <div style={{ ...styles.iconInfoItem, maxWidth: "100px" }} className="display-flex-row">
                     <FloorsIcon style={styles.iconInfoSVG} />
-                    <span style={styles.iconInfoItemText}>
-                        {acco.floor} {accordPluralToNumber(acco.floor, "floor")}
-                    </span>
+                    <TextField
+                        defaultValue={!this.isUserOwner ? `${acco.floor} ${accordPluralToNumber(acco.floor, "floor")}` : acco.floor}
+                        type={this.isUserOwner ? "number" : "text"}
+                        label={this.isUserOwner ? accordPluralToNumber(acco.floor, "floor") : ""}
+                        placeholder={`${acco.floor} ${accordPluralToNumber(acco.floor, "floor")}`}
+                        disabled={!this.isUserOwner}
+                        onChange={this.handleChange("floor")}
+                        name="floor"
+                        InputProps={{
+                            disableUnderline: !this.isUserOwner,
+                        }}
+                        inputProps={{ // eslint-disable-line
+                            min: 1,
+                            max: 99,
+                        }}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
                 </div>
             </div>
         );
     }
 
     renderHostInfo() {
-        // @TODO add address badge verification on host
+        // @TODO add address badge verification on place
         const imgUrl = this.accommodation.host.avatar ? `data:image/gif;base64, ${this.accommodation.host.avatar}` : "/img/accommodation.jpg";
         const style = {
             ...styles.coverImg,
@@ -215,13 +306,24 @@ export default class AccommodationDetail extends React.PureComponent {
             right: "10px",
             borderRadius: "100%"
         };
+        if (this.isUserOwner) {
+            return null;
+        }
         return (
-            <div>
+            <Grid
+                className="relative"
+                item
+                xs={12}
+                sm={12}
+                md={12}
+                lg={this.hasMissions ? 9 : 12}
+                xl={this.hasMissions ? 8 : 12}
+            >
                 <Typography style={{ color: midGrey, fontWeight: 500 }}>
                     Host: <span style={{ letterSpacing: "1px" }}>{this.accommodation.host.username}</span>
                 </Typography>
                 <div style={style} />
-            </div>
+            </Grid>
         );
     }
 
@@ -229,21 +331,26 @@ export default class AccommodationDetail extends React.PureComponent {
         return (
             <Grid container className="full-width" style={styles.accommodationCard}>
                 <Grid className="relative" item xs={12}>
-                    <Typography style={{ color: darkGrey, fontWeight: 500, fontSize: "1.875em" }} className="capitalize" variant="display1">
-                        {this.accommodation.title}
-                    </Typography>
+                    <TextField
+                        style={{ color: darkGrey, fontWeight: 500, fontSize: "1.875em" }}
+                        defaultValue={this.accommodation.title}
+                        fullWidth
+                        label=""
+                        name="title"
+                        onChange={this.handleChange("title")}
+                        disabled={!this.isUserOwner}
+                        InputProps={{
+                            disableUnderline: !this.isUserOwner,
+                        }}
+                        inputProps={{ // eslint-disable-line
+                            style: styles.title
+                        }}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
                 </Grid>
-                <Grid
-                    className="relative"
-                    item
-                    xs={12}
-                    sm={12}
-                    md={12}
-                    lg={this.hasMissions ? 9 : 12}
-                    xl={this.hasMissions ? 8 : 12}
-                >
-                    {this.renderHostInfo()}
-                </Grid>
+                {this.renderHostInfo()}
                 <Grid
                     item
                     xs={12}
@@ -273,7 +380,7 @@ export default class AccommodationDetail extends React.PureComponent {
                     lg={this.hasMissions ? 9 : 12}
                     xl={this.hasMissions ? 8 : 12}
                 >
-                    {this.renderMap()}
+                    <PlaceMap acco={this.accommodation} isUserOwner={this.isUserOwner} />
                 </Grid>
             </Grid>
         );
@@ -341,21 +448,21 @@ export default class AccommodationDetail extends React.PureComponent {
         );
     }
 
-    renderImg() {
-        if (!this.accommodation) {
-            return (
-                <div style={{ marginTop: "80px" }} />
-            );
+    renderSaveBtn() {
+        if (!this.isUserOwner) {
+            return null;
         }
-        const imgUrl = this.accommodation.pictures.length > 0 ? this.accommodation.pictures[0].url : "/img/accommodation.jpg";
-        const style = {
-            ...styles.coverImg,
-            backgroundImage: `url("${imgUrl}")`
-        };
         return (
-            <div style={style}>
-                <div style={styles.coverImgOpacifier} />
-            </div>
+            <Button
+                style={styles.saveBtn}
+                color="primary"
+                disabled={!this.hasAccoChanged || this.props.accommodation.isLoading}
+                onClick={() => this.savePlace()}
+                variant="fab"
+                id="devaway-edit-acco-btn"
+            >
+                <Save />
+            </Button>
         );
     }
 
@@ -367,10 +474,15 @@ export default class AccommodationDetail extends React.PureComponent {
         return (
             <div className="relative full-width" style={{ background: "#fff" }}>
                 <Navbar burgerColor={darkGrey} />
-                {this.renderImg()}
+                <CarouselImages
+                    style={styles.carousel}
+                    acco={this.accommodation}
+                    isUserOwner={this.isUserOwner}
+                />
                 <div style={style}>
                     {this.renderFetchingSpinner()}
                     {this.renderPlace()}
+                    {this.renderSaveBtn()}
                 </div>
             </div>
         );

@@ -1,4 +1,5 @@
 import * as accoTypes from "../actions/types/accommodation";
+import { remapAccoPropsInMap, remapAccoProps } from "../parsers/entityParsers";
 
 const initialSate = {
     data: [],
@@ -24,14 +25,14 @@ const accommodation = (state = initialSate, action) => {
             data: state.data.find(accoId => accoId === payload.data.id) ?
                 state.data :
                 state.data.concat(payload.data.id),
-            byID: state.byID.set(payload.data.id, payload.data),
+            byID: state.byID.set(payload.data.id, remapAccoProps(payload.data)),
             isLoading: false
         };
     case accoTypes.FETCH_ACCOMMODATIONS_SUCCESS:
         return {
             ...state,
             data: payload.data,
-            byID: payload.byID,
+            byID: remapAccoPropsInMap(payload.byID),
             isLoading: false
         };
     case accoTypes.FETCH_ACCOMMODATIONS_FAILURE:
@@ -55,7 +56,11 @@ const accommodation = (state = initialSate, action) => {
             data: payload.accommodation && payload.accommodation.id ?
                 state.data.concat([payload.accommodation.id]) : state.data,
             byID: payload.accommodation && payload.accommodation.id ?
-                state.byID.set(payload.accommodation.id, payload.accommodation) : state.byID
+                state.byID.set(payload.accommodation.id, remapAccoProps({
+                    ...state.byID.get(payload.accommodation.id),
+                    ...payload.accommodation,
+                })
+                ) : state.byID
         };
     case accoTypes.SAVE_ACCOMMODATION_FAILURE:
         return {

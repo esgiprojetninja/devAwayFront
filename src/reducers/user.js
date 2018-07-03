@@ -1,4 +1,5 @@
 import * as types from "../actions/types/user";
+import { remapAccoProps } from "../parsers/entityParsers";
 
 const initialSate = {
     data: {
@@ -90,7 +91,7 @@ const userReducer = (state = initialSate, action) => {
                 (stateAccos, currentAcc) =>
                     ({
                         ...stateAccos,
-                        [currentAcc.id]: currentAcc
+                        [currentAcc.id]: remapAccoProps(currentAcc)
                     }),
                 state.accommodations
             )
