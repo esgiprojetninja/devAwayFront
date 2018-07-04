@@ -23,9 +23,6 @@ const PROP_RULES = {
 };
 
 const styles = theme => ({
-    flex: {
-        flex: 1,
-    },
     title: {
         fontSize: "xx-large",
     },
@@ -41,7 +38,7 @@ const styles = theme => ({
     container: {
         width: "100%",
         height: "calc(100vh - 70px - 60px)",
-        maxWidth: 1380,
+        maxWidth: 720,
         margin: "auto",
         marginTop: theme.spacing.unit,
     },
@@ -56,7 +53,8 @@ const styles = theme => ({
         margin: "auto",
         marginTop: theme.spacing.unit * 2,
         width: "95%",
-        height: "100%",
+        height: "auto",
+        minHeight: "100%",
         padding: theme.spacing.unit * 2,
         paddingBottom: theme.spacing.unit * 10,
     },
@@ -74,7 +72,7 @@ const styles = theme => ({
     },
 });
 
-export class AccommocationCreation extends React.PureComponent {
+class AccommocationCreation extends React.PureComponent {
     state = {
         title: "",
         titleError: "",
@@ -162,7 +160,7 @@ export class AccommocationCreation extends React.PureComponent {
 
     renderSaveButton() {
         if (this.props.accommodation.isLoading) {
-            return <CircularProgress color="primary" />;
+            return null;
         }
         return (
             <Button
@@ -247,12 +245,12 @@ export class AccommocationCreation extends React.PureComponent {
         }
         return (
             <Grid container spacing={24} className={this.props.classes.container}>
-                <Grid item className={this.props.classes.item} xs={12}>
-                    <Typography className={this.props.classes.title} type="title" color="inherit" component="h2">
-                        Describe your place
-                    </Typography>
-                </Grid>
                 <Paper className={this.props.classes.paper} elevation={1}>
+                    <Grid item className={this.props.classes.item} xs={12}>
+                        <Typography className={this.props.classes.title} type="title" color="inherit" component="h2">
+                            Describe your place
+                        </Typography>
+                    </Grid>
                     <Grid item className={this.props.classes.item} xs={12}>
                         {this.renderForm()}
                     </Grid>
@@ -277,11 +275,23 @@ export class AccommocationCreation extends React.PureComponent {
         );
     }
 
+    renderSpinner() {
+        if (this.props.accommodation.isLoading) {
+            return (
+                <div className="display-flex-row full-screen position-fixed modal-bg align-absolute-top">
+                    <CircularProgress color="primary" />
+                </div>
+            );
+        }
+        return null;
+    }
+
     render() {
         return (
             <div>
                 <Navbar burgerColor="#acacac" />
                 {this.renderContent()}
+                {this.renderSpinner()}
             </div>
         );
     }
@@ -297,8 +307,7 @@ AccommocationCreation.propTypes = {
         isLoading: T.bool.isRequired
     }).isRequired,
     classes: T.shape({
-        flex: T.any,
-        title: T.any,
+        title: T.string.isRequired,
         container: T.string.isRequired,
         paper: T.string.isRequired,
         item: T.string.isRequired,

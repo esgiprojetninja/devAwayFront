@@ -7,14 +7,14 @@ import {
 import mainReducer from "../../../reducers/index";
 import AccommodationDetailMap from "../../../ui/Accommodation/AccommodationDetailMap.jsx";
 import { accommodationMock } from "../../mock/body/accommodation";
-import mapMockFn, { getNewSizeSpy, getNewPointSpy } from "../../mock/googleMap";
+import mapMockFn, { getNewSizeSpy, getNewPointSpy, getNewMarkerSpy } from "../../mock/googleMap";
 
 describe("ui <AccommodationDetailMap />", function () {
     const accos = new Map();
     let acco = null;
 
     beforeEach(() => {
-        acco = accommodationMock;
+        acco = JSON.parse(JSON.stringify(accommodationMock));
         jest.clearAllMocks();
         global.google = mapMockFn(jest);
         const initialState = mainReducer(undefined, {});
@@ -129,6 +129,26 @@ describe("ui <AccommodationDetailMap />", function () {
         expect(this.initialProps.updateAcco).toHaveBeenCalled();
     });
 
+    it("should NOT render address info popup", () => {
+        const props = {
+            ...this.initialProps,
+            isUserOwner: true,
+            acco: {
+                ...acco,
+                address: undefined
+            },
+            state: {
+                placeSearched: "COUCOU",
+            },
+        };
+        const wrapper = shallow(
+            <AccommodationDetailMap {...props} />
+        );
+
+        const instance = wrapper.dive().instance();
+        expect(instance.renderValidAddressPopup()).toBeNull();
+    });
+
     it("should not render address dom", () => {
         const props = {
             ...this.initialProps,
@@ -145,10 +165,27 @@ describe("ui <AccommodationDetailMap />", function () {
             <AccommodationDetailMap {...this.initialProps} />
         );
         const instance = wrapper.dive().instance();
-        instance.homeMarker = new global.google.maps.Marker();
-        const spy = jest.spyOn(instance.homeMarker, "setMap");
+        const spy = getNewMarkerSpy();
         instance.loadHomeMarker();
         expect(spy).toHaveBeenCalled();
+    });
+
+    it("should NOT load home marker without acco's lat or lng", () => {
+        const props = {
+            ...this.initialProps,
+            acco: {
+                ...acco,
+                latitude: undefined,
+                longitude: undefined,
+            },
+        };
+        const wrapper = shallow(
+            <AccommodationDetailMap {...props} />
+        );
+        const instance = wrapper.dive().instance();
+        const spy = getNewMarkerSpy();
+        instance.loadHomeMarker();
+        expect(spy).not.toHaveBeenCalled();
     });
 
     it("should load map", () => {
@@ -336,5 +373,20 @@ describe("ui <AccommodationDetailMap />", function () {
         expect(googleEventClearSpy).toHaveBeenCalledWith(coucouObjRef);
         expect(global.clearTimeout).toHaveBeenCalled();
         global.clearTimeout = clearTimeout;
+    });
+
+    it("should call props.updateAddress when defined", () => {
+        const props = {
+            ...this.initialProps,
+            updateAddress: jest.fn(),
+        };
+        const wrapper = shallow(
+            <AccommodationDetailMap {...props} />
+        );
+
+        const instance = wrapper.dive().instance();
+        instance.saveNewAdress();
+        expect(instance.props.updateAddress).toHaveBeenCalled();
+        expect(this.initialProps.updateAcco).not.toHaveBeenCalled();
     });
 });

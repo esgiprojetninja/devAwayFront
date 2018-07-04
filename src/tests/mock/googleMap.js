@@ -4,22 +4,30 @@ const TOP_LEFT = "POULAY_TOP_LEFT";
 
 let newSizeSpy = null;
 let newPointSpy = null;
+let newMarkerSpy = null;
 export const getNewSizeSpy = (jest) => {
-    if (newSizeSpy === null || !jest) {
+    if (newSizeSpy === null && jest) {
         newSizeSpy = jest.fn();
     }
     return newSizeSpy;
 };
 export const getNewPointSpy = (jest) => {
-    if (newPointSpy === null || !jest) {
+    if (newPointSpy === null && jest) {
         newPointSpy = jest.fn();
     }
     return newPointSpy;
+};
+export const getNewMarkerSpy = (jest) => {
+    if (newMarkerSpy === null && jest) {
+        newMarkerSpy = jest.fn();
+    }
+    return newMarkerSpy;
 };
 
 export default (jest) => {
     newSizeSpy = jest.fn();
     newPointSpy = jest.fn();
+    newMarkerSpy = jest.fn();
     return {
         maps: {
             Map: class {
@@ -59,6 +67,9 @@ export default (jest) => {
                 extend = jest.fn()
             },
             Marker: class {
+                constructor() {
+                    getNewMarkerSpy(jest)();
+                }
                 setMap = jest.fn()
             },
             Size: class {
