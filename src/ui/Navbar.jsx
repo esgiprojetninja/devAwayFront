@@ -95,7 +95,7 @@ export class NavBarComponent extends React.PureComponent {
                 >
                     <NavLink
                         id="accommodation-creation-link"
-                        to="/accommodations/create"
+                        to="/place/creation"
                     >
                         New place
                     </NavLink>

@@ -27,7 +27,7 @@ export default [
         component: AccommodationsTabs
     },
     {
-        path: "/accommodations/create",
+        path: "/place/creation",
         exact: true,
         component: AccommodationCreation
     },
