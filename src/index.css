@@ -19,6 +19,24 @@ body {
     height: 100%;
 }
 
+.full-screen {
+    width: 99vw;
+    height: 99vh;
+}
+
+.position-fixed {
+    position: fixed;
+}
+
+.modal-bg {
+    background: rgba(8, 8, 8, .2);
+}
+
+.align-absolute-top {
+    top: 0;
+    left: 0;
+}
+
 .capitalize {
     text-transform: capitalize;
 }

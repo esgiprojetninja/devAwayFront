@@ -216,11 +216,11 @@ class AccommodationDetailMap extends React.PureComponent {
             return null;
         }
         const { classes } = this.props;
-        const address = this.state.placeSearched ?
+        const address = this.state.placeSearched && this.state.placeSearched.address ?
             this.state.placeSearched.address
             : this.props.acco.address;
 
-        if (!address) {
+        if (typeof address !== "string" || address.length === 0) {
             return null;
         }
         return (
