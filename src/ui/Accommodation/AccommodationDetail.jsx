@@ -42,11 +42,6 @@ const styles = {
         padding: "16px 12px",
         borderBottom: `1px solid ${lightGrey}`
     },
-    carousel: {
-        width: "100%",
-        position: "relative",
-        height: "430px",
-    },
     iconInfoItem: {
         marginLeft: "10px",
     },
@@ -475,7 +470,6 @@ export default class AccommodationDetail extends React.PureComponent {
             <div className="relative full-width" style={{ background: "#fff" }}>
                 <Navbar burgerColor={darkGrey} />
                 <CarouselImages
-                    style={styles.carousel}
                     acco={this.accommodation}
                     isUserOwner={this.isUserOwner}
                 />
