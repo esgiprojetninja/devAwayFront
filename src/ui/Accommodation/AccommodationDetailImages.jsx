@@ -8,6 +8,30 @@ import EditImgIcon from "react-icons/lib/go/pencil";
 import { accommodationPropTypes } from "../../propTypes/accommodationType";
 import { darkGrey } from "../../styles/theme";
 
+const addImgStyle = {
+    margin: "auto",
+    width: "100%",
+    height: "100%",
+    borderRadius: "100%",
+    color: darkGrey,
+    fill: darkGrey,
+    transition: "fill, color, background .2s ease-in-out",
+    cursor: "pointer",
+    "&:hover": {
+        color: "#fff",
+        fill: "#fff",
+        backgroundColor: darkGrey,
+    },
+};
+
+const hoverSubSvg = {
+    "&:hover > svg": {
+        background: darkGrey,
+        color: "#fff",
+        fill: "#fff",
+    }
+};
+
 const styles = theme => ({ // eslint-disable-line
     container: {
         width: "100%",
@@ -39,18 +63,11 @@ const styles = theme => ({ // eslint-disable-line
         flexDirection: "row",
     },
     addImgIcon: {
-        margin: "auto",
+        ...addImgStyle,
         border: `1px solid ${darkGrey}`,
-        borderRadius: "100%",
-        color: darkGrey,
-        fill: darkGrey,
-        transition: "fill, color, background .2s ease-in-out",
-        cursor: "pointer",
-        "&:hover": {
-            color: "#fff",
-            fill: "#fff",
-            backgroundColor: darkGrey,
-        },
+    },
+    editImgIcon: {
+        ...addImgStyle,
     },
     img: {
         width: "100%",
@@ -58,14 +75,22 @@ const styles = theme => ({ // eslint-disable-line
         opacity: "0.7",
     },
     dotImgWrapper: {
-        width: "50px",
-        height: "100%",
+        width: "40px",
+        height: "40px",
         display: "flex",
         alignItems: "center",
         justifyItems: "center",
         flexDirection: "row",
         cursor: "pointer",
         position: "relative",
+        ...hoverSubSvg,
+    },
+    addImgWrapper: {
+        width: "60px",
+        height: "60px",
+        margin: "auto",
+        position: "relative",
+        ...hoverSubSvg,
     },
     inputPicture: {
         opacity: 0,
@@ -199,11 +224,19 @@ class AccommodationDetailImages extends React.PureComponent {
         return (
             <div key={`${ADD_IMAGE_WARN}-${i}`} className={classes.noImgContainer}>
                 <div className={classes.noImgWrapper}>
-                    <AddImgIcon
-                        size={40}
-                        className={classes.addImgIcon}
-                        onClick={this.handleAddImg}
-                    />
+                    <div className={classes.addImgWrapper} >
+                        <AddImgIcon
+                            size={40}
+                            className={classes.addImgIcon}
+                        />
+                        <input
+                            type="file"
+                            name="placePictureAdd"
+                            accept="image/*"
+                            className={classes.inputPicture}
+                            onChange={e => this.handleAddImg(e, null)}
+                        />
+                    </div>
                 </div>
             </div>
         );
@@ -219,7 +252,7 @@ class AccommodationDetailImages extends React.PureComponent {
                         <div className={classes.editPictureContainer}>
                             <EditImgIcon
                                 size={25}
-                                className={classes.addImgIcon}
+                                className={classes.editImgIcon}
                             />
                             <input
                                 type="file"

@@ -118,7 +118,7 @@ describe("ui <AccommodationDetailImages />", function () {
             }}
             />
         );
-        const fileInput = wrapper.find("input").first();
+        const fileInput = wrapper.find("input[name='placePictureUpload']").first();
         fileInput.simulate("change",
             {
                 preventDefault: jest.fn(),
