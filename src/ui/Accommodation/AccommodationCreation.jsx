@@ -2,31 +2,23 @@ import React from "react";
 import * as T from "prop-types";
 import Button from "@material-ui/core/Button";
 import { withStyles } from "@material-ui/core/styles";
-import Switch from "@material-ui/core/Switch";
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Typography from "@material-ui/core/Typography";
-import FormLabel from "@material-ui/core/FormLabel";
 import FormControl from "@material-ui/core/FormControl";
-import FormGroup from "@material-ui/core/FormGroup";
+import Save from "@material-ui/icons/Save";
 
 import Navbar from "../../containers/Navbar";
+import AccommodationDetailMap from "../../containers/AccommodationDetailMap";
+import { lightGrey } from "../../styles/theme";
 
 const PROP_RULES = {
     title: { min: 6, max: 24 },
     description: { min: 6, max: 255 },
-    city: { min: 4, max: 59 },
-    region: { min: 4, max: 59 },
-    country: { min: 4, max: 59 },
-    address: { min: 10, max: 255 },
-    nbBedroom: { min: 0, max: 10, isNumber: true },
-    nbBathroom: { min: 0, max: 10, isNumber: true },
-    nbToilet: { min: 0, max: 10, isNumber: true },
-    nbMaxBaby: { min: 0, max: 10, isNumber: true },
-    nbMaxChild: { min: 0, max: 10, isNumber: true },
-    nbMaxGuest: { min: 0, max: 10, isNumber: true },
-    nbMaxAdult: { min: 0, max: 10, isNumber: true },
+    address: { min: 5, max: 255 },
     propertySize: { min: 10, max: 10000, isNumber: true }
 };
 
@@ -36,80 +28,119 @@ const styles = theme => ({
     },
     title: {
         fontSize: "xx-large",
-        margin: theme.spacing.unit
+    },
+    mapLabel: {
+        marginTop: theme.spacing.unit * 4,
+        color: lightGrey,
+        fontSize: "larger",
+    },
+    labelControl: {
+        fontSize: "larger",
+        color: lightGrey,
+    },
+    container: {
+        width: "100%",
+        height: "calc(100vh - 70px - 60px)",
+        maxWidth: 1380,
+        margin: "auto",
+        marginTop: theme.spacing.unit,
+    },
+    mapContainer: {
+        width: "100%",
+        height: 300,
+        maxWidth: 1380,
+        margin: "auto",
+        marginTop: theme.spacing.unit * 4,
+    },
+    paper: {
+        margin: "auto",
+        marginTop: theme.spacing.unit * 2,
+        width: "95%",
+        height: "100%",
+        padding: theme.spacing.unit * 2,
+        paddingBottom: theme.spacing.unit * 10,
+    },
+    saveBtn: {
+        position: "fixed",
+        right: theme.spacing.unit * 2,
+        bottom: theme.spacing.unit * 4,
+    },
+    item: {
+        marginTop: theme.spacing.unit * 2,
+    },
+    numberFormControl: {
+        width: "100%",
+        maxWidth: 250,
     },
 });
 
 export class AccommocationCreation extends React.PureComponent {
-    static propTypes = {
-        user: T.shape({
-            isLoggedIn: T.bool.isRequired,
-            data: T.shape({
-                id: T.number
-            }),
-        }).isRequired,
-        accommodation: T.shape({
-            isLoading: T.bool.isRequired
-        }).isRequired,
-        classes: T.shape({
-            flex: T.any,
-            title: T.any,
-        }).isRequired,
-        saveAccommodation: T.func.isRequired
-    };
-
     state = {
         title: "",
         titleError: "",
         description: "",
         descriptionError: "",
-        city: "",
-        cityError: "",
-        region: "",
-        regionError: "",
-        country: "",
-        countryError: "",
-        address: "",
-        addressError: "",
-        nbBedroom: 0,
-        nbBedroomError: "",
-        nbBathroom: 0,
-        nbBathroomError: "",
-        nbToilet: 0,
-        nbToiletError: "",
-        nbMaxBaby: 0,
-        nbMaxBabyError: "",
-        nbMaxChild: 0,
-        nbMaxChildError: "",
-        nbMaxGuest: 0,
-        nbMaxGuestError: "",
-        nbMaxAdult: 0,
-        nbMaxAdultError: "",
         propertySize: 10,
         propertySizeError: "",
-        animalsAllowed: true,
-        smokersAllowed: true,
-        hasInternet: true,
-        floor: 0, // eslint-disable-line
-        minStay: 0, // eslint-disable-line
-        maxStay: 10, // eslint-disable-line
-        checkinHour: new Date().toISOString(), // eslint-disable-line
-        checkoutHour: new Date().toISOString(), // eslint-disable-line
-        createdAt: new Date().toISOString(), // eslint-disable-line
-        updatedAt: new Date().toISOString() // eslint-disable-line
+        latitude: null,
+        longitude: null,
+        address: null,
+        country: null,
+        region: null,
+        city: null,
     }
 
-    handleSave = () => {
-        this.props.saveAccommodation({
-            ...this.state,
-            host: `/api/users/${this.props.user.data.id}`,
-            pictures: ""
-        });
+    get accommodation() {
+        const {
+            title,
+            description,
+            propertySize,
+            address,
+            latitude,
+            longitude,
+            country,
+            region,
+            city } = this.state;
+        return {
+            title,
+            description,
+            propertySize,
+            address,
+            latitude,
+            longitude,
+            country,
+            region,
+            city,
+            host: this.props.user.data,
+        };
     }
 
-    handleToggleBtn = name => (event, checked) => {
-        this.setState({ [name]: checked });
-    };
+    get accoSavable() {
+        if (this.state.titleError) {
+            return false;
+        }
+        if (this.state.descriptionError) {
+            return false;
+        }
+        if (this.state.propertySizeError) {
+            return false;
+        }
+        if (this.state.latitude === null) {
+            return false;
+        }
+        if (this.state.longitude === null) {
+            return false;
+        }
+        if (this.state.address === null) {
+            return false;
+        }
+        return true;
+    }
+
+    handleSave = async () => {
+        await this.props.saveAccommodation(this.accommodation);
+        // @TODO redirect to acco detail on success !!
+    }
 
     handleChange(property, ev) {
         const { value } = ev.target;
@@ -134,20 +165,29 @@ export class AccommocationCreation extends React.PureComponent {
             return <CircularProgress color="primary" />;
         }
         return (
-            <Button color="inherit" onClick={this.handleSave}>save</Button>
+            <Button
+                className={this.props.classes.saveBtn}
+                color="primary"
+                disabled={!this.accoSavable}
+                onClick={this.handleSave}
+                variant="fab"
+                id="devaway-create-acco-btn"
+            >
+                <Save />
+            </Button>
         );
     }
 
-    renderTextProperty(propName, required = true, multi = false, rows = 1) {
+    renderTextProperty(propName, multi = false, rows = 1) {
         const capitalized = propName.charAt(0).toUpperCase() + propName.slice(1);
         const id = `${capitalized}-${Math.floor(Math.random() * 2000)}`;
         return (
             <FormControl fullWidth >
-                <InputLabel htmlFor={id}>{this.state[`${propName}Error`].length ? this.state[`${propName}Error`] : capitalized}</InputLabel>
+                <InputLabel className={this.props.classes.labelControl} htmlFor={id}>{this.state[`${propName}Error`].length ? this.state[`${propName}Error`] : `${capitalized} (*)`}</InputLabel>
                 <Input
                     error={!!this.state[`${propName}Error`].length}
                     id={id}
-                    required={required}
+                    required
                     fullWidth
                     type="text"
                     name={propName}
@@ -162,15 +202,15 @@ export class AccommocationCreation extends React.PureComponent {
         );
     }
 
-    renderNumberProperty(propName, defaultLegend, required = true) {
+    renderNumberProperty(propName, defaultLegend) {
         const capitalized = propName.charAt(0).toUpperCase() + propName.slice(1);
         const id = `${capitalized}-${Math.floor(Math.random() * 2000)}`;
         return (
-            <FormControl fullWidth >
-                <InputLabel htmlFor={id}>{this.state[`${propName}Error`].length ? this.state[`${propName}Error`] : defaultLegend}</InputLabel>
+            <FormControl className={this.props.classes.numberFormControl}>
+                <InputLabel className={this.props.classes.labelControl} htmlFor={id}>{this.state[`${propName}Error`].length ? this.state[`${propName}Error`] : `${defaultLegend} (*)`}</InputLabel>
                 <Input
                     error={!!this.state[`${propName}Error`].length}
-                    required={required}
+                    required
                     fullWidth
                     type="number"
                     name={propName}
@@ -187,63 +227,88 @@ export class AccommocationCreation extends React.PureComponent {
 
     renderForm() {
         return (
-            <form action="">
-                {this.renderTextProperty("title", true, true, 2)}
-                {this.renderTextProperty("description", true, true, 4)}
-                {this.renderTextProperty("city", true, true, 4)}
-                {this.renderTextProperty("region", true, true, 4)}
-                {this.renderTextProperty("country", true, true, 4)}
-                {this.renderTextProperty("address", true, true, 4)}
-                {this.renderNumberProperty("nbBedroom", "Bedrooms")}
-                {this.renderNumberProperty("nbBathroom", "Bathrooms")}
-                {this.renderNumberProperty("nbToilet", "Toilets")}
-                {this.renderNumberProperty("nbMaxBaby", "Hostable babies")}
-                {this.renderNumberProperty("nbMaxChild", "Hostable children")}
-                {this.renderNumberProperty("nbMaxGuest", "Hostable guests")}
-                {this.renderNumberProperty("nbMaxAdult", "Hostable adults")}
-                {this.renderNumberProperty("propertySize", "Property size (m²)", true)}
-                <FormGroup>
-                    <FormLabel
-                        control={
-                            <Switch
-                                checked={this.state.animalsAllowed}
-                                onChange={this.handleToggleBtn("animalsAllowed")}
-                            />}
-                        label="Animals allowed"
-                    />
-                    <FormLabel
-                        control={
-                            <Switch
-                                checked={this.state.smokersAllowed}
-                                onChange={this.handleToggleBtn("smokersAllowed")}
-                            />}
-                        label="Smokers allowed"
-                    />
-                    <FormLabel
-                        control={
-                            <Switch
-                                checked={this.state.hasInternet}
-                                onChange={this.handleToggleBtn("hasInternet")}
-                            />}
-                        label="Internet access"
-                    />
-                </FormGroup>
-            </form>
+            <Grid container spacing={24}>
+                <Grid item className={this.props.classes.item} xs={12}>
+                    {this.renderTextProperty("title", true, 2)}
+                </Grid>
+                <Grid item className={this.props.classes.item} xs={12}>
+                    {this.renderTextProperty("description", true, 4)}
+                </Grid>
+                <Grid item className={this.props.classes.item} xs={12}>
+                    {this.renderNumberProperty("propertySize", "Property size (m²)", true)}
+                </Grid>
+            </Grid>
+        );
+    }
+
+    renderContent() {
+        if (!this.props.user.isLoggedIn) {
+            return null;
+        }
+        return (
+            <Grid container spacing={24} className={this.props.classes.container}>
+                <Grid item className={this.props.classes.item} xs={12}>
+                    <Typography className={this.props.classes.title} type="title" color="inherit" component="h2">
+                        Describe your place
+                    </Typography>
+                </Grid>
+                <Paper className={this.props.classes.paper} elevation={1}>
+                    <Grid item className={this.props.classes.item} xs={12}>
+                        {this.renderForm()}
+                    </Grid>
+                    <Grid className={this.props.classes.mapContainer} item xs={12}>
+                        <Grid item xs={12}>
+                            <Typography className={this.props.classes.mapLabel} variant="subheading" color="inherit" component="p">
+                                Address (*)
+                            </Typography>
+                        </Grid>
+                        <AccommodationDetailMap
+                            acco={this.accommodation}
+                            isUserOwner
+                            zoom={8}
+                            updateAddress={(addressObj) => {
+                                this.setState(addressObj);
+                            }}
+                        />
+                    </Grid>
+                </Paper>
+                {this.renderSaveButton()}
+            </Grid>
         );
     }
 
     render() {
-        if (!this.props.user.isLoggedIn) return null;
         return (
             <div>
                 <Navbar burgerColor="#acacac" />
-                <Typography className={this.props.classes.title} type="title" color="inherit" component="h2">
-                    Accommodation creation
-                </Typography>
-                {this.renderForm()}
-                {this.renderSaveButton()}
+                {this.renderContent()}
             </div>
         );
     }
 }
+AccommocationCreation.propTypes = {
+    user: T.shape({
+        isLoggedIn: T.bool.isRequired,
+        data: T.shape({
+            id: T.number
+        }),
+    }).isRequired,
+    accommodation: T.shape({
+        isLoading: T.bool.isRequired
+    }).isRequired,
+    classes: T.shape({
+        flex: T.any,
+        title: T.any,
+        container: T.string.isRequired,
+        paper: T.string.isRequired,
+        item: T.string.isRequired,
+        mapContainer: T.string.isRequired,
+        saveBtn: T.string.isRequired,
+        numberFormControl: T.string.isRequired,
+        mapLabel: T.string.isRequired,
+        labelControl: T.string.isRequired,
+    }).isRequired,
+    saveAccommodation: T.func.isRequired
+};
+
 export default withStyles(styles)(AccommocationCreation);

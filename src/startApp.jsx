@@ -45,7 +45,7 @@ function startApp(node) {
         <MuiThemeProvider theme={defaultTheme}>
             <BrowserRouter basename={routes[0].path} forceRefresh={!supportsHistory} >
                 <Provider store={store}>
-                    <div className="full-width">
+                    <div className="full-width full-height">
                         {routes.map(route => (<RouteWithSubRoutes key={`${Date.now()}+${route.path}`} {...route} />))}
                     </div>
                 </Provider>

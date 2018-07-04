@@ -48,9 +48,11 @@ const MAP_LOAD_DELAY = 3000;
 class AccommodationDetailMap extends React.PureComponent {
     static defaultProps = {
         acco: null,
+        zoom: 10,
         state: {
             placeSearched: null,
         },
+        updateAddress: null,
     }
 
     state = {
@@ -119,10 +121,24 @@ class AccommodationDetailMap extends React.PureComponent {
         map.fitBounds(bounds);
     }
 
+    get mapCenter() {
+        const { latitude, longitude } = this.props.acco;
+        if (typeof latitude !== "number" || typeof longitude !== "number") {
+            return {
+                latitude: 48,
+                longitude: 48,
+            };
+        }
+        return {
+            latitude, longitude
+        };
+    }
+
     loadMap() {
+        const { latitude, longitude } = this.mapCenter;
         this.map = new google.maps.Map(this.mapDom, {
-            center: { lat: this.props.acco.latitude, lng: this.props.acco.longitude },
-            zoom: 13,
+            center: { lat: latitude, lng: longitude },
+            zoom: this.props.zoom,
             mapTypeId: "roadmap"
         });
 
@@ -155,6 +171,9 @@ class AccommodationDetailMap extends React.PureComponent {
         }
         const { map } = this;
         const { acco } = this.props;
+        if (typeof acco.latitude !== "number" || typeof acco.longitude !== "number") {
+            return;
+        }
         this.homeMarker = new google.maps.Marker({
             map,
             title: acco.address || "Current address",
@@ -179,18 +198,36 @@ class AccommodationDetailMap extends React.PureComponent {
         this.searchInput.value = "";
     }
 
+    saveNewAdress = () => {
+        if (typeof this.props.updateAddress === "function") {
+            this.props.updateAddress(this.state.placeSearched);
+            return;
+        }
+        this.props.updateAcco({
+            ...this.props.acco,
+            ...this.state.placeSearched,
+        });
+        this.clearSearchedPlace();
+        this.loadHomeMarker();
+    }
+
     renderValidAddressPopup() {
         if (this.props.isUserOwner !== true) {
             return null;
         }
         const { classes } = this.props;
+        const address = this.state.placeSearched ?
+            this.state.placeSearched.address
+            : this.props.acco.address;
+
+        if (!address) {
+            return null;
+        }
         return (
             <div id="devaway-address-pop" className={classes.changeAddressPopup}>
                 <Typography className="full-width text-center">
                     {
-                        this.state.placeSearched ?
-                            this.state.placeSearched.address
-                            : this.props.acco.address
+                        address
                     }
                 </Typography>
                 <Button
@@ -200,18 +237,11 @@ class AccommodationDetailMap extends React.PureComponent {
                         this.state.placeSearched === null ||
                         this.props.accommodation.isLoading
                     }
-                    onClick={async () => {
-                        await this.props.updateAcco({
-                            ...this.props.acco,
-                            ...this.state.placeSearched,
-                        });
-                        this.clearSearchedPlace();
-                        this.loadHomeMarker();
-                    }}
+                    onClick={this.saveNewAdress}
                     color="primary"
                     variant="contained"
                 >
-                    Change address
+                    Set address
                 </Button>
                 <Button
                     className="full-width margin-auto"
@@ -255,8 +285,10 @@ AccommodationDetailMap.propTypes = {
         wrapper: T.string.isRequired,
         changeAddressPopup: T.string.isRequired,
     }).isRequired,
+    zoom: T.number,
     updateAcco: T.func.isRequired,
     extractAddressFromPlace: T.func.isRequired,
+    updateAddress: T.func,
     accommodation: accommodationReducerPropTypes.isRequired,
     acco: accommodationPropTypes,
     isUserOwner: T.bool.isRequired,
