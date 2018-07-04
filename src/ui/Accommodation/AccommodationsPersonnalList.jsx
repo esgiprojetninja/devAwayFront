@@ -147,7 +147,7 @@ class AccommodationsPersonnalList extends React.PureComponent {
         }
         return (
             <NavLink
-                to="/accommodations/create"
+                to="/place/creation"
             >
                 <Button
                     size="large"
