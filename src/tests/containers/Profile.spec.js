@@ -73,8 +73,8 @@ describe("Container Profile", () => {
             });
         });
 
-        it("onProfileChanged", () => {
-            const { store, fn } = prepare("onProfileChanged", mainReducer(undefined, {}));
+        it("updateUser", () => {
+            const { store, fn } = prepare("updateUser", mainReducer(undefined, {}));
             fn().then(() => {
                 expect(store.getActions().map(a => a.type)).toEqual([]);
             });

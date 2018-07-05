@@ -1,3 +1,4 @@
+/* global Date */
 import React from "react";
 import * as T from "prop-types";
 import Grid from "@material-ui/core/Grid";
@@ -49,7 +50,24 @@ export class Profile extends React.PureComponent {
         if (!this.hasProfileChanged) {
             return;
         }
-        this.props.onProfileChanged(this.newProps);
+        const { data } = this.props.current;
+        const patch = this.newProps
+            .reduce((obj, prop) => ({
+                ...obj,
+                [prop]: this.state[prop],
+            }), {});
+        this.props.updateUser({
+            id: data.id || null,
+            email: data.email,
+            username: data.username,
+            lastName: data.lastName,
+            firstName: data.firstName,
+            languages: data.languages,
+            skills: data.skills,
+            avatar: data.avatar,
+            ...patch,
+            updated_at: new Date().toISOString()
+        });
     }
 
     handleChange(ev, prop) {
@@ -63,16 +81,17 @@ export class Profile extends React.PureComponent {
         const reader = new global.FileReader();
         const file = e.target.files[0];
         reader.onloadend = () => {
-            if (reader.result.indexOf("data:image/") > -1) {
-                // @TODO call pic updater
-                console.log("POULAAAY", reader.result);
+            if (reader.result.includes("data:image/")) {
+                this.setState({
+                    avatar: reader.result
+                });
             }
         };
         reader.readAsDataURL(file);
     }
 
     renderUserImage() {
-        const imgUrl = this.props.current.data.avatar;
+        const imgUrl = this.state.avatar || this.props.current.data.avatar;
         const { classes } = this.props;
         return (
             <div className="full-width display-flex-row">
@@ -80,7 +99,9 @@ export class Profile extends React.PureComponent {
                     {
                         imgUrl && <Avatar
                             alt="Adelle Charles"
-                            src={`data:image/jpeg;base64,${imgUrl}`}
+                            src={imgUrl.includes("data:image/") ?
+                                imgUrl : `data:image/jpeg;base64,${imgUrl}`
+                            }
                             className={classes.avatar}
                         />
                     }
@@ -229,7 +250,7 @@ export class Profile extends React.PureComponent {
 
 Profile.propTypes = {
     onGetMe: T.func.isRequired,
-    onProfileChanged: T.func.isRequired,
+    updateUser: T.func.isRequired,
     current: T.shape({
         isLoading: T.bool.isRequired,
         isLoggedIn: T.bool.isRequired,

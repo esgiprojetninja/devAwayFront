@@ -67,7 +67,10 @@ const userReducer = (state = initialSate, action) => {
             isLoading: false,
             isLoggedIn: false,
             hasError: false,
-            data: payload.user
+            data: {
+                ...state.data,
+                ...payload.user
+            },
         };
     case types.ADD_USER_FAILURE:
         return {

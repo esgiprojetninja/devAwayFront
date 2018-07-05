@@ -5,13 +5,13 @@ import thunk from "redux-thunk";
 import * as userActionTypes from "../../actions/types/user";
 import * as userActions from "../../actions/user";
 import { SET_SNACK_MSG } from "../../actions/types/snack";
+import { basicUser } from "../mock/body/user";
 import {
     mockAPI,
     mockAPIWithErrors,
     mockAPIWithServerFailure
 } from "../mock/API";
 
-import { createUser, basicUser } from "../mock/body/user";
 import { accommodationMock } from "../mock/body/accommodation";
 
 describe("Actions user", () => {
@@ -123,76 +123,6 @@ describe("Actions user", () => {
         const store = mockStore();
         return store.dispatch(userActions.login()).then(() => {
             expect(store.getActions()).toEqual(expextedActions);
-        });
-    });
-
-    it("should create a user", () => {
-        const expectedAction = [
-            { type: userActionTypes.USER_REQUEST },
-            {
-                type: SET_SNACK_MSG,
-                payload: {
-                    msg: `Account created with ${createUser.username}`,
-                    snackDuration: undefined
-                }
-            },
-            {
-                type: userActionTypes.ADD_USER_SUCCESS,
-                payload: { user: basicUser }
-            }
-        ];
-        const store = mockStore();
-        return store.dispatch(userActions.addUser(createUser)).then(() => {
-            expect(store.getActions()).toEqual(expectedAction);
-        });
-    });
-
-    it("should NOT create a user with uncomplete response", () => {
-        const expectedAction = [
-            { type: userActionTypes.USER_REQUEST },
-            {
-                type: SET_SNACK_MSG,
-                payload: {
-                    msg: "Uncomplete user info",
-                    snackDuration: undefined
-                }
-            },
-            {
-                type: userActionTypes.ADD_USER_FAILURE,
-                payload: {
-                    hasError: true
-                }
-            }
-        ];
-        mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)]);
-        const store = mockStore();
-        return store.dispatch(userActions.addUser({ username: "chibar" })).then(() => {
-            expect(store.getActions()).toEqual(expectedAction);
-        });
-    });
-
-    it("should NOT create a user with error on serverside", () => {
-        const expectedAction = [
-            { type: userActionTypes.USER_REQUEST },
-            {
-                type: SET_SNACK_MSG,
-                payload: {
-                    msg: "Account creation failure",
-                    snackDuration: undefined
-                }
-            },
-            {
-                type: userActionTypes.ADD_USER_FAILURE,
-                payload: new Error({
-                    code: 500,
-                    message: "gtfo"
-                })
-            }
-        ];
-        mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithServerFailure)]);
-        const store = mockStore();
-        return store.dispatch(userActions.addUser()).then(() => {
-            expect(store.getActions()).toEqual(expectedAction);
         });
     });
 
@@ -390,6 +320,76 @@ describe("Actions user", () => {
         mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithServerFailure)]);
         const store = mockStore();
         await store.dispatch(userActions.fetchUserAccommodations(123));
+        expect(store.getActions()).toEqual(expectedActions);
+    });
+
+    it("should upsert user", async () => {
+        const expectedActions = [
+            {
+                type: userActionTypes.USER_REQUEST,
+            },
+            {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "User created",
+                    snackDuration: undefined
+                },
+            },
+            {
+                type: userActionTypes.ADD_USER_SUCCESS,
+                payload: {
+                    user: basicUser
+                }
+            }
+        ];
+        const store = mockStore();
+        await store.dispatch(userActions.upsertUser({ poulay: "man" }));
+        expect(store.getActions()).toEqual(expectedActions);
+    });
+
+    it("should NOT upsert user with API error", async () => {
+        const expectedActions = [
+            {
+                type: userActionTypes.USER_REQUEST,
+            },
+            {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "Couldn't edit user",
+                    snackDuration: undefined
+                },
+            },
+            {
+                type: userActionTypes.ADD_USER_FAILURE,
+                payload: "POULAY ERROR",
+            }
+        ];
+        mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)]);
+        const store = mockStore();
+        await store.dispatch(userActions.upsertUser({ id: 123, poulay: "man" }));
+        expect(store.getActions()).toEqual(expectedActions);
+    });
+
+    it("should NOT get user accommodations with server failure", async () => {
+        const expectedActions = [
+            {
+                type: userActionTypes.USER_REQUEST,
+            },
+            {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "Couldn't edit user",
+                    snackDuration: undefined
+                },
+            },
+            {
+                type: userActionTypes.ADD_USER_FAILURE,
+                payload: "gtfo",
+            }
+        ];
+        mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithServerFailure)]);
+        const store = mockStore();
+        await store.dispatch(userActions.upsertUser({ id: 123, poulay: "man" }));
         expect(store.getActions()).toEqual(expectedActions);
     });
 });

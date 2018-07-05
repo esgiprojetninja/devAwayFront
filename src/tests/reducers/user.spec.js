@@ -108,7 +108,7 @@ describe("Reducer USER", () => {
                 languages: "",
                 skills: "",
                 createdAt: "",
-                updateAt: "",
+                updatedAt: "",
                 username: ""
             }
         };
@@ -127,7 +127,8 @@ describe("Reducer USER", () => {
                 languages: "",
                 skills: "",
                 createdAt: "",
-                updateAt: "",
+                token: "",
+                updatedAt: "",
                 username: ""
             }
         });

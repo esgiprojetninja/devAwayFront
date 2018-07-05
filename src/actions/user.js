@@ -91,24 +91,26 @@ const addUserFailure = err => ({
     payload: err
 });
 
-export const addUser = (user) => {
-    return (dispatch, getState, API) => {
+export const upsertUser = (user) => {
+    return async (dispatch, getState, API) => {
+        let verb = user.id || user.id === 0 ?
+            "edit"
+            : "create";
         dispatch(userRequest());
-        return API.userApi.addUser(user)
-            .then(
-                (res) => {
-                    if (res && res.id && res.email && res.username) {
-                        dispatch(displaySnackMsg(`Account created with ${res.username}`));
-                        return dispatch(addUserSuccess(res));
-                    }
-                    dispatch(displaySnackMsg("Uncomplete user info"));
-                    return dispatch(addUserFailure(res));
-                }, (err) => {
-                    // console.error("addUser error", err);
-                    dispatch(displaySnackMsg("Account creation failure"));
-                    return dispatch(addUserFailure(err));
-                }
-            );
+        console.log("complete sent user", user);
+        try {
+            const res = await API.userApi.upsertUser(user);
+            if (res && res.email && res.username) {
+                verb = `${verb}ed`.replace("ee", "e");
+                dispatch(displaySnackMsg(`User ${verb}`));
+                return dispatch(addUserSuccess(res));
+            }
+            dispatch(displaySnackMsg(`Couldn't ${verb} user`));
+            return dispatch(addUserFailure(res.message || `Couldn't ${verb} user`));
+        } catch (e) {
+            dispatch(displaySnackMsg(`Couldn't ${verb} user`));
+            return dispatch(addUserFailure(e.message));
+        }
     };
 };
 

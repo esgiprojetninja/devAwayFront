@@ -28,7 +28,7 @@ describe("ui <Profile />", function () {
                 container: ""
             },
             onGetMe: jest.fn(),
-            onProfileChanged: jest.fn()
+            updateUser: jest.fn()
         };
     });
 
