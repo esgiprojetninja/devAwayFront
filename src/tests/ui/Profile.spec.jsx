@@ -11,6 +11,19 @@ describe("ui <Profile />", function () {
         const initialState = mainReducer(undefined, {}).profile;
         this.initialProps = {
             ...initialState,
+            current: {
+                isLoading: false,
+                isLoggedIn: true,
+                data: {
+                    email: "email",
+                    firstName: "firstName",
+                    lastName: "lastName",
+                    username: "username",
+                    languages: "languages",
+                    skills: "skills",
+                    avatar: "avatar",
+                },
+            },
             classes: {
                 container: ""
             },

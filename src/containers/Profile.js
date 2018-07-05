@@ -6,7 +6,7 @@ import {
 
 import ProfileComponent from "../ui/Profile.jsx";
 
-export const mapStateToProps = state => state.profile;
+export const mapStateToProps = state => ({ current: state.user });
 
 export const mapDispatchToProps = dispatch => ({
     onGetMe: () => dispatch(getMe()),

@@ -7,40 +7,39 @@ import {
 import LogBox from "../../ui/LogBox.jsx";
 
 describe("ui <LogBox />", function () {
-    const defaultProps = {
-        data: {
-            id: 0,
-            email: "",
-            lastName: "",
-            firstName: "",
-            languages: "",
-            skills: "",
-            createdAt: "",
-            updatedAt: "",
-            username: ""
-        },
-        isLoading: false,
-        isLoggedIn: false,
-        hasError: false,
-        errorText: "",
-        onSubmit: jest.fn(),
-        onLogoutClicked: jest.fn()
-    };
-
-    global.localStorage = {
-        getItem: jest.fn()
-    };
-
     beforeEach(() => {
-        this.wrapper = mount(<LogBox
-            data={defaultProps.data}
-            isLoading={defaultProps.isLoading}
-            isLoggedIn={defaultProps.isLoggedIn}
-            hasError={defaultProps.hasError}
-            errorText={defaultProps.errorText}
-            onSubmit={defaultProps.onSubmit}
-            onLogoutClicked={defaultProps.onLogoutClicked}
-        />);
+        global.localStorage = {
+            getItem: jest.fn()
+        };
+        this.defaultProps = {
+            data: {
+                id: 0,
+                email: "",
+                lastName: "",
+                firstName: "",
+                languages: "",
+                skills: "",
+                createdAt: "",
+                updatedAt: "",
+                avatar: "",
+                username: ""
+            },
+            isLoading: false,
+            isLoggedIn: false,
+            hasError: false,
+            errorText: "",
+            onSubmit: jest.fn(),
+            onLogoutClicked: jest.fn()
+        };
+        this.wrapper = shallow(<LogBox
+            data={this.defaultProps.data}
+            isLoading={this.defaultProps.isLoading}
+            isLoggedIn={this.defaultProps.isLoggedIn}
+            hasError={this.defaultProps.hasError}
+            errorText={this.defaultProps.errorText}
+            onSubmit={this.defaultProps.onSubmit}
+            onLogoutClicked={this.defaultProps.onLogoutClicked}
+        />).dive();
     });
 
     afterEach(() => {
@@ -48,24 +47,24 @@ describe("ui <LogBox />", function () {
     });
 
     it("should render a login button", () => {
-        expect(this.wrapper.find("Button").length).toBe(1);
+        expect(this.wrapper.find("#devaway-logbox-toggler").length).toBe(1);
     });
 
     it("should open dialog", () => {
-        expect(this.wrapper.find("Dialog").props().open).toBe(false);
-        this.wrapper.find("Button").simulate("click");
-        expect(this.wrapper.find("Dialog").props().open).toBe(true);
+        expect(this.wrapper.find("#devaway-logbox-dialog").props().open).toBe(false);
+        this.wrapper.find("#devaway-logbox-toggler").simulate("click");
+        expect(this.wrapper.find("#devaway-logbox-dialog").props().open).toBe(true);
     });
 
     it("should render a spinner", () => {
         const wrapper = mount(<LogBox
-            data={defaultProps.data}
+            data={this.defaultProps.data}
             isLoading
-            isLoggedIn={defaultProps.isLoggedIn}
-            hasError={defaultProps.hasError}
-            errorText={defaultProps.errorText}
-            onSubmit={defaultProps.onSubmit}
-            onLogoutClicked={defaultProps.onLogoutClicked}
+            isLoggedIn={this.defaultProps.isLoggedIn}
+            hasError={this.defaultProps.hasError}
+            errorText={this.defaultProps.errorText}
+            onSubmit={this.defaultProps.onSubmit}
+            onLogoutClicked={this.defaultProps.onLogoutClicked}
         />);
         expect(wrapper.find("CircularProgress").length).toBe(1);
     });
@@ -78,15 +77,15 @@ describe("ui <LogBox />", function () {
     });
 
     it("shouldn't open", () => {
-        const wrapper = mount(<LogBox
-            data={defaultProps.data}
+        const wrapper = shallow(<LogBox
+            data={this.defaultProps.data}
             isLoading
             isLoggedIn
-            hasError={defaultProps.hasError}
-            errorText={defaultProps.errorText}
-            onSubmit={defaultProps.onSubmit}
-            onLogoutClicked={defaultProps.onLogoutClicked}
-        />);
+            hasError={this.defaultProps.hasError}
+            errorText={this.defaultProps.errorText}
+            onSubmit={this.defaultProps.onSubmit}
+            onLogoutClicked={this.defaultProps.onLogoutClicked}
+        />).dive();
         wrapper.instance().handleClickOpen();
         expect(wrapper.state("open")).toBe(false);
     });
@@ -96,33 +95,20 @@ describe("ui <LogBox />", function () {
         expect(this.wrapper.state("username")).toEqual("Toto");
     });
 
-    it("should render errors", () => {
-        const wrapper = mount(<LogBox
-            data={defaultProps.data}
-            isLoading={defaultProps.isLoading}
-            isLoggedIn={defaultProps.isLoggedIn}
-            hasError
-            errorText="Oops"
-            onSubmit={defaultProps.onSubmit}
-            onLogoutClicked={defaultProps.onLogoutClicked}
-        />);
-        expect(wrapper.instance().renderErrors()).not.toBe(null);
-    });
-
     it("should handleSubmit", () => {
         const mockSubmit = jest.fn();
         const mockEv = {
             preventDefault: jest.fn()
         };
-        const wrapper = mount(<LogBox
-            data={defaultProps.data}
-            isLoading={defaultProps.isLoading}
-            isLoggedIn={defaultProps.isLoggedIn}
-            hasError={defaultProps.hasError}
-            errorText={defaultProps.errorText}
+        const wrapper = shallow(<LogBox
+            data={this.defaultProps.data}
+            isLoading={this.defaultProps.isLoading}
+            isLoggedIn={this.defaultProps.isLoggedIn}
+            hasError={this.defaultProps.hasError}
+            errorText={this.defaultProps.errorText}
             onSubmit={mockSubmit}
-            onLogoutClicked={defaultProps.onLogoutClicked}
-        />);
+            onLogoutClicked={this.defaultProps.onLogoutClicked}
+        />).dive();
         wrapper.instance().handleChange("username", { target: { value: "Toto" } });
         wrapper.instance().handleChange("password", { target: { value: "Secret" } });
         wrapper.instance().handleSubmit(mockEv);
@@ -136,29 +122,140 @@ describe("ui <LogBox />", function () {
     it("should renderLoggedBox", () => {
         const wrapper = shallow(<LogBox
             data={{
-                ...defaultProps.data,
+                ...this.defaultProps.data,
                 username: "Apu"
             }}
-            isLoading={defaultProps.isLoading}
+            isLoading={this.defaultProps.isLoading}
             isLoggedIn
-            hasError={defaultProps.hasError}
-            errorText={defaultProps.errorText}
-            onSubmit={defaultProps.onSubmit}
-            onLogoutClicked={defaultProps.onLogoutClicked}
-        />);
+            hasError={this.defaultProps.hasError}
+            errorText={this.defaultProps.errorText}
+            onSubmit={this.defaultProps.onSubmit}
+            onLogoutClicked={this.defaultProps.onLogoutClicked}
+        />).dive();
         expect(wrapper.contains("Apu")).toBe(true);
     });
 
-    it("should render logout button", () => {
-        const wrapper = mount(<LogBox
-            data={defaultProps.data}
-            isLoading={defaultProps.isLoading}
-            isLoggedIn={!""}
-            hasError={defaultProps.hasError}
-            errorText={defaultProps.errorText}
-            onSubmit={defaultProps.onSubmit}
-            onLogoutClicked={defaultProps.onLogoutClicked}
-        />);
-        expect(wrapper.contains("Logout")).toBe(true);
+    it("should render open user menu", () => {
+        const props = {
+            ...this.defaultProps,
+            data: {
+                ...this.defaultProps.data,
+                username: "poulayname"
+            },
+            isLoading: false,
+            isLoggedIn: true,
+            hasError: false,
+            errorText: "",
+        };
+        const wrapper = shallow(
+            <LogBox {...props} />
+        ).dive();
+        const userMenuToggler = wrapper.find("#user-menu-toggler").first();
+        userMenuToggler.simulate("click", {
+            currentTarget: "poulayman"
+        });
+        wrapper.instance().setState({ poulay: "man" });
+        expect(wrapper.state().anchorEl).toBe("poulayman");
+    });
+
+    it("should render logout btn", () => {
+        const props = {
+            ...this.defaultProps,
+            data: {
+                ...this.defaultProps.data,
+                username: "poulayname"
+            },
+            isLoading: false,
+            isLoggedIn: true,
+            hasError: false,
+            errorText: "",
+        };
+        const wrapper = shallow(
+            <LogBox {...props} />
+        ).dive();
+        const userMenuToggler = wrapper.find("#user-menu-toggler").first();
+        userMenuToggler.simulate("click", {
+            currentTarget: userMenuToggler.html()
+        });
+        wrapper.instance().setState({ poulay: "man" });
+
+        const logoutBtn = wrapper.find("#devaway-user-logout-btn").first();
+        expect(logoutBtn.length).toBe(1);
+    });
+
+    it("should logout", () => {
+        const props = {
+            ...this.defaultProps,
+            data: {
+                ...this.defaultProps.data,
+                username: "poulayname"
+            },
+            isLoading: false,
+            isLoggedIn: true,
+            hasError: false,
+            errorText: "",
+        };
+        const wrapper = shallow(
+            <LogBox {...props} />
+        ).dive();
+        const userMenuToggler = wrapper.find("#user-menu-toggler").first();
+        userMenuToggler.simulate("click", {
+            currentTarget: userMenuToggler.html()
+        });
+        wrapper.instance().setState({ poulay: "man" });
+
+        const logoutBtn = wrapper.find("#devaway-user-logout-btn").first();
+        const spy = jest.spyOn(wrapper.instance(), "handleClickOpen");
+        logoutBtn.simulate("click");
+        expect(this.defaultProps.onLogoutClicked).toHaveBeenCalled();
+        expect(spy).toHaveBeenCalled();
+    });
+
+    it("should render user's avatar without prefixing it", () => {
+        const props = {
+            ...this.defaultProps,
+            data: {
+                ...this.defaultProps.data,
+                username: "poulayname",
+                avatar: "ohmygadpoulayman"
+            },
+            isLoading: false,
+            isLoggedIn: true,
+            hasError: false,
+            errorText: "",
+        };
+        const wrapper = shallow(
+            <LogBox {...props} />
+        ).dive();
+        const userMenuToggler = wrapper.find("#devaway-toolbar-user-avatar");
+        expect(userMenuToggler.prop("src")).toBe("data:image/jpeg;base64,ohmygadpoulayman");
+    });
+
+    it("should render user's avatar", () => {
+        const props = {
+            ...this.defaultProps,
+            data: {
+                ...this.defaultProps.data,
+                username: "poulayname",
+                avatar: "data:image/ohmygadpoulayman"
+            },
+            isLoading: false,
+            isLoggedIn: true,
+            hasError: false,
+            errorText: "",
+        };
+        const wrapper = shallow(
+            <LogBox {...props} />
+        ).dive();
+        const userMenuToggler = wrapper.find("#devaway-toolbar-user-avatar");
+        expect(userMenuToggler.prop("src")).toBe("data:image/ohmygadpoulayman");
+    });
+
+    it("should clear anchorEl", () => {
+        const instance = this.wrapper.instance();
+        instance.setState({ anchorEl: "poulay" });
+        expect(instance.state.anchorEl).toBe("poulay");
+        instance.handleUserMenuClose();
+        expect(instance.state.anchorEl).toBeNull();
     });
 });

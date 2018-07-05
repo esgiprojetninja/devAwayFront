@@ -19,7 +19,7 @@ describe("ui <NavBar />", () => {
         ...initialState,
         state: {
             open: false,
-            openUserMenuEl: null
+            openPlacesMenuEl: null
         },
         store: {
             ...configureMockStore()(),
@@ -119,12 +119,12 @@ describe("ui <NavBar />", () => {
         };
         wrapper = shallow(<NavBarComponent {...props} />);
         wrapper.setState({ open: false });
-        wrapper.setState({ openUserMenuEl: null });
+        wrapper.setState({ openPlacesMenuEl: null });
         const toggler = wrapper.find("#menu-toggler");
         toggler.simulate("click", {
             currentTarget: "coucou"
         });
-        expect(wrapper.instance().state.openUserMenuEl).toBe("coucou");
+        expect(wrapper.instance().state.openPlacesMenuEl).toBe("coucou");
     });
 
     it("should reset element menu", () => {
@@ -137,12 +137,12 @@ describe("ui <NavBar />", () => {
         };
         wrapper = shallow(<NavBarComponent {...props} />);
         wrapper.setState({ open: false });
-        wrapper.setState({ openUserMenuEl: "coucou" });
+        wrapper.setState({ openPlacesMenuEl: "coucou" });
 
         const toggler = wrapper.find("#long-menu");
-        expect(wrapper.instance().state.openUserMenuEl).not.toBeNull();
+        expect(wrapper.instance().state.openPlacesMenuEl).not.toBeNull();
         toggler.simulate("close");
-        expect(wrapper.instance().state.openUserMenuEl).toBeNull();
+        expect(wrapper.instance().state.openPlacesMenuEl).toBeNull();
     });
 
     it("should render style navbar", () => {

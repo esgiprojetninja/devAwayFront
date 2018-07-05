@@ -84,9 +84,9 @@ describe("Container Profile", () => {
         it("only dispatch profile state", () => {
             expect(mapStateToProps(
                 {
-                    profile: "coucou"
+                    user: "coucou"
                 }
-            )).toEqual("coucou");
+            )).toEqual({ current: "coucou" });
         });
     });
 });

@@ -114,13 +114,13 @@ class AccommocationCreation extends React.PureComponent {
     }
 
     get accoSavable() {
-        if (this.state.titleError) {
+        if (this.state.titleError || !this.state.title) {
             return false;
         }
-        if (this.state.descriptionError) {
+        if (this.state.descriptionError || !this.state.description) {
             return false;
         }
-        if (this.state.propertySizeError) {
+        if (this.state.propertySizeError || !this.state.propertySize) {
             return false;
         }
         if (this.state.latitude === null) {
