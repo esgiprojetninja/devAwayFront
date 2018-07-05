@@ -3,6 +3,8 @@ import * as T from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import Button from "@material-ui/core/Button";
+import Save from "@material-ui/icons/Save";
 import TextField from "@material-ui/core/TextField";
 import { Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
@@ -15,15 +17,47 @@ export class Profile extends React.PureComponent {
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
+        this.state = {
+            email: "",
+            lastName: "",
+            firstName: "",
+            languages: "",
+            skills: "",
+            username: "",
+            avatar: "",
+        };
     }
     componentDidMount() {
         this.props.onGetMe();
     }
 
-    handleChange(ev) {
-        const { value, id } = ev.target;
-        this.props.onProfileChanged(id, value);
+    get newProps() {
+        const { data } = this.props.current;
+        return Object.keys(this.state)
+            .filter(prop => !!this.state[prop])
+            .filter(prop => Object.prototype.hasOwnProperty.call(data, prop));
     }
+
+    get hasProfileChanged() {
+        const { data } = this.props.current;
+        const found = this.newProps
+            .find(prop => `${data[prop]}` !== `${this.state[prop]}`);
+        return !!found;
+    }
+
+    handleSave = () => {
+        if (!this.hasProfileChanged) {
+            return;
+        }
+        this.props.onProfileChanged(this.newProps);
+    }
+
+    handleChange(ev, prop) {
+        this.setState({
+            [prop]: ev.target.value
+        });
+    }
+
     handleAddImg = (e) => {
         e.preventDefault();
         const reader = new global.FileReader();
@@ -71,8 +105,10 @@ export class Profile extends React.PureComponent {
                     label="Email"
                     type="email"
                     className={classes.textField}
-                    value={this.props.current.data.email}
-                    onChange={this.handleChange}
+                    defaultValue={this.props.current.data.email}
+                    onChange={(e) => {
+                        this.handleChange(e, "email");
+                    }}
                     margin="normal"
                     fullWidth
                 />
@@ -80,8 +116,10 @@ export class Profile extends React.PureComponent {
                     id="firstName"
                     label="First Name"
                     className={classes.textField}
-                    value={this.props.current.data.firstName}
-                    onChange={this.handleChange}
+                    defaultValue={this.props.current.data.firstName}
+                    onChange={(e) => {
+                        this.handleChange(e, "firstName");
+                    }}
                     margin="normal"
                     fullWidth
                 />
@@ -89,8 +127,10 @@ export class Profile extends React.PureComponent {
                     id="lastName"
                     label="Last Name"
                     className={classes.textField}
-                    value={this.props.current.data.lastName}
-                    onChange={this.handleChange}
+                    defaultValue={this.props.current.data.lastName}
+                    onChange={(e) => {
+                        this.handleChange(e, "lastName");
+                    }}
                     margin="normal"
                     fullWidth
                 />
@@ -98,8 +138,10 @@ export class Profile extends React.PureComponent {
                     id="userName"
                     label="User Name"
                     className={classes.textField}
-                    value={this.props.current.data.username}
-                    onChange={this.handleChange}
+                    defaultValue={this.props.current.data.username}
+                    onChange={(e) => {
+                        this.handleChange(e, "username");
+                    }}
                     margin="normal"
                     fullWidth
                 />
@@ -107,8 +149,10 @@ export class Profile extends React.PureComponent {
                     id="languages"
                     label="Languages"
                     className={classes.textField}
-                    value={this.props.current.data.languages}
-                    onChange={this.handleChange}
+                    defaultValue={this.props.current.data.languages}
+                    onChange={(e) => {
+                        this.handleChange(e, "languages");
+                    }}
                     margin="normal"
                     helperText="Languages separated with a coma"
                     fullWidth
@@ -118,14 +162,34 @@ export class Profile extends React.PureComponent {
                     id="skills"
                     label="Skills"
                     className={classes.textField}
-                    value={this.props.current.data.skills}
-                    onChange={this.handleChange}
+                    defaultValue={this.props.current.data.skills}
+                    onChange={(e) => {
+                        this.handleChange(e, "skills");
+                    }}
                     margin="normal"
                     helperText="Skills separated with a coma"
                     fullWidth
                     multiline
                 />
             </div>
+        );
+    }
+
+    renderSaveBtn() {
+        if (!this.props.current.isLoggedIn) {
+            return null;
+        }
+        return (
+            <Button
+                className={this.props.classes.saveBtn}
+                color="primary"
+                disabled={!this.hasProfileChanged || this.props.current.isLoading}
+                onClick={this.handleSave}
+                variant="fab"
+                id="devaway-edit-profilte-btn"
+            >
+                <Save />
+            </Button>
         );
     }
 
@@ -157,6 +221,7 @@ export class Profile extends React.PureComponent {
                         </Paper>
                     </Grid>
                 </Grid>
+                {this.renderSaveBtn()}
             </div>
         );
     }
@@ -220,5 +285,10 @@ export default withStyles(theme => ({
     },
     paper: {
         padding: theme.spacing.unit * 2
-    }
+    },
+    saveBtn: {
+        position: "fixed",
+        right: theme.spacing.unit * 2,
+        bottom: theme.spacing.unit * 4,
+    },
 }))(Profile);

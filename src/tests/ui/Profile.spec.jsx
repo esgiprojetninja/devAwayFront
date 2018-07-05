@@ -56,6 +56,7 @@ describe("ui <Profile />", function () {
         const wrapper = shallow(
             <Profile {...this.initialProps} />
         );
+        const spy = jest.spyOn(wrapper.instance(), "handleChange");
         wrapper.find("#email").simulate("change",
             {
                 target: {
@@ -64,6 +65,14 @@ describe("ui <Profile />", function () {
                 }
             }
         );
-        expect(this.initialProps.onProfileChanged).toHaveBeenCalled();
+        expect(spy).toHaveBeenCalledWith(
+            {
+                target: {
+                    value: "coucou",
+                    id: "chibar"
+                }
+            },
+            "email"
+        );
     });
 });
