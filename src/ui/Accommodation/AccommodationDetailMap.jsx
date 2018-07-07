@@ -48,7 +48,7 @@ const MAP_LOAD_DELAY = 3000;
 class AccommodationDetailMap extends React.PureComponent {
     static defaultProps = {
         acco: null,
-        zoom: 10,
+        zoom: 5,
         state: {
             placeSearched: null,
         },
@@ -198,12 +198,12 @@ class AccommodationDetailMap extends React.PureComponent {
         this.searchInput.value = "";
     }
 
-    saveNewAdress = () => {
+    saveNewAdress = async () => {
         if (typeof this.props.updateAddress === "function") {
             this.props.updateAddress(this.state.placeSearched);
             return;
         }
-        this.props.updateAcco({
+        await this.props.updateAcco({
             ...this.props.acco,
             ...this.state.placeSearched,
         });
