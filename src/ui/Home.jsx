@@ -2,10 +2,6 @@ import * as React from "react";
 import * as T from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
-import Snackbar from "@material-ui/core/Snackbar";
 import "animate.css/animate.min.css";
 import ScrollAnimation from "react-animate-on-scroll";
 import HomeSearchForm from "./HomeSearchForm.jsx";
@@ -23,7 +19,6 @@ export class Home extends React.PureComponent {
             root: T.string,
             brandRibon: T.string,
             backgroundImg: T.string,
-            snackbar: T.string.isRequired,
             footer: T.string.isRequired,
             footerList: T.string.isRequired,
             footerListItem: T.string.isRequired,
@@ -40,12 +35,6 @@ export class Home extends React.PureComponent {
             destinationWrapper: T.string.isRequired,
             destinationsImg: T.string.isRequired
         }).isRequired,
-        snack: T.shape({
-            snackText: T.string.isRequired,
-            hasSnack: T.bool.isRequired,
-            snackDuration: T.number.isRequired
-        }).isRequired,
-        closeSnack: T.func.isRequired
     };
 
     renderFirstBlock() {
@@ -172,39 +161,6 @@ export class Home extends React.PureComponent {
         );
     }
 
-    renderSnackbar() {
-        return (
-            <Snackbar
-                message={this.props.snack.snackText}
-                autoHideDuration={this.props.snack.snackDuration}
-                open={this.props.snack.hasSnack}
-                anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "center"
-                }}
-                style={{
-                    left: "calc(50%)"
-                }}
-                className={this.props.classes.snackbar}
-                onClose={this.props.closeSnack}
-                action={[
-                    <Button key="undo" color="primary" onClick={this.props.closeSnack}>
-                        OK
-                    </Button>,
-                    <IconButton
-                        key="close"
-                        aria-label="Close"
-                        color="primary"
-                        onClick={this.props.closeSnack}
-                    >
-                        <CloseIcon />
-                    </IconButton>
-                ]}
-            />
-        );
-    }
-
-
     render() {
         return (
             <div>
@@ -224,7 +180,6 @@ export class Home extends React.PureComponent {
                     {this.renderDestinations()}
                     {this.renderAccomodations()}
                     {this.renderFooter()}
-                    {this.renderSnackbar()}
                 </div>
             </div>
         );
@@ -317,9 +272,4 @@ export default withStyles(theme => ({
         marginLeft: 0,
         marginRight: "10px"
     },
-    snackbar: {
-        margin: theme.spacing.unit,
-        width: "300px",
-        left: "calc(50% - 150px)"
-    }
 }))(Home);

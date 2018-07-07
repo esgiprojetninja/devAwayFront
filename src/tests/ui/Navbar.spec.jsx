@@ -53,7 +53,8 @@ describe("ui <NavBar />", () => {
             },
             toolbar: {
                 paddingRight: 1
-            }
+            },
+            snackbar: "T.string.isRequired,",
         },
         getSavedState: jest.fn(() => ({})),
         removeStateProp: jest.fn(),

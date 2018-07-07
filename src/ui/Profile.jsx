@@ -6,6 +6,7 @@ import Paper from "@material-ui/core/Paper";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Button from "@material-ui/core/Button";
 import Save from "@material-ui/icons/Save";
+import Cancel from "@material-ui/icons/Cancel";
 import TextField from "@material-ui/core/TextField";
 import { Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
@@ -50,24 +51,21 @@ export class Profile extends React.PureComponent {
         if (!this.hasProfileChanged) {
             return;
         }
-        const { data } = this.props.current;
         const patch = this.newProps
             .reduce((obj, prop) => ({
                 ...obj,
                 [prop]: this.state[prop],
             }), {});
-        this.props.updateUser({
-            id: data.id || null,
-            email: data.email,
-            username: data.username,
-            lastName: data.lastName,
-            firstName: data.firstName,
-            languages: data.languages,
-            skills: data.skills,
-            avatar: data.avatar,
-            ...patch,
-            updated_at: new Date().toISOString()
-        });
+        this.props.updateUser(patch);
+    }
+
+    handleCancel= () => {
+        const patch = this.newProps
+            .reduce((obj, prop) => ({
+                ...obj,
+                [prop]: "",
+            }), {});
+        this.setState(patch);
     }
 
     handleChange(ev, prop) {
@@ -126,7 +124,7 @@ export class Profile extends React.PureComponent {
                     label="Email"
                     type="email"
                     className={classes.textField}
-                    defaultValue={this.props.current.data.email}
+                    value={this.state.email || this.props.current.data.email}
                     onChange={(e) => {
                         this.handleChange(e, "email");
                     }}
@@ -137,7 +135,7 @@ export class Profile extends React.PureComponent {
                     id="firstName"
                     label="First Name"
                     className={classes.textField}
-                    defaultValue={this.props.current.data.firstName}
+                    value={this.state.firstName || this.props.current.data.firstName}
                     onChange={(e) => {
                         this.handleChange(e, "firstName");
                     }}
@@ -148,7 +146,7 @@ export class Profile extends React.PureComponent {
                     id="lastName"
                     label="Last Name"
                     className={classes.textField}
-                    defaultValue={this.props.current.data.lastName}
+                    value={this.state.lastName || this.props.current.data.lastName}
                     onChange={(e) => {
                         this.handleChange(e, "lastName");
                     }}
@@ -159,7 +157,7 @@ export class Profile extends React.PureComponent {
                     id="userName"
                     label="User Name"
                     className={classes.textField}
-                    defaultValue={this.props.current.data.username}
+                    value={this.state.username || this.props.current.data.username}
                     onChange={(e) => {
                         this.handleChange(e, "username");
                     }}
@@ -170,7 +168,7 @@ export class Profile extends React.PureComponent {
                     id="languages"
                     label="Languages"
                     className={classes.textField}
-                    defaultValue={this.props.current.data.languages}
+                    value={this.state.languages || this.props.current.data.languages}
                     onChange={(e) => {
                         this.handleChange(e, "languages");
                     }}
@@ -183,7 +181,7 @@ export class Profile extends React.PureComponent {
                     id="skills"
                     label="Skills"
                     className={classes.textField}
-                    defaultValue={this.props.current.data.skills}
+                    value={this.state.skills || this.props.current.data.skills}
                     onChange={(e) => {
                         this.handleChange(e, "skills");
                     }}
@@ -196,21 +194,33 @@ export class Profile extends React.PureComponent {
         );
     }
 
-    renderSaveBtn() {
+    renderSaveBtns() {
         if (!this.props.current.isLoggedIn) {
             return null;
         }
         return (
-            <Button
-                className={this.props.classes.saveBtn}
-                color="primary"
-                disabled={!this.hasProfileChanged || this.props.current.isLoading}
-                onClick={this.handleSave}
-                variant="fab"
-                id="devaway-edit-profilte-btn"
-            >
-                <Save />
-            </Button>
+            <div>
+                <Button
+                    className={this.props.classes.saveBtn}
+                    color="primary"
+                    disabled={!this.hasProfileChanged || this.props.current.isLoading}
+                    onClick={this.handleSave}
+                    variant="fab"
+                    id="devaway-edit-profilte-btn"
+                >
+                    <Save />
+                </Button>
+                <Button
+                    className={this.props.classes.cancelBtn}
+                    color="default"
+                    disabled={!this.hasProfileChanged || this.props.current.isLoading}
+                    onClick={this.handleCancel}
+                    variant="fab"
+                    id="devaway-cancel-profile-btn"
+                >
+                    <Cancel />
+                </Button>
+            </div>
         );
     }
 
@@ -242,7 +252,7 @@ export class Profile extends React.PureComponent {
                         </Paper>
                     </Grid>
                 </Grid>
-                {this.renderSaveBtn()}
+                {this.renderSaveBtns()}
             </div>
         );
     }
@@ -306,6 +316,11 @@ export default withStyles(theme => ({
     },
     paper: {
         padding: theme.spacing.unit * 2
+    },
+    cancelBtn: {
+        position: "fixed",
+        right: theme.spacing.unit * 2,
+        bottom: theme.spacing.unit * 12,
     },
     saveBtn: {
         position: "fixed",

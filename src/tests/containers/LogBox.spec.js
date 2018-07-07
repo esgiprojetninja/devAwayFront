@@ -37,7 +37,7 @@ describe("Container LogBox", () => {
             expect(storeActions.map(a => a.type)).toEqual([
                 "LOGIN_REQUEST",
                 "LOGIN_SUCCESS",
-                "USER_REQUEST",
+                "USER_GET_ME_REQUEST",
                 "SET_SNACK_MSG",
                 "LOGIN_SUCCESS"
             ]);

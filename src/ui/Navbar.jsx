@@ -9,6 +9,8 @@ import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuIcon from "@material-ui/icons/Menu";
+import CloseIcon from "@material-ui/icons/Close";
+import Snackbar from "@material-ui/core/Snackbar";
 
 import LogBox from "../containers/LogBox";
 import SubscribeBox from "../containers/SubscribeBox";
@@ -21,7 +23,13 @@ export class NavBarComponent extends React.PureComponent {
         getSavedState: T.func.isRequired,
         storeStateProp: T.func.isRequired,
         removeStateProp: T.func.isRequired,
-        onInit: T.func.isRequired
+        onInit: T.func.isRequired,
+        snack: T.shape({
+            snackText: T.string.isRequired,
+            hasSnack: T.bool.isRequired,
+            snackDuration: T.number.isRequired
+        }).isRequired,
+        closeSnack: T.func.isRequired,
     };
 
     static defaultProps = { burgerColor: "#fff" }
@@ -120,6 +128,38 @@ export class NavBarComponent extends React.PureComponent {
         );
     }
 
+    renderSnackbar() {
+        return (
+            <Snackbar
+                message={this.props.snack.snackText}
+                autoHideDuration={this.props.snack.snackDuration}
+                open={this.props.snack.hasSnack}
+                anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center"
+                }}
+                style={{
+                    left: "calc(50%)"
+                }}
+                className={this.props.classes.snackbar}
+                onClose={this.props.closeSnack}
+                action={[
+                    <Button key="undo" color="primary" onClick={this.props.closeSnack}>
+                        OK
+                    </Button>,
+                    <IconButton
+                        key="close"
+                        aria-label="Close"
+                        color="primary"
+                        onClick={this.props.closeSnack}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                ]}
+            />
+        );
+    }
+
     render() {
         const { classes } = this.props;
         const containerStyle = {
@@ -161,6 +201,7 @@ export class NavBarComponent extends React.PureComponent {
                 >
                     <MenuIcon />
                 </IconButton>
+                {this.renderSnackbar()}
             </div>
         );
     }
@@ -170,7 +211,8 @@ NavBarComponent.propTypes = {
     classes: T.shape({
         root: T.any,
         flex: T.any,
-        menuButton: T.any
+        menuButton: T.any,
+        snackbar: T.string.isRequired,
     }).isRequired,
     user: T.shape({
         isLoggedIn: T.bool.isRequired
@@ -207,5 +249,10 @@ export default withStyles(theme => ({
     },
     toolbar: {
         paddingRight: theme.spacing.unit * 6
+    },
+    snackbar: {
+        margin: theme.spacing.unit,
+        width: "300px",
+        left: "calc(50% - 150px)"
     }
 }))(NavBarComponent);

@@ -53,40 +53,41 @@ describe("Container Profile", () => {
                 setItem: jest.fn()
             };
         });
-        it("onGetMe", () => {
+        it("onGetMe", async () => {
             const { store, fn } = prepare("onGetMe", mainReducer(undefined, {}));
-            fn().then(() => {
-                expect(store.getActions().map(a => a.type)).toEqual([
-                    "GET_ME_REQUEST",
-                    "GET_ME_SUCCESS"
-                ]);
-            });
+            await fn();
+            expect(store.getActions().map(a => a.type)).toEqual([
+                "USER_GET_ME_REQUEST", "SET_SNACK_MSG", "LOGIN_SUCCESS"
+            ]);
         });
 
-        it("onGetMe (error)", () => {
+        it("onGetMe (error)", async () => {
             const { store, fn } = prepareWithError("onGetMe", mainReducer(undefined, {}));
-            fn().then(() => {
-                expect(store.getActions().map(a => a.type)).toEqual([
-                    "GET_ME_REQUEST",
-                    "GET_ME_FAILURE"
-                ]);
-            });
+            await fn();
+            expect(store.getActions().map(a => a.type)).toEqual([
+                "USER_GET_ME_REQUEST", "SET_SNACK_MSG", "LOGOUT", "LOGIN_FAILURE"
+            ]);
         });
 
-        it("updateUser", () => {
+        it("update", async () => {
             const { store, fn } = prepare("updateUser", mainReducer(undefined, {}));
-            fn().then(() => {
-                expect(store.getActions().map(a => a.type)).toEqual([]);
-            });
+            mapStateToProps(
+                {
+                    user: { data: { id: 1 } }
+                });
+            await fn({ username: "poulay" });
+            expect(store.getActions().map(a => a.type)).toEqual([
+                "USER_REQUEST", "SET_SNACK_MSG", "LOGIN_SUCCESS"
+            ]);
         });
     });
     describe("mapStateToProps", () => {
         it("only dispatch profile state", () => {
             expect(mapStateToProps(
                 {
-                    user: "coucou"
+                    user: { data: { id: "coucou" } }
                 }
-            )).toEqual({ current: "coucou" });
+            )).toEqual({ current: { data: { id: "coucou" } } });
         });
     });
 });

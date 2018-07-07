@@ -16,6 +16,7 @@ const initialSate = {
     },
     isLoggedIn: false,
     isLoading: false,
+    isGettingData: false,
     hasError: false,
     error: "",
     accommodations: {},
@@ -28,6 +29,12 @@ const userReducer = (state = initialSate, action) => {
         return {
             ...state,
             isLoading: true
+        };
+    case types.USER_GET_ME_REQUEST:
+        return {
+            ...state,
+            isLoading: true,
+            isGettingData: true,
         };
     case types.LOGOUT:
         return {
@@ -51,7 +58,8 @@ const userReducer = (state = initialSate, action) => {
                 ...state.data,
                 ...payload.data
             },
-            isLoading: false
+            isLoading: false,
+            isGettingData: false,
         };
     case types.LOGIN_FAILURE:
         return {
@@ -59,6 +67,7 @@ const userReducer = (state = initialSate, action) => {
             isLoggedIn: false,
             error: payload,
             isLoading: false,
+            isGettingData: false,
             hasError: true
         };
     case types.ADD_USER_SUCCESS:

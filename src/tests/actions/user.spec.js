@@ -48,7 +48,7 @@ describe("Actions user", () => {
                     data: { token: "prout" }
                 }
             },
-            { type: userActionTypes.USER_REQUEST },
+            { type: userActionTypes.USER_GET_ME_REQUEST },
             {
                 type: SET_SNACK_MSG,
                 payload: {
@@ -135,7 +135,7 @@ describe("Actions user", () => {
 
     it("should load only token session", () => {
         const expectedActions = [
-            { type: userActionTypes.USER_REQUEST },
+            { type: userActionTypes.USER_GET_ME_REQUEST },
             {
                 type: SET_SNACK_MSG,
                 payload: {
@@ -178,9 +178,9 @@ describe("Actions user", () => {
         });
     });
 
-    it("should get user profile", () => {
-        const expectedAction = [
-            { type: userActionTypes.USER_REQUEST },
+    it("should get user profile", async () => {
+        const expectedActions = [
+            { type: userActionTypes.USER_GET_ME_REQUEST },
             {
                 type: SET_SNACK_MSG,
                 payload: {
@@ -201,14 +201,13 @@ describe("Actions user", () => {
             }
         ];
         const store = mockStore();
-        return store.dispatch(userActions.getMe("coucouToken")).then(() => {
-            expect(store.getActions()).toEqual(expectedAction);
-        });
+        await store.dispatch(userActions.getMe("coucouToken"));
+        expect(store.getActions()).toEqual(expectedActions);
     });
 
     it("should NOT get whole user profile", () => {
         const expectedAction = [
-            { type: userActionTypes.USER_REQUEST },
+            { type: userActionTypes.USER_GET_ME_REQUEST },
             {
                 type: SET_SNACK_MSG,
                 payload: {
@@ -234,7 +233,7 @@ describe("Actions user", () => {
 
     it("should NOT get user profile", () => {
         const expectedAction = [
-            { type: userActionTypes.USER_REQUEST },
+            { type: userActionTypes.USER_GET_ME_REQUEST },
             {
                 type: SET_SNACK_MSG,
                 payload: {
