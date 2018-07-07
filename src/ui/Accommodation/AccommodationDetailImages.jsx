@@ -6,7 +6,7 @@ import * as T from "prop-types";
 import AddImgIcon from "react-icons/lib/go/plus";
 import EditImgIcon from "react-icons/lib/go/pencil";
 import { accommodationPropTypes } from "../../propTypes/accommodationType";
-import { darkGrey } from "../../styles/theme";
+import { lightGrey, darkGrey } from "../../styles/theme";
 
 const addImgStyle = {
     margin: "auto",
@@ -24,20 +24,13 @@ const addImgStyle = {
     },
 };
 
-const hoverSubSvg = {
-    "&:hover > svg": {
-        background: darkGrey,
-        color: "#fff",
-        fill: "#fff",
-    }
-};
-
-const styles = theme => ({ // eslint-disable-line
+const styles = theme => ({
     container: {
         width: "100%",
         position: "relative",
         height: "430px",
         overflow: "hidden",
+        borderBottom: `2px solid ${lightGrey}`
     },
     imgContainer: {
         height: "430px",
@@ -64,10 +57,21 @@ const styles = theme => ({ // eslint-disable-line
     },
     addImgIcon: {
         ...addImgStyle,
-        border: `1px solid ${darkGrey}`,
+        border: `1px solid ${theme.palette.primary.main}`,
+        background: theme.palette.primary.main,
+        color: "#fff",
+        fill: "#fff",
+        height: "32px",
+        width: "20px",
+        padding: "0 5px",
+        marginLeft: theme.spacing.unit
     },
     editImgIcon: {
         ...addImgStyle,
+        maxHeight: 30,
+        maxWidth: 30,
+        color: theme.palette.primary.main,
+        fill: theme.palette.primary.main,
     },
     img: {
         width: "100%",
@@ -83,14 +87,18 @@ const styles = theme => ({ // eslint-disable-line
         flexDirection: "row",
         cursor: "pointer",
         position: "relative",
-        ...hoverSubSvg,
+        "&:hover > svg": {
+            boxShadow: `-1px 1px 4px 0px ${theme.palette.primary.main}`,
+        },
     },
     addImgWrapper: {
         width: "60px",
         height: "60px",
         margin: "auto",
         position: "relative",
-        ...hoverSubSvg,
+        "&:hover > svg": {
+            boxShadow: `-1px 1px 4px 0px ${theme.palette.primary.main}`,
+        },
     },
     inputPicture: {
         opacity: 0,
@@ -108,15 +116,15 @@ const styles = theme => ({ // eslint-disable-line
         right: 4,
         height: 50,
         width: 50,
-        opacity: "0.7",
         background: "#fff",
         display: "flex",
         cursor: "pointer",
-        transition: "opacity .2s ease-in-out",
+        transition: "box-shadow .2s ease-in-out",
         zIndex: 1,
         borderRadius: "100%",
+        boxShadow: `-1px 1px 1px 0px ${theme.palette.primary.main}`,
         "&:hover": {
-            opacity: 1
+            boxShadow: `-1px 1px 4px 0px ${theme.palette.primary.main}`,
         }
     },
 });
@@ -149,7 +157,7 @@ class AccommodationDetailImages extends React.PureComponent {
             alignItems: "center",
             justifyContent: "center",
             flexDirection: "row",
-            backgroundColor: "rgba(255, 255, 255, .7)",
+            backgroundColor: "#fff",
             height: "60px",
             paddingBottom: "20px",
         };

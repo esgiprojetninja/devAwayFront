@@ -47,8 +47,8 @@ describe("ui <AccommodationDetailMap />", function () {
         const props = {
             ...this.initialProps,
             user: {
-                isLoading: true,
-                isLoggedIn: false,
+                ...this.initialProps.user,
+                isGettingData: true,
             },
         };
         const wrapper = shallow(

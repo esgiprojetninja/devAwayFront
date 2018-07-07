@@ -262,7 +262,7 @@ class AccommodationDetailMap extends React.PureComponent {
 
     render() {
         if (
-            (this.props.user.isLoading && !this.props.user.isLoggedIn && this.map === null)
+            (this.props.user.isGettingData && this.map === null)
             || (this.props.acco === null && this.props.accommodation.isLoading)
         ) {
             return null;
@@ -294,6 +294,7 @@ AccommodationDetailMap.propTypes = {
     isUserOwner: T.bool.isRequired,
     user: T.shape({
         isLoggedIn: T.bool.isRequired,
+        isGettingData: T.bool.isRequired,
         isLoading: T.bool.isRequired,
     }).isRequired,
     state: T.shape({
