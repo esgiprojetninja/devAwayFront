@@ -15,7 +15,7 @@ import Avatar from "@material-ui/core/Avatar";
 import Guard from "../containers/Guard";
 import Navbar from "../containers/Navbar";
 
-export class Profile extends React.PureComponent {
+class Profile extends React.PureComponent {
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
@@ -115,81 +115,33 @@ export class Profile extends React.PureComponent {
         );
     }
 
+    renderTextField(prop, label, type = "text", helperText = "") {
+        return (
+            <TextField
+                id={prop}
+                label={label}
+                type={type}
+                className={this.props.classes.textField}
+                value={this.state[prop] || this.props.current.data[prop]}
+                onChange={(e) => {
+                    this.handleChange(e, prop);
+                }}
+                margin="normal"
+                helperText={helperText}
+                fullWidth
+            />
+        );
+    }
+
     renderProfile() {
-        const { classes } = this.props;
         return (
             <div>
-                <TextField
-                    id="email"
-                    label="Email"
-                    type="email"
-                    className={classes.textField}
-                    value={this.state.email || this.props.current.data.email}
-                    onChange={(e) => {
-                        this.handleChange(e, "email");
-                    }}
-                    margin="normal"
-                    fullWidth
-                />
-                <TextField
-                    id="firstName"
-                    label="First Name"
-                    className={classes.textField}
-                    value={this.state.firstName || this.props.current.data.firstName}
-                    onChange={(e) => {
-                        this.handleChange(e, "firstName");
-                    }}
-                    margin="normal"
-                    fullWidth
-                />
-                <TextField
-                    id="lastName"
-                    label="Last Name"
-                    className={classes.textField}
-                    value={this.state.lastName || this.props.current.data.lastName}
-                    onChange={(e) => {
-                        this.handleChange(e, "lastName");
-                    }}
-                    margin="normal"
-                    fullWidth
-                />
-                <TextField
-                    id="userName"
-                    label="User Name"
-                    className={classes.textField}
-                    value={this.state.username || this.props.current.data.username}
-                    onChange={(e) => {
-                        this.handleChange(e, "username");
-                    }}
-                    margin="normal"
-                    fullWidth
-                />
-                <TextField
-                    id="languages"
-                    label="Languages"
-                    className={classes.textField}
-                    value={this.state.languages || this.props.current.data.languages}
-                    onChange={(e) => {
-                        this.handleChange(e, "languages");
-                    }}
-                    margin="normal"
-                    helperText="Languages separated with a coma"
-                    fullWidth
-                    multiline
-                />
-                <TextField
-                    id="skills"
-                    label="Skills"
-                    className={classes.textField}
-                    value={this.state.skills || this.props.current.data.skills}
-                    onChange={(e) => {
-                        this.handleChange(e, "skills");
-                    }}
-                    margin="normal"
-                    helperText="Skills separated with a coma"
-                    fullWidth
-                    multiline
-                />
+                {this.renderTextField("email", "Email", "email")}
+                {this.renderTextField("firstName", "First Name")}
+                {this.renderTextField("lastName", "Last Name")}
+                {this.renderTextField("username", "User Name")}
+                {this.renderTextField("languages", "Languages", null, "Languages separated with a coma")}
+                {this.renderTextField("skills", "Skills", null, "Skills separated with a coma")}
             </div>
         );
     }
