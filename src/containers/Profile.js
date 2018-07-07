@@ -1,16 +1,21 @@
 import { connect } from "react-redux";
 
-import {
-    getMe
-} from "../actions/profile";
+import { upsertUser, getMe } from "../actions/user";
 
 import ProfileComponent from "../ui/Profile.jsx";
 
-export const mapStateToProps = state => state.profile;
+let userId = null;
+export const mapStateToProps = (state) => {
+    userId = state.user.data.id;
+    return { current: state.user };
+};
 
 export const mapDispatchToProps = dispatch => ({
     onGetMe: () => dispatch(getMe()),
-    onProfileChanged: () => {} // @TODO
+    updateUser: user => dispatch(upsertUser({
+        ...user,
+        id: userId
+    }))
 });
 
 const Profile = connect(

@@ -4,6 +4,7 @@ import React from "react";
 import {
     shallow, mount
 } from "enzyme";
+import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 import configureMockStore from "redux-mock-store";
@@ -69,9 +70,11 @@ describe("ui <AccommodationsTabs />", function () {
         };
         console.error = () => { }; // eslint-disable-line
         const wrapper = mount(
-            <Provider store={this.store} >
-                <AccommodationsTabs {...props} />
-            </Provider>
+            <BrowserRouter>
+                <Provider store={this.store} >
+                    <AccommodationsTabs {...props} />
+                </Provider>
+            </BrowserRouter>
         );
         const toggler = wrapper.find("#user-places-toggler").filter("button");
         expect(toggler.html()).not.toContain("disabled");

@@ -66,6 +66,13 @@ describe("Container Navbar", () => {
             expect(storeActions.map(a => a.type)).toEqual([]);
             expect(window.localStorage.removeItem).toHaveBeenCalledWith(`${navbarKeyStoragePrefix}open`);
         });
+
+        it("closeSnack", async () => {
+            const { store, fn } = prepare("closeSnack");
+            await fn();
+            const storeActions = await store.getActions();
+            expect(storeActions.map(a => a.type)).toEqual(["RM_SNACK_MSG"]);
+        });
     });
 
     describe("mapStateToProps", () => {

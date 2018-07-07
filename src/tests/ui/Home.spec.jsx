@@ -20,7 +20,6 @@ describe("ui <Home />", () => {
                     root: "",
                     brandRibon: "",
                     backgroundImg: "",
-                    snackbar: "",
                     footer: "",
                     footerList: "",
                     footerListItem: "",
@@ -37,12 +36,6 @@ describe("ui <Home />", () => {
                     destinationWrapper: "",
                     destinationsImg: ""
                 }}
-                snack={{
-                    snackText: "",
-                    hasSnack: false,
-                    snackDuration: 4000
-                }}
-                closeSnack={() => {}}
                 onInit={() => {}}
             />);
         expect(wrapper.find(ArticleWithMedia).length).toBe(1);
@@ -52,12 +45,6 @@ describe("ui <Home />", () => {
     it("should render with M-UI styles", () => {
         const wrapper = shallow(
             <HomeWithStyles
-                snack={{
-                    snackText: "",
-                    hasSnack: false,
-                    snackDuration: 4000
-                }}
-                closeSnack={() => { }}
                 onInit={() => { }}
             />);
         expect(wrapper.text()).toMatch(/Home/);

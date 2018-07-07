@@ -5,10 +5,11 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { withStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
+import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuIcon from "@material-ui/icons/Menu";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
+import Snackbar from "@material-ui/core/Snackbar";
 
 import LogBox from "../containers/LogBox";
 import SubscribeBox from "../containers/SubscribeBox";
@@ -21,7 +22,13 @@ export class NavBarComponent extends React.PureComponent {
         getSavedState: T.func.isRequired,
         storeStateProp: T.func.isRequired,
         removeStateProp: T.func.isRequired,
-        onInit: T.func.isRequired
+        onInit: T.func.isRequired,
+        snack: T.shape({
+            snackText: T.string.isRequired,
+            hasSnack: T.bool.isRequired,
+            snackDuration: T.number.isRequired
+        }).isRequired,
+        closeSnack: T.func.isRequired,
     };
 
     static defaultProps = { burgerColor: "#fff" }
@@ -30,7 +37,7 @@ export class NavBarComponent extends React.PureComponent {
         super(props);
         const defaultState = {
             open: false,
-            openUserMenuEl: null
+            openPlacesMenuEl: null
         };
         this.state = {
             ...defaultState,
@@ -49,26 +56,26 @@ export class NavBarComponent extends React.PureComponent {
         this.props.storeStateProp("open", open ? "" : 1);
     }
 
-    handleUserMenuClick = (ev) => {
+    handlePlacesMenuClick = (e) => {
         this.setState({
-            openUserMenuEl: ev.currentTarget
+            openPlacesMenuEl: e.currentTarget
         });
     }
-    handleUserMenuClose = () => {
+    handlePlacesMenuClose = () => {
         this.setState({
-            openUserMenuEl: null
+            openPlacesMenuEl: null
         });
-        this.props.removeStateProp("openUserMenuEl");
+        this.props.removeStateProp("openPlacesMenuEl");
     }
 
-    renderUserMenu() {
+    renderPlacesMenu() {
         if (!this.props.user.isLoggedIn) return null;
         return (
             <Menu
                 id="long-menu"
-                anchorEl={this.state.openUserMenuEl}
-                open={!!this.state.openUserMenuEl}
-                onClose={this.handleUserMenuClose}
+                anchorEl={this.state.openPlacesMenuEl}
+                open={!!this.state.openPlacesMenuEl}
+                onClose={this.handlePlacesMenuClose}
                 PaperProps={{
                     style: {
                         maxHeight: ITEM_HEIGHT * 4.5,
@@ -79,7 +86,7 @@ export class NavBarComponent extends React.PureComponent {
                 <MenuItem
                     key="/geszuihgvhui"
                     selected={false}
-                    onClick={this.handleUserMenuClose}
+                    onClick={this.handlePlacesMenuClose}
                 >
                     <NavLink
                         id="accommodation-link"
@@ -91,7 +98,7 @@ export class NavBarComponent extends React.PureComponent {
                 <MenuItem
                     key="/poulafefzee"
                     selected={false}
-                    onClick={this.handleUserMenuClose}
+                    onClick={this.handlePlacesMenuClose}
                 >
                     <NavLink
                         id="accommodation-creation-link"
@@ -107,16 +114,40 @@ export class NavBarComponent extends React.PureComponent {
     renderMenuToggler() {
         if (!this.props.user.isLoggedIn) return null;
         return (
-            <IconButton
+            <Button
                 id="menu-toggler"
                 aria-label="More"
                 aria-haspopup="true"
-                aria-owns={this.state.openUserMenuEl ? "long-menu" : null}
+                aria-owns={this.state.openPlacesMenuEl ? "long-menu" : null}
                 color="inherit"
-                onClick={this.handleUserMenuClick}
+                onClick={this.handlePlacesMenuClick}
             >
-                <MoreVertIcon />
-            </IconButton>
+                places
+            </Button>
+        );
+    }
+
+    renderSnackbar() {
+        return (
+            <Snackbar
+                message={this.props.snack.snackText}
+                autoHideDuration={this.props.snack.snackDuration}
+                open={this.props.snack.hasSnack}
+                anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center"
+                }}
+                style={{
+                    left: "calc(50%)"
+                }}
+                className={this.props.classes.snackbar}
+                onClose={this.props.closeSnack}
+                action={[
+                    <Button key="undo" color="primary" onClick={this.props.closeSnack}>
+                        OK
+                    </Button>
+                ]}
+            />
         );
     }
 
@@ -135,15 +166,20 @@ export class NavBarComponent extends React.PureComponent {
                 <AppBar position="fixed" style={this.state.open ? { transform: "scaleY(1)" } : { transform: "scaleY(0)" }} className={classes.navStyle}>
                     <Toolbar className={classes.toolbar}>
                         <div className="full-width">
-                            <img
-                                className={classes.logo}
-                                alt="Devaway Logo"
-                                src={`${process.env.PUBLIC_URL}/img/logowhite.png`}
-                            />
+                            <NavLink
+                                id="home-link-logo"
+                                to="/"
+                            >
+                                <img
+                                    className={classes.logo}
+                                    alt="Devaway Logo"
+                                    src={`${process.env.PUBLIC_URL}/img/logowhite.png`}
+                                />
+                            </NavLink>
                         </div>
                         <SubscribeBox />
                         {this.renderMenuToggler()}
-                        {this.renderUserMenu()}
+                        {this.renderPlacesMenu()}
                         <LogBox />
                     </Toolbar>
                 </AppBar>
@@ -156,6 +192,7 @@ export class NavBarComponent extends React.PureComponent {
                 >
                     <MenuIcon />
                 </IconButton>
+                {this.renderSnackbar()}
             </div>
         );
     }
@@ -165,7 +202,8 @@ NavBarComponent.propTypes = {
     classes: T.shape({
         root: T.any,
         flex: T.any,
-        menuButton: T.any
+        menuButton: T.any,
+        snackbar: T.string.isRequired,
     }).isRequired,
     user: T.shape({
         isLoggedIn: T.bool.isRequired
@@ -202,5 +240,10 @@ export default withStyles(theme => ({
     },
     toolbar: {
         paddingRight: theme.spacing.unit * 6
+    },
+    snackbar: {
+        margin: theme.spacing.unit,
+        width: "300px",
+        left: "calc(50% - 150px)"
     }
 }))(NavBarComponent);

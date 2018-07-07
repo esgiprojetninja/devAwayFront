@@ -24,7 +24,7 @@ export const mockAPI = {
     },
     userApi: {
         login: () => Promise.resolve({ success: { token: "prout" } }),
-        addUser: () => Promise.resolve(basicUser),
+        upsertUser: () => Promise.resolve(basicUser),
         getAccommodations: () => Promise.resolve(
             Array.from(new Array(1)).map((a, i) => ({
                 ...accommodationMock,
@@ -144,8 +144,9 @@ export const mockAPIWithErrors = {
             hasError: true,
             message: "No sir, you are not comin in"
         }),
-        addUser: () => Promise.resolve({
-            hasError: true
+        upsertUser: () => Promise.resolve({
+            hasError: true,
+            message: "POULAY ERROR"
         }),
         getAccommodations: () => Promise.resolve({
             hasError: true
@@ -189,10 +190,7 @@ export const mockAPIWithServerFailure = {
             code: 500,
             message: "gtfo"
         })),
-        addUser: () => Promise.reject(new Error({
-            code: 500,
-            message: "gtfo"
-        })),
+        upsertUser: () => Promise.reject(new Error("gtfo")),
         getAccommodations: () => Promise.reject(new Error("gtfo", {
             code: 500,
             message: "gtfo",

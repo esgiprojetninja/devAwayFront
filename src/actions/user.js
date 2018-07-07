@@ -15,6 +15,10 @@ const userRequest = () => ({
     type: types.USER_REQUEST
 });
 
+const userGetMeRequest = () => ({
+    type: types.USER_GET_ME_REQUEST
+});
+
 const loginRequest = () => ({
     type: types.LOGIN_REQUEST
 });
@@ -30,30 +34,33 @@ const loginFailure = error => ({
 });
 
 export const getMe = (token) => {
-    return (dispatch, getState, API) => {
-        dispatch(userRequest());
-        return API.profileApi.getMe()
-            .then(
-                (res) => {
-                    if (res && res.id && res.email && res.username) {
-                        dispatch(displaySnackMsg(`Logged in as ${res.username}`));
-                        const sessionUser = JSON.stringify({
-                            ...res,
-                            token
-                        });
-                        window.localStorage.setItem("filledUser", sessionUser);
-                        return dispatch(loginSuccess(res));
-                    }
-                    dispatch(displaySnackMsg("Login failed"));
-                    dispatch(logout());
-                    return dispatch(loginFailure(res.message));
-                }, (err) => {
-                    // console.error("getMe error", err);
-                    dispatch(displaySnackMsg("Login failed"));
-                    dispatch(logout());
-                    return dispatch(loginFailure(err));
-                }
-            );
+    return async (dispatch, getState, API) => {
+        const state = getState();
+        if (state && state.user && state.user.isGettingData) {
+            return;
+        }
+        dispatch(userGetMeRequest());
+        try {
+            const res = await API.profileApi.getMe();
+            if (res && res.id && res.email && res.username) {
+                dispatch(displaySnackMsg(`Logged in as ${res.username}`));
+                const sessionUser = JSON.stringify({
+                    ...res,
+                    token
+                });
+                window.localStorage.setItem("filledUser", sessionUser);
+                dispatch(loginSuccess(res));
+                return;
+            }
+            dispatch(displaySnackMsg("Login failed"));
+            dispatch(logout());
+            dispatch(loginFailure(res.message));
+        } catch (err) {
+            // console.error("getMe error", err);
+            dispatch(displaySnackMsg("Login failed"));
+            dispatch(logout());
+            dispatch(loginFailure(err));
+        }
     };
 };
 
@@ -91,24 +98,27 @@ const addUserFailure = err => ({
     payload: err
 });
 
-export const addUser = (user) => {
-    return (dispatch, getState, API) => {
+export const upsertUser = (user) => {
+    return async (dispatch, getState, API) => {
+        let verb = user.id || user.id === 0 ?
+            "edit"
+            : "create";
         dispatch(userRequest());
-        return API.userApi.addUser(user)
-            .then(
-                (res) => {
-                    if (res && res.id && res.email && res.username) {
-                        dispatch(displaySnackMsg(`Account created with ${res.username}`));
-                        return dispatch(addUserSuccess(res));
-                    }
-                    dispatch(displaySnackMsg("Uncomplete user info"));
-                    return dispatch(addUserFailure(res));
-                }, (err) => {
-                    // console.error("addUser error", err);
-                    dispatch(displaySnackMsg("Account creation failure"));
-                    return dispatch(addUserFailure(err));
-                }
-            );
+        try {
+            const res = await API.userApi.upsertUser(user);
+            if (res && res.email && res.username) {
+                verb = `${verb}ed`.replace("ee", "e");
+                dispatch(displaySnackMsg(`User ${verb}`));
+                return user.id ?
+                    dispatch(loginSuccess(res))
+                    : dispatch(addUserSuccess(res));
+            }
+            dispatch(displaySnackMsg(`Couldn't ${verb} user`));
+            return dispatch(addUserFailure(res.message || `Couldn't ${verb} user`));
+        } catch (e) {
+            dispatch(displaySnackMsg(`Couldn't ${verb} user`));
+            return dispatch(addUserFailure(e.message));
+        }
     };
 };
 

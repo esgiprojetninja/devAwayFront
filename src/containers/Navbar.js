@@ -3,6 +3,7 @@
 import { connect } from "react-redux";
 import { loadSessionUser } from "../actions/user";
 import NavbarComponent from "../ui/Navbar";
+import { removeSnackMsg } from "../actions/snack";
 
 export const navbarKeyStoragePrefix = "navbarKeyStoragePrefix";
 
@@ -25,7 +26,10 @@ export const mapDispatchToProps = dispatch => ({
     },
     async onInit() {
         return dispatch(loadSessionUser());
-    }
+    },
+    closeSnack() {
+        dispatch(removeSnackMsg());
+    },
 });
 
 const Navbar = connect(

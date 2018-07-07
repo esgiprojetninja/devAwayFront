@@ -141,3 +141,8 @@ button.btn-white {
     padding: 2.5px 10px;
     font-size: 3vh;
 }
+
+#user-menu > div[role="document"] > ul[role="menu"] {
+    padding-top: 0;
+    padding-bottom: 0;
+}

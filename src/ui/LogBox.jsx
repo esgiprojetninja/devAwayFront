@@ -1,8 +1,13 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 import * as T from "prop-types";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import FormControl from "@material-ui/core/FormControl";
+import Card from "@material-ui/core/Card";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -11,41 +16,43 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Icon from "@material-ui/core/Icon";
+import UserIcon from "react-icons/lib/fa/user";
+import { withStyles } from "@material-ui/core/styles";
+import Avatar from "@material-ui/core/Avatar";
 import { User } from "../propTypes/userType";
-import { defaultTheme } from "../styles/theme";
 
-const styles = {
+const styles = theme => ({
     loginSendBtn: {
         margin: "auto",
         marginLeft: "6px"
     },
-    loginDialog: {
-        title: {
-            color: defaultTheme.palette.primary.dark
-        },
-        titleSeparator: {
-            margin: "auto",
-            width: "100%",
-            height: "1px",
-            display: "block",
-            backgroundColor: defaultTheme.palette.primary.dark
-        }
-    }
-};
+    loginDialogTitle: {
+        color: theme.palette.primary.dark
+    },
+    loginDialogTitleSeparator: {
+        margin: "auto",
+        width: "100%",
+        height: "1px",
+        display: "block",
+        backgroundColor: theme.palette.primary.dark
+    },
+    userMenuCard: {
+        width: "100%",
+        height: 155,
+        margin: 0,
+        paddingTop: theme.spacing.unit * 2,
+        paddingBottom: theme.spacing.unit * 2,
+    },
+    userMenuCardTitle: {
+        width: "100%",
+        margin: theme.spacing.unit,
+        paddingLeft: theme.spacing.unit,
+        paddingRight: theme.spacing.unit,
+        color: theme.palette.primary.light,
+    },
+});
 
-export default class LogBox extends React.PureComponent {
-    static propTypes = {
-        isLoading: T.bool.isRequired,
-        isLoggedIn: T.bool.isRequired,
-        hasError: T.bool.isRequired,
-        error: T.string,
-        onSubmit: T.func.isRequired,
-        onLogoutClicked: T.func.isRequired,
-        data: User
-    };
-
-    static defaultProps = { error: "", data: {} }
-
+class LogBox extends React.PureComponent {
     constructor(props) {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -56,9 +63,22 @@ export default class LogBox extends React.PureComponent {
             username: "",
             password: "",
             noticedError: false,
-            open: false
+            open: false,
+            anchorEl: null,
         };
     }
+
+    get classes() {
+        return this.props.classes;
+    }
+
+    handleUserMenuClick = (event) => {
+        this.setState({ anchorEl: event.currentTarget });
+    };
+
+    handleUserMenuClose = () => {
+        this.setState({ anchorEl: null });
+    };
 
     handleClickOpen = () => {
         if (!this.props.isLoggedIn) {
@@ -88,40 +108,67 @@ export default class LogBox extends React.PureComponent {
         this.handleClose();
     }
 
-    renderErrors() {
-        if (!this.props.hasError || this.state.noticedError) {
-            return null;
+    renderAvatar() {
+        const img = this.props.data.avatar || null;
+        if (img) {
+            return (<Avatar
+                id="devaway-toolbar-user-avatar"
+                alt="Adelle Charles"
+                src={img.includes("data:image/") ? img : `data:image/jpeg;base64,${img}`}
+                style={{ width: 40, height: 40 }}
+            />);
         }
         return (
-            <Typography color="secondary">
-                {this.props.error},
-            </Typography>
-        );
-    }
-
-    renderName() {
-        return (
-            <Typography color="inherit">
-                {this.props.data.username},
-            </Typography>
+            <UserIcon size={20} style={{ color: "#fff", fill: "#fff" }} />
         );
     }
 
     renderLoggedBox() {
+        const { anchorEl } = this.state;
         return (
-            <div style={{
-                display: "flex",
-                alignItems: "center",
-                alignContent: "center"
-            }}
-            >
-                {this.renderName()}
-                <Button
-                    onClick={this.props.onLogoutClicked}
-                    color="inherit"
+            <div>
+                <IconButton
+                    id="user-menu-toggler"
+                    style={{ position: "relative", marginRight: 10 }}
+                    aria-label="User menu"
+                    aria-owns={anchorEl ? "user-menu" : null}
+                    aria-haspopup="true"
+                    onClick={this.handleUserMenuClick}
                 >
-                    Logout
-                </Button>
+                    {this.renderAvatar()}
+                </IconButton>
+                <Menu
+                    id="user-menu"
+                    anchorEl={anchorEl}
+                    open={!!anchorEl}
+                    onClose={this.handleUserMenuClose}
+                >
+                    <Card className={this.classes.userMenuCard}>
+                        <Typography variant="headline" className={this.classes.userMenuCardTitle} color="inherit">
+                            Hey, {this.props.data.username}
+                        </Typography>
+                        <MenuItem onClick={this.handleClickOpen}>
+                            <NavLink
+                                id="user-account-link"
+                                to="/profile"
+                            >My account
+                            </NavLink>
+                        </MenuItem>
+                        <MenuItem>
+                            <Button
+                                id="devaway-user-logout-btn"
+                                className="full-width"
+                                color="primary"
+                                variant="contained"
+                                onClick={() => {
+                                    this.handleClickOpen();
+                                    this.props.onLogoutClicked();
+                                }}
+                            >Logout
+                            </Button>
+                        </MenuItem>
+                    </Card>
+                </Menu>
             </div>
         );
     }
@@ -129,16 +176,17 @@ export default class LogBox extends React.PureComponent {
     renderLogBox() {
         return (
             <div>
-                <Button className="btn-white" onClick={this.handleClickOpen}>Log in</Button>
+                <Button id="devaway-logbox-toggler" className="btn-white" onClick={this.handleClickOpen}>Log in</Button>
                 <Dialog
+                    id="devaway-logbox-dialog"
                     open={this.state.open}
                     onClose={this.handleClose}
                     aria-labelledby="form-logbox-title"
                 >
                     <DialogTitle id="form-logbox-title">
-                        <span style={styles.loginDialog.title}>Login</span>
+                        <span className={this.classes.loginDialogTitle}>Login</span>
                     </DialogTitle>
-                    <div style={styles.loginDialog.titleSeparator} />
+                    <div className={this.classes.loginDialogTitleSeparator} />
                     <form
                         onSubmit={this.handleSubmit}
                     >
@@ -169,10 +217,10 @@ export default class LogBox extends React.PureComponent {
                             <Button
                                 type="submit"
                                 variant="raised"
-                                style={styles.loginDialog.title}
+                                className={this.classes.loginDialogTitle}
                             >
                                 Log in
-                                <Icon style={styles.loginSendBtn} >send</Icon>
+                                <Icon className={this.classes.loginSendBtn} >send</Icon>
                             </Button>
                         </DialogActions>
                     </form>
@@ -191,3 +239,14 @@ export default class LogBox extends React.PureComponent {
         return this.renderLogBox();
     }
 }
+LogBox.propTypes = {
+    isLoading: T.bool.isRequired,
+    isLoggedIn: T.bool.isRequired,
+    hasError: T.bool.isRequired,
+    onSubmit: T.func.isRequired,
+    onLogoutClicked: T.func.isRequired,
+    data: User.isRequired,
+    classes: T.shape({}).isRequired,
+};
+
+export default withStyles(styles)(LogBox);

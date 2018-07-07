@@ -7,9 +7,10 @@ import { accommodationMock } from "../mock/body/accommodation";
 global.fetch = fetchMock;
 
 describe("API user", () => {
-    const baseUrl = process.env.REACT_APP_API_URL;
+    const baseUrl = "toto.poulayman";
 
     beforeAll(() => {
+        process.env.REACT_APP_API_URL = baseUrl;
         global.fetch = fetchMock;
         window.localStorage = {
             getItem: () => "eerzearez",
@@ -32,10 +33,22 @@ describe("API user", () => {
             name: "prout",
             POULAY: "man"
         };
-        const mockedCall = fetchMock.post(`https://${baseUrl}/api/users/add`, profile);
-        await userApi.addUser(profile);
+        const mockedCall = fetchMock.post(`https://${baseUrl}/api/v1/users`, profile);
+        await userApi.upsertUser(profile);
         const body = JSON.parse(mockedCall.lastCall()[1].body);
         expect(body).toEqual(profile);
+    });
+
+    it("should update a USER", async () => {
+        const user = {
+            username: "poulay",
+            id: 123,
+            lastname: "fongalakwaki",
+        };
+        const mockedCall = fetchMock.put(`https://${baseUrl}/api/v1/users/123`, user);
+        await userApi.upsertUser(user);
+        const body = JSON.parse(mockedCall.lastCall()[1].body);
+        expect(body).toEqual(user);
     });
 
     it("should get one user's accommodations", async () => {

@@ -19,6 +19,7 @@ describe("Reducer USER", () => {
         },
         isLoggedIn: false,
         isLoading: false,
+        isGettingData: false,
         hasError: false,
         error: "",
         accommodations: {},
@@ -60,6 +61,7 @@ describe("Reducer USER", () => {
             ...initialSate,
             isLoading: false,
             isLoggedIn: true,
+            isGettingData: false,
             hasError: false,
             data: {
                 ...initialSate.data,
@@ -93,6 +95,16 @@ describe("Reducer USER", () => {
         });
     });
 
+    it("should dispatch USER_GET_ME_REQUEST", () => {
+        expect(userReducer(initialSate, {
+            type: userTypes.USER_GET_ME_REQUEST
+        })).toEqual({
+            ...initialSate,
+            isLoading: true,
+            isGettingData: true,
+        });
+    });
+
     it("should dispatch ADD_USER_SUCCESS", () => {
         const state = {
             ...initialSate,
@@ -108,7 +120,7 @@ describe("Reducer USER", () => {
                 languages: "",
                 skills: "",
                 createdAt: "",
-                updateAt: "",
+                updatedAt: "",
                 username: ""
             }
         };
@@ -127,7 +139,8 @@ describe("Reducer USER", () => {
                 languages: "",
                 skills: "",
                 createdAt: "",
-                updateAt: "",
+                token: "",
+                updatedAt: "",
                 username: ""
             }
         });
