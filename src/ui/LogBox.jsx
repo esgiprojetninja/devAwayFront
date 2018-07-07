@@ -109,16 +109,12 @@ class LogBox extends React.PureComponent {
     }
 
     renderAvatar() {
-        const imgUrl = this.props.data.avatar ? // eslint-disable-line
-            this.props.data.avatar.includes("data:image/") ?
-                this.props.data.avatar
-                : `data:image/jpeg;base64,${this.props.data.avatar}`
-            : null;
-        if (imgUrl) {
+        const img = this.props.data.avatar || null;
+        if (img) {
             return (<Avatar
                 id="devaway-toolbar-user-avatar"
                 alt="Adelle Charles"
-                src={imgUrl}
+                src={img.includes("data:image/") ? img : `data:image/jpeg;base64,${img}`}
                 style={{ width: 40, height: 40 }}
             />);
         }

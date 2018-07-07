@@ -5,7 +5,6 @@ import { loadSessionUser } from "../actions/user";
 import NavbarComponent from "../ui/Navbar";
 import { removeSnackMsg } from "../actions/snack";
 
-
 export const navbarKeyStoragePrefix = "navbarKeyStoragePrefix";
 
 export const mapStateToProps = state => state;
