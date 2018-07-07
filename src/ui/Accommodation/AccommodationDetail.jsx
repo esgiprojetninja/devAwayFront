@@ -14,14 +14,15 @@ import Save from "@material-ui/icons/Save";
 import Navbar from "../../containers/Navbar";
 import CarouselImages from "../../containers/AccommodationDetailImages";
 import PlaceMap from "../../containers/AccommodationDetailMap";
+import AccommodationMissions from "../../containers/AccommodationMissions";
 import { getAdaptedContainerWidth } from "./AccommodationsList";
 import { accommodationReducerPropTypes } from "../../propTypes/accommodation.reducer.d";
-import { lightGrey, midGrey, darkGrey } from "../../styles/theme";
+import { midGrey, darkGrey } from "../../styles/theme";
 
 const styles = {
     container: {
         margin: "auto",
-        marginTop: "20px",
+        padding: "20px 0 20px 20px",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-around",
@@ -37,10 +38,6 @@ const styles = {
         wordBreak: "break-all",
         height: "100%",
         maxHeight: "70vh"
-    },
-    missionCard: {
-        padding: "16px 12px",
-        borderBottom: `1px solid ${lightGrey}`
     },
     iconInfoItem: {
         marginLeft: "10px",
@@ -76,7 +73,6 @@ export default class AccommodationDetail extends React.PureComponent {
             }).isRequired
         }).isRequired,
         onInit: T.func.isRequired,
-        applyToMission: T.func.isRequired,
         updateAcco: T.func.isRequired,
         accommodation: accommodationReducerPropTypes.isRequired,
         user: T.shape({
@@ -381,68 +377,6 @@ export default class AccommodationDetail extends React.PureComponent {
         );
     }
 
-    renderMission(mission) {
-        return (
-            <div key={mission.id} style={styles.missionCard} className="full-width">
-                <Typography className="full-width text-center" style={{ color: darkGrey, fontWeight: 500, fontSize: "1.6em" }}>
-                    {mission.title}
-                </Typography>
-                <Typography className="full-width text-justify" style={{ color: midGrey, fontSize: "1.2em" }}>
-                    {mission.description}
-                </Typography>
-                {this.props.user.isLoggedIn ?
-                    <Button
-                        className="devaway-apply-btn full-width margin-auto"
-                        style={{ maxWidth: "200px", display: "flex" }}
-                        onClick={() => this.props.applyToMission(this.props.user.data.id, mission)}
-                        color="primary"
-                    >
-                        Apply
-                    </Button>
-                    : null
-                }
-            </div>
-        );
-    }
-
-    renderPlace() {
-        if (!this.accommodation) return null;
-        if (!this.hasMissions) {
-            return (
-                <Grid container className="full-width">
-                    {this.renderPlaceDetails()}
-                    <Typography style={{ color: midGrey, fontWeight: 500 }}>
-                        There are no missions linked to this place yet !
-                    </Typography>
-                </Grid>
-            );
-        }
-        return (
-            <Grid container className="full-width">
-                <Grid xs={12} sm={12} md={8} lg={8} xl={8} item container className="full-width" style={styles.accommodationCard}>
-                    {this.renderPlaceDetails()}
-                </Grid>
-                <Grid xs={12} sm={12} md={4} lg={4} xl={4} item container className="devaway-missions-container full-width" style={styles.accommodationCard}>
-                    {
-                        this.accommodation.missions.map((i, m) => {
-                            const mission = {
-                                nbPersons: Math.round(Math.random() * 10),
-                                id: `MissionID-${m}`,
-                                title: `Mission ${m}`,
-                                description: `description of the sheitan you KNOOW ${m}`,
-                                checkInDate: new Date().toISOString(),
-                                checkoutDate: new Date(Date.now() + (1000 * 3600 * 24 * 15)),
-                                isBooked: m % 2 === 0,
-                                isActive: m % 2 === 0
-                            };
-                            return this.renderMission(mission);
-                        })
-                    }
-                </Grid>
-            </Grid>
-        );
-    }
-
     renderSaveBtn() {
         if (!this.isUserOwner) {
             return null;
@@ -467,7 +401,7 @@ export default class AccommodationDetail extends React.PureComponent {
             width: this.state.containerWidth
         };
         return (
-            <div className="relative full-width" style={{ background: "#fff" }}>
+            <div className="relative full-width" style={{ background: "#efefef" }}>
                 <Navbar burgerColor={darkGrey} />
                 <CarouselImages
                     acco={this.accommodation}
@@ -475,7 +409,35 @@ export default class AccommodationDetail extends React.PureComponent {
                 />
                 <div style={style}>
                     {this.renderFetchingSpinner()}
-                    {this.renderPlace()}
+                    <Grid container space={24} className="full-width">
+                        <Grid
+                            xs={12}
+                            sm={12}
+                            md={8}
+                            lg={8}
+                            xl={8}
+                            item
+                            container
+                            style={styles.accommodationCard}
+                        >
+                            {this.accommodation && this.renderPlaceDetails()}
+                        </Grid>
+                        <Grid
+                            xs={12}
+                            sm={12}
+                            md={4}
+                            lg={4}
+                            xl={4}
+                            item
+                            container
+                            style={styles.accommodationCard}
+                        >
+                            <AccommodationMissions
+                                acco={this.accommodation}
+                                isUserOwner={this.isUserOwner}
+                            />
+                        </Grid>
+                    </Grid>
                     {this.renderSaveBtn()}
                 </div>
             </div>
