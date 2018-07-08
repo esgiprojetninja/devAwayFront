@@ -407,7 +407,7 @@ export default class AccommodationDetail extends React.PureComponent {
                     acco={this.accommodation}
                     isUserOwner={this.isUserOwner}
                 />
-                <div style={style}>
+                <div id="#devaway-acco-place-container" style={style}>
                     {this.renderFetchingSpinner()}
                     <Grid container space={24} className="full-width">
                         <Grid
@@ -432,10 +432,10 @@ export default class AccommodationDetail extends React.PureComponent {
                             container
                             style={styles.accommodationCard}
                         >
-                            <AccommodationMissions
+                            {this.accommodation && <AccommodationMissions
                                 acco={this.accommodation}
                                 isUserOwner={this.isUserOwner}
-                            />
+                            />}
                         </Grid>
                     </Grid>
                     {this.renderSaveBtn()}

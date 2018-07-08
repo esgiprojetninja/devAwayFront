@@ -45,10 +45,6 @@ class AccommodationMissions extends React.PureComponent {
         return "See it all";
     }
 
-    handleAddMission = () => {
-        console.log("open modal mofo", this);
-    }
-
     renderMission(mission) {
         return (
             <div key={mission.id}>
@@ -70,17 +66,20 @@ class AccommodationMissions extends React.PureComponent {
     }
 
     renderAddBtn() {
-        return (
-            <Button
-                id="devaway-add-mission-btn"
-                className="full-width margin-auto"
-                style={{ maxWidth: "80%" }}
-                onClick={this.handleAddMission}
-                color="default"
-                variant="contained"
+        return (!this.missions && this.props.isUserOwner &&
+            <NavLink
+                to="/mission/creation"
             >
-                Add mission <AddIcon />
-            </Button>
+                <Button
+                    id="devaway-add-mission-btn"
+                    className="full-width margin-auto"
+                    onClick={this.handleAddMission}
+                    color="default"
+                    variant="contained"
+                >
+                    Add mission <AddIcon />
+                </Button>
+            </NavLink>
         );
     }
 

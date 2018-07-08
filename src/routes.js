@@ -4,10 +4,16 @@ import Profile from "./containers/Profile";
 import AccommodationDetail from "./containers/AccommodationDetail";
 import AccommodationsTabs from "./containers/AccommodationsTabs";
 import AccommodationCreation from "./containers/AccommodationCreation";
+import MissionCreation from "./containers/Mission/MissionCreation";
 
 export default [
     {
         path: "/",
+        exact: true,
+        component: Home
+    },
+    {
+        path: "/home",
         exact: true,
         component: Home
     },
@@ -34,5 +40,10 @@ export default [
     {
         path: "/accommodations/:accoID",
         component: AccommodationDetail
-    }
+    },
+    {
+        path: "/mission/creation",
+        exact: true,
+        component: MissionCreation
+    },
 ];

@@ -137,7 +137,7 @@ class AccommocationCreation extends React.PureComponent {
 
     handleSave = async () => {
         await this.props.saveAccommodation(this.accommodation);
-        // @TODO redirect to acco detail on success !!
+        // @TODO redirect to acco detail on success !!  (poping this page from history)
     }
 
     handleChange(property, ev) {
