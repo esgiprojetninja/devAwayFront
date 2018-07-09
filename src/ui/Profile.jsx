@@ -11,6 +11,7 @@ import TextField from "@material-ui/core/TextField";
 import { Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
+import UserIcon from "react-icons/lib/fa/user";
 
 import Guard from "../containers/Guard";
 import Navbar from "../containers/Navbar";
@@ -102,6 +103,9 @@ class Profile extends React.PureComponent {
                             }
                             className={classes.avatar}
                         />
+                    }
+                    {
+                        !imgUrl && <UserIcon className={classes.avatar} />
                     }
                     <input
                         type="file"
@@ -251,6 +255,8 @@ export default withStyles(theme => ({
         width: "100%",
         height: "100%",
         transition: "transform .2s ease-in-out",
+        color: theme.palette.primary.midGrey,
+        fill: theme.palette.primary.midGrey,
     },
     inputImgEdit: {
         width: "105%",
