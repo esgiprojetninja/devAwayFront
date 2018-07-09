@@ -7,7 +7,6 @@ import { render } from "react-dom";
 import { BrowserRouter, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import { MuiThemeProvider } from "@material-ui/core/styles";
-// import Reboot from "@material-ui/core/Reboot";
 
 import {
     defaultTheme

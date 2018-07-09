@@ -13,11 +13,6 @@ export default [
         component: Home
     },
     {
-        path: "/home",
-        exact: true,
-        component: Home
-    },
-    {
         path: "/guard",
         exact: true,
         component: Guard
@@ -28,7 +23,7 @@ export default [
         component: Profile
     },
     {
-        path: "/accommodations",
+        path: "/places",
         exact: true,
         component: AccommodationsTabs
     },
@@ -38,7 +33,7 @@ export default [
         component: AccommodationCreation
     },
     {
-        path: "/accommodations/:accoID",
+        path: "/places/:accoID",
         component: AccommodationDetail
     },
     {

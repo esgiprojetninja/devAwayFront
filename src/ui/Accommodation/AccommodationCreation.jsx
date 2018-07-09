@@ -109,7 +109,6 @@ class AccommocationCreation extends React.PureComponent {
             country,
             region,
             city,
-            host: this.props.user.data,
         };
     }
 

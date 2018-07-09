@@ -90,7 +90,7 @@ export class NavBarComponent extends React.PureComponent {
                 >
                     <NavLink
                         id="accommodation-link"
-                        to="/accommodations"
+                        to="/places"
                     >
                         All places
                     </NavLink>
