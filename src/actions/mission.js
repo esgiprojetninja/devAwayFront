@@ -42,10 +42,10 @@ const saveMissionFailure = payload => ({
     payload
 });
 
-export const saveMission = () =>
+export const saveMission = mission =>
     (dispatch, getState, API) => {
         dispatch(saveMissionRequest());
-        return API.missionApi.createOrUpdate(getState().mission.current)
+        return API.missionApi.createOrUpdate(mission)
             .then(
                 (res) => {
                     if (res.hasError) {

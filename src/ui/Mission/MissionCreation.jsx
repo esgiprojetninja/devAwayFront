@@ -1,5 +1,5 @@
 import React from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, NavLink } from "react-router-dom";
 import * as T from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
@@ -13,22 +13,32 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
+import Avatar from "@material-ui/core/Avatar";
+import TodoIcon from "react-icons/lib/fa/question";
 import moment from "moment";
 
 import Navbar from "../../containers/Navbar";
+import { getAccoImg } from "../../utils/accommodation";
 
 const PROP_RULES = {
     name: { min: 6, max: 24 },
     description: { min: 6, max: 255 },
     checkinDate: { min: moment().local().add(1, "hours").unix(), isNumber: true },
     stayTime: { min: 1, max: (1000 * 60 * 60 * 24 * 365 * 10) }, // min 10 years
-    stayTimeUnit: { values: ["hours", "days", "weeks", "months"], isSelect: true },
+    stayTimeUnit: { values: [
+        { label: "hours", value: "hours" },
+        { label: "days", value: "days" },
+        { label: "weeks", value: "weeks" },
+        { label: "months", value: "months" },
+    ],
+    isSelect: true },
+    accommodation: { values: [], isSelect: true },
 };
 
 const styles = theme => ({
     container: {
         width: "100%",
-        height: "calc(100vh - 70px - 60px)",
+        height: "calc(100vh - 70px - 120px)",
         maxWidth: 720,
         margin: "auto",
         marginTop: theme.spacing.unit,
@@ -55,30 +65,19 @@ const styles = theme => ({
     numberFormControl: {
         width: "100%",
         maxWidth: 150,
+        height: "100%",
     },
     saveBtn: {
         position: "fixed",
         right: theme.spacing.unit * 2,
         bottom: theme.spacing.unit * 4,
     },
-    chips: {
-        display: "flex",
-        flexWrap: "wrap",
-    },
-    chip: {
-        margin: theme.spacing.unit / 4,
+    placeAvatar: {
+        margin: theme.spacing.unit * 2,
     },
 });
 
 class MissionCreation extends React.PureComponent {
-    constructor(props) {
-        super(props);
-        const { user } = props;
-        if (!user.isLoggedIn && !user.isLoading && !user.isGettingData) {
-            // this.props.history.replace("/home");
-        }
-    }
-
     state = {
         name: "",
         nameError: "",
@@ -90,9 +89,20 @@ class MissionCreation extends React.PureComponent {
         checkoutDateError: "",
         stayTime: PROP_RULES.stayTime.min,
         stayTimeError: "",
-        stayTimeUnit: PROP_RULES.stayTimeUnit.values[1],
+        stayTimeUnit: PROP_RULES.stayTimeUnit.values[2].value,
         stayTimeUnitError: "",
-        accommodation: null,
+        accommodation: "",
+        accommodationError: "",
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const { accommodations } = nextProps.user;
+        PROP_RULES.accommodation.values = Object.keys(accommodations)
+            .map(id => ({ label: accommodations[id].title, value: id }));
+
+        if (PROP_RULES.accommodation.values.length === 1) {
+            this.setState({ accommodation: PROP_RULES.accommodation.values[0].value });
+        }
     }
 
     get missionValid() {
@@ -105,7 +115,13 @@ class MissionCreation extends React.PureComponent {
         if (this.state.checkinDateError || !this.state.checkinDate) {
             return false;
         }
-        if (this.state.checkoutDateError || !this.state.checkoutDate) {
+        if (this.state.stayTimeError || !this.state.stayTime) {
+            return false;
+        }
+        if (this.state.stayTimeUnitError || !this.state.stayTimeUnit) {
+            return false;
+        }
+        if (this.state.accommodationError || !this.state.accommodation) {
             return false;
         }
         return true;
@@ -130,7 +146,7 @@ class MissionCreation extends React.PureComponent {
     }
 
     handleSave = async () => {
-        await this.props.saveMission(this.accommodation);
+        await this.props.saveMission(this.mission);
         // @TODO redirect to mission detail on success !! (poping this page from history)
     }
 
@@ -194,7 +210,7 @@ class MissionCreation extends React.PureComponent {
         );
     }
 
-    renderSelectProperty(propName, defaultLegend) {
+    renderSelectProperty(propName, stringChoices, defaultLegend) {
         const capitalized = propName.charAt(0).toUpperCase() + propName.slice(1);
         const id = `${capitalized}-${Math.floor(Math.random() * 2000)}`;
         return (
@@ -203,21 +219,23 @@ class MissionCreation extends React.PureComponent {
                 <Select
                     id={id}
                     value={this.state[propName]}
-                    onChange={this.handleChange}
+                    onChange={(e) => {
+                        this.handleChange(propName, e);
+                    }}
                     inputProps={{
                         name: propName,
                         id: "select-multiple-stay-unit",
                     }}
                 >
-                    {PROP_RULES[propName].values.map(prop => (
+                    {stringChoices.map(prop => (
                         <MenuItem
-                            key={prop}
-                            value={prop}
+                            key={prop.label}
+                            value={prop.value}
                             style={{
-                                fontWeight: this.state[propName] === prop ? 400 : 700,
+                                fontWeight: this.state[propName] === prop.value ? 600 : 400,
                             }}
                         >
-                            {prop}
+                            {prop.label}
                         </MenuItem>
                     ))}
                 </Select>
@@ -225,9 +243,32 @@ class MissionCreation extends React.PureComponent {
         );
     }
 
+    renderPlaceAvatar() {
+        const id = this.state.accommodation;
+        if (!id || !this.props.user.accommodations[id]) {
+            return (
+                <TodoIcon size={30} className={this.props.classes.placeAvatar} />
+            );
+        }
+        const imgUrl = getAccoImg(this.props.user.accommodations[id]);
+        return (
+            <Avatar
+                className={this.props.classes.placeAvatar}
+                alt="place"
+                src={imgUrl.includes("data:image/") || imgUrl.length < 50 ?
+                    imgUrl : `data:image/jpeg;base64,${imgUrl}`
+                }
+            />
+        );
+    }
+
     renderForm() {
         return (
             <Grid container spacing={24}>
+                <Grid container item className={this.props.classes.item} xs={12}>
+                    <Grid item xs={10}>{this.renderSelectProperty("accommodation", PROP_RULES.accommodation.values)}</Grid>
+                    <Grid item>{this.renderPlaceAvatar()}</Grid>
+                </Grid>
                 <Grid item className={this.props.classes.item} xs={12}>
                     {this.renderTextProperty("name", false)}
                 </Grid>
@@ -236,7 +277,7 @@ class MissionCreation extends React.PureComponent {
                 </Grid>
                 <Grid item className={this.props.classes.item} xs={12}>
                     {this.renderNumberProperty("stayTime", "Minimum stay")}
-                    {this.renderSelectProperty("stayTimeUnit")}
+                    {this.renderSelectProperty("stayTimeUnit", PROP_RULES.stayTimeUnit.values, "Unit")}
                 </Grid>
             </Grid>
         );
@@ -260,9 +301,58 @@ class MissionCreation extends React.PureComponent {
         );
     }
 
+    renderNoUser() {
+        return (
+            <Grid container spacing={24} className={this.props.classes.container}>
+                <Paper className={this.props.classes.paper} elevation={1}>
+                    <div className="full-width display-flex-row">
+                        <Typography className={this.props.classes.title} type="title" color="inherit" component="h2">
+                            You need to log in before using our services
+                        </Typography>
+                    </div>
+                    <div style={{ marginTop: 40 }} className="full-width display-flex-row">
+                        <NavLink
+                            to="/places"
+                        >
+                            <Button color="primary" variant="contained">
+                                Check out the places we have !
+                            </Button>
+                        </NavLink>
+                    </div>
+                </Paper>
+            </Grid>
+        );
+    }
+
+    renderNoUserAcco() {
+        return (
+            <Grid container spacing={24} className={this.props.classes.container}>
+                <Paper className={this.props.classes.paper} elevation={1}>
+                    <div className="full-width display-flex-row">
+                        <Typography className={this.props.classes.title} type="title" color="inherit" component="h2">
+                            You have no place to link this mission to
+                        </Typography>
+                    </div>
+                    <div style={{ marginTop: 40 }} className="full-width display-flex-row">
+                        <NavLink
+                            to="/place/creation"
+                        >
+                            <Button color="primary" variant="contained">
+                                Create your first place
+                            </Button>
+                        </NavLink>
+                    </div>
+                </Paper>
+            </Grid>
+        );
+    }
+
     renderContent() {
         if (!this.props.user.isLoggedIn) {
-            return null;
+            return this.renderNoUser();
+        }
+        if (!Object.keys(this.props.user.accommodations).length) {
+            return this.renderNoUserAcco();
         }
         return (
             <Grid container spacing={24} className={this.props.classes.container}>
@@ -282,9 +372,9 @@ class MissionCreation extends React.PureComponent {
     }
 
     renderSpinner() {
-        if (this.props.accommodation.isLoading) {
+        if (this.props.accommodation.isLoading || this.props.user.isLoading) {
             return (
-                <div className="display-flex-row full-screen position-fixed modal-bg align-absolute-top">
+                <div style={{ marginTop: 20 }} className="display-flex-row full-width">
                     <CircularProgress color="primary" />
                 </div>
             );
@@ -296,8 +386,8 @@ class MissionCreation extends React.PureComponent {
         return (
             <div>
                 <Navbar burgerColor="#acacac" />
-                {this.renderContent()}
                 {this.renderSpinner()}
+                {this.renderContent()}
             </div>
         );
     }
@@ -307,6 +397,7 @@ MissionCreation.propTypes = {
         isLoggedIn: T.bool.isRequired,
         isLoading: T.bool.isRequired,
         isGettingData: T.bool.isRequired,
+        accommodations: T.shape({}).isRequired,
         data: T.shape({
             id: T.number
         }),
@@ -325,8 +416,7 @@ MissionCreation.propTypes = {
         item: T.string.isRequired,
         numberFormControl: T.string.isRequired,
         saveBtn: T.string.isRequired,
-        chips: T.string.isRequired,
-        chip: T.string.isRequired,
+        placeAvatar: T.string.isRequired,
     }).isRequired,
     saveMission: T.func.isRequired,
 };
