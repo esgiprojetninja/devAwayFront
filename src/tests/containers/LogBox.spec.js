@@ -32,7 +32,7 @@ describe("Container LogBox", () => {
                 setItem: jest.fn()
             };
             const { store, fn } = prepare("onSubmit");
-            await fn({ username: "jardin", password: "tomate" });
+            await fn({ userName: "jardin", password: "tomate" });
             const storeActions = await store.getActions();
             expect(storeActions.map(a => a.type)).toEqual([
                 "LOGIN_REQUEST",

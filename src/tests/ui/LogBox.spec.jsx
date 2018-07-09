@@ -22,7 +22,7 @@ describe("ui <LogBox />", function () {
                 createdAt: "",
                 updatedAt: "",
                 avatar: "",
-                username: ""
+                userName: ""
             },
             isLoading: false,
             isLoggedIn: false,
@@ -91,8 +91,8 @@ describe("ui <LogBox />", function () {
     });
 
     it("should handleChange", () => {
-        this.wrapper.instance().handleChange("username", { target: { value: "Toto" } });
-        expect(this.wrapper.state("username")).toEqual("Toto");
+        this.wrapper.instance().handleChange("userName", { target: { value: "Toto" } });
+        expect(this.wrapper.state("userName")).toEqual("Toto");
     });
 
     it("should handleSubmit", () => {
@@ -109,12 +109,12 @@ describe("ui <LogBox />", function () {
             onSubmit={mockSubmit}
             onLogoutClicked={this.defaultProps.onLogoutClicked}
         />).dive();
-        wrapper.instance().handleChange("username", { target: { value: "Toto" } });
+        wrapper.instance().handleChange("userName", { target: { value: "Toto" } });
         wrapper.instance().handleChange("password", { target: { value: "Secret" } });
         wrapper.instance().handleSubmit(mockEv);
         expect(mockEv.preventDefault).toBeCalled();
         expect(mockSubmit).toBeCalledWith({
-            username: "Toto",
+            userName: "Toto",
             password: "Secret"
         });
     });
@@ -123,7 +123,7 @@ describe("ui <LogBox />", function () {
         const wrapper = shallow(<LogBox
             data={{
                 ...this.defaultProps.data,
-                username: "Apu"
+                userName: "Apu"
             }}
             isLoading={this.defaultProps.isLoading}
             isLoggedIn
@@ -140,7 +140,7 @@ describe("ui <LogBox />", function () {
             ...this.defaultProps,
             data: {
                 ...this.defaultProps.data,
-                username: "poulayname"
+                userName: "poulayname"
             },
             isLoading: false,
             isLoggedIn: true,
@@ -163,7 +163,7 @@ describe("ui <LogBox />", function () {
             ...this.defaultProps,
             data: {
                 ...this.defaultProps.data,
-                username: "poulayname"
+                userName: "poulayname"
             },
             isLoading: false,
             isLoggedIn: true,
@@ -188,7 +188,7 @@ describe("ui <LogBox />", function () {
             ...this.defaultProps,
             data: {
                 ...this.defaultProps.data,
-                username: "poulayname"
+                userName: "poulayname"
             },
             isLoading: false,
             isLoggedIn: true,
@@ -216,7 +216,7 @@ describe("ui <LogBox />", function () {
             ...this.defaultProps,
             data: {
                 ...this.defaultProps.data,
-                username: "poulayname",
+                userName: "poulayname",
                 avatar: "ohmygadpoulayman"
             },
             isLoading: false,
@@ -236,7 +236,7 @@ describe("ui <LogBox />", function () {
             ...this.defaultProps,
             data: {
                 ...this.defaultProps.data,
-                username: "poulayname",
+                userName: "poulayname",
                 avatar: "data:image/ohmygadpoulayman"
             },
             isLoading: false,

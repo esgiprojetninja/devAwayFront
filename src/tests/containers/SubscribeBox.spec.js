@@ -28,7 +28,7 @@ describe("Container SubscribeBox", () => {
         it("onSubmit", async () => {
             const { store, fn } = prepare("onSubmit");
             await fn({
-                username: "jardin",
+                userName: "jardin",
                 password: "tomate",
                 passwordCheck: "tomate"
             });

@@ -51,7 +51,7 @@ export const mockAPI = {
             some: "user",
             id: 1,
             email: "coucou",
-            username: "azy"
+            userName: "azy"
         })
     },
     guardApi: {

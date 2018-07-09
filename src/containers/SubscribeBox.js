@@ -8,30 +8,22 @@ export const mapStateToProps = state => state.user;
 
 export const mapDispatchToProps = dispatch => ({
     onSubmit: (data) => {
-        const d = new Date().toISOString();
         dispatch(upsertUser({
-            roles: 1,
             email: data.email,
-            username: data.username,
+            userName: data.userName,
             password: data.password,
-            confirm_password: data.passwordCheck,
-            lastName: "",
-            firstName: "",
-            languages: "en",
-            skills: "",
-            createdAt: d,
-            updatedAt: d
+            c_password: data.passwordCheck,
         }));
     },
     hasError: {
         email: false,
-        username: false,
+        userName: false,
         password: false,
         passwordCheck: false
     },
     errorText: {
         email: "",
-        username: "",
+        userName: "",
         password: "",
         passwordCheck: ""
     }

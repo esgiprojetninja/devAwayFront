@@ -311,7 +311,7 @@ export default class AccommodationDetail extends React.PureComponent {
                 xl={this.hasMissions ? 8 : 12}
             >
                 <Typography style={{ color: midGrey, fontWeight: 500 }}>
-                    Host: <span style={{ letterSpacing: "1px" }}>{this.accommodation.host.username}</span>
+                    Host: <span style={{ letterSpacing: "1px" }}>{this.accommodation.host.userName}</span>
                 </Typography>
                 <div style={style} />
             </Grid>

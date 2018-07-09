@@ -12,13 +12,13 @@ describe("ui <SubscribeBox />", function () {
         isLoading: false,
         hasError: {
             email: false,
-            username: false,
+            userName: false,
             password: false,
             passwordCheck: false
         },
         errorText: {
             email: "",
-            username: "",
+            userName: "",
             password: "",
             passwordCheck: ""
         },
@@ -81,8 +81,8 @@ describe("ui <SubscribeBox />", function () {
     });
 
     it("should handleChange", () => {
-        this.wrapper.instance().handleChange("username", { target: { value: "Toto" } });
-        expect(this.wrapper.state("username")).toEqual("Toto");
+        this.wrapper.instance().handleChange("userName", { target: { value: "Toto" } });
+        expect(this.wrapper.state("userName")).toEqual("Toto");
     });
 
     it("should render errors", () => {
@@ -91,13 +91,13 @@ describe("ui <SubscribeBox />", function () {
             isLoggedIn={defaultProps.isLoggedIn}
             hasError={{
                 email: true,
-                username: true,
+                userName: true,
                 password: true,
                 passwordCheck: true
             }}
             errorText={{
                 email: "goderror",
-                username: "goderror",
+                userName: "goderror",
                 password: "goderror",
                 passwordCheck: "goderror"
             }}
@@ -119,7 +119,7 @@ describe("ui <SubscribeBox />", function () {
             onSubmit={mockSubmit}
         />);
         wrapper.instance().handleChange("chibar", { target: { value: "Toto" } });
-        wrapper.instance().handleChange("username", { target: { value: "Toto" } });
+        wrapper.instance().handleChange("userName", { target: { value: "Toto" } });
         wrapper.instance().handleChange("password", { target: { value: "Secret" } });
         wrapper.instance().handleChange("passwordCheck", { target: { value: "Secret" } });
         wrapper.instance().handleChange("email", { target: { value: "myemail@email.zu" } });
@@ -127,7 +127,7 @@ describe("ui <SubscribeBox />", function () {
         expect(mockEv.preventDefault).toBeCalled();
         expect(mockSubmit).toBeCalledWith({
             email: "myemail@email.zu",
-            username: "Toto",
+            userName: "Toto",
             password: "Secret",
             passwordCheck: "Secret"
         });

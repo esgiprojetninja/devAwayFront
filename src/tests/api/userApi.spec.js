@@ -21,11 +21,11 @@ describe("API user", () => {
     });
 
     it("should login", async () => {
-        const data = { username: "chibar", password: "singos" };
+        const data = { userName: "chibar", password: "singos" };
         const mockedCall = fetchMock.post(`https://${baseUrl}/api/login`, data);
         await userApi.login(data);
         const body = JSON.parse(mockedCall.lastCall()[1].body);
-        expect(body).toEqual({ email: data.username, password: data.password });
+        expect(body).toEqual({ email: data.userName, password: data.password });
     });
 
     it("should create a USER", async () => {
@@ -33,7 +33,7 @@ describe("API user", () => {
             name: "prout",
             POULAY: "man"
         };
-        const mockedCall = fetchMock.post(`https://${baseUrl}/api/v1/users`, profile);
+        const mockedCall = fetchMock.post(`https://${baseUrl}/api/register`, profile);
         await userApi.upsertUser(profile);
         const body = JSON.parse(mockedCall.lastCall()[1].body);
         expect(body).toEqual(profile);
@@ -41,7 +41,7 @@ describe("API user", () => {
 
     it("should update a USER", async () => {
         const user = {
-            username: "poulay",
+            userName: "poulay",
             id: 123,
             lastname: "fongalakwaki",
         };

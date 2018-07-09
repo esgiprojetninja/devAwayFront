@@ -14,7 +14,7 @@ describe("Reducer USER", () => {
             skills: "",
             createdAt: "",
             updatedAt: "",
-            username: "",
+            userName: "",
             token: ""
         },
         isLoggedIn: false,
@@ -52,7 +52,7 @@ describe("Reducer USER", () => {
             payload: {
                 data: {
                     id: 42,
-                    username: "dupoulay",
+                    userName: "dupoulay",
                     email: "chillinmyass",
                     token: "datauken"
                 }
@@ -66,7 +66,7 @@ describe("Reducer USER", () => {
             data: {
                 ...initialSate.data,
                 id: 42,
-                username: "dupoulay",
+                userName: "dupoulay",
                 email: "chillinmyass",
                 token: "datauken"
             }
@@ -121,7 +121,7 @@ describe("Reducer USER", () => {
                 skills: "",
                 createdAt: "",
                 updatedAt: "",
-                username: ""
+                userName: ""
             }
         };
 
@@ -141,7 +141,7 @@ describe("Reducer USER", () => {
                 createdAt: "",
                 token: "",
                 updatedAt: "",
-                username: ""
+                userName: ""
             }
         });
     });
