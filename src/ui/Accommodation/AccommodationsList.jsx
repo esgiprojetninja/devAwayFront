@@ -171,7 +171,7 @@ export default class AccommodationsList extends React.PureComponent {
                                 onMouseLeave={() => this.setState({ hoveredTile: null })}
                             >
                                 <NavLink
-                                    to={`/accommodations/${filledAcco.id}`}
+                                    to={`/places/${filledAcco.id}`}
                                 >
                                     <img style={{ width: "100%", height: "auto" }} src={getAccoImg(filledAcco)} alt={filledAcco.title} />
                                     <div style={styles.gridCustomDiv}>

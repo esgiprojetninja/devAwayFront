@@ -130,7 +130,7 @@ class AccommodationsPersonnalList extends React.PureComponent {
                                     </CardContent>
                                     <CardActions>
                                         <NavLink
-                                            to={`/accommodations/${acco.id}`}
+                                            to={`/places/${acco.id}`}
                                         >
                                             <Button variant="contained" color="default" className={this.classes.controlBtn}>
                                                 Administrate

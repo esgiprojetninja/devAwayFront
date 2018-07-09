@@ -6,7 +6,13 @@ export const mapStateToProps = state => state;
 
 export const mapDispatchToProps = dispatch => ({
     saveAccommodation(accommodation) {
-        dispatch(saveAccommodation(accommodation));
+        const unemptyAcco = Object.keys(accommodation)
+            .filter(prop => accommodation[prop] !== null && accommodation !== undefined)
+            .reduce((finalObj, prop) => ({
+                ...finalObj,
+                [prop]: accommodation[prop]
+            }), {});
+        dispatch(saveAccommodation(unemptyAcco));
     }
 });
 

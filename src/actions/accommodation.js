@@ -1,3 +1,4 @@
+/* global window */
 import * as types from "./types/accommodation";
 import { displaySnackMsg } from "./snack";
 
@@ -62,19 +63,28 @@ const saveAccommodationFailure = payload => ({
 export function saveAccommodation(newAccommodation = null) {
     return (dispatch, getState, API) => {
         dispatch(saveAccommodationRequest());
+        const verb = newAccommodation.id ? "update" : "create";
         return API.accommodationApi.createOrUpdate(
             newAccommodation
             || getState().accommodation.current)
             .then((res) => {
-                if (res.hasError || res.trace) {
-                    dispatch(displaySnackMsg("Accomodation creation failed !"));
+                if (res.hasError || res.trace || !res.id) {
+                    dispatch(displaySnackMsg(`Failed to ${verb} place`));
                     return dispatch(saveAccommodationFailure(res));
                 }
-                dispatch(displaySnackMsg("Accomodation created !"));
+                dispatch(displaySnackMsg(`Place ${verb}d`));
                 dispatch(saveAccommodationSuccess(res));
+                if (!newAccommodation.id) {
+                    const { origin } = window.location;
+                    if (window.history && window.history.replaceState) {
+                        window.history.replaceState(null, "new place", `${origin}/places/${res.id}`);
+                    }
+                    window.location = `${origin}/places/${res.id}`;
+                    return null;
+                }
                 return dispatch(fetchAccommodations());
             }, (err) => {
-                dispatch(displaySnackMsg("Accomodation creation failed !"));
+                dispatch(displaySnackMsg(`Failed to ${verb} place`));
                 return dispatch(saveAccommodationFailure(err));
             });
     };
