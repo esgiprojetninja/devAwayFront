@@ -20,11 +20,14 @@ import moment from "moment";
 import Navbar from "../../containers/Navbar";
 import { getAccoImg } from "../../utils/accommodation";
 
+const DATE_FORMAT = "YYYY-MM-DD";
+const HOUR_FORMAT = "HH:mm";
+
 const PROP_RULES = {
     name: { min: 6, max: 24 },
     description: { min: 6, max: 255 },
-    checkinDate: { min: moment().local().add(1, "hours").unix(), isNumber: true },
-    stayTime: { min: 1, max: (1000 * 60 * 60 * 24 * 365 * 10) }, // min 10 years
+    checkinDate: { min: moment().local().add(1, "hours"), isDate: true },
+    stayTime: { min: 1, max: (1000 * 60 * 60 * 24 * 365 * 10) }, // max 10 years
     stayTimeUnit: { values: [
         { label: "hours", value: "hours" },
         { label: "days", value: "days" },
@@ -67,6 +70,9 @@ const styles = theme => ({
         maxWidth: 150,
         height: "100%",
     },
+    dateFormControl: {
+        width: "100%",
+    },
     saveBtn: {
         position: "fixed",
         right: theme.spacing.unit * 2,
@@ -83,10 +89,9 @@ class MissionCreation extends React.PureComponent {
         nameError: "",
         description: "",
         descriptionError: "",
-        checkinDate: PROP_RULES.checkinDate.min,
+        checkinDate: PROP_RULES.checkinDate.min.format(DATE_FORMAT),
+        checkinDateHour: PROP_RULES.checkinDate.min.format(HOUR_FORMAT),
         checkinDateError: "",
-        checkoutDate: moment().local().add(7, "days"),
-        checkoutDateError: "",
         stayTime: PROP_RULES.stayTime.min,
         stayTimeError: "",
         stayTimeUnit: PROP_RULES.stayTimeUnit.values[2].value,
@@ -103,6 +108,20 @@ class MissionCreation extends React.PureComponent {
         if (PROP_RULES.accommodation.values.length === 1) {
             this.setState({ accommodation: PROP_RULES.accommodation.values[0].value });
         }
+    }
+
+    get mission() {
+        const { name, description, checkinDate, checkinDateHour, accommodation } = this.state;
+        const momentStartDate = moment(`${checkinDate}_${checkinDateHour}`, `${DATE_FORMAT}_${HOUR_FORMAT}`);
+        return {
+            name,
+            description,
+            accommodation,
+            checkinDate: momentStartDate.local().toISOString(),
+            checkoutDate: momentStartDate
+                .add(this.state.stayTime, this.state.stayTimeUnit)
+                .local().toISOString(),
+        };
     }
 
     get missionValid() {
@@ -125,24 +144,6 @@ class MissionCreation extends React.PureComponent {
             return false;
         }
         return true;
-    }
-
-    get tsStay() {
-        const defaultTs = moment().local().add(7, "days").unix() - moment().local().add(1, "hours").unix();
-        if (!this.state.checkinDate || this.state.checkinDateError) {
-            return defaultTs;
-        }
-        switch (this.state.stayTimeUnit) {
-        case "hours":
-            return this.state.checkinDate.add(this.state.stayTime, "hours").unix();
-        case "days":
-            return this.state.checkinDate.add(this.state.stayTime, "days").unix();
-        case "weeks":
-            return this.state.checkinDate.add(this.state.stayTime, "weeks").unix();
-        case "months":
-            return this.state.checkinDate.add(this.state.stayTime, "months").unix();
-        default: return defaultTs;
-        }
     }
 
     handleSave = async () => {
@@ -262,12 +263,57 @@ class MissionCreation extends React.PureComponent {
         );
     }
 
+    renderCheckinDate() {
+        return (
+            <Grid container spacing={24}>
+                <Grid item xs={6}>
+                    <TextField
+                        className={this.props.classes.dateFormControl}
+                        value={this.state.checkinDate}
+                        label={this.state.checkinDateError.length > 0 ? this.state.checkinDateError : "Mission start date"}
+                        name="checkinDate"
+                        min={PROP_RULES.checkinDate.min.format(DATE_FORMAT)}
+                        onChange={(ev) => {
+                            const { value } = ev.target;
+                            const formatted = moment(value, DATE_FORMAT).local();
+                            const minDate = PROP_RULES.checkinDate.min;
+                            this.setState({ checkinDate: value, checkinDateError: "" });
+                            if (value !== minDate.format(DATE_FORMAT)
+                                && minDate.unix() > formatted.unix()) {
+                                this.setState({ checkinDateError: "Mission has to be starting at least an hour from now" });
+                            }
+                        }}
+                        margin="normal"
+                        type="date"
+                    />
+                </Grid>
+                <Grid item>
+                    <TextField
+                        className={this.props.classes.numberFormControl}
+                        value={this.state.checkinDateHour}
+                        label={this.state.checkinDateError.length > 0 ? "  " : "time (*)"}
+                        name="checkinDateHour"
+                        onChange={(ev) => {
+                            const { value } = ev.target;
+                            this.setState({ checkinDateHour: value });
+                        }}
+                        margin="normal"
+                        type="time"
+                    />
+                </Grid>
+            </Grid>
+        );
+    }
+
     renderForm() {
         return (
             <Grid container spacing={24}>
                 <Grid container item className={this.props.classes.item} xs={12}>
                     <Grid item xs={10}>{this.renderSelectProperty("accommodation", PROP_RULES.accommodation.values)}</Grid>
                     <Grid item>{this.renderPlaceAvatar()}</Grid>
+                </Grid>
+                <Grid item className={this.props.classes.item} xs={12}>
+                    {this.renderCheckinDate()}
                 </Grid>
                 <Grid item className={this.props.classes.item} xs={12}>
                     {this.renderTextProperty("name", false)}
@@ -372,7 +418,10 @@ class MissionCreation extends React.PureComponent {
     }
 
     renderSpinner() {
-        if (this.props.accommodation.isLoading || this.props.user.isLoading) {
+        console.log("WWWAAAY", this.props.mission);
+        if (this.props.accommodation.isLoading
+            || this.props.user.isLoading
+            || this.props.mission.isLoading) {
             return (
                 <div style={{ marginTop: 20 }} className="display-flex-row full-width">
                     <CircularProgress color="primary" />
@@ -402,6 +451,9 @@ MissionCreation.propTypes = {
             id: T.number
         }),
     }).isRequired,
+    mission: T.shape({
+        isLoading: T.bool.isRequired,
+    }).isRequired,
     accommodation: T.shape({
         isLoading: T.bool.isRequired
     }).isRequired,
@@ -415,6 +467,7 @@ MissionCreation.propTypes = {
         labelControl: T.string.isRequired,
         item: T.string.isRequired,
         numberFormControl: T.string.isRequired,
+        dateFormControl: T.string.isRequired,
         saveBtn: T.string.isRequired,
         placeAvatar: T.string.isRequired,
     }).isRequired,

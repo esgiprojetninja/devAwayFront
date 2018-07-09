@@ -1,4 +1,5 @@
 import * as missionTypes from "./types/mission";
+import { displaySnackMsg } from "./snack";
 
 const fetchMissionsRequest = () => ({
     type: missionTypes.FETCH_MISSIONS_REQUEST
@@ -45,15 +46,23 @@ const saveMissionFailure = payload => ({
 export const saveMission = mission =>
     (dispatch, getState, API) => {
         dispatch(saveMissionRequest());
+        const verb = mission.id ? "update" : "create";
         return API.missionApi.createOrUpdate(mission)
             .then(
-                (res) => {
+                async (res) => {
+                    await new Promise(resolve => setTimeout(resolve, 5000));
+                    console.log("RESPONNNNSE", res);
                     if (res.hasError) {
+                        dispatch(displaySnackMsg(`Failed to ${verb} mission`));
                         return dispatch(saveMissionFailure(res.message));
                     }
+                    dispatch(displaySnackMsg(`Mission ${verb}d`));
                     return dispatch(saveMissionSuccess());
                 },
-                error => dispatch(saveMissionFailure(error))
+                (error) => {
+                    dispatch(displaySnackMsg(`Failed to ${verb} mission`));
+                    dispatch(saveMissionFailure(error));
+                }
             );
     };
 
