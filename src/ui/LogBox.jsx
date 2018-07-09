@@ -57,10 +57,10 @@ class LogBox extends React.PureComponent {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
-        this.handleUsernameChange = this.handleChange.bind(this, "username");
+        this.handleUsernameChange = this.handleChange.bind(this, "userName");
         this.handlePasswordChange = this.handleChange.bind(this, "password");
         this.state = {
-            username: "",
+            userName: "",
             password: "",
             noticedError: false,
             open: false,
@@ -100,9 +100,9 @@ class LogBox extends React.PureComponent {
     handleSubmit(ev) {
         ev.preventDefault();
         this.setState({ noticedError: false });
-        const { username, password } = this.state;
+        const { userName, password } = this.state;
         this.props.onSubmit({
-            username,
+            userName,
             password
         });
         this.handleClose();
@@ -145,7 +145,7 @@ class LogBox extends React.PureComponent {
                 >
                     <Card className={this.classes.userMenuCard}>
                         <Typography variant="headline" className={this.classes.userMenuCardTitle} color="inherit">
-                            Hey, {this.props.data.username}
+                            Hey, {this.props.data.userName}
                         </Typography>
                         <MenuItem onClick={this.handleClickOpen}>
                             <NavLink
@@ -192,12 +192,12 @@ class LogBox extends React.PureComponent {
                     >
                         <DialogContent>
                             <FormControl>
-                                <InputLabel htmlFor="username">Username</InputLabel>
+                                <InputLabel htmlFor="userName">Username</InputLabel>
                                 <Input
                                     error={this.props.hasError && !this.state.noticedError}
                                     type="text"
-                                    name="username"
-                                    id="username"
+                                    name="userName"
+                                    id="userName"
                                     onChange={this.handleUsernameChange}
                                 />
                             </FormControl>

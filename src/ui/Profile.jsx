@@ -25,7 +25,7 @@ class Profile extends React.PureComponent {
             firstName: "",
             languages: "",
             skills: "",
-            username: "",
+            userName: "",
             avatar: "",
         };
     }
@@ -139,7 +139,7 @@ class Profile extends React.PureComponent {
                 {this.renderTextField("email", "Email", "email")}
                 {this.renderTextField("firstName", "First Name")}
                 {this.renderTextField("lastName", "Last Name")}
-                {this.renderTextField("username", "User Name")}
+                {this.renderTextField("userName", "User Name")}
                 {this.renderTextField("languages", "Languages", null, "Languages separated with a coma")}
                 {this.renderTextField("skills", "Skills", null, "Skills separated with a coma")}
             </div>
@@ -220,7 +220,7 @@ Profile.propTypes = {
             email: T.string,
             firstName: T.string,
             lastName: T.string,
-            username: T.string,
+            userName: T.string,
             languages: T.string,
             skills: T.string,
             avatar: T.string,

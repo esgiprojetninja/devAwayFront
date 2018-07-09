@@ -42,8 +42,8 @@ export const getMe = (token) => {
         dispatch(userGetMeRequest());
         try {
             const res = await API.profileApi.getMe();
-            if (res && res.id && res.email && res.username) {
-                dispatch(displaySnackMsg(`Logged in as ${res.username}`));
+            if (res && res.id && res.email && res.userName) {
+                dispatch(displaySnackMsg(`Logged in as ${res.userName}`));
                 const sessionUser = JSON.stringify({
                     ...res,
                     token
@@ -106,7 +106,7 @@ export const upsertUser = (user) => {
         dispatch(userRequest());
         try {
             const res = await API.userApi.upsertUser(user);
-            if (res && res.email && res.username) {
+            if (res && (res.email || res.token) && res.userName) {
                 verb = `${verb}ed`.replace("ee", "e");
                 dispatch(displaySnackMsg(`User ${verb}`));
                 return user.id ?

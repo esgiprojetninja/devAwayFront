@@ -11,7 +11,7 @@ const initialSate = {
         skills: "",
         createdAt: "",
         updatedAt: "",
-        username: "",
+        userName: "",
         token: ""
     },
     isLoggedIn: false,

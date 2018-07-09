@@ -22,7 +22,7 @@ const initialState = {
     email: "",
     password: "",
     passwordCheck: "",
-    username: "",
+    userName: "",
     open: false
 };
 
@@ -32,13 +32,13 @@ export class SubscribeBox extends React.PureComponent {
         isLoading: T.bool.isRequired,
         hasError: T.shape({
             email: T.bool.isRequired,
-            username: T.bool.isRequired,
+            userName: T.bool.isRequired,
             password: T.bool.isRequired,
             passwordCheck: T.bool.isRequired
         }).isRequired,
         errorText: T.shape({
             email: T.string.isRequired,
-            username: T.string.isRequired,
+            userName: T.string.isRequired,
             password: T.string.isRequired,
             passwordCheck: T.string.isRequired
         }).isRequired,
@@ -61,12 +61,12 @@ export class SubscribeBox extends React.PureComponent {
         this.onClose();
         const {
             email,
-            username,
+            userName,
             password,
             passwordCheck
         } = this.state;
         this.props.onSubmit({
-            email, username, password, passwordCheck
+            email, userName, password, passwordCheck
         });
         this.setState(initialState);
     }
@@ -94,10 +94,10 @@ export class SubscribeBox extends React.PureComponent {
             this.props.errorText.email = hasErr ? "Wrong email format" : "";
             return;
         }
-        case "username": {
+        case "userName": {
             const hasErr = !(value.length >= 5 || value.length > 20);
-            this.props.hasError.username = hasErr;
-            this.props.errorText.username = hasErr ? "Username must be between 5 & 15 characters long" : "";
+            this.props.hasError.userName = hasErr;
+            this.props.errorText.userName = hasErr ? "Username must be between 5 & 15 characters long" : "";
             return;
         }
         case "password": {
@@ -155,9 +155,9 @@ export class SubscribeBox extends React.PureComponent {
     renderUserNameField() {
         return (
             <FormControl>
-                <InputLabel htmlFor="devaway-subscribe-name">{this.props.hasError.username ? this.props.errorText.username : "User name"}</InputLabel>
+                <InputLabel htmlFor="devaway-subscribe-name">{this.props.hasError.userName ? this.props.errorText.userName : "User name"}</InputLabel>
                 <Input
-                    error={this.props.hasError.username}
+                    error={this.props.hasError.userName}
                     required
                     id="devaway-subscribe-name"
                     type="text"
@@ -166,7 +166,7 @@ export class SubscribeBox extends React.PureComponent {
                     rows="2"
                     margin="dense"
                     onChange={(ev) => {
-                        this.handleChange("username", ev);
+                        this.handleChange("userName", ev);
                     }}
                 />
             </FormControl>

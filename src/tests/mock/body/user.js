@@ -1,7 +1,7 @@
 const user = {
     email: "sezfze@efze.fez",
     roles: 1,
-    username: "dydyFos",
+    userName: "dydyFos",
     lastName: "tonpere",
     firstName: "suce",
     languages: "fr",

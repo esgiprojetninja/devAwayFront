@@ -10,10 +10,8 @@ import Typography from "@material-ui/core/Typography";
 import Save from "@material-ui/icons/Save";
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
-import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
-import Chip from "@material-ui/core/Chip";
 import MenuItem from "@material-ui/core/MenuItem";
 import moment from "moment";
 
@@ -71,17 +69,6 @@ const styles = theme => ({
         margin: theme.spacing.unit / 4,
     },
 });
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: (ITEM_HEIGHT * 4.5) + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
-};
 
 class MissionCreation extends React.PureComponent {
     constructor(props) {
@@ -215,18 +202,12 @@ class MissionCreation extends React.PureComponent {
                 <InputLabel htmlFor="select-multiple-stay-unit">{this.state[`${propName}Error`].length > 0 ? this.state[`${propName}Error`] : `${defaultLegend || capitalized} (*)`}</InputLabel>
                 <Select
                     id={id}
-                    multiple
-                    value={PROP_RULES.stayTimeUnit.values}
+                    value={this.state[propName]}
                     onChange={this.handleChange}
-                    input={<Input id="select-multiple-stay-unit" />}
-                    renderValue={selected => (
-                        <div className={this.props.classes.chips}>
-                            {selected.map(val =>
-                                <Chip key={val} label={val} className={this.props.classes.chip} />
-                            )}
-                        </div>
-                    )}
-                    MenuProps={MenuProps}
+                    inputProps={{
+                        name: propName,
+                        id: "select-multiple-stay-unit",
+                    }}
                 >
                     {PROP_RULES[propName].values.map(prop => (
                         <MenuItem

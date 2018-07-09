@@ -12,7 +12,7 @@ export const User = T.shape({
     avatar: T.string,
     roles: T.number,
     isActive: T.number,
-    username: T.string.isRequired
+    userName: T.string.isRequired
 });
 
 export const toto = "toto";

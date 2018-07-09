@@ -63,14 +63,14 @@ describe("Actions user", () => {
                         some: "user",
                         id: 1,
                         email: "coucou",
-                        username: "azy"
+                        userName: "azy"
                     }
                 }
             }
         ];
         const store = mockStore();
         return store.dispatch(userActions.login({
-            username: "azy",
+            userName: "azy",
             password: "secret"
         })).then(() => {
             expect(store.getActions()).toEqual(expextedActions);
@@ -95,7 +95,7 @@ describe("Actions user", () => {
         mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)]);
         const store = mockStore();
         return store.dispatch(userActions.login({
-            username: "azy"
+            userName: "azy"
         })).then(() => {
             expect(store.getActions()).toEqual(expextedActions);
         });
@@ -167,7 +167,7 @@ describe("Actions user", () => {
                             some: "user",
                             id: 1,
                             email: "coucou",
-                            username: "azy"
+                            userName: "azy"
                         }
                     }
                 }]));
@@ -195,7 +195,7 @@ describe("Actions user", () => {
                         some: "user",
                         id: 1,
                         email: "coucou",
-                        username: "azy"
+                        userName: "azy"
                     }
                 }
             }

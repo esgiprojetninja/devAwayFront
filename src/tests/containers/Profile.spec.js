@@ -75,7 +75,7 @@ describe("Container Profile", () => {
                 {
                     user: { data: { id: 1 } }
                 });
-            await fn({ username: "poulay" });
+            await fn({ userName: "poulay" });
             expect(store.getActions().map(a => a.type)).toEqual([
                 "USER_REQUEST", "SET_SNACK_MSG", "LOGIN_SUCCESS"
             ]);

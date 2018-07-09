@@ -18,7 +18,7 @@ describe("ui <Profile />", function () {
                     email: "email",
                     firstName: "firstName",
                     lastName: "lastName",
-                    username: "username",
+                    userName: "userName",
                     languages: "languages",
                     skills: "skills",
                     avatar: "avatar",
