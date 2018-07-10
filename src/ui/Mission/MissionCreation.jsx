@@ -23,21 +23,6 @@ import { getAccoImg } from "../../utils/accommodation";
 const DATE_FORMAT = "YYYY-MM-DD";
 const HOUR_FORMAT = "HH:mm";
 
-const PROP_RULES = {
-    name: { min: 6, max: 24 },
-    description: { min: 6, max: 255 },
-    checkinDate: { min: moment().local().add(1, "hours"), isDate: true },
-    stayTime: { min: 1, max: (1000 * 60 * 60 * 24 * 365 * 10) }, // max 10 years
-    stayTimeUnit: { values: [
-        { label: "hours", value: "hours" },
-        { label: "days", value: "days" },
-        { label: "weeks", value: "weeks" },
-        { label: "months", value: "months" },
-    ],
-    isSelect: true },
-    accommodation: { values: [], isSelect: true },
-};
-
 const styles = theme => ({
     container: {
         width: "100%",
@@ -85,47 +70,45 @@ const styles = theme => ({
 
 class MissionCreation extends React.PureComponent {
     state = {
-        name: "",
-        nameError: "",
+        title: "",
+        titleError: "",
         description: "",
         descriptionError: "",
-        checkinDate: PROP_RULES.checkinDate.min.format(DATE_FORMAT),
-        checkinDateHour: PROP_RULES.checkinDate.min.format(HOUR_FORMAT),
+        checkinDate: this.props.formRules.checkinDate.min.format(DATE_FORMAT),
+        checkinDateHour: this.props.formRules.checkinDate.min.format(HOUR_FORMAT),
         checkinDateError: "",
-        stayTime: PROP_RULES.stayTime.min,
+        stayTime: this.props.formRules.stayTime.min,
         stayTimeError: "",
-        stayTimeUnit: PROP_RULES.stayTimeUnit.values[2].value,
+        stayTimeUnit: this.props.formRules.stayTimeUnit.values[2].value,
         stayTimeUnitError: "",
         accommodation: "",
         accommodationError: "",
     }
 
-    componentWillReceiveProps(nextProps) {
-        const { accommodations } = nextProps.user;
-        PROP_RULES.accommodation.values = Object.keys(accommodations)
-            .map(id => ({ label: accommodations[id].title, value: id }));
+    componentDidMount() {
+        this.autoAssignAcco();
+    }
 
-        if (PROP_RULES.accommodation.values.length === 1) {
-            this.setState({ accommodation: PROP_RULES.accommodation.values[0].value });
-        }
+    componentWillReceiveProps(props) {
+        this.autoAssignAcco(props);
     }
 
     get mission() {
-        const { name, description, checkinDate, checkinDateHour, accommodation } = this.state;
+        const { title, description, checkinDate, checkinDateHour, accommodation } = this.state;
         const momentStartDate = moment(`${checkinDate}_${checkinDateHour}`, `${DATE_FORMAT}_${HOUR_FORMAT}`);
         return {
-            name,
+            title,
             description,
             accommodation,
             checkinDate: momentStartDate.local().toISOString(),
             checkoutDate: momentStartDate
-                .add(this.state.stayTime, this.state.stayTimeUnit)
+                .add(Number(this.state.stayTime), this.state.stayTimeUnit)
                 .local().toISOString(),
         };
     }
 
     get missionValid() {
-        if (this.state.nameError || !this.state.name) {
+        if (this.state.titleError || !this.state.title) {
             return false;
         }
         if (this.state.descriptionError || !this.state.description) {
@@ -146,21 +129,36 @@ class MissionCreation extends React.PureComponent {
         return true;
     }
 
+    get isLoading() {
+        return this.props.accommodation.isLoading
+            || this.props.user.isLoading
+            || this.props.mission.current.isLoading;
+    }
+
+    autoAssignAcco(props = this.props) {
+        if (!this.state.accommodation && props.formRules.accommodation.values.length > 0) {
+            this.setState({ accommodation: props.formRules.accommodation.values[0].value });
+        }
+    }
+
     handleSave = async () => {
+        if (this.isLoading || !this.missionValid) {
+            return;
+        }
         await this.props.saveMission(this.mission);
         // @TODO redirect to mission detail on success !! (poping this page from history)
     }
 
     handleChange(property, ev) {
         const { value } = ev.target;
-        if (PROP_RULES[property]) {
-            const { min, max, isNumber, isSelect } = PROP_RULES[property];
+        if (this.props.formRules[property]) {
+            const { min, max, isNumber, isSelect } = this.props.formRules[property]; // eslint-disable-line
             const testedValue = isNumber || isSelect ? value : value.length;
             if (testedValue < min || testedValue > max) {
                 this.setState({ [`${property}Error`]: `Must be between ${min} and ${max} characters long` });
             } else if (isNumber && Number.isNaN(Number(value))) {
                 this.setState({ [`${property}Error`]: "Must be a number" });
-            } else if (isSelect && testedValue in PROP_RULES[property].values) {
+            } else if (isSelect && testedValue in this.props.formRules[property].values) {
                 this.setState({ [`${property}Error`]: "Unknown value" });
             } else {
                 this.setState({ [`${property}Error`]: "" });
@@ -168,6 +166,9 @@ class MissionCreation extends React.PureComponent {
             this.setState({
                 [property]: isNumber ? Number(value) : value
             });
+            if (this.missionValid) {
+                this.props.changeCurrent(this.mission);
+            }
         }
     }
 
@@ -176,6 +177,9 @@ class MissionCreation extends React.PureComponent {
         const id = `${capitalized}-${Math.floor(Math.random() * 2000)}`;
         return (
             <TextField
+                InputLabelProps={{
+                    shrink: true,
+                }}
                 id={id}
                 value={this.state[propName]}
                 fullWidth
@@ -196,6 +200,9 @@ class MissionCreation extends React.PureComponent {
         const id = `${capitalized}-${Math.floor(Math.random() * 2000)}`;
         return (
             <TextField
+                InputLabelProps={{
+                    shrink: true,
+                }}
                 className={this.props.classes.numberFormControl}
                 id={id}
                 value={this.state[propName]}
@@ -225,7 +232,7 @@ class MissionCreation extends React.PureComponent {
                     }}
                     inputProps={{
                         name: propName,
-                        id: "select-multiple-stay-unit",
+                        id: `select-multiple-stay-unit-${propName}]`,
                     }}
                 >
                     {stringChoices.map(prop => (
@@ -268,20 +275,26 @@ class MissionCreation extends React.PureComponent {
             <Grid container spacing={24}>
                 <Grid item xs={6}>
                     <TextField
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
                         className={this.props.classes.dateFormControl}
                         value={this.state.checkinDate}
                         label={this.state.checkinDateError.length > 0 ? this.state.checkinDateError : "Mission start date"}
                         name="checkinDate"
-                        min={PROP_RULES.checkinDate.min.format(DATE_FORMAT)}
+                        min={this.props.formRules.checkinDate.min.format(DATE_FORMAT)}
                         onChange={(ev) => {
                             const { value } = ev.target;
                             const formatted = moment(value, DATE_FORMAT).local();
-                            const minDate = PROP_RULES.checkinDate.min;
+                            const minDate = this.props.formRules.checkinDate.min;
                             this.setState({ checkinDate: value, checkinDateError: "" });
                             if (value !== minDate.format(DATE_FORMAT)
                                 && minDate.unix() > formatted.unix()) {
-                                this.setState({ checkinDateError: "Mission has to be starting at least an hour from now" });
+                                return this.setState({ checkinDateError: "Mission has to be starting at least an hour from now" });
+                            } else if (this.missionValid) {
+                                return this.props.changeCurrent(this.mission);
                             }
+                            return null;
                         }}
                         margin="normal"
                         type="date"
@@ -289,6 +302,9 @@ class MissionCreation extends React.PureComponent {
                 </Grid>
                 <Grid item>
                     <TextField
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
                         className={this.props.classes.numberFormControl}
                         value={this.state.checkinDateHour}
                         label={this.state.checkinDateError.length > 0 ? "  " : "time (*)"}
@@ -296,6 +312,9 @@ class MissionCreation extends React.PureComponent {
                         onChange={(ev) => {
                             const { value } = ev.target;
                             this.setState({ checkinDateHour: value });
+                            if (this.missionValid) {
+                                this.props.changeCurrent(this.mission);
+                            }
                         }}
                         margin="normal"
                         type="time"
@@ -309,21 +328,21 @@ class MissionCreation extends React.PureComponent {
         return (
             <Grid container spacing={24}>
                 <Grid container item className={this.props.classes.item} xs={12}>
-                    <Grid item xs={10}>{this.renderSelectProperty("accommodation", PROP_RULES.accommodation.values)}</Grid>
+                    <Grid item xs={10}>{this.renderSelectProperty("accommodation", this.props.formRules.accommodation.values)}</Grid>
                     <Grid item>{this.renderPlaceAvatar()}</Grid>
                 </Grid>
                 <Grid item className={this.props.classes.item} xs={12}>
                     {this.renderCheckinDate()}
                 </Grid>
                 <Grid item className={this.props.classes.item} xs={12}>
-                    {this.renderTextProperty("name", false)}
+                    {this.renderTextProperty("title", false)}
                 </Grid>
                 <Grid item className={this.props.classes.item} xs={12}>
                     {this.renderTextProperty("description", true, 4)}
                 </Grid>
                 <Grid item className={this.props.classes.item} xs={12}>
                     {this.renderNumberProperty("stayTime", "Minimum stay")}
-                    {this.renderSelectProperty("stayTimeUnit", PROP_RULES.stayTimeUnit.values, "Unit")}
+                    {this.renderSelectProperty("stayTimeUnit", this.props.formRules.stayTimeUnit.values, "Unit")}
                 </Grid>
             </Grid>
         );
@@ -337,7 +356,7 @@ class MissionCreation extends React.PureComponent {
             <Button
                 className={this.props.classes.saveBtn}
                 color="primary"
-                disabled={!this.missionValid}
+                disabled={!this.missionValid || this.isLoading}
                 onClick={this.handleSave}
                 variant="fab"
                 id="devaway-create-acco-btn"
@@ -418,10 +437,7 @@ class MissionCreation extends React.PureComponent {
     }
 
     renderSpinner() {
-        console.log("WWWAAAY", this.props.mission);
-        if (this.props.accommodation.isLoading
-            || this.props.user.isLoading
-            || this.props.mission.isLoading) {
+        if (this.isLoading) {
             return (
                 <div style={{ marginTop: 20 }} className="display-flex-row full-width">
                     <CircularProgress color="primary" />
@@ -447,12 +463,18 @@ MissionCreation.propTypes = {
         isLoading: T.bool.isRequired,
         isGettingData: T.bool.isRequired,
         accommodations: T.shape({}).isRequired,
+        accommodationsArr: T.arrayOf(T.shape({
+            label: T.string.isRequired,
+            id: T.number.isRequired,
+        })).isRequired,
         data: T.shape({
             id: T.number
         }),
     }).isRequired,
     mission: T.shape({
-        isLoading: T.bool.isRequired,
+        current: T.shape({
+            isLoading: T.bool.isRequired,
+        }).isRequired,
     }).isRequired,
     accommodation: T.shape({
         isLoading: T.bool.isRequired
@@ -471,7 +493,40 @@ MissionCreation.propTypes = {
         saveBtn: T.string.isRequired,
         placeAvatar: T.string.isRequired,
     }).isRequired,
+    formRules: T.shape({
+        title: T.shape({
+            min: T.number.isRequired,
+            max: T.number.isRequired,
+        }).isRequired,
+        description: T.shape({
+            min: T.number.isRequired,
+            max: T.number.isRequired,
+        }).isRequired,
+        checkinDate: T.shape({
+            min: T.shape({ format: T.func.isRequired }).isRequired,
+            isDate: T.bool.isRequired,
+        }).isRequired,
+        stayTime: T.shape({
+            min: T.number.isRequired,
+            max: T.number.isRequired,
+        }).isRequired,
+        stayTimeUnit: T.shape({
+            values: T.arrayOf(T.shape({
+                label: T.string.isRequired,
+                value: T.number.isRequired,
+            })).isRequired,
+            isSelect: T.bool.isRequired,
+        }).isRequired,
+        accommodation: T.shape({
+            values: T.arrayOf(T.shape({
+                label: T.string.isRequired,
+                value: T.number.isRequired,
+            })).isRequired,
+            isSelect: T.bool.isRequired,
+        }).isRequired,
+    }).isRequired,
     saveMission: T.func.isRequired,
+    changeCurrent: T.func.isRequired,
 };
 
 export default withStyles(styles)(withRouter(MissionCreation));
