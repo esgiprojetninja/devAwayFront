@@ -35,7 +35,6 @@ const mission = (state = initialSate, action) => {
             errorText: payload
         };
     case missionTypes.SAVE_MISSION_REQUEST:
-        console.log("EEEEH FDP");
         return {
             ...state,
             current: {
@@ -58,6 +57,14 @@ const mission = (state = initialSate, action) => {
             errorText: payload,
             current: {
                 ...state.current,
+                isLoading: false
+            }
+        };
+    case missionTypes.EDIT_CURRENT_MISSION:
+        return {
+            ...state,
+            current: {
+                data: payload.mission,
                 isLoading: false
             }
         };

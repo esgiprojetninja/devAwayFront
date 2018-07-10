@@ -43,8 +43,9 @@ const saveMissionFailure = payload => ({
     payload
 });
 
-export const saveMission = mission =>
+export const saveMission = () =>
     (dispatch, getState, API) => {
+        const mission = getState().mission.current.data;
         dispatch(saveMissionRequest());
         const verb = mission.id ? "update" : "create";
         return API.missionApi.createOrUpdate(mission)
@@ -90,3 +91,8 @@ export const deleteMission = id =>
             return dispatch(fetchMissions());
         }, err => dispatch(deleteMissionFailure(err)));
     };
+
+export const changeCurrentMission = mission => ({
+    type: missionTypes.EDIT_CURRENT_MISSION,
+    payload: { mission },
+});
