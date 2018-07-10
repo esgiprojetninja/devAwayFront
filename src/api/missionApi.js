@@ -3,7 +3,8 @@ import {
 } from "../parsers/entityParsers";
 
 import {
-    generateFetch
+    generateFetch,
+    defaultErrorHandler,
 } from "./utils/utils";
 
 function create(mission) {
@@ -32,7 +33,11 @@ const missionApi = {
     },
     // TODO: check update and create methods when api is ok
     createOrUpdate: (mission) => {
-        return mission.id > 0 ? update(mission) : create(mission);
+        return mission.id > 0 ?
+            update(mission)
+            : create(mission)
+                .then(res => Promise.resolve(res.success))
+                .catch(defaultErrorHandler);
     },
     deleteItem: (id) => {
         return generateFetch("missions", "DELETE", id);

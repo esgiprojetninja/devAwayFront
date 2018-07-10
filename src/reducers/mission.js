@@ -46,7 +46,7 @@ const mission = (state = initialSate, action) => {
         return {
             ...state,
             current: {
-                data: payload,
+                data: payload.mission,
                 isLoading: false
             }
         };

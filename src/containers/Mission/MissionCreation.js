@@ -30,7 +30,7 @@ export const mapStateToProps = (state) => {
                 ],
                 isSelect: true
             },
-            accommodation: {
+            accommodation_id: {
                 values: accoArr.map(acco => ({
                     ...acco,
                     value: acco.id })),
@@ -41,8 +41,9 @@ export const mapStateToProps = (state) => {
 };
 
 export const mapDispatchToProps = dispatch => ({
-    saveMission(mission) {
-        dispatch(saveMission(mission));
+    async saveMission(mission) {
+        const res = await dispatch(saveMission(mission));
+        return res;
     },
     changeCurrent(mission) {
         dispatch(changeCurrentMission(mission));
