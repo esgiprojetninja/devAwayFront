@@ -34,8 +34,9 @@ const saveMissionRequest = () => ({
     type: missionTypes.SAVE_MISSION_REQUEST
 });
 
-const saveMissionSuccess = () => ({
-    type: missionTypes.SAVE_MISSION_SUCCESS
+const saveMissionSuccess = mission => ({
+    type: missionTypes.SAVE_MISSION_SUCCESS,
+    payload: { mission },
 });
 
 const saveMissionFailure = payload => ({
@@ -44,27 +45,22 @@ const saveMissionFailure = payload => ({
 });
 
 export const saveMission = () =>
-    (dispatch, getState, API) => {
+    async (dispatch, getState, API) => {
         const mission = getState().mission.current.data;
         dispatch(saveMissionRequest());
         const verb = mission.id ? "update" : "create";
-        return API.missionApi.createOrUpdate(mission)
-            .then(
-                async (res) => {
-                    await new Promise(resolve => setTimeout(resolve, 5000));
-                    console.log("RESPONNNNSE", res);
-                    if (res.hasError) {
-                        dispatch(displaySnackMsg(`Failed to ${verb} mission`));
-                        return dispatch(saveMissionFailure(res.message));
-                    }
-                    dispatch(displaySnackMsg(`Mission ${verb}d`));
-                    return dispatch(saveMissionSuccess());
-                },
-                (error) => {
-                    dispatch(displaySnackMsg(`Failed to ${verb} mission`));
-                    dispatch(saveMissionFailure(error));
-                }
-            );
+        try {
+            const res = await API.missionApi.createOrUpdate(mission);
+            if (res.hasError || !res.id || !res.title) {
+                dispatch(displaySnackMsg(`Failed to ${verb} mission`));
+                return dispatch(saveMissionFailure(res.message));
+            }
+            dispatch(displaySnackMsg(`Mission ${verb}d`));
+            return dispatch(saveMissionSuccess(res));
+        } catch (error) {
+            dispatch(displaySnackMsg(`Failed to ${verb} mission`));
+            return dispatch(saveMissionFailure(error));
+        }
     };
 
 const deleteMissionRequest = () => ({

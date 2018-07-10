@@ -41,4 +41,9 @@ export default [
         exact: true,
         component: MissionCreation
     },
+    {
+        path: "/missions/:missionId",
+        exact: true,
+        component: Home
+    },
 ];

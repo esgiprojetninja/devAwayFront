@@ -19,6 +19,7 @@ import moment from "moment";
 
 import Navbar from "../../containers/Navbar";
 import { getAccoImg } from "../../utils/accommodation";
+import { SAVE_MISSION_SUCCESS } from "../../actions/types/mission";
 
 const DATE_FORMAT = "YYYY-MM-DD";
 const HOUR_FORMAT = "HH:mm";
@@ -66,6 +67,9 @@ const styles = theme => ({
     placeAvatar: {
         margin: theme.spacing.unit * 2,
     },
+    errorLabel: {
+        color: "red",
+    },
 });
 
 class MissionCreation extends React.PureComponent {
@@ -81,8 +85,8 @@ class MissionCreation extends React.PureComponent {
         stayTimeError: "",
         stayTimeUnit: this.props.formRules.stayTimeUnit.values[2].value,
         stayTimeUnitError: "",
-        accommodation: "",
-        accommodationError: "",
+        accommodation_id: "",
+        accommodation_idError: "",
     }
 
     componentDidMount() {
@@ -94,12 +98,12 @@ class MissionCreation extends React.PureComponent {
     }
 
     get mission() {
-        const { title, description, checkinDate, checkinDateHour, accommodation } = this.state;
+        const { title, description, checkinDate, checkinDateHour, accommodation_id } = this.state; // eslint-disable-line
         const momentStartDate = moment(`${checkinDate}_${checkinDateHour}`, `${DATE_FORMAT}_${HOUR_FORMAT}`);
         return {
             title,
             description,
-            accommodation,
+            accommodation_id,
             checkinDate: momentStartDate.local().toISOString(),
             checkoutDate: momentStartDate
                 .add(Number(this.state.stayTime), this.state.stayTimeUnit)
@@ -123,7 +127,7 @@ class MissionCreation extends React.PureComponent {
         if (this.state.stayTimeUnitError || !this.state.stayTimeUnit) {
             return false;
         }
-        if (this.state.accommodationError || !this.state.accommodation) {
+        if (this.state.accommodation_idError || !this.state.accommodation_id) {
             return false;
         }
         return true;
@@ -135,9 +139,16 @@ class MissionCreation extends React.PureComponent {
             || this.props.mission.current.isLoading;
     }
 
+    getInputLabelClass(propName) {
+        if (this.state[`${propName}Error`].length > 0) {
+            return this.props.classes.errorLabel;
+        }
+        return null;
+    }
+
     autoAssignAcco(props = this.props) {
-        if (!this.state.accommodation && props.formRules.accommodation.values.length > 0) {
-            this.setState({ accommodation: props.formRules.accommodation.values[0].value });
+        if (!this.state.accommodation_id && props.formRules.accommodation_id.values.length > 0) {
+            this.setState({ accommodation_id: props.formRules.accommodation_id.values[0].value });
         }
     }
 
@@ -145,8 +156,14 @@ class MissionCreation extends React.PureComponent {
         if (this.isLoading || !this.missionValid) {
             return;
         }
-        await this.props.saveMission(this.mission);
-        // @TODO redirect to mission detail on success !! (poping this page from history)
+        const res = await this.props.saveMission(this.mission);
+        if (res.type && res.type === SAVE_MISSION_SUCCESS) {
+            if (res.payload && res.payload.mission && res.payload.mission.id) {
+                this.props.history.replace(`/missions/${res.payload.mission.id}`);
+            }
+        } else {
+            this.props.history.replace("/places");
+        }
     }
 
     handleChange(property, ev) {
@@ -158,7 +175,11 @@ class MissionCreation extends React.PureComponent {
                 this.setState({ [`${property}Error`]: `Must be between ${min} and ${max} characters long` });
             } else if (isNumber && Number.isNaN(Number(value))) {
                 this.setState({ [`${property}Error`]: "Must be a number" });
-            } else if (isSelect && testedValue in this.props.formRules[property].values) {
+            } else if (isSelect
+                && !this.props.formRules[property].values
+                    .map(obj => obj.value)
+                    .includes(testedValue)
+            ) {
                 this.setState({ [`${property}Error`]: "Unknown value" });
             } else {
                 this.setState({ [`${property}Error`]: "" });
@@ -177,6 +198,7 @@ class MissionCreation extends React.PureComponent {
         const id = `${capitalized}-${Math.floor(Math.random() * 2000)}`;
         return (
             <TextField
+                error={this.state[`${propName}Error`].length > 0}
                 InputLabelProps={{
                     shrink: true,
                 }}
@@ -200,6 +222,7 @@ class MissionCreation extends React.PureComponent {
         const id = `${capitalized}-${Math.floor(Math.random() * 2000)}`;
         return (
             <TextField
+                error={this.state[`${propName}Error`].length > 0}
                 InputLabelProps={{
                     shrink: true,
                 }}
@@ -223,7 +246,7 @@ class MissionCreation extends React.PureComponent {
         const id = `${capitalized}-${Math.floor(Math.random() * 2000)}`;
         return (
             <FormControl className={this.props.classes.numberFormControl}>
-                <InputLabel htmlFor="select-multiple-stay-unit">{this.state[`${propName}Error`].length > 0 ? this.state[`${propName}Error`] : `${defaultLegend || capitalized} (*)`}</InputLabel>
+                <InputLabel className={this.getInputLabelClass(propName)} htmlFor="select-multiple-stay-unit">{this.state[`${propName}Error`].length > 0 ? this.state[`${propName}Error`] : `${defaultLegend || capitalized} (*)`}</InputLabel>
                 <Select
                     id={id}
                     value={this.state[propName]}
@@ -252,7 +275,7 @@ class MissionCreation extends React.PureComponent {
     }
 
     renderPlaceAvatar() {
-        const id = this.state.accommodation;
+        const id = this.state.accommodation_id;
         if (!id || !this.props.user.accommodations[id]) {
             return (
                 <TodoIcon size={30} className={this.props.classes.placeAvatar} />
@@ -275,6 +298,7 @@ class MissionCreation extends React.PureComponent {
             <Grid container spacing={24}>
                 <Grid item xs={6}>
                     <TextField
+                        error={this.state.checkinDateError.length > 0}
                         InputLabelProps={{
                             shrink: true,
                         }}
@@ -328,7 +352,7 @@ class MissionCreation extends React.PureComponent {
         return (
             <Grid container spacing={24}>
                 <Grid container item className={this.props.classes.item} xs={12}>
-                    <Grid item xs={10}>{this.renderSelectProperty("accommodation", this.props.formRules.accommodation.values)}</Grid>
+                    <Grid item xs={10}>{this.renderSelectProperty("accommodation_id", this.props.formRules.accommodation_id.values, "Mission location")}</Grid>
                     <Grid item>{this.renderPlaceAvatar()}</Grid>
                 </Grid>
                 <Grid item className={this.props.classes.item} xs={12}>
@@ -479,9 +503,9 @@ MissionCreation.propTypes = {
     accommodation: T.shape({
         isLoading: T.bool.isRequired
     }).isRequired,
-    // history: T.shape({
-    //     replace: T.func.isRequired,
-    // }).isRequired,
+    history: T.shape({
+        replace: T.func.isRequired,
+    }).isRequired,
     classes: T.shape({
         container: T.string.isRequired,
         paper: T.string.isRequired,
@@ -492,6 +516,7 @@ MissionCreation.propTypes = {
         dateFormControl: T.string.isRequired,
         saveBtn: T.string.isRequired,
         placeAvatar: T.string.isRequired,
+        errorLabel: T.string.isRequired,
     }).isRequired,
     formRules: T.shape({
         title: T.shape({
@@ -517,7 +542,7 @@ MissionCreation.propTypes = {
             })).isRequired,
             isSelect: T.bool.isRequired,
         }).isRequired,
-        accommodation: T.shape({
+        accommodation_id: T.shape({
             values: T.arrayOf(T.shape({
                 label: T.string.isRequired,
                 value: T.number.isRequired,
