@@ -45,8 +45,6 @@ describe("Container AccommodationCreation", () => {
                 "SAVE_ACCOMMODATION_REQUEST",
                 "SET_SNACK_MSG",
                 "SAVE_ACCOMMODATION_SUCCESS",
-                "FETCH_ACCOMMODATIONS_REQUEST",
-                "FETCH_ACCOMMODATIONS_SUCCESS"
             ]);
         });
     });

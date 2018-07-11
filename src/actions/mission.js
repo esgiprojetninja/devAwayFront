@@ -48,7 +48,7 @@ export const saveMission = () =>
     async (dispatch, getState, API) => {
         const mission = getState().mission.current.data;
         dispatch(saveMissionRequest());
-        const verb = mission.id ? "update" : "create";
+        const verb = mission && mission.id ? "update" : "create";
         try {
             const res = await API.missionApi.createOrUpdate(mission);
             if (res.hasError || !res.id || !res.title) {

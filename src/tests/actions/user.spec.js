@@ -66,7 +66,8 @@ describe("Actions user", () => {
                         userName: "azy"
                     }
                 }
-            }
+            },
+            { type: userActionTypes.USER_REQUEST },
         ];
         const store = mockStore();
         return store.dispatch(userActions.login({
@@ -198,7 +199,8 @@ describe("Actions user", () => {
                         userName: "azy"
                     }
                 }
-            }
+            },
+            { type: userActionTypes.USER_REQUEST },
         ];
         const store = mockStore();
         await store.dispatch(userActions.getMe("coucouToken"));

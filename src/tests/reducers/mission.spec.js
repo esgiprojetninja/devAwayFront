@@ -88,8 +88,10 @@ describe("Reducer mission", () => {
         expect(missionReducer(state, {
             type: missionTypes.SAVE_MISSION_SUCCESS,
             payload: {
-                id: 1000,
-                name: "Toto"
+                mission: {
+                    id: 1000,
+                    name: "Toto"
+                }
             }
         })).toEqual({
             ...state,

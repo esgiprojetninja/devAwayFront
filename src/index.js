@@ -13,3 +13,10 @@ gScript.onload = () => {
     document.body.removeChild(gScript);
 };
 document.body.appendChild(gScript);
+gScript.onfail = () => {
+    // @TODO pass on a "no-map" variable
+    console.log("POULAYMAN");
+    startApp(document.getElementById("root"));
+    registerServiceWorker();
+    document.body.removeChild(gScript);
+};

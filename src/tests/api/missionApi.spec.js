@@ -25,14 +25,17 @@ describe("API mission", () => {
         });
     });
 
-    it("should create a mission", (done) => {
+    it("should create a mission", async () => {
         const mission = {
-            name: "prout"
+            name: "prout",
+            success: {
+                poulay: "man"
+            }
         };
         fetchMock.post(`https://${baseUrl}/missions`, mission);
-        missionApi.createOrUpdate(mission).then((res) => {
-            expect(res).toEqual(mission);
-            done();
+        const res = await missionApi.createOrUpdate(mission);
+        expect(res).toEqual({
+            poulay: "man"
         });
     });
 
