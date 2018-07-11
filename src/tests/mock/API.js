@@ -34,7 +34,7 @@ export const mockAPI = {
     },
     missionApi: {
         fetchAll: () => Promise.resolve([]),
-        createOrUpdate: () => Promise.resolve({}),
+        createOrUpdate: () => Promise.resolve({ id: 123, title: "poulay mission" }),
         deleteItem: () => Promise.resolve({}),
         applyToMission: () => Promise.resolve({ poulay: "man" })
     },

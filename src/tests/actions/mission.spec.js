@@ -8,6 +8,7 @@ import {
     mockAPIWithServerFailure
 } from "../mock/API";
 
+import { SET_SNACK_MSG } from "../../actions/types/snack";
 import * as missionTypes from "../../actions/types/mission";
 import * as missionActions from "../../actions/mission";
 
@@ -52,10 +53,25 @@ describe("Actions mission", () => {
         expect(storeError.getActions()).toEqual(expectedActions);
     });
 
-    it("should savestoreError a mission", async () => {
+    it("should save a mission", async () => {
         const expectedActions = [
             { type: missionTypes.SAVE_MISSION_REQUEST },
-            { type: missionTypes.SAVE_MISSION_SUCCESS }
+            {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "Mission created",
+                    snackDuration: undefined
+                },
+            },
+            {
+                type: missionTypes.SAVE_MISSION_SUCCESS,
+                payload: {
+                    mission: {
+                        id: 123,
+                        title: "poulay mission"
+                    }
+                },
+            }
         ];
         const store = mockStore({
             mission: {
@@ -69,6 +85,10 @@ describe("Actions mission", () => {
     it("should save a mission - API error", async () => {
         const expectedActions = [
             { type: missionTypes.SAVE_MISSION_REQUEST },
+            {
+                type: SET_SNACK_MSG,
+                payload: { msg: "Failed to create mission" }
+            },
             { type: missionTypes.SAVE_MISSION_FAILURE, payload: "Won't save" }
         ];
         const storeError = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)])({
@@ -84,9 +104,13 @@ describe("Actions mission", () => {
         const expectedActions = [
             { type: missionTypes.SAVE_MISSION_REQUEST },
             {
+                type: SET_SNACK_MSG,
+                payload: { msg: "Failed to create mission" }
+            },
+            {
                 type: missionTypes.SAVE_MISSION_FAILURE,
                 payload: new Error("gtfo")
-            }
+            },
         ];
         mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithServerFailure)]);
         const storeError = mockStore({

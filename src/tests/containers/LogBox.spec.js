@@ -39,7 +39,8 @@ describe("Container LogBox", () => {
                 "LOGIN_SUCCESS",
                 "USER_GET_ME_REQUEST",
                 "SET_SNACK_MSG",
-                "LOGIN_SUCCESS"
+                "LOGIN_SUCCESS",
+                "USER_REQUEST",
             ]);
         });
 

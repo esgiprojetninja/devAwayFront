@@ -57,7 +57,7 @@ describe("Container Profile", () => {
             const { store, fn } = prepare("onGetMe", mainReducer(undefined, {}));
             await fn();
             expect(store.getActions().map(a => a.type)).toEqual([
-                "USER_GET_ME_REQUEST", "SET_SNACK_MSG", "LOGIN_SUCCESS"
+                "USER_GET_ME_REQUEST", "SET_SNACK_MSG", "LOGIN_SUCCESS", "USER_REQUEST", "FETCH_USER_ACCOMMODATIONS_SUCCESS"
             ]);
         });
 

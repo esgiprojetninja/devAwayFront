@@ -15,7 +15,7 @@ import * as accoTypes from "../../actions/types/accommodation";
 import * as accoActions from "../../actions/accommodation";
 
 
-describe("Actions user", () => {
+describe("Actions accommodations", () => {
     let mockStore = null;
     beforeEach(() => {
         jest.clearAllMocks();
@@ -108,7 +108,7 @@ describe("Actions user", () => {
             {
                 type: SET_SNACK_MSG,
                 payload: {
-                    msg: "Accomodation created !",
+                    msg: "Place created",
                     snackDuration: undefined
                 }
             },
@@ -121,11 +121,6 @@ describe("Actions user", () => {
                     }
                 }
             },
-            { type: accoTypes.FETCH_ACCOMMODATIONS_REQUEST },
-            {
-                type: accoTypes.FETCH_ACCOMMODATIONS_SUCCESS,
-                payload: []
-            }
         ];
         const store = mockStore();
         await store.dispatch(accoActions.saveAccommodation("chibar"));
@@ -140,7 +135,7 @@ describe("Actions user", () => {
             {
                 type: SET_SNACK_MSG,
                 payload: {
-                    msg: "Accomodation created !",
+                    msg: "Place created",
                     snackDuration: undefined
                 }
             },
@@ -153,15 +148,10 @@ describe("Actions user", () => {
                     }
                 }
             },
-            { type: accoTypes.FETCH_ACCOMMODATIONS_REQUEST },
-            {
-                type: accoTypes.FETCH_ACCOMMODATIONS_SUCCESS,
-                payload: []
-            }
         ];
         // mainReducer
         const store = mockStore(mainReducer(undefined, {}));
-        await store.dispatch(accoActions.saveAccommodation());
+        await store.dispatch(accoActions.saveAccommodation({}));
         expect(store.getActions()).toEqual(expectedActions);
     });
 
@@ -173,7 +163,7 @@ describe("Actions user", () => {
             {
                 type: SET_SNACK_MSG,
                 payload: {
-                    msg: "Accomodation creation failed !",
+                    msg: "Failed to create place",
                     snackDuration: undefined
                 }
             },
@@ -199,7 +189,7 @@ describe("Actions user", () => {
             {
                 type: SET_SNACK_MSG,
                 payload: {
-                    msg: "Accomodation creation failed !",
+                    msg: "Failed to create place",
                     snackDuration: undefined
                 }
             },
