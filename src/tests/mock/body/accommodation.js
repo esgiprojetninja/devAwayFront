@@ -37,7 +37,7 @@ export const accommodationMock = {
     updatedAt: "coucou updatedAt",
     checkinHour: "coucou checkinHour",
     checkoutHour: "coucou checkoutHour",
-    mission: []
+    missions: []
 };
 
 export const genAccommodationsMock = (num = 4) => Array.from(new Array(num))

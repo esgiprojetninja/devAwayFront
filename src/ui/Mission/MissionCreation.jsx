@@ -127,7 +127,8 @@ class MissionCreation extends React.PureComponent {
         if (this.state.stayTimeUnitError || !this.state.stayTimeUnit) {
             return false;
         }
-        if (this.state.accommodation_idError || !this.state.accommodation_id) {
+        if (this.state.accommodation_idError ||
+            (Number.isNaN(Number(this.state.accommodation_id)) || !this.state.accommodation_id)) {
             return false;
         }
         return true;
@@ -157,7 +158,7 @@ class MissionCreation extends React.PureComponent {
             return;
         }
         const res = await this.props.saveMission(this.mission);
-        if (res.type && res.type === SAVE_MISSION_SUCCESS) {
+        if (res && res.type && res.type === SAVE_MISSION_SUCCESS) {
             if (res.payload && res.payload.mission && res.payload.mission.id) {
                 this.props.history.replace(`/missions/${res.payload.mission.id}`);
             }
@@ -185,7 +186,7 @@ class MissionCreation extends React.PureComponent {
                 this.setState({ [`${property}Error`]: "" });
             }
             this.setState({
-                [property]: isNumber ? Number(value) : value
+                [property]: isNumber || isSelect ? Number(value) : value
             });
             if (this.missionValid) {
                 this.props.changeCurrent(this.mission);
@@ -195,14 +196,13 @@ class MissionCreation extends React.PureComponent {
 
     renderTextProperty(propName, multi = false, rows = 1, defaultLegend) {
         const capitalized = propName.charAt(0).toUpperCase() + propName.slice(1);
-        const id = `${capitalized}-${Math.floor(Math.random() * 2000)}`;
         return (
             <TextField
                 error={this.state[`${propName}Error`].length > 0}
                 InputLabelProps={{
                     shrink: true,
                 }}
-                id={id}
+                id={`select-multiple-stay-unit-${propName}`}
                 value={this.state[propName]}
                 fullWidth
                 label={this.state[`${propName}Error`].length > 0 ? this.state[`${propName}Error`] : `${defaultLegend || capitalized} (*)`}
@@ -219,7 +219,6 @@ class MissionCreation extends React.PureComponent {
 
     renderNumberProperty(propName, defaultLegend) {
         const capitalized = propName.charAt(0).toUpperCase() + propName.slice(1);
-        const id = `${capitalized}-${Math.floor(Math.random() * 2000)}`;
         return (
             <TextField
                 error={this.state[`${propName}Error`].length > 0}
@@ -227,7 +226,7 @@ class MissionCreation extends React.PureComponent {
                     shrink: true,
                 }}
                 className={this.props.classes.numberFormControl}
-                id={id}
+                id={`select-multiple-stay-unit-${propName}`}
                 value={this.state[propName]}
                 fullWidth
                 label={this.state[`${propName}Error`].length > 0 ? this.state[`${propName}Error`] : `${defaultLegend || capitalized} (*)`}
@@ -243,19 +242,18 @@ class MissionCreation extends React.PureComponent {
 
     renderSelectProperty(propName, stringChoices, defaultLegend) {
         const capitalized = propName.charAt(0).toUpperCase() + propName.slice(1);
-        const id = `${capitalized}-${Math.floor(Math.random() * 2000)}`;
         return (
             <FormControl className={this.props.classes.numberFormControl}>
                 <InputLabel className={this.getInputLabelClass(propName)} htmlFor="select-multiple-stay-unit">{this.state[`${propName}Error`].length > 0 ? this.state[`${propName}Error`] : `${defaultLegend || capitalized} (*)`}</InputLabel>
                 <Select
-                    id={id}
+                    id={`select-multiple-stay-unit-${propName}`}
                     value={this.state[propName]}
                     onChange={(e) => {
                         this.handleChange(propName, e);
                     }}
                     inputProps={{
                         name: propName,
-                        id: `select-multiple-stay-unit-${propName}]`,
+                        id: `select-multiple-stay-unit-${propName}`,
                     }}
                 >
                     {stringChoices.map(prop => (
@@ -263,7 +261,7 @@ class MissionCreation extends React.PureComponent {
                             key={prop.label}
                             value={prop.value}
                             style={{
-                                fontWeight: this.state[propName] === prop.value ? 600 : 400,
+                                fontWeight: this.state[propName] === Number(prop.value) ? 600 : 400,
                             }}
                         >
                             {prop.label}
@@ -302,6 +300,7 @@ class MissionCreation extends React.PureComponent {
                         InputLabelProps={{
                             shrink: true,
                         }}
+                        id="checkin-date-input"
                         className={this.props.classes.dateFormControl}
                         value={this.state.checkinDate}
                         label={this.state.checkinDateError.length > 0 ? this.state.checkinDateError : "Mission start date"}
@@ -329,6 +328,7 @@ class MissionCreation extends React.PureComponent {
                         InputLabelProps={{
                             shrink: true,
                         }}
+                        id="checkin-time-input"
                         className={this.props.classes.numberFormControl}
                         value={this.state.checkinDateHour}
                         label={this.state.checkinDateError.length > 0 ? "  " : "time (*)"}
@@ -383,7 +383,7 @@ class MissionCreation extends React.PureComponent {
                 disabled={!this.missionValid || this.isLoading}
                 onClick={this.handleSave}
                 variant="fab"
-                id="devaway-create-acco-btn"
+                id="devaway-create-acco-mission-btn"
             >
                 <Save />
             </Button>
@@ -392,7 +392,7 @@ class MissionCreation extends React.PureComponent {
 
     renderNoUser() {
         return (
-            <Grid container spacing={24} className={this.props.classes.container}>
+            <Grid id="devaway-mission-creation-unlogged-container" container spacing={24} className={this.props.classes.container}>
                 <Paper className={this.props.classes.paper} elevation={1}>
                     <div className="full-width display-flex-row">
                         <Typography className={this.props.classes.title} type="title" color="inherit" component="h2">
@@ -415,7 +415,7 @@ class MissionCreation extends React.PureComponent {
 
     renderNoUserAcco() {
         return (
-            <Grid container spacing={24} className={this.props.classes.container}>
+            <Grid id="devaway-mission-creation-no-acco-container" container spacing={24} className={this.props.classes.container}>
                 <Paper className={this.props.classes.paper} elevation={1}>
                     <div className="full-width display-flex-row">
                         <Typography className={this.props.classes.title} type="title" color="inherit" component="h2">
@@ -463,7 +463,7 @@ class MissionCreation extends React.PureComponent {
     renderSpinner() {
         if (this.isLoading) {
             return (
-                <div style={{ marginTop: 20 }} className="display-flex-row full-width">
+                <div id="devaway-mission-creation-spinner-container" style={{ marginTop: 20 }} className="display-flex-row full-width">
                     <CircularProgress color="primary" />
                 </div>
             );
