@@ -60,13 +60,12 @@ const saveAccommodationFailure = payload => ({
     payload
 });
 
-export function saveAccommodation(newAccommodation = null) {
+export function saveAccommodation(newAccommodation) {
     return (dispatch, getState, API) => {
         dispatch(saveAccommodationRequest());
         const verb = newAccommodation.id ? "update" : "create";
         return API.accommodationApi.createOrUpdate(
-            newAccommodation
-            || getState().accommodation.current)
+            newAccommodation)
             .then((res) => {
                 if (res.hasError || res.trace || !res.id) {
                     dispatch(displaySnackMsg(`Failed to ${verb} place`));

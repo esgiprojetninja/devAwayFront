@@ -1,3 +1,4 @@
+/* global */
 import { connect } from "react-redux";
 import moment from "moment";
 import MissionCreationComponent from "../../ui/Mission/MissionCreation";
@@ -10,6 +11,7 @@ export const mapStateToProps = (state) => {
             label: state.user.accommodations[id].title,
             id: Number(id)
         }));
+    const m = global.jestmoment || moment;
     return {
         ...state,
         user: {
@@ -19,7 +21,7 @@ export const mapStateToProps = (state) => {
         formRules: {
             title: { min: 6, max: 24 },
             description: { min: 6, max: 255 },
-            checkinDate: { min: moment().local().add(1, "hours"), isDate: true },
+            checkinDate: { min: m().local().add(1, "hours"), isDate: true },
             stayTime: { min: 1, max: (1000 * 60 * 60 * 24 * 365 * 10) }, // max 10 years
             stayTimeUnit: {
                 values: [

@@ -126,4 +126,17 @@ describe("Reducer mission", () => {
             }
         });
     });
+
+    it("should EDIT_CURRENT_MISSION", () => {
+        expect(missionReducer(initialSate, {
+            type: missionTypes.EDIT_CURRENT_MISSION,
+            payload: { mission: "POULAY" }
+        })).toEqual({
+            ...initialSate,
+            current: {
+                data: "POULAY",
+                isLoading: false
+            }
+        });
+    });
 });

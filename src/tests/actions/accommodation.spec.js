@@ -1,4 +1,5 @@
 /* eslint-env jest */
+/* global window */
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
@@ -25,6 +26,7 @@ describe("Actions accommodations", () => {
             getItem: jest.fn(),
             setItem: jest.fn()
         };
+        window.history = jest.fn();
     });
 
     it("should set current accomodation", () => {

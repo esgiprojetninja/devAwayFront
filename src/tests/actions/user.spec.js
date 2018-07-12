@@ -207,6 +207,18 @@ describe("Actions user", () => {
         expect(store.getActions()).toEqual(expectedActions);
     });
 
+    it("should get user profile - already fetching profile", async () => {
+        const expectedActions = [
+        ];
+        const store = mockStore({
+            user: {
+                isGettingData: true,
+            }
+        });
+        await store.dispatch(userActions.getMe("coucouToken"));
+        expect(store.getActions()).toEqual(expectedActions);
+    });
+
     it("should NOT get whole user profile", () => {
         const expectedAction = [
             { type: userActionTypes.USER_GET_ME_REQUEST },

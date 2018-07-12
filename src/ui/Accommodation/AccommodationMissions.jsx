@@ -32,8 +32,8 @@ class AccommodationMissions extends React.PureComponent {
             : null;
     }
 
-    getMissionBtnLegent(mission) {
-        if (this.isUserOwner) {
+    getMissionBtnLegend(mission) {
+        if (this.props.isUserOwner) {
             return "Modify";
         }
         const { user } = this.props;
@@ -58,7 +58,7 @@ class AccommodationMissions extends React.PureComponent {
                     <NavLink
                         to={`/missions/${mission.id}`}
                     >
-                        <Button color="primary" variant="raised">{this.getMissionBtnLegent(mission)}</Button>
+                        <Button color="primary" variant="raised">{this.getMissionBtnLegend(mission)}</Button>
                     </NavLink>
                 }
             </div>
@@ -66,7 +66,7 @@ class AccommodationMissions extends React.PureComponent {
     }
 
     renderAddBtn() {
-        return (!this.missions && this.props.isUserOwner &&
+        return (this.props.isUserOwner &&
             <NavLink
                 to="/mission/creation"
             >
