@@ -25,6 +25,15 @@ describe("API mission", () => {
         });
     });
 
+    it("should fetchById", (done) => {
+        const data = { id: 123, name: "Toto" };
+        fetchMock.get(`https://${baseUrl}/missions/123`, data);
+        missionApi.fetchById(123).then((res) => {
+            expect(res).toEqual(data);
+            done();
+        });
+    });
+
     it("should create a mission", async () => {
         const mission = {
             name: "prout",

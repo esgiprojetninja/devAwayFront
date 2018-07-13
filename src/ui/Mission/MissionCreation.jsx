@@ -18,6 +18,7 @@ import TodoIcon from "react-icons/lib/fa/question";
 import moment from "moment";
 
 import Navbar from "../../containers/Navbar";
+import NoUserComp from "../NoUserComp";
 import { getAccoImg } from "../../utils/accommodation";
 import { SAVE_MISSION_SUCCESS } from "../../actions/types/mission";
 
@@ -390,29 +391,6 @@ class MissionCreation extends React.PureComponent {
         );
     }
 
-    renderNoUser() {
-        return (
-            <Grid id="devaway-mission-creation-unlogged-container" container spacing={24} className={this.props.classes.container}>
-                <Paper className={this.props.classes.paper} elevation={1}>
-                    <div className="full-width display-flex-row">
-                        <Typography className={this.props.classes.title} type="title" color="inherit" component="h2">
-                            You need to log in before using our services
-                        </Typography>
-                    </div>
-                    <div style={{ marginTop: 40 }} className="full-width display-flex-row">
-                        <NavLink
-                            to="/places"
-                        >
-                            <Button color="primary" variant="contained">
-                                Check out the places we have !
-                            </Button>
-                        </NavLink>
-                    </div>
-                </Paper>
-            </Grid>
-        );
-    }
-
     renderNoUserAcco() {
         return (
             <Grid id="devaway-mission-creation-no-acco-container" container spacing={24} className={this.props.classes.container}>
@@ -438,7 +416,7 @@ class MissionCreation extends React.PureComponent {
 
     renderContent() {
         if (!this.props.user.isLoggedIn) {
-            return this.renderNoUser();
+            return (<NoUserComp />);
         }
         if (!Object.keys(this.props.user.accommodations).length) {
             return this.renderNoUserAcco();

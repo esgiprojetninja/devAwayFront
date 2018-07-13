@@ -68,6 +68,34 @@ const mission = (state = initialSate, action) => {
                 isLoading: false
             }
         };
+    case missionTypes.FETCH_MISSION_REQUEST:
+        return {
+            ...state,
+            current: {
+                ...state.current,
+                isLoading: true
+            }
+        };
+    case missionTypes.FETCH_MISSION_SUCCESS:
+        return {
+            ...state,
+            current: {
+                ...state.current,
+                data: {
+                    ...payload.mission
+                },
+                isLoading: false
+            }
+        };
+    case missionTypes.FETCH_MISSION_FAILURE:
+        return {
+            ...state,
+            current: {
+                ...state.current,
+                data: {},
+                isLoading: false
+            }
+        };
     default:
         return state;
     }

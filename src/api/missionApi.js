@@ -31,6 +31,9 @@ const missionApi = {
             };
         });
     },
+    fetchById: (id) => {
+        return generateFetch(`missions/${id}`, "GET");
+    },
     // TODO: check update and create methods when api is ok
     createOrUpdate: (mission) => {
         return mission.id > 0 ?

@@ -87,13 +87,15 @@ describe("Actions mission", () => {
             { type: missionTypes.SAVE_MISSION_REQUEST },
             {
                 type: SET_SNACK_MSG,
-                payload: { msg: "Failed to create mission" }
+                payload: { msg: "Failed to update mission" }
             },
             { type: missionTypes.SAVE_MISSION_FAILURE, payload: "Won't save" }
         ];
         const storeError = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)])({
             mission: {
-                current: {}
+                current: {
+                    data: { id: 123 }
+                }
             }
         });
         await storeError.dispatch(missionActions.saveMission());
@@ -162,6 +164,59 @@ describe("Actions mission", () => {
             }
         });
         await storeError.dispatch(missionActions.deleteMission(1000));
+        expect(storeError.getActions()).toEqual(expectedActions);
+    });
+
+
+    it("should fetch one mission", async () => {
+        const expectedActions = [
+            { type: missionTypes.FETCH_MISSION_REQUEST },
+            { type: missionTypes.FETCH_MISSION_SUCCESS,
+                payload: {
+                    mission: {
+                        id: 123,
+                        poulay: "man"
+                    }
+                }
+            },
+        ];
+        const store = mockStore();
+        await store.dispatch(missionActions.fetchMission(123));
+        expect(store.getActions()).toEqual(expectedActions);
+    });
+
+    it("should fetch one mission - API error", async () => {
+        const expectedActions = [
+            { type: missionTypes.FETCH_MISSION_REQUEST },
+            {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "Failed to retrieve mission",
+                    snackDuration: undefined
+                },
+            },
+            { type: missionTypes.FETCH_MISSION_FAILURE, payload: { msg: "Couldn't get mission" } }
+        ];
+        const storeError = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)])();
+        await storeError.dispatch(missionActions.fetchMission(123));
+        expect(storeError.getActions()).toEqual(expectedActions);
+    });
+
+    it("should fetch one mission - Server failure", async () => {
+        const expectedActions = [
+            { type: missionTypes.FETCH_MISSION_REQUEST },
+            {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "Failed to retrieve mission",
+                    snackDuration: undefined
+                },
+            },
+            { type: missionTypes.FETCH_MISSION_FAILURE, payload: { msg: "gtfo" } }
+        ];
+        mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithServerFailure)]);
+        const storeError = mockStore();
+        await storeError.dispatch(missionActions.fetchMission(123));
         expect(storeError.getActions()).toEqual(expectedActions);
     });
 });
