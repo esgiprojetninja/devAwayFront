@@ -36,7 +36,8 @@ export const mockAPI = {
         fetchAll: () => Promise.resolve([]),
         createOrUpdate: () => Promise.resolve({ id: 123, title: "poulay mission" }),
         deleteItem: () => Promise.resolve({}),
-        applyToMission: () => Promise.resolve({ poulay: "man" })
+        applyToMission: () => Promise.resolve({ poulay: "man" }),
+        fetchById: id => Promise.resolve({ id: id || 123, poulay: "man" }),
     },
     messageApi: {
         fetchAll: () => Promise.resolve([]),
@@ -95,6 +96,10 @@ export const mockAPIWithErrors = {
         deleteItem: () => Promise.resolve({
             hasError: true,
             message: "Couldn't delete"
+        }),
+        fetchById: () => Promise.resolve({
+            hasError: true,
+            message: "Couldn't get mission"
         })
     },
     messageApi: {
@@ -109,7 +114,7 @@ export const mockAPIWithErrors = {
         deleteItem: () => Promise.resolve({
             hasError: true,
             message: "Couldn't delete"
-        })
+        }),
     },
     profileApi: {
         fetchAll: () => Promise.resolve({
@@ -168,7 +173,8 @@ export const mockAPIWithServerFailure = {
     missionApi: {
         fetchAll: () => Promise.reject(new Error("gtfo")),
         createOrUpdate: () => Promise.reject(new Error("gtfo")),
-        deleteItem: () => Promise.reject(new Error("gtfo"))
+        deleteItem: () => Promise.reject(new Error("gtfo")),
+        fetchById: () => Promise.reject(new Error("gtfo")),
     },
     messageApi: {
         fetchAll: () => Promise.reject(new Error("gtfo")),

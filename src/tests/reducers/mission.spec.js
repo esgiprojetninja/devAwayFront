@@ -139,4 +139,47 @@ describe("Reducer mission", () => {
             }
         });
     });
+
+    it("should FETCH_MISSION_REQUEST", () => {
+        expect(missionReducer(initialSate, {
+            type: missionTypes.FETCH_MISSION_REQUEST,
+        })).toEqual({
+            ...initialSate,
+            current: {
+                ...initialSate.current,
+                isLoading: true
+            }
+        });
+    });
+
+    it("should FETCH_MISSION_SUCCESS", () => {
+        expect(missionReducer(initialSate, {
+            type: missionTypes.FETCH_MISSION_SUCCESS,
+            payload: {
+                mission: {
+                    poulay: "man",
+                }
+            }
+        })).toEqual({
+            ...initialSate,
+            current: {
+                data: {
+                    poulay: "man",
+                },
+                isLoading: false
+            }
+        });
+    });
+
+    it("should FETCH_MISSION_FAILURE", () => {
+        expect(missionReducer(initialSate, {
+            type: missionTypes.FETCH_MISSION_FAILURE,
+        })).toEqual({
+            ...initialSate,
+            current: {
+                data: {},
+                isLoading: false
+            }
+        });
+    });
 });

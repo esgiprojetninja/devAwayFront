@@ -5,8 +5,8 @@ import Slider from "react-slick";
 import * as T from "prop-types";
 import AddImgIcon from "react-icons/lib/go/plus";
 import EditImgIcon from "react-icons/lib/go/pencil";
-import { accommodationPropTypes } from "../../propTypes/accommodationType";
 import { lightGrey, darkGrey } from "../../styles/theme";
+import { getImgUrl } from "../../utils/image";
 
 const addImgStyle = {
     margin: "auto",
@@ -145,6 +145,7 @@ const SLIDER_SETTINGS = {
 class AccommodationDetailImages extends React.PureComponent {
     static defaultProps = {
         acco: null,
+        changePictureListener: null,
     }
 
     get acco() {
@@ -181,8 +182,12 @@ class AccommodationDetailImages extends React.PureComponent {
         const file = e.target.files[0];
         reader.onloadend = () => {
             if (reader.result.indexOf("data:image/") > -1) {
-                this.props.updatePicture(this.acco, pictureId, reader.result);
+                if (!this.props.changePictureListener) {
+                    return this.props.updatePicture(this.acco, pictureId, reader.result);
+                }
+                return this.props.changePictureListener(this.acco, pictureId, reader.result);
             }
+            return null;
         };
         reader.readAsDataURL(file);
     }
@@ -203,7 +208,7 @@ class AccommodationDetailImages extends React.PureComponent {
                     tabIndex={0}
                     className={classes.dotImgWrapper}
                 >
-                    <img className={classes.img} src={this.acco.pictures[index].url} alt="dot" />
+                    <img className={classes.img} src={getImgUrl(this.acco.pictures[index])} alt="dot" />
                 </div>
             );
         }
@@ -252,7 +257,7 @@ class AccommodationDetailImages extends React.PureComponent {
 
     renderImage(pictureObj) {
         const { classes } = this.props;
-        const imgUrl = pictureObj.url || "/img/accommodation.jpg";
+        const imgUrl = getImgUrl(pictureObj);
         return (
             <div className={classes.imgContainer} key={pictureObj.url}>
                 {
@@ -313,7 +318,12 @@ AccommodationDetailImages.propTypes = {
         dotImgWrapper: T.string.isRequired,
     }).isRequired,
     updatePicture: T.func.isRequired,
-    acco: accommodationPropTypes,
+    changePictureListener: T.func,
+    acco: T.shape({
+        pictures: T.arrayOf(T.shape({
+            url: T.string.isRequired,
+        })).isRequired,
+    }),
     isUserOwner: T.bool.isRequired,
 };
 

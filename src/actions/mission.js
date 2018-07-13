@@ -1,3 +1,4 @@
+/* global */
 import * as missionTypes from "./types/mission";
 import { displaySnackMsg } from "./snack";
 
@@ -92,3 +93,33 @@ export const changeCurrentMission = mission => ({
     type: missionTypes.EDIT_CURRENT_MISSION,
     payload: { mission },
 });
+
+const fetchMissionRequest = () => ({
+    type: missionTypes.FETCH_MISSION_REQUEST
+});
+
+const fetchMissionSuccess = mission => ({
+    type: missionTypes.FETCH_MISSION_SUCCESS,
+    payload: { mission }
+});
+
+const fetchMissionFailure = msg => ({
+    type: missionTypes.FETCH_MISSION_FAILURE,
+    payload: { msg }
+});
+
+export const fetchMission = id =>
+    async (dispatch, getState, API) => {
+        dispatch(fetchMissionRequest());
+        try {
+            const res = await API.missionApi.fetchById(id);
+            if (res.hasError) {
+                dispatch(displaySnackMsg("Failed to retrieve mission"));
+                return dispatch(fetchMissionFailure(res.message));
+            }
+            return dispatch(fetchMissionSuccess(res));
+        } catch (error) {
+            dispatch(displaySnackMsg("Failed to retrieve mission"));
+            return dispatch(fetchMissionFailure(error.message));
+        }
+    };

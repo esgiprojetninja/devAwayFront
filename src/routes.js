@@ -5,6 +5,7 @@ import AccommodationDetail from "./containers/AccommodationDetail";
 import AccommodationsTabs from "./containers/AccommodationsTabs";
 import AccommodationCreation from "./containers/AccommodationCreation";
 import MissionCreation from "./containers/Mission/MissionCreation";
+import MissionEdition from "./containers/Mission/MissionEdition";
 
 export default [
     {
@@ -42,8 +43,8 @@ export default [
         component: MissionCreation
     },
     {
-        path: "/missions/:missionId",
+        path: "/missions/:missionID",
         exact: true,
-        component: Home
+        component: MissionEdition
     },
 ];
