@@ -2,6 +2,7 @@
 /* global */
 import thunk from "redux-thunk";
 import configureMockStore from "redux-mock-store";
+import { getRules } from "../../../utils/mission";
 
 import {
     mockAPI
@@ -29,11 +30,15 @@ describe("Container MissionEdition", () => {
     describe("mapDispatchToProps", () => {
         beforeEach(() => {
             global.setTimeout = r => r();
-            global.setInterval = r => r(10000000);
+            global.clearInterval = jest.fn();
+            global.setInterval = (func) => {
+                func(9999);
+            };
         });
         it("onInit without delay - user logged in", async () => {
             mapStateToProps({
                 user: {
+                    accommodations: {},
                     isLoggedIn: true,
                     isGettingData: false,
                     isLoading: false,
@@ -46,7 +51,58 @@ describe("Container MissionEdition", () => {
                 "FETCH_MISSION_REQUEST", "FETCH_MISSION_SUCCESS"
             ]);
         });
+        it("onInit with delay - user loggin in", async () => {
+            mapStateToProps({
+                user: {
+                    accommodations: {},
+                    isLoggedIn: false,
+                    isGettingData: true,
+                    isLoading: true,
+                }
+            });
+            const { store, fn } = prepare("onInit", mainReducer(undefined, {}));
+            await fn(123);
+            const storeActions = await store.getActions();
+            expect(storeActions.map(a => a.type)).toEqual([
+                "FETCH_MISSION_REQUEST", "FETCH_MISSION_SUCCESS"
+            ]);
+        });
+        it("onInit with delay - user logged in in the mean time", async () => {
+            mapStateToProps({
+                user: {
+                    accommodations: {},
+                    isLoggedIn: false,
+                    isGettingData: true,
+                    isLoading: true,
+                }
+            });
+            const { store, fn } = prepare("onInit", mainReducer(undefined, {}));
+            global.setInterval = (func) => {
+                mapStateToProps({
+                    user: {
+                        accommodations: {},
+                        isLoggedIn: true,
+                        isGettingData: false,
+                        isLoading: false,
+                    }
+                });
+                func();
+            };
+            await fn(123);
+            const storeActions = await store.getActions();
+            expect(storeActions.map(a => a.type)).toEqual([
+                "FETCH_MISSION_REQUEST", "FETCH_MISSION_SUCCESS"
+            ]);
+        });
         it("saveMission", async () => {
+            mapStateToProps({
+                user: {
+                    accommodations: {},
+                    isLoggedIn: true,
+                    isGettingData: false,
+                    isLoading: false,
+                }
+            });
             const { store, fn } = prepare("saveMission", mainReducer(undefined, {}));
             await fn({
                 title: "",
@@ -58,6 +114,14 @@ describe("Container MissionEdition", () => {
             ]);
         });
         it("changeCurrent", async () => {
+            mapStateToProps({
+                user: {
+                    accommodations: {},
+                    isLoggedIn: true,
+                    isGettingData: false,
+                    isLoading: false,
+                }
+            });
             const { store, fn } = prepare("changeCurrent", mainReducer(undefined, {}));
             await fn({
                 title: "8778 erf",
@@ -78,7 +142,18 @@ describe("Container MissionEdition", () => {
             });
         });
         it("dispatch accomodation specific state", () => {
-            expect(mapStateToProps("POULAY")).toEqual("POULAY");
+            const { accoArr, rules } = getRules({});
+            expect(mapStateToProps({
+                user: {
+                    accommodations: {},
+                }
+            })).toEqual({
+                user: {
+                    accommodations: {},
+                    accommodationsArr: accoArr,
+                },
+                formRules: rules
+            });
         });
     });
 });

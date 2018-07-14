@@ -1,44 +1,18 @@
 /* global */
 import { connect } from "react-redux";
-import moment from "moment";
 import MissionCreationComponent from "../../ui/Mission/MissionCreation";
 import { saveMission, changeCurrentMission } from "../../actions/mission";
+import { getRules } from "../../utils/mission";
 
 export const mapStateToProps = (state) => {
-    const accoArr = Object.keys(state.user.accommodations)
-        .filter(id => id !== null && id !== undefined && !Number.isNaN(Number(id)))
-        .map(id => ({
-            label: state.user.accommodations[id].title,
-            id: Number(id)
-        }));
-    const m = global.jestmoment || moment;
+    const { accoArr, rules } = getRules(state.user.accommodations);
     return {
         ...state,
         user: {
             ...state.user,
             accommodationsArr: accoArr
         },
-        formRules: {
-            title: { min: 6, max: 24 },
-            description: { min: 6, max: 255 },
-            checkinDate: { min: m().local().add(1, "hours"), isDate: true },
-            stayTime: { min: 1, max: (1000 * 60 * 60 * 24 * 365 * 10) }, // max 10 years
-            stayTimeUnit: {
-                values: [
-                    { label: "hours", value: 0 },
-                    { label: "days", value: 1 },
-                    { label: "weeks", value: 2 },
-                    { label: "months", value: 3 },
-                ],
-                isSelect: true
-            },
-            accommodation_id: {
-                values: accoArr.map(acco => ({
-                    ...acco,
-                    value: acco.id })),
-                isSelect: true,
-            },
-        },
+        formRules: rules,
     };
 };
 

@@ -145,6 +145,7 @@ const SLIDER_SETTINGS = {
 class AccommodationDetailImages extends React.PureComponent {
     static defaultProps = {
         acco: null,
+        isUserOwner: false,
         changePictureListener: null,
     }
 
@@ -259,7 +260,7 @@ class AccommodationDetailImages extends React.PureComponent {
         const { classes } = this.props;
         const imgUrl = getImgUrl(pictureObj);
         return (
-            <div className={classes.imgContainer} key={pictureObj.url}>
+            <div className={classes.imgContainer} key={pictureObj.url || "whocares"}>
                 {
                     this.props.isUserOwner ?
                         <div className={classes.editPictureContainer}>
@@ -288,6 +289,7 @@ class AccommodationDetailImages extends React.PureComponent {
                 <div style={{ marginTop: "80px" }} />
             );
         }
+        const pictures = this.acco.pictures || [];
         return (
             <Slider
                 ref={(sl) => { this.slider = sl; }}
@@ -295,14 +297,17 @@ class AccommodationDetailImages extends React.PureComponent {
                 {...this.sliderSettings}
             >
                 {
-                    this.acco.pictures.length + 1 >= MAX_PICTURES ?
-                        this.acco.pictures.map(pic => this.renderImage(pic))
-                        : this.acco.pictures.concat([ADD_IMAGE_WARN]).map((pic, i) => {
+                    pictures.length + 1 >= MAX_PICTURES ?
+                        pictures.map(pic => this.renderImage(pic))
+                        : pictures.concat([ADD_IMAGE_WARN]).map((pic, i) => {
                             if (pic === ADD_IMAGE_WARN) {
                                 return this.renderAddImage(i);
                             }
                             return this.renderImage(pic, i);
                         })
+                }
+                { pictures.length === 0 &&
+                    this.renderImage({})
                 }
             </Slider>
         );
@@ -324,7 +329,7 @@ AccommodationDetailImages.propTypes = {
             url: T.string.isRequired,
         })).isRequired,
     }),
-    isUserOwner: T.bool.isRequired,
+    isUserOwner: T.bool,
 };
 
 export default withStyles(styles)(AccommodationDetailImages);

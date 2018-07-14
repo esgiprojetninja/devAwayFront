@@ -22,6 +22,6 @@ export const getImgUrl = (imgObj) => {
         return imgObj.url;
     }
     return "/img/people-working.jpg";
-}
+};
 
 export const euiezijfiezjfe = "dfjiezfoeo";
