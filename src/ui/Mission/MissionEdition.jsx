@@ -19,6 +19,7 @@ import InactiveIcon from "react-icons/lib/fa/lock";
 import ActiveIcon from "react-icons/lib/fa/plus";
 import UnbookedIcon from "react-icons/lib/fa/paper-plane";
 import Avatar from "@material-ui/core/Avatar";
+import UserIcon from "react-icons/lib/fa/user";
 import moment from "moment";
 
 import { midGrey, darkGrey } from "../../styles/theme";
@@ -28,6 +29,7 @@ import CarouselImages from "../../containers/AccommodationDetailImages";
 import GMap from "../../containers/AccommodationDetailMap";
 import missionRules from "../../propTypes/missionRulesType";
 import { getStateFromRules, DATE_FORMAT, HOUR_FORMAT } from "../../utils/mission";
+import getUserImg from "../../utils/user";
 
 const styles = theme => ({
     container: {
@@ -425,11 +427,42 @@ class MissionEdition extends React.PureComponent {
         );
     }
 
+    renderHostInfo() {
+        const { mission } = this;
+        if (this.isUserOwner || !mission || !mission.accommodation || !mission.accommodation.host) {
+            return null;
+        }
+        const imgUrl = getUserImg(mission.accommodation.host.avatar);
+        if (!imgUrl) {
+            return (
+                <Grid xs={12} container item justify="flex-end">
+                    <Typography style={{ color: midGrey, paddingRight: "4px" }} variant="body2" color="inherit">
+                        {mission.accommodation.host.userName}
+                    </Typography>
+                    <UserIcon size={25} className={this.props.classes.icon} />
+                </Grid>
+            );
+        }
+        return (
+            <Grid xs={12} container item justify="flex-end">
+                <Typography style={{ color: midGrey, paddingRight: "4px" }} variant="body2" color="inherit">
+                    {mission.accommodation.host.userName}
+                </Typography>
+                <Avatar
+                    className={this.props.classes.avatar}
+                    alt={mission.accommodation.host.userName}
+                    src={imgUrl}
+                />
+            </Grid>
+        );
+    }
+
     renderMissionDetails() {
         return (
             this.mission &&
             <Grid xs={12} item container>
-                <Grid container direction="row" align="flex-start" xs={12}>
+                {this.renderHostInfo()}
+                <Grid container item direction="row" align="flex-start" xs={12}>
                     <Grid item xs={6}>
                         <div className="display-flex-row justify-start">
                             {this.renderActiveStatus()}
