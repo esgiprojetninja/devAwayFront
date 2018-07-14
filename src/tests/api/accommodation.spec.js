@@ -55,7 +55,7 @@ describe("API accommodation", () => {
 
     it("should create new picture", async () => {
         const id = "100";
-        fetchMock.post(`https://${baseUrl}/api/v1/pictures`, { ok: "Okay poulay" });
+        fetchMock.put(`https://${baseUrl}/api/v1/accommodations/100/pictures`, { ok: "Okay poulay" });
         const res = await accommodationApi.upsertPicture({
             accommodation_id: id,
             url: "man"
@@ -65,7 +65,7 @@ describe("API accommodation", () => {
 
     it("should update a picture", async () => {
         const id = "100";
-        fetchMock.put(`https://${baseUrl}/api/v1/pictures/123`, { ok: "Okay poulay" });
+        fetchMock.put(`https://${baseUrl}/api/v1/pictures/accommodations/123`, { ok: "Okay poulay" });
         const res = await accommodationApi.upsertPicture({
             accommodation_id: id,
             url: "man",
