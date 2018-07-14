@@ -89,9 +89,8 @@ class MissionEdition extends React.PureComponent {
         checkoutDateHour: "",
     };
 
-    async componentDidMount() {
-        await this.props.onInit(this.props.match.params.missionID);
-        this.resetState(this.props.mission.current.data);
+    componentDidMount() {
+        this.props.onInit(this.props.match.params.missionID);
     }
 
     get isUserOwner() {
@@ -125,16 +124,41 @@ class MissionEdition extends React.PureComponent {
             || this.props.mission.current.isLoading;
     }
 
-    autoAssignAcco(props = this.props) {
-        if (!this.state.accommodation_id && props.formRules.accommodation_id.values.length > 0) {
-            this.setState({ accommodation_id: props.formRules.accommodation_id.values[0].value });
+    get hasMissionChanged() {
+        const { title, description, accommodation_id, // eslint-disable-line
+            checkinDate, checkinDateHour, checkoutDate,
+            checkoutDateHour } = this.state;
+        const mission = this.props.mission.current.data;
+        if (title && title.trim() !== mission.title) {
+            return true;
         }
+        if (description && description.trim() !== mission.description) {
+            return true;
+        }
+        if (accommodation_id && Number(accommodation_id) !== Number(mission.accommodation_id)) { // eslint-disable-line
+            return true;
+        }
+        const oldMomentCheckinDate = moment(mission.checkinDate, `${DATE_FORMAT} ${HOUR_FORMAT}`);
+        if (checkinDate) {
+            const newDate = `${checkinDate} ${checkinDateHour || oldMomentCheckinDate.format(HOUR_FORMAT)}`;
+            if (moment(newDate, `${DATE_FORMAT} ${HOUR_FORMAT}`).unix() !== oldMomentCheckinDate.unix()) {
+                return true;
+            }
+        }
+        const oldMomentCheckoutDate = moment(mission.checkoutDate, `${DATE_FORMAT} ${HOUR_FORMAT}`);
+        if (checkoutDate) {
+            const newDate = `${checkoutDate} ${checkoutDateHour || oldMomentCheckoutDate.format(HOUR_FORMAT)}`;
+            if (moment(newDate, `${DATE_FORMAT} ${HOUR_FORMAT}`).unix() !== oldMomentCheckoutDate.unix()) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    resetState(mission = this.state.oldMission) {
-        this.setState({
-            oldMission: JSON.parse(JSON.stringify(mission)),
-        });
+    get isMissionValid() {
+        return !Object.keys(this.state)
+            .filter(propName => propName.includes("Error"))
+            .find(propName => this.state[propName].length > 0);
     }
 
     handleSave = () => {
@@ -364,7 +388,7 @@ class MissionEdition extends React.PureComponent {
                     InputLabelProps={{
                         shrink: true,
                     }}
-                    id="checkin-date-edit-input"
+                    id="checkout-date-edit-input"
                     disabled={!this.isUserOwner}
                     InputProps={{
                         disableUnderline: !this.isUserOwner,
@@ -400,7 +424,7 @@ class MissionEdition extends React.PureComponent {
                     InputLabelProps={{
                         shrink: true,
                     }}
-                    id="checkin-time-edit-input"
+                    id="checkout-time-edit-input"
                     disabled={!this.isUserOwner}
                     InputProps={{
                         disableUnderline: !this.isUserOwner,
@@ -409,16 +433,16 @@ class MissionEdition extends React.PureComponent {
                         }
                     }}
                     value={
-                        this.state.checkoutHourDate
+                        this.state.checkoutDateHour
                             || moment(this.mission.checkoutDate).format(HOUR_FORMAT)}
-                    label={this.state.checkinDateError.length > 0 ? this.state.checkinDateError : "  "}
-                    name="checkinDateHour"
+                    label={this.state.checkoutDateError.length > 0 ? this.state.checkoutDateError : "  "}
+                    name="checkoutDateHour"
                     onChange={(ev) => {
                         if (!this.isUserOwner) {
                             return;
                         }
                         const { value } = ev.target;
-                        this.setState({ checkinDateHour: value });
+                        this.setState({ checkoutDateHour: value });
                     }}
                     margin="normal"
                     type={this.isUserOwner ? "time" : "text"}
@@ -493,7 +517,6 @@ class MissionEdition extends React.PureComponent {
                             <Typography type="paragraph" color="inherit" variant="caption">{this.props.mission.current.data.accommodation.address}
                             </Typography>
                         }
-                        {this.currentAccommodationId && this.isUserOwner && this.renderSelectProperty("accommodation_id", this.props.formRules.accommodation_id.values, this.currentAccommodationId)}
                     </div>
                 </Grid>
                 <Grid className={this.props.classes.mapContainer} item xs={12}>
@@ -523,8 +546,17 @@ class MissionEdition extends React.PureComponent {
                 <Button
                     className={this.props.classes.cancelBtn}
                     aria-label="Cancel"
-                    disabled={!this.isMissionValid || this.isLoading}
-                    onClick={this.resetState}
+                    disabled={!this.hasMissionChanged || this.isLoading}
+                    onClick={() => {
+                        const mission = this.props.mission.current.data;
+                        this.setState({
+                            ...mission,
+                            checkinDate: moment(mission.checkinDate, `${DATE_FORMAT} ${HOUR_FORMAT}`).format(DATE_FORMAT),
+                            checkinDateHour: moment(mission.checkinDate, `${DATE_FORMAT} ${HOUR_FORMAT}`).format(HOUR_FORMAT),
+                            checkoutDate: moment(mission.checkoutDate, `${DATE_FORMAT} ${HOUR_FORMAT}`).format(DATE_FORMAT),
+                            checkoutDateHour: moment(mission.checkoutDate, `${DATE_FORMAT} ${HOUR_FORMAT}`).format(HOUR_FORMAT),
+                        });
+                    }}
                     color="default"
                     variant="fab"
                     id="devaway-cancel-edition-mission-btn"
@@ -535,7 +567,7 @@ class MissionEdition extends React.PureComponent {
                     className={this.props.classes.saveBtn}
                     aria-label="Save"
                     color="primary"
-                    disabled={!this.isMissionValid || this.isLoading}
+                    disabled={!this.isMissionValid || !this.hasMissionChanged || this.isLoading}
                     onClick={this.handleSave}
                     variant="fab"
                     id="devaway-edit-mission-btn"
