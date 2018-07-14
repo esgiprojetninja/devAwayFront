@@ -96,6 +96,10 @@ export default class AccommodationDetail extends React.PureComponent {
         window.addEventListener("resize", this.updateDimensions.bind(this));
     }
 
+    componentDidCatch(error) {
+        console.log("mais wesh", error, this);
+    }
+
     componentWillUnmount() {
         window.removeEventListener("resize", this.updateDimensions.bind(this));
     }

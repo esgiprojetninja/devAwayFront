@@ -111,7 +111,7 @@ describe("Reducer ACCOMMODATION", function () {
         })).toEqual({
             ...this.initialSate,
             data: ["coucou"],
-            byID: new Map().set("coucou", { id: "coucou", shwantz: "cannette" })
+            byID: new Map().set("coucou", { id: "coucou", pictures: [], shwantz: "cannette" })
         });
     });
 

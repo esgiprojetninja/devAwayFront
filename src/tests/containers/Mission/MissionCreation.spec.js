@@ -12,6 +12,7 @@ import {
     mapStateToProps,
     mapDispatchToProps
 } from "../../../containers/Mission/MissionCreation";
+import { getRules } from "../../../utils/mission";
 
 const mockStore = configureMockStore([thunk.withExtraArgument(mockAPI)]);
 
@@ -59,6 +60,9 @@ describe("Container MissionCreation", () => {
             });
         });
         it("dispatch accomodation specific state", () => {
+            const { accoArr, rules } = getRules({
+                351: { title: "poulay mission", description: "poulaying the description " }
+            });
             expect(mapStateToProps({
                 user: {
                     accommodations: { 351: { title: "poulay mission", description: "poulaying the description " } }
@@ -68,34 +72,9 @@ describe("Container MissionCreation", () => {
                     accommodations: {
                         351: { title: "poulay mission", description: "poulaying the description " }
                     },
-                    accommodationsArr: [{
-                        label: "poulay mission", id: 351
-                    }]
+                    accommodationsArr: accoArr
                 },
-                formRules: {
-                    title: { min: 6, max: 24 },
-                    description: { min: 6, max: 255 },
-                    checkinDate: { min: "poulaymoment", isDate: true },
-                    stayTime: { min: 1, max: (1000 * 60 * 60 * 24 * 365 * 10) }, // max 10 years
-                    stayTimeUnit: {
-                        values: [
-                            { label: "hours", value: 0 },
-                            { label: "days", value: 1 },
-                            { label: "weeks", value: 2 },
-                            { label: "months", value: 3 },
-                        ],
-                        isSelect: true
-                    },
-                    accommodation_id: {
-                        values: [{
-                            label: "poulay mission", id: 351
-                        }].map(acco => ({
-                            ...acco,
-                            value: acco.id
-                        })),
-                        isSelect: true,
-                    },
-                },
+                formRules: rules,
             });
         });
     });

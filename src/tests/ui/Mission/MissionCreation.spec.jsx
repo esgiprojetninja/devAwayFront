@@ -15,6 +15,7 @@ import {
 import MissionCreation from "../../../ui/Mission/MissionCreation.jsx";
 import { genAccommodationsMock } from "../../mock/body/accommodation";
 import { SAVE_MISSION_SUCCESS } from "../../../actions/types/mission";
+import { getRules } from "../../../utils/mission";
 
 describe("ui <MissionCreation />", function () {
     const logErr = console.error; // eslint-disable-line
@@ -26,6 +27,11 @@ describe("ui <MissionCreation />", function () {
         };
         jest.clearAllMocks();
         const initialState = mainReducer(undefined, {});
+        const accommodations = genAccommodationsMock(3).reduce((finalObj, acco) => ({
+            ...finalObj,
+            [acco.id]: acco,
+        }), {});
+        const { accoArr, rules } = getRules(accommodations);
         this.initialProps = {
             ...initialState,
             user: {
@@ -33,14 +39,8 @@ describe("ui <MissionCreation />", function () {
                 isLoggedIn: true,
                 isLoading: false,
                 isGettingData: false,
-                accommodations: genAccommodationsMock(3).reduce((finalObj, acco) => ({
-                    ...finalObj,
-                    [acco.id]: acco,
-                }), {}),
-                accommodationsArr: genAccommodationsMock(3).map(acco => ({
-                    label: acco.title,
-                    id: acco.id,
-                })),
+                accommodations,
+                accommodationsArr: accoArr,
                 data: {
                     ...initialState.user.data,
                     id: 1234
@@ -61,31 +61,7 @@ describe("ui <MissionCreation />", function () {
                 placeAvatar: "T.string.isRequired",
                 errorLabel: "T.string.isRequired",
             },
-            formRules: {
-                title: { min: 6, max: 24 },
-                description: { min: 6, max: 255 },
-                checkinDate: { min: moment().local().add(1, "hours"), isDate: true },
-                stayTime: { min: 1, max: (1000 * 60 * 60 * 24 * 365 * 10) }, // max 10 years
-                stayTimeUnit: {
-                    values: [
-                        { label: "hours", value: 0 },
-                        { label: "days", value: 1 },
-                        { label: "weeks", value: 2 },
-                        { label: "months", value: 3 },
-                    ],
-                    isSelect: true
-                },
-                accommodation_id: {
-                    values: genAccommodationsMock(3).map(acco => ({
-                        label: acco.title,
-                        id: acco.id,
-                    })).map(acco => ({
-                        ...acco,
-                        value: acco.id
-                    })),
-                    isSelect: true,
-                },
-            },
+            formRules: rules,
             saveMission: jest.fn(() => {
                 return Promise.resolve({
                     type: SAVE_MISSION_SUCCESS,
