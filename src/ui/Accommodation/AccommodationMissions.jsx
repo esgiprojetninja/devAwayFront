@@ -6,24 +6,57 @@ import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
 import Typography from "@material-ui/core/Typography";
+import moment from "moment";
+import Grid from "@material-ui/core/Grid";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Tooltip from "@material-ui/core/Tooltip";
+import InactiveIcon from "react-icons/lib/fa/lock";
+import ActiveIcon from "react-icons/lib/fa/plus";
+import UnbookedIcon from "react-icons/lib/fa/paper-plane";
+import BookedIcon from "react-icons/lib/fa/close";
 import { accommodationPropTypes } from "../../propTypes/accommodationType";
+import { DATE_FORMAT, HOUR_FORMAT } from "../../utils/mission";
 
 const styles = theme => ({
     container: {
         width: "100%",
-        height: "100%",
         paddingRight: theme.spacing.unit,
         paddingLeft: theme.spacing.unit,
     },
+    listContainer: {
+        width: "100%",
+        marginTop: theme.spacing.unit * 4
+    },
+    heading: {
+        fontSize: theme.typography.pxToRem(15),
+        flexBasis: "33.33%",
+        flexShrink: 0,
+    },
+    secondaryHeading: {
+        fontSize: theme.typography.pxToRem(15),
+        color: theme.palette.text.secondary,
+    },
+    icon: {
+        color: theme.palette.primary.midGrey,
+        marginLeft: theme.spacing.unit * 2,
+        marginRight: theme.spacing.unit * 2,
+    },
 });
+
+const formatMissionDates = mission => `From ${moment(mission.checkinDate, `${DATE_FORMAT} ${HOUR_FORMAT}`).format("MMMM Do YYYY")} to ${moment(mission.checkoutDate, `${DATE_FORMAT} ${HOUR_FORMAT}`).format("MMMM Do YYYY")}`;
 
 class AccommodationMissions extends React.PureComponent {
     static defaultProps = {
         acco: null,
     }
 
-    componentDidMount() {
-    }
+    state = {
+        expanded: null,
+    };
+
 
     get missions() {
         const { acco } = this.props;
@@ -45,23 +78,81 @@ class AccommodationMissions extends React.PureComponent {
         return "See it all";
     }
 
-    renderMission(mission) {
+    handleChange = panel => (event, expanded) => {
+        this.setState({
+            expanded: expanded ? panel : null,
+        });
+    };
+
+    renderBookedStatus(mission) {
+        const { classes } = this.props;
+        if (mission.isBooked) {
+            return (
+                <Tooltip title="Mission taken">
+                    <BookedIcon className={classes.icon} size={25} />
+                </Tooltip>
+            );
+        }
         return (
-            <div key={mission.id}>
-                <Typography className="full-width text-center">
-                    {mission.title}
-                </Typography>
-                <Typography className="full-width text-justify">
-                    {mission.description}
-                </Typography>
-                {this.isUserOwner &&
-                    <NavLink
-                        to={`/missions/${mission.id}`}
-                    >
-                        <Button color="primary" variant="raised">{this.getMissionBtnLegend(mission)}</Button>
-                    </NavLink>
-                }
-            </div>
+            <Tooltip title="Mission available">
+                <UnbookedIcon className={classes.icon} size={25} />
+            </Tooltip>
+        );
+    }
+
+    renderActiveStatus(mission) {
+        const { classes } = this.props;
+        if (mission.isActive) {
+            return (
+                <Tooltip title="Mission inactive">
+                    <InactiveIcon className={classes.icon} size={25} />
+                </Tooltip>
+            );
+        }
+        return (
+            <Tooltip title="Mission active">
+                <ActiveIcon className={classes.icon} size={25} />
+            </Tooltip>
+        );
+    }
+
+    renderMission(mission) {
+        const { classes } = this.props;
+        const { expanded } = this.state;
+        return (
+            <ExpansionPanel
+                key={mission.id}
+                expanded={expanded === mission.id}
+                onChange={this.handleChange(mission.id)}
+            >
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography className={classes.heading}>
+                        {this.renderBookedStatus(mission)}
+                        {mission.title}
+                    </Typography>
+                    <Typography className={classes.secondaryHeading}>
+                        {formatMissionDates(mission)}
+                    </Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                    <Grid container alignItems="center">
+                        <Grid item>
+                            {this.renderBookedStatus(mission)}
+                            {this.renderActiveStatus(mission)}
+                        </Grid>
+                        <Grid item>
+                            <Typography>{mission.description}</Typography>
+                        </Grid>
+                    </Grid>
+                    <Grid container justify="flex-end">
+                        <NavLink
+                            to={`/missions/${mission.id}`}
+                        >
+                            <Button color="default" variant="contained">{this.getMissionBtnLegend(mission)}</Button>
+                        </NavLink>
+                    </Grid>
+                </ExpansionPanelDetails>
+            </ExpansionPanel>
         );
     }
 
@@ -71,35 +162,31 @@ class AccommodationMissions extends React.PureComponent {
                 to="/mission/creation"
             >
                 <Button
-                    id="devaway-add-mission-btn"
-                    className="full-width margin-auto"
                     onClick={this.handleAddMission}
                     color="default"
                     variant="contained"
                 >
-                    Add mission <AddIcon />
+                    Add a mission <AddIcon />
                 </Button>
             </NavLink>
         );
     }
 
     renderList() {
+        const { classes } = this.props;
         return (
-            <div className="full-width full-height display-flex-column">
+            <div className={classes.listContainer}>
                 {this.missions.map(m => this.renderMission(m))}
             </div>
         );
     }
 
     render() {
+        const { classes } = this.props;
         return (
-            <div className={this.props.classes.container}>
+            <div className={classes.container}>
+                {this.props.isUserOwner && this.renderAddBtn()}
                 {this.missions && this.renderList()}
-                {!this.missions && this.props.isUserOwner && (
-                    <div className="full-width full-height display-flex-column">
-                        {this.renderAddBtn()}
-                    </div>
-                )}
             </div>
         );
     }
