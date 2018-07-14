@@ -15,7 +15,6 @@ gScript.onload = () => {
 document.body.appendChild(gScript);
 gScript.onerror = () => {
     // @TODO pass on a "no-map" variable
-    console.warn("googlemap failed to load");
     startApp(document.getElementById("root"));
     registerServiceWorker();
     document.body.removeChild(gScript);
