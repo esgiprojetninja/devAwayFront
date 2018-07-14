@@ -20,8 +20,10 @@ import TodoIcon from "react-icons/lib/fa/question";
 import InactiveIcon from "react-icons/lib/fa/lock";
 import ActiveIcon from "react-icons/lib/fa/plus";
 import UnbookedIcon from "react-icons/lib/fa/paper-plane";
+import BookedIcon from "react-icons/lib/fa/close";
 import Avatar from "@material-ui/core/Avatar";
 import UserIcon from "react-icons/lib/fa/user";
+import Tooltip from "@material-ui/core/Tooltip";
 import moment from "moment";
 
 import { midGrey, darkGrey } from "../../styles/theme";
@@ -39,6 +41,7 @@ const styles = theme => ({
         maxWidth: 1200,
         margin: "auto",
         overflow: "hidden",
+        position: "relative",
     },
     mapContainer: {
         height: 300,
@@ -88,6 +91,18 @@ const styles = theme => ({
     icon: {
         color: theme.palette.primary.midGrey,
         margin: theme.spacing.unit * 4,
+    },
+    activeIcon: {
+        color: theme.palette.primary.midGrey,
+        position: "absolute",
+        top: 4,
+        right: 4,
+    },
+    bookedIcon: {
+        color: theme.palette.primary.midGrey,
+        position: "absolute",
+        top: 4,
+        right: 34,
     },
 });
 
@@ -288,21 +303,31 @@ class MissionEdition extends React.PureComponent {
 
     renderBookedStatus() {
         if (!this.mission || !this.mission.isBooked) {
-            return null;
+            return (
+                <Tooltip title="Mission taken">
+                    <BookedIcon className={this.props.classes.bookedIcon} size={25} />
+                </Tooltip>
+            );
         }
         return (
-            <UnbookedIcon className={this.props.classes.icon} size={15} />
+            <Tooltip title="Mission available">
+                <UnbookedIcon className={this.props.classes.bookedIcon} size={25} />
+            </Tooltip>
         );
     }
 
     renderActiveStatus() {
         if (!this.mission || !this.mission.isActive) {
             return (
-                <InactiveIcon className={this.props.classes.icon} size={15} />
+                <Tooltip title="Mission inactive">
+                    <InactiveIcon className={this.props.classes.activeIcon} size={25} />
+                </Tooltip>
             );
         }
         return (
-            <ActiveIcon className={this.props.classes.icon} size={15} />
+            <Tooltip title="Mission active">
+                <ActiveIcon className={this.props.classes.activeIcon} size={25} />
+            </Tooltip>
         );
     }
 
@@ -530,10 +555,6 @@ class MissionEdition extends React.PureComponent {
             <Grid container>
                 <Grid container item direction="row" align="flex-start" xs={12}>
                     <Grid item xs={12}>
-                        <div className="display-flex-row justify-start">
-                            {this.renderActiveStatus()}
-                            {this.renderBookedStatus()}
-                        </div>
                         {this.isUserOwner && this.renderTextField("title", this.mission.title, { color: darkGrey, fontWeight: 500, fontSize: "1.875em" })}
                     </Grid>
                 </Grid>
@@ -647,6 +668,8 @@ class MissionEdition extends React.PureComponent {
                     }}
                 />
                 <Card className={this.props.classes.container}>
+                    {this.mission && this.renderActiveStatus()}
+                    {this.mission && this.renderBookedStatus()}
                     {this.renderSpinner()}
                     {!this.isUserOwner && <CardHeader
                         title={`Mission ${this.isUserOwner ? "edition" : "detail"}`}
@@ -705,6 +728,8 @@ MissionEdition.propTypes = {
         icon: T.string.isRequired,
         selectFormControl: T.string.isRequired,
         dateField: T.string.isRequired,
+        activeIcon: T.string.isRequired,
+        bookedIcon: T.string.isRequired,
     }).isRequired,
     formRules: missionRules.isRequired,
     saveMission: T.func.isRequired,

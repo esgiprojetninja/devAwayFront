@@ -3,12 +3,15 @@ import React from "react";
 import * as T from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Card from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
 import GuestsIcon from "@material-ui/icons/People";
 import BedsIcon from "@material-ui/icons/LocalHotel";
 import BathRoomsIcon from "@material-ui/icons/InvertColors";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import Avatar from "@material-ui/core/Avatar";
+import UserIcon from "react-icons/lib/fa/user";
 import FloorsIcon from "@material-ui/icons/ClearAll";
 import Save from "@material-ui/icons/Save";
 import Navbar from "../../containers/Navbar";
@@ -18,26 +21,24 @@ import AccommodationMissions from "../../containers/AccommodationMissions";
 import { getAdaptedContainerWidth } from "./AccommodationsList";
 import { accommodationReducerPropTypes } from "../../propTypes/accommodation.reducer.d";
 import { midGrey, darkGrey } from "../../styles/theme";
+import parseUserImg from "../../utils/user";
 
 const styles = {
     container: {
         margin: "auto",
-        padding: "20px 0 20px 20px",
+        padding: "0 0 20px 20px",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-around",
         alignItems: "center",
-        maxWidth: "1768px",
-        background: "#fff",
+        maxWidth: "1200px",
         color: midGrey,
         paddingBottom: "50px"
     },
     accommodationCard: {
         margin: "0",
-        overflowY: "auto",
         wordBreak: "break-all",
-        height: "100%",
-        maxHeight: "70vh"
+        height: "auto",
     },
     iconInfoItem: {
         marginLeft: "10px",
@@ -48,11 +49,13 @@ const styles = {
         paddingRight: 10,
     },
     gMapContainer: {
-        height: "300px"
+        height: "300px",
+        margin: "12px 20px 12px 0"
     },
     title: {
         fontSize: "24px",
         color: darkGrey,
+        margin: "12px 0",
     },
     saveBtn: {
         position: "fixed",
@@ -94,10 +97,6 @@ export default class AccommodationDetail extends React.PureComponent {
     componentDidMount() {
         this.props.onInit(this.props.match.params.accoID);
         window.addEventListener("resize", this.updateDimensions.bind(this));
-    }
-
-    componentDidCatch(error) {
-        console.log("mais wesh", error, this);
     }
 
     componentWillUnmount() {
@@ -290,34 +289,24 @@ export default class AccommodationDetail extends React.PureComponent {
 
     renderHostInfo() {
         // @TODO add address badge verification on place
-        const imgUrl = this.accommodation.host.avatar ? `data:image/gif;base64, ${this.accommodation.host.avatar}` : "/img/accommodation.jpg";
-        const style = {
-            ...styles.coverImg,
-            backgroundImage: `url("${imgUrl}")`,
-            height: "50px",
-            width: "50px",
-            position: "absolute",
-            top: "-17px",
-            right: "10px",
-            borderRadius: "100%"
-        };
+        const imgUrl = this.accommodation.host.avatar;
         if (this.isUserOwner) {
             return null;
         }
         return (
-            <Grid
-                className="relative"
-                item
-                xs={12}
-                sm={12}
-                md={12}
-                lg={this.hasMissions ? 9 : 12}
-                xl={this.hasMissions ? 8 : 12}
-            >
-                <Typography style={{ color: midGrey, fontWeight: 500 }}>
-                    Host: <span style={{ letterSpacing: "1px" }}>{this.accommodation.host.userName}</span>
-                </Typography>
-                <div style={style} />
+            <Grid style={{ margin: "12px 0" }} container item xs={12}>
+                <Grid item>
+                    {imgUrl && <Avatar
+                        alt="place owner"
+                        src={parseUserImg(imgUrl)}
+                    />}
+                    {!imgUrl && <UserIcon size={25} />}
+                </Grid>
+                <Grid item>
+                    <Typography style={{ color: midGrey, fontWeight: 500, marginLeft: "12px" }}>
+                        {this.accommodation.host.userName}
+                    </Typography>
+                </Grid>
             </Grid>
         );
     }
@@ -325,7 +314,7 @@ export default class AccommodationDetail extends React.PureComponent {
     renderPlaceDetails() {
         return (
             <Grid container className="full-width" style={styles.accommodationCard}>
-                <Grid className="relative" item xs={12}>
+                <Grid style={{ margin: "12px 0" }} className="relative" item xs={12}>
                     <TextField
                         style={{ color: darkGrey, fontWeight: 500, fontSize: "1.875em" }}
                         defaultValue={this.accommodation.title}
@@ -346,35 +335,13 @@ export default class AccommodationDetail extends React.PureComponent {
                     />
                 </Grid>
                 {this.renderHostInfo()}
-                <Grid
-                    item
-                    xs={12}
-                    sm={12}
-                    md={this.hasMissions ? 8 : 12}
-                    lg={this.hasMissions ? 10 : 12}
-                    xl={this.hasMissions ? 10 : 12}
-                >
+                <Grid style={{ margin: "12px 0" }} item xs={12}>
                     {this.renderIconsInfo()}
                 </Grid>
-                <Grid
-                    item
-                    xs={12}
-                    sm={12}
-                    md={12}
-                    lg={this.hasMissions ? 9 : 12}
-                    xl={this.hasMissions ? 8 : 12}
-                >
+                <Grid style={{ margin: "12px 0" }} item xs={12}>
                     {this.renderDescription()}
                 </Grid>
-                <Grid
-                    style={styles.gMapContainer}
-                    item
-                    xs={12}
-                    sm={12}
-                    md={12}
-                    lg={this.hasMissions ? 9 : 12}
-                    xl={this.hasMissions ? 8 : 12}
-                >
+                <Grid style={styles.gMapContainer} item xs={12}>
                     <PlaceMap acco={this.accommodation} isUserOwner={this.isUserOwner} />
                 </Grid>
             </Grid>
@@ -405,37 +372,19 @@ export default class AccommodationDetail extends React.PureComponent {
             width: this.state.containerWidth
         };
         return (
-            <div className="relative full-width" style={{ background: "#efefef" }}>
+            <div className="relative full-width">
                 <Navbar burgerColor={darkGrey} />
                 <CarouselImages
                     acco={this.accommodation}
                     isUserOwner={this.isUserOwner}
                 />
-                <div id="#devaway-acco-place-container" style={style}>
+                <Card id="#devaway-acco-place-container" style={style}>
                     {this.renderFetchingSpinner()}
                     <Grid container space={24} className="full-width">
-                        <Grid
-                            xs={12}
-                            sm={12}
-                            md={8}
-                            lg={8}
-                            xl={8}
-                            item
-                            container
-                            style={styles.accommodationCard}
-                        >
+                        <Grid xs={12} item container style={styles.accommodationCard}>
                             {this.accommodation && this.renderPlaceDetails()}
                         </Grid>
-                        <Grid
-                            xs={12}
-                            sm={12}
-                            md={4}
-                            lg={4}
-                            xl={4}
-                            item
-                            container
-                            style={styles.accommodationCard}
-                        >
+                        <Grid xs={12} item container style={styles.accommodationCard}>
                             {this.accommodation && <AccommodationMissions
                                 acco={this.accommodation}
                                 isUserOwner={this.isUserOwner}
@@ -443,7 +392,7 @@ export default class AccommodationDetail extends React.PureComponent {
                         </Grid>
                     </Grid>
                     {this.renderSaveBtn()}
-                </div>
+                </Card>
             </div>
         );
     }

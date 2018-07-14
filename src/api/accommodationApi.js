@@ -58,8 +58,8 @@ const accommodationApi = {
     },
     upsertPicture: (picture) => {
         return picture.id === null || Number.isNaN(Number(picture.id)) ?
-            generateFetch(`accommodations/${picture.accommodation_id}/pictures`, "POST", null, picture)
-            : generateFetch(`accommodations/${picture.accommodation_id}/pictures`, "PUT", picture.id, picture);
+            generateFetch(`accommodations/${picture.accommodation_id}/pictures`, "PUT", null, picture)
+            : generateFetch("pictures/accommodations", "PUT", picture.id, picture);
     },
 };
 
