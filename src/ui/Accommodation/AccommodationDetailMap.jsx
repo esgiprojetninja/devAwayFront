@@ -73,9 +73,7 @@ class AccommodationDetailMap extends React.PureComponent {
                 google.maps.event.clearInstanceListeners(this.searchBox);
             }
             clearTimeout(mapDelayedLoader);
-        } catch (e) {
-            console.error("DetailMap error on unmount", e);
-        }
+        } catch (e) {} // eslint-disable-line
     }
 
     onPlacesChanged = () => {

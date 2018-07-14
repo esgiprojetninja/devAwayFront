@@ -4,6 +4,8 @@ import * as T from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { NavLink } from "react-router-dom";
 import Button from "@material-ui/core/Button";
+import Card from "@material-ui/core/Card";
+import CardHeader from "@material-ui/core/CardHeader";
 import Save from "@material-ui/icons/Save";
 import Cancel from "@material-ui/icons/Cancel";
 import Grid from "@material-ui/core/Grid";
@@ -34,24 +36,25 @@ import getUserImg from "../../utils/user";
 const styles = theme => ({
     container: {
         width: "100%",
-        maxWidth: 1700,
+        maxWidth: 1200,
         margin: "auto",
-        background: "#fff",
-        padding: theme.spacing.unit * 4,
-        paddingTop: theme.spacing.unit * 2,
+        overflow: "hidden",
     },
     mapContainer: {
         height: 300,
         maxWidth: 1200,
-        marginTop: theme.spacing.unit * 2,
+        margin: theme.spacing.unit * 4,
     },
     activeContainer: {
         height: 15,
     },
     title: {
         maxWidth: 400,
-        marginTop: theme.spacing.unit * 2,
+        margin: theme.spacing.unit * 4,
         textDecoration: "underline",
+    },
+    description: {
+        margin: theme.spacing.unit * 4,
     },
     saveBtn: {
         position: "fixed",
@@ -64,11 +67,18 @@ const styles = theme => ({
         bottom: theme.spacing.unit * 12,
     },
     accommodationText: {
-        margin: theme.spacing.unit * 2,
+        margin: theme.spacing.unit * 4,
         fontSize: "large",
         fontStyle: "italic",
     },
+    selectFormControl: {
+        margin: theme.spacing.unit * 4,
+    },
+    dateField: {
+        margin: theme.spacing.unit * 4,
+    },
     avatar: {
+        margin: theme.spacing.unit * 4,
         transition: "transform .2s ease-in-out",
         cursor: "pointer",
         "&:hover": {
@@ -76,7 +86,8 @@ const styles = theme => ({
         }
     },
     icon: {
-        color: theme.palette.primary.midGrey
+        color: theme.palette.primary.midGrey,
+        margin: theme.spacing.unit * 4,
     },
 });
 
@@ -125,9 +136,7 @@ class MissionEdition extends React.PureComponent {
     }
 
     get hasMissionChanged() {
-        const { title, description, accommodation_id, // eslint-disable-line
-            checkinDate, checkinDateHour, checkoutDate,
-            checkoutDateHour } = this.state;
+        const { title, description, accommodation_id } = this.state; // eslint-disable-line
         const mission = this.props.mission.current.data;
         if (title && title.trim() !== mission.title) {
             return true;
@@ -139,18 +148,14 @@ class MissionEdition extends React.PureComponent {
             return true;
         }
         const oldMomentCheckinDate = moment(mission.checkinDate, `${DATE_FORMAT} ${HOUR_FORMAT}`);
-        if (checkinDate) {
-            const newDate = `${checkinDate} ${checkinDateHour || oldMomentCheckinDate.format(HOUR_FORMAT)}`;
-            if (moment(newDate, `${DATE_FORMAT} ${HOUR_FORMAT}`).unix() !== oldMomentCheckinDate.unix()) {
-                return true;
-            }
+        const newMomentCheckinDate = this.getSnapshotedDate("in");
+        if (newMomentCheckinDate.unix() !== oldMomentCheckinDate.unix()) {
+            return true;
         }
         const oldMomentCheckoutDate = moment(mission.checkoutDate, `${DATE_FORMAT} ${HOUR_FORMAT}`);
-        if (checkoutDate) {
-            const newDate = `${checkoutDate} ${checkoutDateHour || oldMomentCheckoutDate.format(HOUR_FORMAT)}`;
-            if (moment(newDate, `${DATE_FORMAT} ${HOUR_FORMAT}`).unix() !== oldMomentCheckoutDate.unix()) {
-                return true;
-            }
+        const newMomentCheckoutDate = this.getSnapshotedDate("out");
+        if (newMomentCheckoutDate.unix() !== oldMomentCheckoutDate.unix()) {
+            return true;
         }
         return false;
     }
@@ -161,11 +166,36 @@ class MissionEdition extends React.PureComponent {
             .find(propName => this.state[propName].length > 0);
     }
 
+    getSnapshotedDate(prop = "in" || "out") {
+        const mission = this.props.mission.current.data;
+        const oldMomentCheckDate = moment(mission[`check${prop}Date`], `${DATE_FORMAT} ${HOUR_FORMAT}`);
+
+        const curDate = this.state[`check${prop}Date`];
+        const curDateHour = this.state[`check${prop}DateHour`];
+        if (curDate) {
+            const newDate = `${curDate} ${curDateHour || oldMomentCheckDate.format(HOUR_FORMAT)}`;
+            return moment(newDate);
+        }
+        return oldMomentCheckDate;
+    }
+
     handleSave = () => {
-        if (this.isLoading || !this.isMissionValid) {
+        if (this.isLoading || !this.isMissionValid || !this.hasMissionChanged) {
             return;
         }
-        this.props.saveMission(this.mission);
+        const inDate = this.getSnapshotedDate("in");
+        const outDate = this.getSnapshotedDate("out");
+        this.props.saveMission({
+            ...this.mission,
+            title: this.state.title.trim() || this.mission.title.trim(),
+            description: this.state.description.trim() || this.mission.description.trim(),
+            checkinDate: inDate.unix() > outDate.unix() ?
+                outDate.format(`${DATE_FORMAT} ${HOUR_FORMAT}`)
+                : inDate.format(`${DATE_FORMAT} ${HOUR_FORMAT}`),
+            checkoutDate: inDate.unix() > outDate.unix() ?
+                inDate.format(`${DATE_FORMAT} ${HOUR_FORMAT}`)
+                : outDate.format(`${DATE_FORMAT} ${HOUR_FORMAT}`),
+        });
     }
 
     handleChange = (property, ev) => {
@@ -199,7 +229,7 @@ class MissionEdition extends React.PureComponent {
         const hasError = this.isUserOwner && this.state[`${propName}Error`].length > 0;
         return (
             this.isUserOwner &&
-            <FormControl>
+            <FormControl className={this.props.classes.selectFormControl}>
                 <InputLabel htmlFor={`select-multiple-${propName}`}>{hasError ? this.state[`${propName}Error`] : ""}</InputLabel>
                 <Select
                     disabled={!this.isUserOwner}
@@ -306,8 +336,9 @@ class MissionEdition extends React.PureComponent {
             color: midGrey,
         };
         return (
-            <Grid item container xs={12} alignItems="flex-end" justify="flex-end">
+            <Grid item container xs={12}>
                 <TextField
+                    className={this.props.classes.dateField}
                     style={style}
                     error={this.state.checkinDateError.length > 0}
                     InputLabelProps={{
@@ -319,7 +350,7 @@ class MissionEdition extends React.PureComponent {
                         disableUnderline: !this.isUserOwner,
                         style: {
                             ...style,
-                            maxWidth: 100
+                            maxWidth: 150
                         }
                     }}
                     value={this.state.checkinDate ||
@@ -346,6 +377,7 @@ class MissionEdition extends React.PureComponent {
                     type={this.isUserOwner ? "date" : "text"}
                 />
                 <TextField
+                    className={this.props.classes.dateField}
                     InputLabelProps={{
                         shrink: true,
                     }}
@@ -359,7 +391,7 @@ class MissionEdition extends React.PureComponent {
                     }}
                     value={this.state.checkinDateHour ||
                         moment(this.mission.checkinDate).format(HOUR_FORMAT)}
-                    label={this.state.checkinDateError.length > 0 ? this.state.checkinDateError : "  "}
+                    label={this.state.checkinDateError.length > 0 ? this.state.checkinDateError : "_"}
                     name="checkinDateHour"
                     onChange={(ev) => {
                         if (!this.isUserOwner) {
@@ -381,8 +413,9 @@ class MissionEdition extends React.PureComponent {
             color: midGrey,
         };
         return (
-            <Grid item container xs={12} alignItems="flex-end" justify="flex-end">
+            <Grid item container xs={12}>
                 <TextField
+                    className={this.props.classes.dateField}
                     style={style}
                     error={this.state.checkoutDateError.length > 0}
                     InputLabelProps={{
@@ -394,7 +427,7 @@ class MissionEdition extends React.PureComponent {
                         disableUnderline: !this.isUserOwner,
                         style: {
                             ...style,
-                            maxWidth: 100
+                            maxWidth: 150
                         }
                     }}
                     value={this.state.checkoutDate
@@ -421,6 +454,7 @@ class MissionEdition extends React.PureComponent {
                     type={this.isUserOwner ? "date" : "text"}
                 />
                 <TextField
+                    className={this.props.classes.dateField}
                     InputLabelProps={{
                         shrink: true,
                     }}
@@ -435,7 +469,7 @@ class MissionEdition extends React.PureComponent {
                     value={
                         this.state.checkoutDateHour
                             || moment(this.mission.checkoutDate).format(HOUR_FORMAT)}
-                    label={this.state.checkoutDateError.length > 0 ? this.state.checkoutDateError : "  "}
+                    label={this.state.checkoutDateError.length > 0 ? this.state.checkoutDateError : "_"}
                     name="checkoutDateHour"
                     onChange={(ev) => {
                         if (!this.isUserOwner) {
@@ -459,74 +493,84 @@ class MissionEdition extends React.PureComponent {
         const imgUrl = getUserImg(mission.accommodation.host.avatar);
         if (!imgUrl) {
             return (
-                <Grid xs={12} container item justify="flex-end">
-                    <Typography style={{ color: midGrey, paddingRight: "4px" }} variant="body2" color="inherit">
-                        {mission.accommodation.host.userName}
-                    </Typography>
-                    <UserIcon size={25} className={this.props.classes.icon} />
+                <Grid style={{ maxHeight: "50px" }} xs={6} container item justify="flex-end">
+                    <Grid item>
+                        <Typography className="full-height full-width display-flex-row" style={{ color: midGrey, paddingRight: "4px", display: "flex" }} variant="body2" color="inherit" component="p">
+                            {mission.accommodation.host.userName}
+                        </Typography>
+                    </Grid>
+                    <Grid item>
+                        <UserIcon size={25} className={this.props.classes.icon} />
+                    </Grid>
                 </Grid>
             );
         }
         return (
             <Grid xs={12} container item justify="flex-end">
-                <Typography style={{ color: midGrey, paddingRight: "4px" }} variant="body2" color="inherit">
-                    {mission.accommodation.host.userName}
-                </Typography>
-                <Avatar
-                    className={this.props.classes.avatar}
-                    alt={mission.accommodation.host.userName}
-                    src={imgUrl}
-                />
+                <Grid item>
+                    <Typography style={{ color: midGrey, paddingRight: "4px" }} variant="body2" color="inherit">
+                        {mission.accommodation.host.userName}
+                    </Typography>
+                </Grid>
+                <Grid item>
+                    <Avatar
+                        className={this.props.classes.avatar}
+                        alt={mission.accommodation.host.userName}
+                        src={imgUrl}
+                    />
+                </Grid>
             </Grid>
         );
     }
 
     renderMissionDetails() {
+        const currentAcco = this.props.mission.current.data.accommodation;
         return (
             this.mission &&
-            <Grid xs={12} item container>
-                {this.renderHostInfo()}
+            <Grid container>
                 <Grid container item direction="row" align="flex-start" xs={12}>
-                    <Grid item xs={6}>
+                    <Grid item xs={12}>
                         <div className="display-flex-row justify-start">
                             {this.renderActiveStatus()}
                             {this.renderBookedStatus()}
                         </div>
-                        {this.renderTextField("title", this.mission.title, { color: darkGrey, fontWeight: 500, fontSize: "1.875em" })}
-                    </Grid>
-                    <Grid item container xs={6} justify="flex-end">
-                        {this.renderStartDateFields()}
-                        {this.renderEndDateFields()}
+                        {this.isUserOwner && this.renderTextField("title", this.mission.title, { color: darkGrey, fontWeight: 500, fontSize: "1.875em" })}
                     </Grid>
                 </Grid>
-                <Grid item container xs={12}>
+                {this.isUserOwner &&
+                <Grid item container xs={12} justify="flex-start">
+                    {this.renderStartDateFields()}
+                    {this.renderEndDateFields()}
+                </Grid>}
+                <Grid item container xs={6}>
                     <div className="display-flex-row">
                         {this.renderPlaceAvatar()}
-                        {this.props.mission.current.data.accommodation.title && !this.isUserOwner &&
+                        {currentAcco && currentAcco.title && !this.isUserOwner &&
                             <NavLink
                                 to={`/places/${this.mission.accommodation_id}`}
                             >
-                                <Typography className={this.props.classes.accommodationText} type="paragraph" color="inherit">{this.props.mission.current.data.accommodation.title}
+                                <Typography className={this.props.classes.accommodationText} type="paragraph" color="inherit">{currentAcco.title}
                                 </Typography>
                             </NavLink>
                         }
                         {this.currentAccommodationId && this.isUserOwner && this.renderSelectProperty("accommodation_id", this.props.formRules.accommodation_id.values, this.currentAccommodationId)}
                     </div>
-                    <div className="display-flex-row full-width justify-start">
-                        {this.props.mission.current.data.accommodation.address &&
-                            <Typography type="paragraph" color="inherit" variant="caption">{this.props.mission.current.data.accommodation.address}
-                            </Typography>
-                        }
-                    </div>
                 </Grid>
+                {this.renderHostInfo()}
                 <Grid className={this.props.classes.mapContainer} item xs={12}>
-                    {this.props.mission.current.data.accommodation &&
+                    {currentAcco &&
                         <GMap
-                            acco={this.props.mission.current.data.accommodation}
+                            acco={currentAcco}
                             isUserOwner={false}
                         />
                     }
                 </Grid>
+                <div className="display-flex-row full-width justify-start">
+                    {currentAcco && currentAcco.address &&
+                        <Typography className={this.props.classes.selectFormControl} type="paragraph" color="inherit" variant="caption">{currentAcco.address}
+                        </Typography>
+                    }
+                </div>
                 <Grid item xs={12}>
                     {this.renderTextField("description", this.mission.description, { color: midGrey, fontSize: "1.275em" }, { rowsMax: 4 })}
                 </Grid>
@@ -588,8 +632,11 @@ class MissionEdition extends React.PureComponent {
     }
 
     render() {
+        const suheader = this.mission ?
+            `${moment(this.mission.checkinDate).format("MMMM Do YYYY")}  --->  ${moment(this.mission.checkoutDate).format("MMMM Do YYYY")}`
+            : "";
         return (
-            <div className="full-width" style={{ background: "#efefef" }}>
+            <div className="full-width">
                 <Navbar burgerColor={darkGrey} />
                 <CarouselImages
                     acco={this.mission}
@@ -599,10 +646,14 @@ class MissionEdition extends React.PureComponent {
                         console.log("HEY POULAYMAN", mission, imgData);
                     }}
                 />
-                <Grid container spacing={24} className={this.props.classes.container}>
+                <Card className={this.props.classes.container}>
                     {this.renderSpinner()}
+                    {!this.isUserOwner && <CardHeader
+                        title={`Mission ${this.isUserOwner ? "edition" : "detail"}`}
+                        subheader={suheader}
+                    />}
                     {this.renderMissionDetails()}
-                </Grid>
+                </Card>
                 {this.renderSaveBtns()}
             </div>
         );
@@ -652,6 +703,8 @@ MissionEdition.propTypes = {
         cancelBtn: T.string.isRequired,
         accommodationText: T.string.isRequired,
         icon: T.string.isRequired,
+        selectFormControl: T.string.isRequired,
+        dateField: T.string.isRequired,
     }).isRequired,
     formRules: missionRules.isRequired,
     saveMission: T.func.isRequired,

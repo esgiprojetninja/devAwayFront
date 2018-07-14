@@ -45,9 +45,9 @@ const saveMissionFailure = payload => ({
     payload
 });
 
-export const saveMission = () =>
+export const saveMission = newMission =>
     async (dispatch, getState, API) => {
-        const mission = getState().mission.current.data;
+        const mission = newMission || getState().mission.current.data;
         dispatch(saveMissionRequest());
         const verb = mission && mission.id ? "update" : "create";
         try {
