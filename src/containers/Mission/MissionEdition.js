@@ -2,30 +2,39 @@
 import { connect } from "react-redux";
 import MissionEditionComponent from "../../ui/Mission/MissionEdition";
 import { saveMission, changeCurrentMission, fetchMission } from "../../actions/mission";
+import { getRules } from "../../utils/mission";
 
-let storedState = null;
+let refState = null;
 const MAX_DELAY = 1000;
 const REPEAT_DELAY = 100;
 
 export const mapStateToProps = (state) => {
-    storedState = state;
-    return state;
+    refState = state;
+    const { accoArr, rules } = getRules(state.user.accommodations);
+    return {
+        ...state,
+        user: {
+            ...state.user,
+            accommodationsArr: accoArr
+        },
+        formRules: rules,
+    };
 };
 
 export const mapDispatchToProps = dispatch => ({
     async onInit(missionId) {
         return new Promise((finalRes) => {
             let currentDelay = 0;
-            const bePatient = storedState.user.isLoggedIn ?
+            const bePatient = refState.user.isLoggedIn ?
                 Promise.resolve()
                 : new Promise(resolve => global.setTimeout(resolve, 200));
             bePatient.then(() => {
-                const inter = storedState.user.isGettingData || storedState.user.isLoading ?
+                return refState.user.isGettingData || refState.user.isLoading ?
                     new Promise((resolve) => {
                         let listener = null;
                         listener = global.setInterval((mockRepeatDelay = REPEAT_DELAY) => {
                             currentDelay += mockRepeatDelay;
-                            if ((!storedState.isGettingData && !storedState.user.isLoading)
+                            if ((!refState.isGettingData && !refState.user.isLoading)
                                 || currentDelay >= MAX_DELAY) {
                                 global.clearInterval(listener);
                                 resolve();
@@ -33,10 +42,9 @@ export const mapDispatchToProps = dispatch => ({
                         }, REPEAT_DELAY);
                     })
                     : Promise.resolve();
-                inter.then(() => {
-                    dispatch(fetchMission(missionId));
-                    finalRes();
-                });
+            }).then(() => {
+                dispatch(fetchMission(missionId));
+                finalRes("poulay");
             });
         });
     },

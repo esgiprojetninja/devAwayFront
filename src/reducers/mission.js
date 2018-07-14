@@ -1,4 +1,5 @@
 import * as missionTypes from "../actions/types/mission";
+import { remapAccoProps } from "../parsers/entityParsers";
 
 const initialSate = {
     data: [],
@@ -46,7 +47,13 @@ const mission = (state = initialSate, action) => {
         return {
             ...state,
             current: {
-                data: payload.mission,
+                data: {
+                    ...payload.mission,
+                    accommodation: payload.mission.accommodation
+                        && payload.mission.accommodation.id ?
+                        remapAccoProps(payload.mission.accommodation)
+                        : payload.mission.accommodation
+                },
                 isLoading: false
             }
         };
@@ -82,7 +89,11 @@ const mission = (state = initialSate, action) => {
             current: {
                 ...state.current,
                 data: {
-                    ...payload.mission
+                    ...payload.mission,
+                    accommodation: payload.mission.accommodation &&
+                        payload.mission.accommodation.id ?
+                        remapAccoProps(payload.mission.accommodation)
+                        : payload.mission.accommodation
                 },
                 isLoading: false
             }

@@ -21,9 +21,8 @@ import Navbar from "../../containers/Navbar";
 import NoUserComp from "../NoUserComp";
 import { getAccoImg } from "../../utils/accommodation";
 import { SAVE_MISSION_SUCCESS } from "../../actions/types/mission";
-
-const DATE_FORMAT = "YYYY-MM-DD";
-const HOUR_FORMAT = "HH:mm";
+import missionRules from "../../propTypes/missionRulesType";
+import { getStateFromRules, DATE_FORMAT, HOUR_FORMAT } from "../../utils/mission";
 
 const styles = theme => ({
     container: {
@@ -74,21 +73,7 @@ const styles = theme => ({
 });
 
 class MissionCreation extends React.PureComponent {
-    state = {
-        title: "",
-        titleError: "",
-        description: "",
-        descriptionError: "",
-        checkinDate: this.props.formRules.checkinDate.min.format(DATE_FORMAT),
-        checkinDateHour: this.props.formRules.checkinDate.min.format(HOUR_FORMAT),
-        checkinDateError: "",
-        stayTime: this.props.formRules.stayTime.min,
-        stayTimeError: "",
-        stayTimeUnit: this.props.formRules.stayTimeUnit.values[2].value,
-        stayTimeUnitError: "",
-        accommodation_id: "",
-        accommodation_idError: "",
-    }
+    state = getStateFromRules(this.props.formRules);
 
     componentDidMount() {
         this.autoAssignAcco();
@@ -496,38 +481,7 @@ MissionCreation.propTypes = {
         placeAvatar: T.string.isRequired,
         errorLabel: T.string.isRequired,
     }).isRequired,
-    formRules: T.shape({
-        title: T.shape({
-            min: T.number.isRequired,
-            max: T.number.isRequired,
-        }).isRequired,
-        description: T.shape({
-            min: T.number.isRequired,
-            max: T.number.isRequired,
-        }).isRequired,
-        checkinDate: T.shape({
-            min: T.shape({ format: T.func.isRequired }).isRequired,
-            isDate: T.bool.isRequired,
-        }).isRequired,
-        stayTime: T.shape({
-            min: T.number.isRequired,
-            max: T.number.isRequired,
-        }).isRequired,
-        stayTimeUnit: T.shape({
-            values: T.arrayOf(T.shape({
-                label: T.string.isRequired,
-                value: T.number.isRequired,
-            })).isRequired,
-            isSelect: T.bool.isRequired,
-        }).isRequired,
-        accommodation_id: T.shape({
-            values: T.arrayOf(T.shape({
-                label: T.string.isRequired,
-                value: T.number.isRequired,
-            })).isRequired,
-            isSelect: T.bool.isRequired,
-        }).isRequired,
-    }).isRequired,
+    formRules: missionRules.isRequired,
     saveMission: T.func.isRequired,
     changeCurrent: T.func.isRequired,
 };

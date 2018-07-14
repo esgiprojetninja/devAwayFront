@@ -1,3 +1,5 @@
+import { isArray } from "util";
+
 export const remapAccoProps = (item) => {
     const acco = item;
     if (Object.prototype.hasOwnProperty.call(item, "animalsAllowed")) {
@@ -8,6 +10,9 @@ export const remapAccoProps = (item) => {
     }
     if (Object.prototype.hasOwnProperty.call(item, "hasInternet")) {
         acco.hasInternet = !!acco.hasInternet;
+    }
+    if (!Object.prototype.hasOwnProperty.call(item, "pictures") || isArray(item.pictures)) {
+        acco.pictures = [];
     }
     if (Object.prototype.hasOwnProperty.call(item, "pictures")) {
         acco.pictures = acco.pictures.map(pic => ({
