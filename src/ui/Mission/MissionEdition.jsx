@@ -30,6 +30,8 @@ import Avatar from "@material-ui/core/Avatar";
 import UserIcon from "react-icons/lib/fa/user";
 import Tooltip from "@material-ui/core/Tooltip";
 import Divider from "@material-ui/core/Divider";
+import Fade from "@material-ui/core/Fade";
+import Slide from "@material-ui/core/Slide";
 import moment from "moment";
 
 import { midGrey, darkGrey } from "../../styles/theme";
@@ -93,9 +95,15 @@ const styles = theme => ({
         margin: theme.spacing.unit,
         fontSize: "large",
     },
+    ownerInactiveWarningContainer: {
+        background: "rgba(8, 8, 8, .35)",
+        borderRadius: "2%",
+        boxShadow: "1px 3px 21px 0px #aeaeae",
+    },
     ownerInactiveWarning: {
         margin: theme.spacing.unit * 4,
-        marginBottom: 0,
+        color: "#fff",
+        fontWeight: 700,
     },
     selectFormControl: {
         margin: theme.spacing.unit * 4,
@@ -685,31 +693,31 @@ class MissionEdition extends React.PureComponent {
         const imgUrl = getUserImg(mission.accommodation.host.avatar);
         if (!imgUrl) {
             return (
-                <Grid style={{ maxHeight: "50px" }} container justify="flex-end">
+                <Grid container justify="flex-start">
+                    <Grid item>
+                        <UserIcon size={25} className={this.props.classes.icon} />
+                    </Grid>
                     <Grid item>
                         <Typography className="full-height full-width display-flex-row" style={{ color: midGrey, paddingRight: "4px", display: "flex" }} variant="body2" color="inherit" component="p">
                             {mission.accommodation.host.userName}
                         </Typography>
                     </Grid>
-                    <Grid item>
-                        <UserIcon size={25} className={this.props.classes.icon} />
-                    </Grid>
                 </Grid>
             );
         }
         return (
-            <Grid container justify="flex-end">
-                <Grid item>
-                    <Typography style={{ color: midGrey, paddingRight: "4px" }} variant="body2" color="inherit">
-                        {mission.accommodation.host.userName}
-                    </Typography>
-                </Grid>
+            <Grid container justify="flex-start">
                 <Grid item>
                     <Avatar
                         className={this.props.classes.avatar}
                         alt={mission.accommodation.host.userName}
                         src={imgUrl}
                     />
+                </Grid>
+                <Grid item>
+                    <Typography style={{ color: midGrey, paddingRight: "4px" }} variant="body2" color="inherit">
+                        {mission.accommodation.host.userName}
+                    </Typography>
                 </Grid>
             </Grid>
         );
@@ -720,13 +728,25 @@ class MissionEdition extends React.PureComponent {
         const { classes } = this.props;
         return (
             this.mission &&
-            <Grid container aligItemsn="center" justify="center">
+            <Grid className="relative" container alignItems="center" justify="flex-start">
+                {this.renderBookedStatus()}
                 {this.renderInactiveControl()}
+                {this.props.mission.current.data.isActive === 0 && this.isUserOwner &&
+                    <Slide in mountOnEnter unmountOnExit>
+                        <Fade in={this.props.mission.current.data.isActive <= 0}>
+                            <Grid direction="row" className={classes.ownerInactiveWarningContainer} container alignItems="center" justify="center">
+                                <Typography className={classes.ownerInactiveWarning} variant="headline" color="primary" component="h3">
+                                    This mission has been set to inactive,
+                                    it&#39;s informations and travellers are now freezed
+                                </Typography>
+                            </Grid>
+                        </Fade>
+                    </Slide>
+                }
+                {this.isUserOwner &&
                 <Grid container item direction="row" align="flex-start" xs={12} md={6}>
-                    <Grid item xs={12}>
-                        {this.isUserOwner && this.renderTextField("title", this.mission.title, { color: darkGrey, fontWeight: 500, fontSize: "1.875em" })}
-                    </Grid>
-                </Grid>
+                    {this.renderTextField("title", this.mission.title, { color: darkGrey, fontWeight: 500, fontSize: "1.875em" })}
+                </Grid>}
                 {this.isUserOwner &&
                 <Grid item container xs={12} md={6} justify="flex-start">
                     {this.renderStartDateFields()}
@@ -746,9 +766,12 @@ class MissionEdition extends React.PureComponent {
                         {this.currentAccommodationId && this.isUserOwner && this.renderSelectProperty("accommodation_id", this.props.formRules.accommodation_id.values, this.currentAccommodationId)}
                     </div>
                 </Grid>
-                <Grid item container xs={6}>
-                    {this.renderHostInfo()}
-                </Grid>
+                {!this.isUserOwner && this.mission
+                && this.mission.accommodation && this.mission.accommodation.host &&
+                    <Grid item container xs={12}>
+                        {this.renderHostInfo()}
+                    </Grid>
+                }
                 <Grid className={classes.mapContainer} item xs={12}>
                     {currentAcco &&
                         <GMap
@@ -964,30 +987,25 @@ class MissionEdition extends React.PureComponent {
         const suheader = this.mission ?
             `${moment(this.mission.checkinDate).format("MMMM Do YYYY")}  --->  ${moment(this.mission.checkoutDate).format("MMMM Do YYYY")}`
             : "";
-        const { classes } = this.props;
+        const { user } = this.props;
+        const canEditImages = this.isUserOwner && this.mission.isActive > 0;
         return (
             <div className="full-width">
                 <Navbar burgerColor={darkGrey} />
-                <CarouselImages
-                    acco={this.mission}
-                    isUserOwner={this.isUserOwner && this.props.mission.current.data.isActive > 0}
-                    changePictureListener={this.handlePictureChange}
-                />
                 <Card className={this.props.classes.container}>
-                    {this.props.mission.current.data.isActive === 0 && this.isUserOwner &&
-                        <Grid container alignItems="center" justify="center">
-                            <Typography className={classes.ownerInactiveWarning} variant="headline" color="primary" component="h3">
-                                This mission has been set to inactive,
-                                it&#39;s informations and travellers are now freezed
-                            </Typography>
-                        </Grid>
-                    }
-                    {this.mission && this.renderBookedStatus()}
                     {this.renderSpinner()}
                     {!this.isUserOwner && <CardHeader
                         title={`Mission ${this.isUserOwner ? "edition" : "detail"}`}
                         subheader={suheader}
                     />}
+                    <Grid container alignItems="center" justify="center">
+                        {this.mission && !user.isLoading && !user.isGettingData &&
+                        <CarouselImages
+                            acco={this.mission}
+                            isUserOwner={canEditImages}
+                            changePictureListener={this.handlePictureChange}
+                        />}
+                    </Grid>
                     {this.renderMissionDetails()}
                 </Card>
                 {this.isUserOwner && this.props.mission.current.data.isActive > 0 &&
