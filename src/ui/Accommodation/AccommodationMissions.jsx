@@ -88,13 +88,13 @@ class AccommodationMissions extends React.PureComponent {
         const { classes } = this.props;
         if (mission.isBooked) {
             return (
-                <Tooltip title="Mission taken">
+                <Tooltip title="Mission reserved with a candidate">
                     <BookedIcon className={classes.icon} size={25} />
                 </Tooltip>
             );
         }
         return (
-            <Tooltip title="Mission available">
+            <Tooltip title="Mission available for candidacies">
                 <UnbookedIcon className={classes.icon} size={25} />
             </Tooltip>
         );
@@ -102,9 +102,9 @@ class AccommodationMissions extends React.PureComponent {
 
     renderActiveStatus(mission) {
         const { classes } = this.props;
-        if (mission.isActive) {
+        if (mission.isActive === 0) {
             return (
-                <Tooltip title="Mission inactive">
+                <Tooltip title="Mission locked">
                     <InactiveIcon className={classes.icon} size={25} />
                 </Tooltip>
             );
