@@ -1,7 +1,7 @@
 /* global */
 import { connect } from "react-redux";
 import MissionEditionComponent from "../../ui/Mission/MissionEdition";
-import { saveMission, changeCurrentMission, fetchMission } from "../../actions/mission";
+import { saveMission, changeCurrentMission, fetchMission, toggleMissionCandidacy } from "../../actions/mission";
 import { getRules } from "../../utils/mission";
 
 let refState = null;
@@ -54,6 +54,9 @@ export const mapDispatchToProps = dispatch => ({
     },
     changeCurrent(mission) {
         dispatch(changeCurrentMission(mission));
+    },
+    toggleMissionCandidacy(apply = true, data) {
+        dispatch(toggleMissionCandidacy(apply, null, data));
     }
 });
 

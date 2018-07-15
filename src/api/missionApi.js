@@ -45,9 +45,12 @@ const missionApi = {
     deleteItem: (id) => {
         return generateFetch("missions", "DELETE", id);
     },
-    applyToMission: (userId, missionId) => { // eslint-disable-line
-        return new Promise(resolve => setTimeout(resolve, 2000));
-    }
+    addCandidacy: (missionId, data) => {
+        return generateFetch(`missions/${missionId}/apply`, "POST", null, data);
+    },
+    cancelCandidacy: (missionId) => {
+        return generateFetch(`missions/${missionId}/leave`, "POST", null);
+    },
 };
 
 export default missionApi;

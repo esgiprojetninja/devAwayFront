@@ -107,6 +107,35 @@ const mission = (state = initialSate, action) => {
                 isLoading: false
             }
         };
+    case missionTypes.TOGGLE_APPLY_MISSION_REQUEST:
+        return {
+            ...state,
+            isLoading: payload.missionId !== state.current.data.id,
+            current: {
+                ...state.current,
+                isLoading: payload.missionId === state.current.data.id,
+            }
+        };
+    case missionTypes.TOGGLE_APPLY_MISSION_FAILURE:
+        return {
+            ...state,
+            isLoading: false,
+            current: {
+                ...state.current,
+                isLoading: false,
+            }
+        };
+    case missionTypes.TOGGLE_APPLY_MISSION_SUCCESS:
+        return {
+            ...state,
+            isLoading: false,
+            byID: state.byID.set(payload.mission.id, payload.mission),
+            current: {
+                ...state.current,
+                data: payload.replaceCurrent ? payload.mission : state.current.data,
+                isLoading: false,
+            }
+        };
     default:
         return state;
     }
