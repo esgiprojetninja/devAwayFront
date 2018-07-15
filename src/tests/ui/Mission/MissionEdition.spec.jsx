@@ -74,6 +74,8 @@ describe("ui <MissionEdition />", function () {
             saveMission: jest.fn(),
             changeCurrent: jest.fn(),
             onInit: jest.fn(),
+            updatePicture: jest.fn(),
+            toggleIsActive: jest.fn(),
             toggleMissionCandidacy: jest.fn(),
         };
     });

@@ -67,4 +67,53 @@ describe("API mission", () => {
             done();
         });
     });
+
+    it("should send a mission candidacy", async () => {
+        const mission = {
+            poulay: "man"
+        };
+        fetchMock.post(`https://${baseUrl}/missions/123/apply`, mission);
+        const res = await missionApi.addCandidacy(123);
+        expect(res).toEqual({
+            poulay: "man"
+        });
+    });
+
+    it("should send a mission candidacy cancelling", async () => {
+        const mission = {
+            poulay: "man"
+        };
+        fetchMock.post(`https://${baseUrl}/missions/123/leave`, mission);
+        const res = await missionApi.cancelCandidacy(123);
+        expect(res).toEqual({
+            poulay: "man"
+        });
+    });
+
+    it("should create a picture", async () => {
+        const mission = {
+            poulay: "man"
+        };
+        fetchMock.put(`https://${baseUrl}/missions/123/pictures`, mission);
+        const res = await missionApi.upsertPicture({
+            mission_id: 123
+        });
+        expect(res).toEqual({
+            poulay: "man"
+        });
+    });
+
+    it("should update a picture", async () => {
+        const mission = {
+            poulay: "man"
+        };
+        fetchMock.put(`https://${baseUrl}/pictures/missions/7687`, mission);
+        const res = await missionApi.upsertPicture({
+            mission_id: 123,
+            id: 7687
+        });
+        expect(res).toEqual({
+            poulay: "man"
+        });
+    });
 });

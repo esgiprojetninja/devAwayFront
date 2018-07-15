@@ -163,9 +163,10 @@ export const toggleMissionCandidacy = (apply = true, missionId, data) =>
     async (dispatch, getState, API) => {
         const id = missionId || getState().mission.current.data.id;
         dispatch(toggleMissionCandidacyRequest(id));
-        const verb = apply ? "add" : "cancel";
+        let verb = apply ? "add" : "cancel";
         try {
             const res = await API.missionApi[`${verb}Candidacy`](id, data);
+            verb = verb.replace("cancel", "cancell");
             if (res.hasError) {
                 dispatch(displaySnackMsg(`Your candidacy couldn't be ${verb}ed`));
                 return dispatch(toggleMissionCandidacyFail(res.message));
@@ -174,6 +175,7 @@ export const toggleMissionCandidacy = (apply = true, missionId, data) =>
             dispatch(displaySnackMsg(`Your candidacy was ${verb}ed`));
             return dispatch(toggleMissionCandidacySuccess(res, missionIsCurrent));
         } catch (error) {
+            verb = verb.replace("cancel", "cancell");
             dispatch(displaySnackMsg(`Your candidacy couldn't be ${verb}ed`));
             return dispatch(toggleMissionCandidacyFail(error.message));
         }
