@@ -685,7 +685,7 @@ class MissionEdition extends React.PureComponent {
         const imgUrl = getUserImg(mission.accommodation.host.avatar);
         if (!imgUrl) {
             return (
-                <Grid style={{ maxHeight: "50px" }} xs={6} container item justify="flex-end">
+                <Grid style={{ maxHeight: "50px" }} container justify="flex-end">
                     <Grid item>
                         <Typography className="full-height full-width display-flex-row" style={{ color: midGrey, paddingRight: "4px", display: "flex" }} variant="body2" color="inherit" component="p">
                             {mission.accommodation.host.userName}
@@ -698,7 +698,7 @@ class MissionEdition extends React.PureComponent {
             );
         }
         return (
-            <Grid xs={12} container item justify="flex-end">
+            <Grid container justify="flex-end">
                 <Grid item>
                     <Typography style={{ color: midGrey, paddingRight: "4px" }} variant="body2" color="inherit">
                         {mission.accommodation.host.userName}
@@ -720,20 +720,20 @@ class MissionEdition extends React.PureComponent {
         const { classes } = this.props;
         return (
             this.mission &&
-            <Grid container>
+            <Grid container aligItemsn="center" justify="center">
                 {this.renderInactiveControl()}
-                <Grid container item direction="row" align="flex-start" xs={12}>
+                <Grid container item direction="row" align="flex-start" xs={12} md={6}>
                     <Grid item xs={12}>
                         {this.isUserOwner && this.renderTextField("title", this.mission.title, { color: darkGrey, fontWeight: 500, fontSize: "1.875em" })}
                     </Grid>
                 </Grid>
                 {this.isUserOwner &&
-                <Grid item container xs={12} justify="flex-start">
+                <Grid item container xs={12} md={6} justify="flex-start">
                     {this.renderStartDateFields()}
                     {this.renderEndDateFields()}
                 </Grid>}
                 <Grid item container xs={6}>
-                    <div className="display-flex-row">
+                    <div className="display-flex-row full-width justify-start">
                         {this.renderPlaceAvatar()}
                         {currentAcco && currentAcco.title && !this.isUserOwner &&
                             <NavLink
@@ -746,7 +746,9 @@ class MissionEdition extends React.PureComponent {
                         {this.currentAccommodationId && this.isUserOwner && this.renderSelectProperty("accommodation_id", this.props.formRules.accommodation_id.values, this.currentAccommodationId)}
                     </div>
                 </Grid>
-                {this.renderHostInfo()}
+                <Grid item container xs={6}>
+                    {this.renderHostInfo()}
+                </Grid>
                 <Grid className={classes.mapContainer} item xs={12}>
                     {currentAcco &&
                         <GMap
