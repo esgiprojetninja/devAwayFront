@@ -47,4 +47,9 @@ export default [
         exact: true,
         component: MissionEdition
     },
+    {
+        path: "/users/:userID",
+        exact: true,
+        component: Home
+    },
 ];

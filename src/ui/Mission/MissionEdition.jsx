@@ -93,6 +93,10 @@ const styles = theme => ({
         margin: theme.spacing.unit,
         fontSize: "large",
     },
+    ownerInactiveWarning: {
+        margin: theme.spacing.unit * 4,
+        marginBottom: 0,
+    },
     selectFormControl: {
         margin: theme.spacing.unit * 4,
     },
@@ -218,12 +222,29 @@ class MissionEdition extends React.PureComponent {
         if (!mission.current.data.travellers) {
             return false;
         }
+        if (!mission.current.data.isBooked === 1 ||
+            mission.current.data.travellers
+                .find(candidacy => candidacy.user === user.data.id && candidacy.status === 69)) {
+            return false;
+        }
         return mission.current.data.travellers
             .find(candidacy => candidacy.user === user.data.id && candidacy.status === 1);
     }
 
     get userNotInTravellers() {
         return !this.userCandidacy;
+    }
+
+    get userIsBookedTraveller() {
+        const { user, mission } = this.props;
+        if (mission.current.data.isBooked === 1) {
+            const bookedUserID = mission.current.data.travellers
+                .find(candidacy => candidacy.user === user.data.id && candidacy.status === 69).user;
+            if (bookedUserID !== user.data.id) {
+                return true;
+            }
+        }
+        return false;
     }
 
     getSnapshotedDate(prop = "in" || "out") {
@@ -241,6 +262,9 @@ class MissionEdition extends React.PureComponent {
 
     handleSave = () => {
         if (this.isLoading || !this.isMissionValid || !this.hasMissionChanged) {
+            return;
+        }
+        if (this.props.mission.current.data.isActive === 0) {
             return;
         }
         const inDate = this.getSnapshotedDate("in");
@@ -263,6 +287,9 @@ class MissionEdition extends React.PureComponent {
 
     handleChange = (property, ev) => {
         const { value } = ev.target;
+        if (!this.props.mission.current.data.isActive) {
+            return;
+        }
         if (this.props.formRules[property]) {
             const { min, max, isNumber, isSelect } = this.props.formRules[property]; // eslint-disable-line
             const testedValue = isNumber || isSelect ? value : value.length;
@@ -289,12 +316,15 @@ class MissionEdition extends React.PureComponent {
     }
 
     handleApplyToggle = () => {
-        const { user } = this.props;
+        const { user, mission } = this.props;
         this.setState({
             openApplyModal: false,
         });
-        if (!user.isLoggedIn || this.isUserOwner || this.props.mission.current.isLoading
+        if (!user.isLoggedIn || this.isUserOwner || mission.current.isLoading
             || this.checkoutApplyDateError || this.checkinApplyDateError) {
+            return;
+        }
+        if (mission.isBooked === 1 && !this.userIsBookedTraveller) {
             return;
         }
         let { checkinApplyDate, checkoutApplyDate } = this.state;
@@ -312,7 +342,10 @@ class MissionEdition extends React.PureComponent {
     }
 
     handlePictureChange = (mission, pictureId, imgData) => {
-        console.log("HEY POULAYMAN", mission, imgData);
+        if (this.props.mission.current.isLoading) {
+            return;
+        }
+        this.props.updatePicture(mission.id, pictureId, imgData);
     }
 
     handleOpenApplyModal = () => {
@@ -327,6 +360,14 @@ class MissionEdition extends React.PureComponent {
         });
     }
 
+    toggleIsActive = () => {
+        const mission = this.props.mission.current.data;
+        if (!mission || !this.isUserOwner) {
+            return;
+        }
+        this.props.toggleIsActive();
+    }
+
     renderSelectProperty(propName, stringChoices, defaultValue) {
         const hasError = this.isUserOwner && this.state[`${propName}Error`].length > 0;
         return (
@@ -334,7 +375,7 @@ class MissionEdition extends React.PureComponent {
             <FormControl className={this.props.classes.selectFormControl}>
                 <InputLabel htmlFor={`select-multiple-${propName}`}>{hasError ? this.state[`${propName}Error`] : ""}</InputLabel>
                 <Select
-                    disabled={!this.isUserOwner}
+                    disabled={!this.isUserOwner || this.props.mission.current.data.isActive === 0}
                     id={`select-multiple-${propName}`}
                     value={this.state[propName] || defaultValue}
                     onChange={(e) => {
@@ -374,7 +415,7 @@ class MissionEdition extends React.PureComponent {
                 onChange={(ev) => {
                     this.handleChange(propName, ev);
                 }}
-                disabled={!this.isUserOwner}
+                disabled={!this.isUserOwner || this.props.mission.current.data.isActive === 0}
                 InputProps={{
                     disableUnderline: !this.isUserOwner,
                     style: inputStyle
@@ -405,19 +446,13 @@ class MissionEdition extends React.PureComponent {
                         control={
                             <Switch
                                 checked={isActive}
-                                onChange={() => this.setState({ isActive: isActive ? 0 : 1 })}
+                                onChange={this.toggleIsActive}
                                 color="primary"
                             />}
                         label={mission.isActive ? "Switched to active" : "Switched to inactive"}
                     />
                 </Grid>
                 <Grid item xs={9}>
-                    {!isActive &&
-                    <Typography variant="headline" color="textSecondary">
-                        This mission is set to inactive,
-                        preventing tavellers from trying to leave any
-                        comments or offer their help
-                    </Typography>}
                     {isActive &&
                     <Typography variant="headline" color="textSecondary">
                         This mission is visible, travellers can apply for it
@@ -428,9 +463,9 @@ class MissionEdition extends React.PureComponent {
     }
 
     renderBookedStatus() {
-        const { user, classes } = this.props;
+        const { user, classes, mission } = this.props;
         if (user.isLoggedIn && !this.isUserOwner && !this.props.mission.current.isLoading) {
-            return (
+            return (this.props.mission.current.data.isActive === 0 &&
                 <Button
                     id="#mission-apply-toggle-modal-btn"
                     className={classes.applyBtn}
@@ -438,6 +473,7 @@ class MissionEdition extends React.PureComponent {
                         "Applying will allow you to communicate with your potential host"
                         : "Removing your candidacy will prevent you from communicating with the host"
                     }
+                    disabled={this.props.mission.current.data.isActive === 0}
                     color="default"
                     onClick={this.handleOpenApplyModal}
                     variant="raised"
@@ -448,14 +484,16 @@ class MissionEdition extends React.PureComponent {
         }
         if (!this.mission || this.mission.isBooked === 0) {
             return (
-                <Tooltip title="Mission available">
+                <Tooltip title="No booked traveller yet">
                     <UnbookedIcon className={this.props.classes.bookedIcon} size={25} />
                 </Tooltip>
             );
         }
         return (
-            <Tooltip title="Mission taken">
-                <BookedIcon className={this.props.classes.bookedIcon} size={25} />
+            <Tooltip title="Mission booked">
+                <NavLink to={`/users/${mission.current.data.travellers.find(candidacy => candidacy.status === 69).user}`}>
+                    <BookedIcon className={this.props.classes.bookedIcon} size={25} />
+                </NavLink>
             </Tooltip>
         );
     }
@@ -499,7 +537,7 @@ class MissionEdition extends React.PureComponent {
                         shrink: true,
                     }}
                     id="checkin-date-edit-input"
-                    disabled={!this.isUserOwner}
+                    disabled={!this.isUserOwner || this.props.mission.current.data.isActive === 0}
                     InputProps={{
                         disableUnderline: !this.isUserOwner,
                         style: {
@@ -536,7 +574,7 @@ class MissionEdition extends React.PureComponent {
                         shrink: true,
                     }}
                     id="checkin-time-edit-input"
-                    disabled={!this.isUserOwner}
+                    disabled={!this.isUserOwner || this.props.mission.current.data.isActive === 0}
                     InputProps={{
                         disableUnderline: !this.isUserOwner,
                         style: {
@@ -576,7 +614,7 @@ class MissionEdition extends React.PureComponent {
                         shrink: true,
                     }}
                     id="checkout-date-edit-input"
-                    disabled={!this.isUserOwner}
+                    disabled={!this.isUserOwner || this.props.mission.current.data.isActive === 0}
                     InputProps={{
                         disableUnderline: !this.isUserOwner,
                         style: {
@@ -613,7 +651,7 @@ class MissionEdition extends React.PureComponent {
                         shrink: true,
                     }}
                     id="checkout-time-edit-input"
-                    disabled={!this.isUserOwner}
+                    disabled={!this.isUserOwner || this.props.mission.current.data.isActive === 0}
                     InputProps={{
                         disableUnderline: !this.isUserOwner,
                         style: {
@@ -784,7 +822,7 @@ class MissionEdition extends React.PureComponent {
     }
 
     renderApplyModal() {
-        const { user, classes } = this.props;
+        const { user, classes, mission } = this.props;
         const style = {
             color: midGrey,
         };
@@ -815,7 +853,8 @@ class MissionEdition extends React.PureComponent {
                                 }}
                                 id="checkin-checkindate-apply-input"
                                 disabled={this.isLoading
-                                    || !this.userNotInTravellers || !this.userNotInTravellers}
+                                    || !this.userNotInTravellers || !this.userNotInTravellers
+                                    || mission.current.data.isActive === 0}
                                 InputProps={{
                                     disableUnderline: !this.isUserOwner,
                                     style: {
@@ -831,6 +870,9 @@ class MissionEdition extends React.PureComponent {
                                 name="checkinDateApply"
                                 min={moment().local().format(DATE_FORMAT)}
                                 onChange={(ev) => {
+                                    if (this.props.mission.current.data.isActive === 0) {
+                                        return;
+                                    }
                                     const { value } = ev.target;
                                     const formatted = moment(value, DATE_FORMAT).local();
                                     const minDate = moment().local();
@@ -852,7 +894,8 @@ class MissionEdition extends React.PureComponent {
                                     shrink: true,
                                 }}
                                 id="checkout-checkoutdate-apply-input"
-                                disabled={this.isLoading || !this.userNotInTravellers}
+                                disabled={this.isLoading || !this.userNotInTravellers
+                                    || mission.current.data.isActive === 0}
                                 InputProps={{
                                     disableUnderline: !this.isUserOwner,
                                     style: {
@@ -868,6 +911,9 @@ class MissionEdition extends React.PureComponent {
                                 name="checkoutDateApply"
                                 min={moment().format(DATE_FORMAT)}
                                 onChange={(ev) => {
+                                    if (this.props.mission.current.data.isActive === 0) {
+                                        return;
+                                    }
                                     const { value } = ev.target;
                                     const formatted = moment(value, DATE_FORMAT).local();
                                     const minDate = moment().add(1, "day").local();
@@ -882,19 +928,31 @@ class MissionEdition extends React.PureComponent {
                             />
                         </Grid>
                     </Grid>
+                    {this.props.mission.current.data.isActive === 1 &&
+                    <Grid container>
+                        <Typography type="paragraph" color="primary" variant="subheading">
+                            The mission has been closed by
+                            {this.props.mission.current.data.accommodation.host.userName}
+                        </Typography>
+                    </Grid>
+                    }
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={this.handleClose} color="primary">
                         Close
                     </Button>
+                    {this.props.mission.current.data.isActive === 1 &&
                     <Button
                         disabled={this.state.checkoutApplyDateError.length > 0
-                            || this.state.checkinApplyDateError.length > 0}
+                            || this.state.checkinApplyDateError.length > 0
+                            || this.props.mission.current.data.isActive === 0
+                            || (mission.isBooked === 1 && !this.userIsBookedTraveller)
+                        }
                         onClick={this.handleApplyToggle}
                         color="primary"
                     >
                         {this.userNotInTravellers ? "Apply" : "Cancel Candidacy"}
-                    </Button>
+                    </Button>}
                 </DialogActions>
             </Dialog>
         );
@@ -904,15 +962,24 @@ class MissionEdition extends React.PureComponent {
         const suheader = this.mission ?
             `${moment(this.mission.checkinDate).format("MMMM Do YYYY")}  --->  ${moment(this.mission.checkoutDate).format("MMMM Do YYYY")}`
             : "";
+        const { classes } = this.props;
         return (
             <div className="full-width">
                 <Navbar burgerColor={darkGrey} />
                 <CarouselImages
                     acco={this.mission}
-                    isUserOwner={this.isUserOwner}
+                    isUserOwner={this.isUserOwner && this.props.mission.current.data.isActive > 0}
                     changePictureListener={this.handlePictureChange}
                 />
                 <Card className={this.props.classes.container}>
+                    {this.props.mission.current.data.isActive === 0 && this.isUserOwner &&
+                        <Grid container alignItems="center" justify="center">
+                            <Typography className={classes.ownerInactiveWarning} variant="headline" color="primary" component="h3">
+                                This mission has been set to inactive,
+                                it&#39;s informations and travellers are now freezed
+                            </Typography>
+                        </Grid>
+                    }
                     {this.mission && this.renderBookedStatus()}
                     {this.renderSpinner()}
                     {!this.isUserOwner && <CardHeader
@@ -921,7 +988,8 @@ class MissionEdition extends React.PureComponent {
                     />}
                     {this.renderMissionDetails()}
                 </Card>
-                {this.renderSaveBtns()}
+                {this.isUserOwner && this.props.mission.current.data.isActive > 0 &&
+                    this.renderSaveBtns()}
                 {this.renderApplyModal()}
             </div>
         );
@@ -956,8 +1024,12 @@ MissionEdition.propTypes = {
                     pictures: T.arrayOf(T.shape({})),
                     isActive: T.number,
                     isBooked: T.number,
+                    host: T.shape({
+                        userName: T.string.isRequired,
+                    }),
                 }),
-                travellers: T.array
+                travellers: T.array,
+                isActive: T.number,
             }).isRequired,
             isLoading: T.bool.isRequired,
         }).isRequired,
@@ -981,6 +1053,8 @@ MissionEdition.propTypes = {
     changeCurrent: T.func.isRequired,
     onInit: T.func.isRequired,
     toggleMissionCandidacy: T.func.isRequired,
+    updatePicture: T.func.isRequired,
+    toggleIsActive: T.func.isRequired,
 };
 
 export default withStyles(styles)(MissionEdition);
