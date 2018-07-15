@@ -45,7 +45,7 @@ export const mapDispatchToProps = dispatch => ({
             }).then(() => {
                 dispatch(fetchMission(missionId));
                 finalRes("poulay");
-            });
+            }).catch();
         });
     },
     async saveMission(mission) {

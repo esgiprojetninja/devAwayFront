@@ -12,13 +12,13 @@ import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import FormControl from "@material-ui/core/FormControl";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Switch from "@material-ui/core/Switch";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import TodoIcon from "react-icons/lib/fa/question";
-import InactiveIcon from "react-icons/lib/fa/lock";
-import ActiveIcon from "react-icons/lib/fa/plus";
 import UnbookedIcon from "react-icons/lib/fa/paper-plane";
 import BookedIcon from "react-icons/lib/fa/close";
 import Avatar from "@material-ui/core/Avatar";
@@ -48,6 +48,11 @@ const styles = theme => ({
         maxWidth: 1200,
         margin: theme.spacing.unit * 4,
     },
+    inactiveWarningContainer: {
+        margin: theme.spacing.unit * 4,
+        marginTop: theme.spacing.unit * 6,
+        textAlign: "justify",
+    },
     activeContainer: {
         height: 15,
     },
@@ -64,15 +69,20 @@ const styles = theme => ({
         right: theme.spacing.unit * 2,
         bottom: theme.spacing.unit * 4,
     },
+    applyBtn: {
+        zIndex: 2,
+        position: "fixed",
+        right: theme.spacing.unit * 2,
+        bottom: theme.spacing.unit * 2,
+    },
     cancelBtn: {
         position: "fixed",
         right: theme.spacing.unit * 2,
         bottom: theme.spacing.unit * 12,
     },
     accommodationText: {
-        margin: theme.spacing.unit * 4,
+        margin: theme.spacing.unit,
         fontSize: "large",
-        fontStyle: "italic",
     },
     selectFormControl: {
         margin: theme.spacing.unit * 4,
@@ -82,6 +92,7 @@ const styles = theme => ({
     },
     avatar: {
         margin: theme.spacing.unit * 4,
+        marginRight: 0,
         transition: "transform .2s ease-in-out",
         cursor: "pointer",
         "&:hover": {
@@ -92,17 +103,11 @@ const styles = theme => ({
         color: theme.palette.primary.midGrey,
         margin: theme.spacing.unit * 4,
     },
-    activeIcon: {
-        color: theme.palette.primary.midGrey,
-        position: "absolute",
-        top: 4,
-        right: 4,
-    },
     bookedIcon: {
         color: theme.palette.primary.midGrey,
         position: "absolute",
-        top: 4,
-        right: 34,
+        top: theme.spacing.unit * 3,
+        right: theme.spacing.unit * 3,
     },
 });
 
@@ -151,7 +156,7 @@ class MissionEdition extends React.PureComponent {
     }
 
     get hasMissionChanged() {
-        const { title, description, accommodation_id } = this.state; // eslint-disable-line
+        const { title, description, accommodation_id, isActive } = this.state; // eslint-disable-line
         const mission = this.props.mission.current.data;
         if (title && title.trim() !== mission.title) {
             return true;
@@ -160,6 +165,9 @@ class MissionEdition extends React.PureComponent {
             return true;
         }
         if (accommodation_id && Number(accommodation_id) !== Number(mission.accommodation_id)) { // eslint-disable-line
+            return true;
+        }
+        if ((isActive === 0 || isActive === 1) && isActive !== mission.isActive) {
             return true;
         }
         const oldMomentCheckinDate = moment(mission.checkinDate, `${DATE_FORMAT} ${HOUR_FORMAT}`);
@@ -204,6 +212,9 @@ class MissionEdition extends React.PureComponent {
             ...this.mission,
             title: this.state.title.trim() || this.mission.title.trim(),
             description: this.state.description.trim() || this.mission.description.trim(),
+            isActive: this.state.isActive === 0 || this.state.isActive === 1 ?
+                this.state.isActive
+                : this.mission.isActive,
             checkinDate: inDate.unix() > outDate.unix() ?
                 outDate.format(`${DATE_FORMAT} ${HOUR_FORMAT}`)
                 : inDate.format(`${DATE_FORMAT} ${HOUR_FORMAT}`),
@@ -238,6 +249,10 @@ class MissionEdition extends React.PureComponent {
                 this.props.changeCurrent(this.mission);
             }
         }
+    }
+
+    handlePictureChange = (mission, pictureId, imgData) => {
+        console.log("HEY POULAYMAN", mission, imgData);
     }
 
     renderSelectProperty(propName, stringChoices, defaultValue) {
@@ -301,32 +316,75 @@ class MissionEdition extends React.PureComponent {
         );
     }
 
-    renderBookedStatus() {
-        if (!this.mission || !this.mission.isBooked) {
-            return (
-                <Tooltip title="Mission taken">
-                    <BookedIcon className={this.props.classes.bookedIcon} size={25} />
-                </Tooltip>
-            );
+    renderInactiveControl() {
+        const { classes } = this.props;
+        const mission = this.props.mission.current.data;
+        if (!this.isUserOwner || !mission) {
+            return null;
         }
+        const isActive = this.state.isActive === 0 || this.state.isActive === 1 ?
+            Boolean(this.state.isActive)
+            : Boolean(this.mission.isActive);
         return (
-            <Tooltip title="Mission available">
-                <UnbookedIcon className={this.props.classes.bookedIcon} size={25} />
-            </Tooltip>
+            <Grid container alignItems="center" className={classes.inactiveWarningContainer}>
+                <Grid item xs={3}>
+                    <FormControlLabel
+                        disabled={this.props.mission.current.isLoading}
+                        control={
+                            <Switch
+                                checked={isActive}
+                                onChange={() => this.setState({ isActive: isActive ? 0 : 1 })}
+                                color="primary"
+                            />}
+                        label={mission.isActive ? "Switched to active" : "Switched to inactive"}
+                    />
+                </Grid>
+                <Grid item xs={9}>
+                    {!isActive &&
+                    <Typography variant="headline" color="textSecondary">
+                        This mission is set to inactive,
+                        preventing tavellers from trying to leave any
+                        comments or offer their help
+                    </Typography>}
+                    {isActive &&
+                    <Typography variant="headline" color="textSecondary">
+                        This mission is visible, travellers can apply for it
+                    </Typography>}
+                </Grid>
+            </Grid>
         );
     }
 
-    renderActiveStatus() {
-        if (!this.mission || !this.mission.isActive) {
+    renderBookedStatus() {
+        const { user, classes } = this.props;
+        const userNotInTravellers = !this.props.mission.current.data.travellers
+            .find(usr => usr.id === user.data.id);
+        if (user.isLoggedIn && !this.isUserOwner && !this.props.mission.current.isLoading) {
             return (
-                <Tooltip title="Mission inactive">
-                    <InactiveIcon className={this.props.classes.activeIcon} size={25} />
+                <Button
+                    id="#mission-apply-toggle-btn"
+                    className={classes.applyBtn}
+                    aria-label={userNotInTravellers ?
+                        "Applying will allow you to communicate with your potential host"
+                        : "Removing your candidacy will prevent you from communicating with the host"
+                    }
+                    color="default"
+                    variant="raised"
+                >
+                    {userNotInTravellers ? "Apply" : "Cancel candidacy"}
+                </Button>
+            );
+        }
+        if (!this.mission || this.mission.isBooked === 0) {
+            return (
+                <Tooltip title="Mission available">
+                    <UnbookedIcon className={this.props.classes.bookedIcon} size={25} />
                 </Tooltip>
             );
         }
         return (
-            <Tooltip title="Mission active">
-                <ActiveIcon className={this.props.classes.activeIcon} size={25} />
+            <Tooltip title="Mission taken">
+                <BookedIcon className={this.props.classes.bookedIcon} size={25} />
             </Tooltip>
         );
     }
@@ -550,9 +608,11 @@ class MissionEdition extends React.PureComponent {
 
     renderMissionDetails() {
         const currentAcco = this.props.mission.current.data.accommodation;
+        const { classes } = this.props;
         return (
             this.mission &&
             <Grid container>
+                {this.renderInactiveControl()}
                 <Grid container item direction="row" align="flex-start" xs={12}>
                     <Grid item xs={12}>
                         {this.isUserOwner && this.renderTextField("title", this.mission.title, { color: darkGrey, fontWeight: 500, fontSize: "1.875em" })}
@@ -570,7 +630,7 @@ class MissionEdition extends React.PureComponent {
                             <NavLink
                                 to={`/places/${this.mission.accommodation_id}`}
                             >
-                                <Typography className={this.props.classes.accommodationText} type="paragraph" color="inherit">{currentAcco.title}
+                                <Typography className={classes.accommodationText} type="paragraph" color="inherit">{currentAcco.title}
                                 </Typography>
                             </NavLink>
                         }
@@ -578,7 +638,7 @@ class MissionEdition extends React.PureComponent {
                     </div>
                 </Grid>
                 {this.renderHostInfo()}
-                <Grid className={this.props.classes.mapContainer} item xs={12}>
+                <Grid className={classes.mapContainer} item xs={12}>
                     {currentAcco &&
                         <GMap
                             acco={currentAcco}
@@ -588,7 +648,7 @@ class MissionEdition extends React.PureComponent {
                 </Grid>
                 <div className="display-flex-row full-width justify-start">
                     {currentAcco && currentAcco.address &&
-                        <Typography className={this.props.classes.selectFormControl} type="paragraph" color="inherit" variant="caption">{currentAcco.address}
+                        <Typography className={classes.selectFormControl} type="paragraph" color="inherit" variant="caption">{currentAcco.address}
                         </Typography>
                     }
                 </div>
@@ -609,6 +669,7 @@ class MissionEdition extends React.PureComponent {
         return (
             <div>
                 <Button
+                    id="#mission-edition-cancel-btn"
                     className={this.props.classes.cancelBtn}
                     aria-label="Cancel"
                     disabled={!this.hasMissionChanged || this.isLoading}
@@ -624,7 +685,6 @@ class MissionEdition extends React.PureComponent {
                     }}
                     color="default"
                     variant="fab"
-                    id="devaway-cancel-edition-mission-btn"
                 >
                     <Cancel />
                 </Button>
@@ -662,13 +722,9 @@ class MissionEdition extends React.PureComponent {
                 <CarouselImages
                     acco={this.mission}
                     isUserOwner={this.isUserOwner}
-                    changePictureListener={(mission, pictureId, imgData) => {
-                        // @TODO update picture
-                        console.log("HEY POULAYMAN", mission, imgData);
-                    }}
+                    changePictureListener={this.handlePictureChange}
                 />
                 <Card className={this.props.classes.container}>
-                    {this.mission && this.renderActiveStatus()}
                     {this.mission && this.renderBookedStatus()}
                     {this.renderSpinner()}
                     {!this.isUserOwner && <CardHeader
@@ -698,7 +754,7 @@ MissionEdition.propTypes = {
             id: T.number.isRequired,
         })).isRequired,
         data: T.shape({
-            id: T.number
+            id: T.number,
         }),
     }).isRequired,
     mission: T.shape({
@@ -711,7 +767,8 @@ MissionEdition.propTypes = {
                     pictures: T.arrayOf(T.shape({})),
                     isActive: T.number,
                     isBooked: T.number,
-                })
+                }),
+                travellers: T.array
             }).isRequired,
             isLoading: T.bool.isRequired,
         }).isRequired,
@@ -728,7 +785,6 @@ MissionEdition.propTypes = {
         icon: T.string.isRequired,
         selectFormControl: T.string.isRequired,
         dateField: T.string.isRequired,
-        activeIcon: T.string.isRequired,
         bookedIcon: T.string.isRequired,
     }).isRequired,
     formRules: missionRules.isRequired,

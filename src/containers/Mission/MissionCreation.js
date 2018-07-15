@@ -18,7 +18,10 @@ export const mapStateToProps = (state) => {
 
 export const mapDispatchToProps = dispatch => ({
     async saveMission(mission) {
-        const res = await dispatch(saveMission(mission));
+        const res = await dispatch(saveMission({
+            ...mission,
+            isActive: 1,
+        }));
         return res;
     },
     changeCurrent(mission) {
