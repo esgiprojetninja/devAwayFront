@@ -125,6 +125,25 @@ export const fetchMission = id =>
     };
 
 
+export const updatePicture = pictureObj =>
+    async (dispatch, getState, API) => {
+        const verb = pictureObj.id ? "update" : "create";
+        dispatch(fetchMissionRequest());
+        try {
+            const res = await API.missionApi.upsertPicture(pictureObj);
+            if (res.hasError) {
+                dispatch(displaySnackMsg(`Failed to ${verb} picture`));
+                return dispatch(fetchMissionFailure(res.message));
+            }
+            dispatch(displaySnackMsg(`${verb.charAt(0).toUpperCase() + verb.slice(1)}d picture`));
+            return dispatch(fetchMissionSuccess(res));
+        } catch (error) {
+            dispatch(displaySnackMsg(`Failed to ${verb} picture`));
+            return dispatch(fetchMissionFailure(error.message));
+        }
+    };
+
+
 const toggleMissionCandidacyRequest = missionId => ({
     type: missionTypes.TOGGLE_APPLY_MISSION_REQUEST,
     payload: { missionId }

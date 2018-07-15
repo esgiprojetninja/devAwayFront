@@ -1,7 +1,7 @@
 /* global */
 import { connect } from "react-redux";
 import MissionEditionComponent from "../../ui/Mission/MissionEdition";
-import { saveMission, changeCurrentMission, fetchMission, toggleMissionCandidacy } from "../../actions/mission";
+import { saveMission, changeCurrentMission, fetchMission, toggleMissionCandidacy, updatePicture } from "../../actions/mission";
 import { getRules } from "../../utils/mission";
 
 let refState = null;
@@ -52,12 +52,28 @@ export const mapDispatchToProps = dispatch => ({
         const res = await dispatch(saveMission(mission));
         return res;
     },
+    async toggleIsActive() {
+        const { mission } = refState;
+        const res = await dispatch(saveMission({
+            ...mission.current.data,
+            isActive: mission.current.data.isActive === 1 ? 0 : 1
+        }));
+        return res;
+    },
     changeCurrent(mission) {
         dispatch(changeCurrentMission(mission));
     },
     toggleMissionCandidacy(apply = true, data) {
         dispatch(toggleMissionCandidacy(apply, null, data));
-    }
+    },
+    updatePicture(missionId, pictureId, imgData) {
+        const picture = {
+            mission_id: missionId,
+            url: imgData,
+            id: pictureId,
+        };
+        dispatch(updatePicture(picture));
+    },
 });
 
 const MissionEdition = connect(

@@ -51,6 +51,11 @@ const missionApi = {
     cancelCandidacy: (missionId) => {
         return generateFetch(`missions/${missionId}/leave`, "POST", null);
     },
+    upsertPicture: (picture) => {
+        return picture.id === null || Number.isNaN(Number(picture.id)) ?
+            generateFetch(`missions/${picture.mission_id}/pictures`, "PUT", null, picture)
+            : generateFetch("pictures/missions", "PUT", picture.id, picture);
+    },
 };
 
 export default missionApi;
