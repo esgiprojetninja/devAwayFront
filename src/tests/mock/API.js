@@ -38,6 +38,13 @@ export const mockAPI = {
         deleteItem: () => Promise.resolve({}),
         applyToMission: () => Promise.resolve({ poulay: "man" }),
         fetchById: id => Promise.resolve({ id: id || 123, poulay: "man" }),
+        addCandidacy: id => Promise.resolve({ id: id || 123, poulay: "man" }),
+        cancelCandidacy: id => Promise.resolve({ id: id || 123, poulay: "man" }),
+        upsertPicture: () => Promise.resolve({
+            ok: true,
+            poulay: "man",
+            id: 1234,
+        }),
     },
     messageApi: {
         fetchAll: () => Promise.resolve([]),
@@ -100,7 +107,19 @@ export const mockAPIWithErrors = {
         fetchById: () => Promise.resolve({
             hasError: true,
             message: "Couldn't get mission"
-        })
+        }),
+        upsertPicture: () => Promise.resolve({
+            hasError: true,
+            message: "such uglyness"
+        }),
+        addCandidacy: () => Promise.resolve({
+            hasError: true,
+            message: "such uglyness"
+        }),
+        cancelCandidacy: () => Promise.resolve({
+            hasError: true,
+            message: "such uglyness"
+        }),
     },
     messageApi: {
         fetchAll: () => Promise.resolve({
@@ -175,6 +194,9 @@ export const mockAPIWithServerFailure = {
         createOrUpdate: () => Promise.reject(new Error("gtfo")),
         deleteItem: () => Promise.reject(new Error("gtfo")),
         fetchById: () => Promise.reject(new Error("gtfo")),
+        upsertPicture: () => Promise.reject(new Error("gtfo")),
+        addCandidacy: () => Promise.reject(new Error("gtfo")),
+        cancelCandidacy: () => Promise.reject(new Error("gtfo")),
     },
     messageApi: {
         fetchAll: () => Promise.reject(new Error("gtfo")),
