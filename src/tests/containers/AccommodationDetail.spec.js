@@ -6,7 +6,6 @@ import {
     mockAPI,
     mockAPIWithErrors,
 } from "../mock/API";
-import missionApi from "../../api/missionApi";
 import mainReducer from "../../reducers/index";
 import {
     mapStateToProps,
