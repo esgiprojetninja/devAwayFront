@@ -6,6 +6,11 @@ import { NavLink } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import Save from "@material-ui/icons/Save";
 import Cancel from "@material-ui/icons/Cancel";
 import Grid from "@material-ui/core/Grid";
@@ -24,6 +29,7 @@ import BookedIcon from "react-icons/lib/fa/close";
 import Avatar from "@material-ui/core/Avatar";
 import UserIcon from "react-icons/lib/fa/user";
 import Tooltip from "@material-ui/core/Tooltip";
+import Divider from "@material-ui/core/Divider";
 import moment from "moment";
 
 import { midGrey, darkGrey } from "../../styles/theme";
@@ -34,6 +40,9 @@ import GMap from "../../containers/AccommodationDetailMap";
 import missionRules from "../../propTypes/missionRulesType";
 import { getStateFromRules, DATE_FORMAT, HOUR_FORMAT } from "../../utils/mission";
 import getUserImg from "../../utils/user";
+
+const DEFAULT_CHECKIN_DATE = moment().local();
+const DEFAULT_CHECKOUT_DATE = moment().local().add(1, "days");
 
 const styles = theme => ({
     container: {
@@ -87,6 +96,9 @@ const styles = theme => ({
     selectFormControl: {
         margin: theme.spacing.unit * 4,
     },
+    applyDateField: {
+        margin: theme.spacing.unit,
+    },
     dateField: {
         margin: theme.spacing.unit * 4,
     },
@@ -103,6 +115,12 @@ const styles = theme => ({
         color: theme.palette.primary.midGrey,
         margin: theme.spacing.unit * 4,
     },
+    modalDivider: {
+        width: "100%",
+        margin: theme.spacing.unit * 3,
+        marginBottom: theme.spacing.unit,
+        marginLeft: 0,
+    },
     bookedIcon: {
         color: theme.palette.primary.midGrey,
         position: "absolute",
@@ -111,6 +129,7 @@ const styles = theme => ({
     },
 });
 
+
 class MissionEdition extends React.PureComponent {
     state = {
         ...getStateFromRules(this.props.formRules),
@@ -118,6 +137,11 @@ class MissionEdition extends React.PureComponent {
         checkinDateHour: "",
         checkoutDate: "",
         checkoutDateHour: "",
+        openApplyModal: false,
+        checkinApplyDate: "",
+        checkoutApplyDate: "",
+        checkinApplyDateError: "",
+        checkoutApplyDateError: "",
     };
 
     componentDidMount() {
@@ -189,6 +213,19 @@ class MissionEdition extends React.PureComponent {
             .find(propName => this.state[propName].length > 0);
     }
 
+    get userCandidacy() {
+        const { user, mission } = this.props;
+        if (!mission.current.data.travellers) {
+            return false;
+        }
+        return mission.current.data.travellers
+            .find(candidacy => candidacy.user === user.data.id && candidacy.status === 1);
+    }
+
+    get userNotInTravellers() {
+        return !this.userCandidacy;
+    }
+
     getSnapshotedDate(prop = "in" || "out") {
         const mission = this.props.mission.current.data;
         const oldMomentCheckDate = moment(mission[`check${prop}Date`], `${DATE_FORMAT} ${HOUR_FORMAT}`);
@@ -251,8 +288,43 @@ class MissionEdition extends React.PureComponent {
         }
     }
 
+    handleApplyToggle = () => {
+        const { user } = this.props;
+        this.setState({
+            openApplyModal: false,
+        });
+        if (!user.isLoggedIn || this.isUserOwner || this.props.mission.current.isLoading
+            || this.checkoutApplyDateError || this.checkinApplyDateError) {
+            return;
+        }
+        let { checkinApplyDate, checkoutApplyDate } = this.state;
+        checkinApplyDate = checkinApplyDate || DEFAULT_CHECKIN_DATE;
+        checkoutApplyDate = checkoutApplyDate || DEFAULT_CHECKOUT_DATE;
+
+        this.props.toggleMissionCandidacy(this.userNotInTravellers, {
+            fromDate: checkinApplyDate.unix() < checkoutApplyDate.unix() ?
+                checkinApplyDate.format(`${DATE_FORMAT}, ${HOUR_FORMAT}`)
+                : checkoutApplyDate.format(`${DATE_FORMAT}, ${HOUR_FORMAT}`),
+            toDate: checkinApplyDate.unix() < checkoutApplyDate.unix() ?
+                checkoutApplyDate.format(`${DATE_FORMAT}, ${HOUR_FORMAT}`)
+                : checkinApplyDate.format(`${DATE_FORMAT}, ${HOUR_FORMAT}`)
+        });
+    }
+
     handlePictureChange = (mission, pictureId, imgData) => {
         console.log("HEY POULAYMAN", mission, imgData);
+    }
+
+    handleOpenApplyModal = () => {
+        this.setState({
+            openApplyModal: true,
+        });
+    }
+
+    handleCloseApplyModal = () => {
+        this.setState({
+            openApplyModal: false,
+        });
     }
 
     renderSelectProperty(propName, stringChoices, defaultValue) {
@@ -357,21 +429,20 @@ class MissionEdition extends React.PureComponent {
 
     renderBookedStatus() {
         const { user, classes } = this.props;
-        const userNotInTravellers = !this.props.mission.current.data.travellers
-            .find(usr => usr.id === user.data.id);
         if (user.isLoggedIn && !this.isUserOwner && !this.props.mission.current.isLoading) {
             return (
                 <Button
-                    id="#mission-apply-toggle-btn"
+                    id="#mission-apply-toggle-modal-btn"
                     className={classes.applyBtn}
-                    aria-label={userNotInTravellers ?
+                    aria-label={this.userNotInTravellers ?
                         "Applying will allow you to communicate with your potential host"
                         : "Removing your candidacy will prevent you from communicating with the host"
                     }
                     color="default"
+                    onClick={this.handleOpenApplyModal}
                     variant="raised"
                 >
-                    {userNotInTravellers ? "Apply" : "Cancel candidacy"}
+                    {this.userNotInTravellers ? "Submit your candidacy" : "Cancel candidacy"}
                 </Button>
             );
         }
@@ -712,6 +783,123 @@ class MissionEdition extends React.PureComponent {
         );
     }
 
+    renderApplyModal() {
+        const { user, classes } = this.props;
+        const style = {
+            color: midGrey,
+        };
+        const checkinDateCandidacy = !this.userCandidacy ? DEFAULT_CHECKIN_DATE : moment(this.userCandidacy.fromDate, `${DATE_FORMAT} ${HOUR_FORMAT}`).local();
+        const checkoutDateCandidacy = !this.userCandidacy ? DEFAULT_CHECKOUT_DATE : moment(this.userCandidacy.toDate, `${DATE_FORMAT} ${HOUR_FORMAT}`).local();
+        return (
+            <Dialog
+                open={this.state.openApplyModal && user.isLoggedIn && !this.isUserOwner}
+                onClose={this.handleCloseApplyModal}
+                aria-labelledby="form-apply-dialog-title"
+            >
+                <DialogTitle id="form-apply-dialog-title">Your Candidacy</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        {this.userNotInTravellers ?
+                            "Applying will allow you to communicate with your potential host"
+                            : "Removing your candidacy will prevent you from communicating with the host"
+                        }
+                    </DialogContentText>
+                    <Divider inset className={classes.modalDivider} />
+                    <Grid container direction="row" align="flex-start">
+                        <Grid item xs={6}>
+                            <TextField
+                                className={classes.applyDateField}
+                                style={style}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                id="checkin-checkindate-apply-input"
+                                disabled={this.isLoading
+                                    || !this.userNotInTravellers || !this.userNotInTravellers}
+                                InputProps={{
+                                    disableUnderline: !this.isUserOwner,
+                                    style: {
+                                        ...style,
+                                        maxWidth: 150
+                                    }
+                                }}
+                                value={this.state.checkinApplyDate ?
+                                    this.state.checkinApplyDate.format(DATE_FORMAT)
+                                    : checkinDateCandidacy.format(DATE_FORMAT)}
+                                error={this.state.checkinApplyDateError.length > 0}
+                                label={this.state.checkinApplyDateError ? this.state.checkinApplyDateError : "From"}
+                                name="checkinDateApply"
+                                min={moment().local().format(DATE_FORMAT)}
+                                onChange={(ev) => {
+                                    const { value } = ev.target;
+                                    const formatted = moment(value, DATE_FORMAT).local();
+                                    const minDate = moment().local();
+                                    this.setState({ checkinApplyDate: formatted, checkinApplyDateError: "" });
+                                    if (minDate.unix() > formatted.unix()) {
+                                        this.setState({ checkinApplyDateError: "Your candidacy can't be backdated" });
+                                    }
+                                }}
+                                fullWidth
+                                margin="normal"
+                                type="date"
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                className={classes.applyDateField}
+                                style={style}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                id="checkout-checkoutdate-apply-input"
+                                disabled={this.isLoading || !this.userNotInTravellers}
+                                InputProps={{
+                                    disableUnderline: !this.isUserOwner,
+                                    style: {
+                                        ...style,
+                                        maxWidth: 150
+                                    }
+                                }}
+                                value={this.state.checkoutApplyDate ?
+                                    this.state.checkoutApplyDate.format(DATE_FORMAT)
+                                    : checkoutDateCandidacy.format(DATE_FORMAT)}
+                                error={this.state.checkoutApplyDateError.length > 0}
+                                label={this.state.checkoutApplyDateError ? this.state.checkoutApplyDateError : "To"}
+                                name="checkoutDateApply"
+                                min={moment().format(DATE_FORMAT)}
+                                onChange={(ev) => {
+                                    const { value } = ev.target;
+                                    const formatted = moment(value, DATE_FORMAT).local();
+                                    const minDate = moment().add(1, "day").local();
+                                    this.setState({ checkoutApplyDate: formatted, checkoutApplyDateError: "" });
+                                    if (minDate.unix() > formatted.unix()) {
+                                        this.setState({ checkoutApplyDateError: "You can't apply for less than a day" });
+                                    }
+                                }}
+                                fullWidth
+                                margin="normal"
+                                type="date"
+                            />
+                        </Grid>
+                    </Grid>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={this.handleClose} color="primary">
+                        Close
+                    </Button>
+                    <Button
+                        disabled={this.state.checkoutApplyDateError.length > 0
+                            || this.state.checkinApplyDateError.length > 0}
+                        onClick={this.handleApplyToggle}
+                        color="primary"
+                    >
+                        {this.userNotInTravellers ? "Apply" : "Cancel Candidacy"}
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        );
+    }
+
     render() {
         const suheader = this.mission ?
             `${moment(this.mission.checkinDate).format("MMMM Do YYYY")}  --->  ${moment(this.mission.checkoutDate).format("MMMM Do YYYY")}`
@@ -734,6 +922,7 @@ class MissionEdition extends React.PureComponent {
                     {this.renderMissionDetails()}
                 </Card>
                 {this.renderSaveBtns()}
+                {this.renderApplyModal()}
             </div>
         );
     }
@@ -791,6 +980,7 @@ MissionEdition.propTypes = {
     saveMission: T.func.isRequired,
     changeCurrent: T.func.isRequired,
     onInit: T.func.isRequired,
+    toggleMissionCandidacy: T.func.isRequired,
 };
 
 export default withStyles(styles)(MissionEdition);

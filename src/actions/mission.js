@@ -123,3 +123,39 @@ export const fetchMission = id =>
             return dispatch(fetchMissionFailure(error.message));
         }
     };
+
+
+const toggleMissionCandidacyRequest = missionId => ({
+    type: missionTypes.TOGGLE_APPLY_MISSION_REQUEST,
+    payload: { missionId }
+});
+
+const toggleMissionCandidacySuccess = (mission, replaceCurrent) => ({
+    type: missionTypes.TOGGLE_APPLY_MISSION_SUCCESS,
+    payload: { mission, replaceCurrent }
+});
+
+const toggleMissionCandidacyFail = msg => ({
+    type: missionTypes.TOGGLE_APPLY_MISSION_FAILURE,
+    payload: { msg }
+});
+
+export const toggleMissionCandidacy = (apply = true, missionId, data) =>
+    async (dispatch, getState, API) => {
+        const id = missionId || getState().mission.current.data.id;
+        dispatch(toggleMissionCandidacyRequest(id));
+        const verb = apply ? "add" : "cancel";
+        try {
+            const res = await API.missionApi[`${verb}Candidacy`](id, data);
+            if (res.hasError) {
+                dispatch(displaySnackMsg(`Your candidacy couldn't be ${verb}ed`));
+                return dispatch(toggleMissionCandidacyFail(res.message));
+            }
+            const missionIsCurrent = res.id === getState().mission.current.data.id;
+            dispatch(displaySnackMsg(`Your candidacy was ${verb}ed`));
+            return dispatch(toggleMissionCandidacySuccess(res, missionIsCurrent));
+        } catch (error) {
+            dispatch(displaySnackMsg(`Your candidacy couldn't be ${verb}ed`));
+            return dispatch(toggleMissionCandidacyFail(error.message));
+        }
+    };
