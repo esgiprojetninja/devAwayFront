@@ -74,6 +74,7 @@ describe("ui <MissionEdition />", function () {
             saveMission: jest.fn(),
             changeCurrent: jest.fn(),
             onInit: jest.fn(),
+            toggleMissionCandidacy: jest.fn(),
         };
     });
     it("should render with main items", () => {

@@ -56,27 +56,6 @@ describe("Container AccommodationDetail", () => {
             expect(store.getActions().map(a => a.type)).toEqual(["FETCH_ACCOMMODATIONS_REQUEST", "FETCH_ACCOMMODATIONS_FAILURE"]);
             expect(res).toBe(false);
         });
-        it("applyToMission", async () => {
-            const spy = jest.spyOn(missionApi, "applyToMission");
-            const { store, fn } = prepare("applyToMission", mainReducer(undefined, {}));
-            const res = await fn("coucou", { id: "coucou" });
-            expect(store.getActions().map(a => a.type)).toEqual([]);
-            expect(spy).toHaveBeenCalled();
-            expect(res).toBe(true);
-        });
-        it("applyToMission - server error", async () => {
-            const oldMethod = missionApi.applyToMission;
-            missionApi.applyToMission = () => {
-                throw new Error("POULAY");
-            };
-            const spy = jest.spyOn(missionApi, "applyToMission");
-            const { store, fn } = prepare("applyToMission", mainReducer(undefined, {}));
-            const res = await fn("coucou", { id: "coucou" });
-            expect(store.getActions().map(a => a.type)).toEqual([]);
-            expect(spy).toHaveBeenCalled();
-            expect(res).toBe(false);
-            missionApi.applyToMission = oldMethod;
-        });
     });
     describe("mapStateToProps", () => {
         it("dispatch accomodation specific state", () => {
