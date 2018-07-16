@@ -901,6 +901,7 @@ class MissionEdition extends React.PureComponent {
         const candidacy = this.userCandidacy;
         const checkinDateCandidacy = !this.userCandidacy ? DEFAULT_CHECKIN_DATE : moment(this.userCandidacy.fromDate, `${DATE_FORMAT} ${HOUR_FORMAT}`).local();
         const checkoutDateCandidacy = !this.userCandidacy ? DEFAULT_CHECKOUT_DATE : moment(this.userCandidacy.toDate, `${DATE_FORMAT} ${HOUR_FORMAT}`).local();
+        const acco = this.props.mission.current.data.accommodation;
         return (this.mission &&
             <Dialog
                 open={this.state.openApplyModal && user.isLoggedIn && !this.isUserOwner}
@@ -1001,8 +1002,7 @@ class MissionEdition extends React.PureComponent {
                     {!canChangeCandidacy &&
                     <Grid container>
                         <Typography type="paragraph" color="primary" variant="subheading">
-                            The mission has been locked
-                            by {this.props.mission.current.data.accommodation.host.userName}
+                            The mission has been locked {acco && acco.host ? `by ${acco.host.userName}` : ""}
                         </Typography>
                     </Grid>
                     }
