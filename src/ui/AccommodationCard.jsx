@@ -2,8 +2,10 @@ import React from "react";
 import * as T from "prop-types";
 import GroupIcon from "@material-ui/icons/Group";
 import LocalHotelIcon from "@material-ui/icons/LocalHotel";
+import Paper from "@material-ui/core/Paper";
 import HotTubIcon from "@material-ui/icons/HotTub";
 import { withStyles } from "@material-ui/core/styles";
+import LinearProgress from "@material-ui/core/LinearProgress";
 import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
@@ -16,6 +18,12 @@ const styles = theme => ({
     card: {
         width: "100%",
         padding: theme.spacing.unit * 1.2,
+    },
+    rootRaper: {
+        width: "100%",
+        height: "100%",
+        margin: 0,
+        padding: 0,
     },
     media: {
         height: 0,
@@ -53,7 +61,14 @@ const styles = theme => ({
         height: "80px",
     },
     iconContainer: {
-        maxWidth: 250
+        maxWidth: 250,
+    },
+    noAccosText: {
+        margin: "auto",
+    },
+    noAccosContainer: {
+        height: "100%",
+        minHeight: 200,
     },
 });
 
@@ -92,6 +107,24 @@ class AccommodationCard extends React.PureComponent {
         return this.props.accommodation.isLoading || this.props.accommodation.search.isLoading;
     }
 
+    renderSpinner() {
+        return (this.isLoading &&
+            <LinearProgress id="getMeProgess" color="primary" mode="query" />
+        );
+    }
+
+    renderNoAccommodations() {
+        const { classes } = this.props;
+        const msg = this.isLoading ?
+            "Searching..."
+            : "Could find any place";
+        return (
+            <Grid container aligItems="center" justify="center" className={classes.noAccosContainer}>
+                <Typography className={classes.noAccosText} variant="headline" color="primary" component="h3">{msg}</Typography>
+            </Grid>
+        );
+    }
+
     renderListItems() {
         const { classes } = this.props;
         const iconContainer = `${classes.iconContainer} display-flex-row full-width space-around margin-auto`;
@@ -100,7 +133,7 @@ class AccommodationCard extends React.PureComponent {
             .map((a) => {
                 const imgUrl = a.pictures.length > 0 ? a.pictures[0].url : `${process.env.PUBLIC_URL}/img/accommodation.jpg`;
                 return (
-                    <Grid className="margin-auto accommodation-card-container" item xs={12} sm={6} md={4} key={a.id}>
+                    <Grid className="margin-auto full-width full-height accommodation-card-container" item xs={12} sm={6} md={4} key={a.id}>
                         <Card className={classes.card}>
                             <CardMedia
                                 className={classes.media}
@@ -135,9 +168,20 @@ class AccommodationCard extends React.PureComponent {
     }
 
     render() {
+        const { classes } = this.props;
         return (
             <Grid container className="accommodation-card-container">
-                {this.renderListItems()}
+                <Paper className={classes.rootRaper} >
+                    {this.renderSpinner()}
+                    {this.accommodations && this.accommodations.length > 0 &&
+                    <Grid container item xs={12}>
+                        {this.renderListItems()}
+                    </Grid>}
+                    {(!this.accommodations || this.accommodations.length === 0) &&
+                    <Grid container item xs={12}>
+                        {this.renderNoAccommodations()}
+                    </Grid>}
+                </Paper>
             </Grid>
         );
     }

@@ -182,12 +182,30 @@ export const searchAccommodations = (params, searchDate) =>
     async (dispatch, getState, API) => {
         dispatch(searchAccommodationRequest());
         try {
-            const res = await API.accommodationApi.search(params);
+            let queryParams = {
+                ...params,
+            };
+            if (params.location) {
+                const openRes = await API.openMapApi.search(params.location);
+                if (openRes.address) {
+                    queryParams = {
+                        ...queryParams,
+                        ...openRes.address,
+                    };
+                }
+            }
+            const res = await API.accommodationApi.search(queryParams);
             if (!res || res.hasError) {
+                dispatch(displaySnackMsg("Research failed"));
                 return dispatch(searchAccommodationFailure(res.message));
+            }
+            if (res.length < 0) {
+                dispatch(displaySnackMsg("No matching places were found"));
             }
             return dispatch(searchAccommodationSuccess(res, searchDate));
         } catch (error) {
+            dispatch(displaySnackMsg("Research failed"));
             return dispatch(searchAccommodationFailure(error.message));
         }
     };
+
