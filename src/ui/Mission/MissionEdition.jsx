@@ -267,6 +267,10 @@ class MissionEdition extends React.PureComponent {
             .find(candidacy => candidacy.user.id === user.data.id);
     }
 
+    get isUserRefused() {
+        return this.userCandidacy && this.userCandidacy.status === -1; 
+    }
+
     get userNotInTravellers() {
         return !this.userCandidacy;
     }
@@ -902,20 +906,22 @@ class MissionEdition extends React.PureComponent {
         const checkinDateCandidacy = !this.userCandidacy ? DEFAULT_CHECKIN_DATE : moment(this.userCandidacy.fromDate, `${DATE_FORMAT} ${HOUR_FORMAT}`).local();
         const checkoutDateCandidacy = !this.userCandidacy ? DEFAULT_CHECKOUT_DATE : moment(this.userCandidacy.toDate, `${DATE_FORMAT} ${HOUR_FORMAT}`).local();
         const acco = this.props.mission.current.data.accommodation;
+
+        let contentText = "Applying will allow you to communicate with your potential host";
+        if (this.isUserRefused) {
+            contentText = `Your candidacy was refused ${moment(candidacy.updated_at, `${DATE_FORMAT}, ${HOUR_FORMAT}:SS`).fromNow()}`;
+        } else if (candidacy && candidacy.status > 0) {
+            contentText = "Removing your candidacy will prevent you from communicating with the host";
+        }
         return (this.mission &&
             <Dialog
                 open={this.state.openApplyModal && user.isLoggedIn && !this.isUserOwner}
                 onClose={this.handleCloseApplyModal}
                 aria-labelledby="form-apply-dialog-title"
             >
-                <DialogTitle id="form-apply-dialog-title">Your Candidacy</DialogTitle>
+                <DialogTitle id="form-apply-dialog-title">{this.isUserRefused ? "Your denied Candidacy" : "Your Candidacy"}</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
-                        {candidacy && candidacy.status > 0 ?
-                            "Removing your candidacy will prevent you from communicating with the host"
-                            : "Applying will allow you to communicate with your potential host"
-                        }
-                    </DialogContentText>
+                    <DialogContentText>{contentText}</DialogContentText>
                     <Divider inset className={classes.modalDivider} />
                     <Grid container direction="row" align="flex-start">
                         <Grid item xs={6}>
@@ -926,7 +932,7 @@ class MissionEdition extends React.PureComponent {
                                     shrink: true,
                                 }}
                                 id="checkin-checkindate-apply-input"
-                                disabled={!canChangeCandidacy}
+                                disabled={!canChangeCandidacy || this.isUserRefused}
                                 InputProps={{
                                     disableUnderline: true,
                                     style: {
@@ -942,7 +948,7 @@ class MissionEdition extends React.PureComponent {
                                 name="checkinDateApply"
                                 min={moment().local().format(DATE_FORMAT)}
                                 onChange={(ev) => {
-                                    if (!canChangeCandidacy) {
+                                    if (!canChangeCandidacy || this.isUserRefused) {
                                         return;
                                     }
                                     const { value } = ev.target;
@@ -966,7 +972,7 @@ class MissionEdition extends React.PureComponent {
                                     shrink: true,
                                 }}
                                 id="checkout-checkoutdate-apply-input"
-                                disabled={!canChangeCandidacy}
+                                disabled={!canChangeCandidacy || this.isUserRefused}
                                 InputProps={{
                                     disableUnderline: !this.isUserOwner,
                                     style: {
@@ -982,7 +988,7 @@ class MissionEdition extends React.PureComponent {
                                 name="checkoutDateApply"
                                 min={moment().format(DATE_FORMAT)}
                                 onChange={(ev) => {
-                                    if (!canChangeCandidacy) {
+                                    if (!canChangeCandidacy || this.isUserRefused) {
                                         return;
                                     }
                                     const { value } = ev.target;
@@ -1008,7 +1014,7 @@ class MissionEdition extends React.PureComponent {
                     }
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={this.handleClose} color="primary">
+                    <Button onClick={this.handleCloseApplyModal} color="default">
                         Close
                     </Button>
                     {canChangeCandidacy &&
@@ -1016,6 +1022,7 @@ class MissionEdition extends React.PureComponent {
                         disabled={this.state.checkoutApplyDateError.length > 0
                             || this.state.checkinApplyDateError.length > 0
                             || !canChangeCandidacy
+                            || this.isUserRefused
                         }
                         onClick={this.handleApplyToggle}
                         color="primary"
@@ -1029,8 +1036,14 @@ class MissionEdition extends React.PureComponent {
 
     renderApplyBtn() {
         const { user, classes, mission } = this.props;
+        const candidacy = this.userCandidacy;
+        let message = "Submit your candidacy";
+        if (this.isUserRefused) {
+            message = "Your candidacy was refused";
+        } else if (candidacy && candidacy.status > 0) {
+            message = "Change your candidacy";
+        }
         if (user.isLoggedIn && !this.isUserOwner && !mission.current.isLoading) {
-            const candidacy = this.userCandidacy;
             return (this.canChangeCandidacy &&
                 <Button
                     id="#mission-apply-toggle-modal-btn"
@@ -1044,7 +1057,7 @@ class MissionEdition extends React.PureComponent {
                     onClick={this.handleOpenApplyModal}
                     variant="raised"
                 >
-                    {candidacy && candidacy.status > 0 ? "Change your candidacy" : "Submit your candidacy"}
+                    {message}
                 </Button>
             );
         }
