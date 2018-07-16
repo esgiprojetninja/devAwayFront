@@ -268,7 +268,7 @@ class MissionEdition extends React.PureComponent {
     }
 
     get isUserRefused() {
-        return this.userCandidacy && this.userCandidacy.status === -1; 
+        return this.userCandidacy && this.userCandidacy.status === -1;
     }
 
     get userNotInTravellers() {
