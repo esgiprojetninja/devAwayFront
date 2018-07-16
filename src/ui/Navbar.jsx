@@ -5,11 +5,13 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { withStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuIcon from "@material-ui/icons/Menu";
 import Snackbar from "@material-ui/core/Snackbar";
+import Fade from "@material-ui/core/Fade";
 
 import LogBox from "../containers/LogBox";
 import SubscribeBox from "../containers/SubscribeBox";
@@ -31,7 +33,7 @@ export class NavBarComponent extends React.PureComponent {
         closeSnack: T.func.isRequired,
     };
 
-    static defaultProps = { burgerColor: "#fff" }
+    static defaultProps = { burgerColor: "#fff", replaceLogoWithSpinner: false }
 
     constructor(props) {
         super(props);
@@ -170,11 +172,11 @@ export class NavBarComponent extends React.PureComponent {
                                 id="home-link-logo"
                                 to="/"
                             >
-                                <img
+                                {!this.props.replaceLogoWithSpinner && <img
                                     className={classes.logo}
                                     alt="Devaway Logo"
                                     src={`${process.env.PUBLIC_URL}/img/logowhite.png`}
-                                />
+                                />}
                             </NavLink>
                         </div>
                         <SubscribeBox />
@@ -192,6 +194,11 @@ export class NavBarComponent extends React.PureComponent {
                 >
                     <MenuIcon />
                 </IconButton>
+                {this.props.replaceLogoWithSpinner &&
+                <Fade in mountOnEnter unmountOnExit>
+                    <CircularProgress className={classes.fixedSpinner} style={togglerStyle} color="inherit" />
+                </Fade>
+                }
                 {this.renderSnackbar()}
             </div>
         );
@@ -207,7 +214,8 @@ NavBarComponent.propTypes = {
     }).isRequired,
     user: T.shape({
         isLoggedIn: T.bool.isRequired
-    }).isRequired
+    }).isRequired,
+    replaceLogoWithSpinner: T.bool,
 };
 
 export default withStyles(theme => ({
@@ -238,6 +246,12 @@ export default withStyles(theme => ({
         right: theme.spacing.unit,
         zIndex: theme.zIndex.appBar + 1,
     },
+    fixedSpinner: {
+        position: "fixed",
+        top: theme.spacing.unit * 1.2,
+        left: theme.spacing.unit * 1.75,
+        zIndex: theme.zIndex.appBar + 1,
+    },
     toolbar: {
         paddingRight: theme.spacing.unit * 6
     },
@@ -245,5 +259,5 @@ export default withStyles(theme => ({
         margin: theme.spacing.unit,
         width: "300px",
         left: "calc(50% - 150px)"
-    }
+    },
 }))(NavBarComponent);

@@ -22,9 +22,9 @@ import Switch from "@material-ui/core/Switch";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import TodoIcon from "react-icons/lib/fa/question";
 import UnbookedIcon from "react-icons/lib/fa/paper-plane";
+import LockedIcon from "react-icons/lib/fa/lock";
 import BookedIcon from "react-icons/lib/fa/close";
 import Avatar from "@material-ui/core/Avatar";
 import UserIcon from "react-icons/lib/fa/user";
@@ -39,6 +39,7 @@ import Navbar from "../../containers/Navbar";
 import { getAccoImg } from "../../utils/accommodation";
 import CarouselImages from "../../containers/AccommodationDetailImages";
 import GMap from "../../containers/AccommodationDetailMap";
+import Travellers from "../../containers/Mission/MissionTravellers";
 import missionRules from "../../propTypes/missionRulesType";
 import { getStateFromRules, DATE_FORMAT, HOUR_FORMAT } from "../../utils/mission";
 import getUserImg from "../../utils/user";
@@ -51,8 +52,18 @@ const styles = theme => ({
         width: "100%",
         maxWidth: 1200,
         margin: "auto",
+        marginTop: theme.spacing.unit * 2,
         overflow: "hidden",
         position: "relative",
+    },
+    hostInfoContainer: {
+        maxWidth: 150,
+        top: 0,
+        right: theme.spacing.unit * 2,
+        position: "absolute",
+    },
+    carouselContainer: {
+        marginTop: theme.spacing.unit * 4,
     },
     mapContainer: {
         height: 300,
@@ -96,7 +107,7 @@ const styles = theme => ({
         fontSize: "large",
     },
     ownerInactiveWarningContainer: {
-        background: "rgba(8, 8, 8, .35)",
+        background: theme.palette.primary.lightGrey,
         borderRadius: "2%",
         boxShadow: "1px 3px 21px 0px #aeaeae",
     },
@@ -127,6 +138,16 @@ const styles = theme => ({
         color: theme.palette.primary.midGrey,
         margin: theme.spacing.unit * 4,
     },
+    headDivider: {
+        width: "100%",
+        margin: theme.spacing.unit * 3,
+        marginBottom: theme.spacing.unit,
+        marginLeft: 0,
+        marginRight: 0,
+        padding: 0,
+        background: theme.palette.primary.light,
+        height: 5
+    },
     modalDivider: {
         width: "100%",
         margin: theme.spacing.unit * 3,
@@ -139,8 +160,17 @@ const styles = theme => ({
         top: theme.spacing.unit * 3,
         right: theme.spacing.unit * 3,
     },
+    noMissionContainer: {
+        height: "100%",
+        minHeight: "80vh",
+        width: "100%",
+    },
+    cardSubHeader: {
+        "& > div > span:first-of-type": {
+            color: theme.palette.primary.darkGrey,
+        },
+    },
 });
-
 
 class MissionEdition extends React.PureComponent {
     state = {
@@ -447,26 +477,28 @@ class MissionEdition extends React.PureComponent {
             Boolean(this.state.isActive)
             : Boolean(this.mission.isActive);
         return (
-            <Grid container alignItems="center" className={classes.inactiveWarningContainer}>
-                <Grid item xs={3}>
-                    <FormControlLabel
-                        disabled={this.props.mission.current.isLoading}
-                        control={
-                            <Switch
-                                checked={isActive}
-                                onChange={this.toggleIsActive}
-                                color="primary"
-                            />}
-                        label={mission.isActive ? "Switched to active" : "Switched to inactive"}
-                    />
+            <Fade in mountOnEnter unmountOnExit>
+                <Grid container alignItems="center" className={classes.inactiveWarningContainer}>
+                    <Grid item xs={3}>
+                        <FormControlLabel
+                            disabled={this.props.mission.current.isLoading}
+                            control={
+                                <Switch
+                                    checked={isActive}
+                                    onChange={this.toggleIsActive}
+                                    color="primary"
+                                />}
+                            label={mission.isActive ? "Switched to active" : "Switched to inactive"}
+                        />
+                    </Grid>
+                    <Grid item xs={9}>
+                        {isActive &&
+                        <Typography variant="headline" color="textSecondary">
+                            This mission is visible, travellers can apply for it
+                        </Typography>}
+                    </Grid>
                 </Grid>
-                <Grid item xs={9}>
-                    {isActive &&
-                    <Typography variant="headline" color="textSecondary">
-                        This mission is visible, travellers can apply for it
-                    </Typography>}
-                </Grid>
-            </Grid>
+            </Fade>
         );
     }
 
@@ -687,13 +719,14 @@ class MissionEdition extends React.PureComponent {
 
     renderHostInfo() {
         const { mission } = this;
-        if (this.isUserOwner || !mission || !mission.accommodation || !mission.accommodation.host) {
+        if (!mission || !mission.accommodation || !mission.accommodation.host) {
             return null;
         }
+        const { classes } = this.props;
         const imgUrl = getUserImg(mission.accommodation.host.avatar);
         if (!imgUrl) {
             return (
-                <Grid container justify="flex-start">
+                <Grid className={classes.hostInfoContainer} container justify="flex-start">
                     <Grid item>
                         <UserIcon size={25} className={this.props.classes.icon} />
                     </Grid>
@@ -706,7 +739,7 @@ class MissionEdition extends React.PureComponent {
             );
         }
         return (
-            <Grid container justify="flex-start">
+            <Grid className={classes.hostInfoContainer} container justify="flex-start">
                 <Grid item>
                     <Avatar
                         className={this.props.classes.avatar}
@@ -724,72 +757,86 @@ class MissionEdition extends React.PureComponent {
     }
 
     renderMissionDetails() {
-        const currentAcco = this.props.mission.current.data.accommodation;
         const { classes } = this.props;
+        const showInactiveLabel = this.props.mission.current.data.isActive <= 0;
+        const collapseStyle = {
+            transition: ".2s transform ease-in-out",
+            transform: showInactiveLabel ? "initial" : "scale(0, 0)",
+            height: "100%",
+            width: "100%",
+        };
+        const gridStyle = {
+            ...collapseStyle,
+            height: "auto",
+        };
         return (
             this.mission &&
-            <Grid className="relative" container alignItems="center" justify="flex-start">
-                {this.renderBookedStatus()}
-                {this.renderInactiveControl()}
-                {this.props.mission.current.data.isActive === 0 && this.isUserOwner &&
-                    <Slide in mountOnEnter unmountOnExit>
-                        <Fade in={this.props.mission.current.data.isActive <= 0}>
-                            <Grid direction="row" className={classes.ownerInactiveWarningContainer} container alignItems="center" justify="center">
-                                <Typography className={classes.ownerInactiveWarning} variant="headline" color="primary" component="h3">
-                                    This mission has been set to inactive,
-                                    it&#39;s informations and travellers are now freezed
+            <Slide direction="right" in mountOnEnter unmountOnExit>
+                <Fade in mountOnEnter unmountOnExit>
+                    <Grid className="relative" container alignItems="center" justify="flex-start">
+                        {this.renderBookedStatus()}
+                        {this.renderInactiveControl()}
+                        <Grid style={gridStyle} item xs={12}>
+                            <Slide in={showInactiveLabel} mountOnEnter unmountOnExit>
+                                <Fade in={showInactiveLabel}>
+                                    <Grid direction="row" className={classes.ownerInactiveWarningContainer} container alignItems="center" justify="center">
+                                        <div style={collapseStyle}>
+                                            <Grid direction="row" container alignItems="center" justify="center">
+                                                <LockedIcon style={{ color: "#fff" }} size={25} />
+                                                <Typography className={classes.ownerInactiveWarning} variant="headline" color="primary" component="h3">
+                                                    This mission has been set to inactive,
+                                                    it&#39;s
+                                                    informations and travellers are now freezed
+                                                </Typography>
+                                            </Grid>
+                                        </div>
+                                    </Grid>
+                                </Fade>
+                            </Slide>
+                        </Grid>
+                        {this.isUserOwner &&
+                        <Grid container item direction="row" align="flex-start" xs={12} md={6}>
+                            {this.renderTextField("title", this.mission.title, { color: darkGrey, fontWeight: 500, fontSize: "1.875em" })}
+                        </Grid>}
+                        {this.isUserOwner &&
+                        <Grid item container xs={12} md={6} justify="flex-start">
+                            {this.renderStartDateFields()}
+                            {this.renderEndDateFields()}
+                        </Grid>}
+                        <Grid item container xs={6}>
+                            <div className="display-flex-row full-width justify-start">
+                                {this.renderPlaceAvatar()}
+                                {this.mission && this.mission.title && !this.isUserOwner &&
+                                    <NavLink
+                                        to={`/places/${this.mission.accommodation_id}`}
+                                    >
+                                        <Typography className={classes.accommodationText} type="paragraph" color="inherit">{this.mission.title}
+                                        </Typography>
+                                    </NavLink>
+                                }
+                                {this.currentAccommodationId && this.isUserOwner && this.renderSelectProperty("accommodation_id", this.props.formRules.accommodation_id.values, this.currentAccommodationId)}
+                            </div>
+                        </Grid>
+                        <Grid className={classes.mapContainer} item xs={12}>
+                            {this.mission &&
+                                <GMap
+                                    acco={this.mission}
+                                    isUserOwner={false}
+                                />
+                            }
+                        </Grid>
+                        <div className="display-flex-row full-width justify-start">
+                            {this.mission && this.mission.address &&
+                                <Typography className={classes.selectFormControl} type="paragraph" color="inherit" variant="caption">{this.mission.address}
                                 </Typography>
-                            </Grid>
-                        </Fade>
-                    </Slide>
-                }
-                {this.isUserOwner &&
-                <Grid container item direction="row" align="flex-start" xs={12} md={6}>
-                    {this.renderTextField("title", this.mission.title, { color: darkGrey, fontWeight: 500, fontSize: "1.875em" })}
-                </Grid>}
-                {this.isUserOwner &&
-                <Grid item container xs={12} md={6} justify="flex-start">
-                    {this.renderStartDateFields()}
-                    {this.renderEndDateFields()}
-                </Grid>}
-                <Grid item container xs={6}>
-                    <div className="display-flex-row full-width justify-start">
-                        {this.renderPlaceAvatar()}
-                        {currentAcco && currentAcco.title && !this.isUserOwner &&
-                            <NavLink
-                                to={`/places/${this.mission.accommodation_id}`}
-                            >
-                                <Typography className={classes.accommodationText} type="paragraph" color="inherit">{currentAcco.title}
-                                </Typography>
-                            </NavLink>
-                        }
-                        {this.currentAccommodationId && this.isUserOwner && this.renderSelectProperty("accommodation_id", this.props.formRules.accommodation_id.values, this.currentAccommodationId)}
-                    </div>
-                </Grid>
-                {!this.isUserOwner && this.mission
-                && this.mission.accommodation && this.mission.accommodation.host &&
-                    <Grid item container xs={12}>
-                        {this.renderHostInfo()}
+                            }
+                        </div>
+                        <Grid item xs={12}>
+                            {this.renderTextField("description", this.mission.description, { color: midGrey, fontSize: "1.275em" }, { rowsMax: 4 })}
+                        </Grid>
                     </Grid>
-                }
-                <Grid className={classes.mapContainer} item xs={12}>
-                    {currentAcco &&
-                        <GMap
-                            acco={currentAcco}
-                            isUserOwner={false}
-                        />
-                    }
-                </Grid>
-                <div className="display-flex-row full-width justify-start">
-                    {currentAcco && currentAcco.address &&
-                        <Typography className={classes.selectFormControl} type="paragraph" color="inherit" variant="caption">{currentAcco.address}
-                        </Typography>
-                    }
-                </div>
-                <Grid item xs={12}>
-                    {this.renderTextField("description", this.mission.description, { color: midGrey, fontSize: "1.275em" }, { rowsMax: 4 })}
-                </Grid>
-            </Grid>
+                </Fade>
+            </Slide>
         );
     }
 
@@ -833,15 +880,6 @@ class MissionEdition extends React.PureComponent {
                 >
                     <Save />
                 </Button>
-            </div>
-        );
-    }
-
-    renderSpinner() {
-        return (
-            this.isLoading &&
-            <div id="devaway-mission-edition-spinner-container" style={{ marginTop: 20 }} className="display-flex-row full-width">
-                <CircularProgress color="primary" />
             </div>
         );
     }
@@ -983,30 +1021,59 @@ class MissionEdition extends React.PureComponent {
         );
     }
 
+    renderNoMissionDetail() {
+        const { classes } = this.props;
+        return (
+            !this.mission &&
+            <Slide direction="left" in mountOnEnter unmountOnExit>
+                <Fade in mountOnEnter unmountOnExit>
+                    <Grid container alignItems="center" justify="center" className={classes.noMissionContainer}>
+                        <Grid item>
+                            <Typography variant="headline" component="h2" color="primary">
+                                This mission does not exist anymore
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                </Fade>
+            </Slide>
+        );
+    }
+
     render() {
         const suheader = this.mission ?
             `${moment(this.mission.checkinDate).format("MMMM Do YYYY")}  --->  ${moment(this.mission.checkoutDate).format("MMMM Do YYYY")}`
             : "";
-        const { user } = this.props;
+        const { classes } = this.props;
         const canEditImages = this.isUserOwner && this.mission.isActive > 0;
         return (
             <div className="full-width">
-                <Navbar burgerColor={darkGrey} />
+                <Navbar replaceLogoWithSpinner={this.isLoading} burgerColor={darkGrey} />
                 <Card className={this.props.classes.container}>
-                    {this.renderSpinner()}
-                    {!this.isUserOwner && <CardHeader
+                    {<CardHeader
+                        className={classes.cardSubHeader}
                         title={`Mission ${this.isUserOwner ? "edition" : "detail"}`}
                         subheader={suheader}
                     />}
-                    <Grid container alignItems="center" justify="center">
-                        {this.mission && !user.isLoading && !user.isGettingData &&
-                        <CarouselImages
-                            acco={this.mission}
-                            isUserOwner={canEditImages}
-                            changePictureListener={this.handlePictureChange}
-                        />}
+                    <Divider inset className={classes.headDivider} />
+                    <Grid className={classes.carouselContainer} container alignItems="center" justify="center">
+                        {this.mission &&
+                        <Slide in mountOnEnter unmountOnExit>
+                            <CarouselImages
+                                acco={this.mission}
+                                isUserOwner={canEditImages}
+                                changePictureListener={this.handlePictureChange}
+                            />
+                        </Slide>}
                     </Grid>
                     {this.renderMissionDetails()}
+                    {!this.mission && this.renderNoMissionDetail()}
+                    <Grid container>
+                        <Travellers mission={this.mission} isUserOwner={this.isUserOwner} />
+                    </Grid>
+                    {this.mission
+                        && this.mission.accommodation && this.mission.accommodation.host &&
+                        this.renderHostInfo()
+                    }
                 </Card>
                 {this.isUserOwner && this.props.mission.current.data.isActive > 0 &&
                     this.renderSaveBtns()}
