@@ -78,6 +78,9 @@ const styles = theme => ({
     },
     darkText: {
         color: theme.palette.primary.darkGrey,
+    },
+    candidacyStatusMsg: {
+        marginTop: theme.spacing.unit * 2,
     }
 });
 
@@ -100,7 +103,7 @@ class MissionTravellers extends React.PureComponent {
     }
 
     get isMissionActive() {
-        return this.mission && this.mission.isActive > 0;
+        return this.mission && this.mission.isActive === 1;
     }
 
     get travellers() {
@@ -109,6 +112,32 @@ class MissionTravellers extends React.PureComponent {
             && this.mission.travellers.length > 0 ?
             this.mission.travellers
             : null;
+    }
+
+    getCandidacyUnEditableStatus(candidacy) {
+        if (!candidacy || !this.mission) {
+            return "";
+        }
+        if (!this.isMissionActive) {
+            return "The mission is locked and cannot be modified untill you switch it back to active";
+        }
+        if (this.mission.isBooked <= 0) {
+            const acceptedCandidate = this.mission.travellers.find(cand => cand.status === 69);
+            if (acceptedCandidate) {
+                return `The mission is already taken by ${acceptedCandidate.user.userName}}`;
+            }
+        }
+        switch (candidacy.status) {
+        case 0: return "User has cancelled his own candidacy";
+        case -1: return "You have refused this user already";
+        case 69: return "Booked users cannot be denied access anymore";
+        default: return "What do you wanna do about this candidacy ?";
+        }
+    }
+
+    isCandidacyEditable(candidacy) {
+        return candidacy && this.isMissionActive
+            && candidacy.status === 1 && this.mission.isBooked <= 0;
     }
 
     handleChangePage = prop => (event, page) => {
@@ -134,7 +163,10 @@ class MissionTravellers extends React.PureComponent {
         });
     };
     validateCandidacyModal = () => {
-        this.props.validateCandidacy(this.state.candidacy);
+        if (!this.isCandidacyEditable(this.state.candidacy)) {
+            return;
+        }
+        this.props.acceptCandidacy(this.state.candidacy);
         this.setState({
             candidacy: null
         });
@@ -170,18 +202,26 @@ class MissionTravellers extends React.PureComponent {
                                 To {candidacy && moment(candidacy.toDate).local().format("MMMM Do YYYY")}
                             </Typography>
                         </Grid>
+                        {this.isCandidacyEditable(candidacy) &&
                         <Grid container>
                             Be aware that after you accept this candidacy,
                             you will not be able to accept another unless
                             {candidacy ? ` ${candidacy.user.userName}` : "the user" } cancels his by himself
-                        </Grid>
+                        </Grid>}
+                        {!this.isCandidacyEditable(candidacy) &&
+                        <Grid container>
+                            <Typography className={classes.candidacyStatusMsg} variant="subheading" color="primary" component="p">
+                                This candidacy cannot be modified,&nbsp;
+                                {this.getCandidacyUnEditableStatus(candidacy)}
+                            </Typography>
+                        </Grid>}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={this.handleCloseCandidacyModal} color="default">
                         Cancel
                     </Button>
-                    <Button onClick={this.validateCandidacyModal} color="primary" autoFocus>
+                    <Button disabled={!this.isCandidacyEditable(candidacy) || this.props.mission.current.isLoading} onClick={this.validateCandidacyModal} color="primary" autoFocus>
                         Validate
                     </Button>
                 </DialogActions>
@@ -197,7 +237,9 @@ class MissionTravellers extends React.PureComponent {
                 <TableCell>Cancidacy Status</TableCell>
                 <TableCell>Starting</TableCell>
                 <TableCell>Ending</TableCell>
-                <TableCell>Actions</TableCell>
+                {this.mission.isBooked === 0 &&
+                    this.mission.isActive === 1 && !this.mission.isLoading &&
+                    <TableCell>Actions</TableCell>}
             </TableRow>
         );
     }
@@ -249,18 +291,17 @@ class MissionTravellers extends React.PureComponent {
                 </TableCell>
                 <TableCell>{moment(candidacy.fromDate).local().format("MMMM Do YYYY")}</TableCell>
                 <TableCell>{moment(candidacy.toDate).local().format("MMMM Do YYYY")}</TableCell>
-                <TableCell padding="dense">
-                    {this.mission.isBooked === 0 &&
+                {this.mission.isBooked === 0 &&
+                    this.mission.isActive === 1 && !this.mission.isLoading &&
+                    <TableCell padding="dense">
                         <Button
                             aria-label="Accept candidacy"
-                            disabled={this.mission.isBooked === 1 || this.mission.isLoading}
-                            color="primary"
+                            color={candidacy.status === 1 ? "primary" : "default"}
                             onClick={this.handleOpenCandidacyModal(candidacy)}
                         >
-                            Approve Candidacy
+                            Manage Candidacy
                         </Button>
-                    }
-                </TableCell>
+                    </TableCell>}
             </TableRow>
         );
     }
@@ -314,22 +355,8 @@ class MissionTravellers extends React.PureComponent {
         );
     }
 
-    renderUserView() {
-        const { classes } = this.props;
-        return (
-            <div className={classes.chibar}>renderUserView</div>
-        );
-    }
-
-    renderVisitorView() {
-        const { classes } = this.props;
-        return (
-            <div className={classes.chibar}>renderVisitorView</div>
-        );
-    }
-
     render() {
-        const { classes, user } = this.props;
+        const { classes } = this.props;
         return (
             <Slide direction="left" in mountOnEnter unmountOnExit>
                 <Fade in mountOnEnter unmountOnExit>
@@ -337,13 +364,6 @@ class MissionTravellers extends React.PureComponent {
                         {this.props.isUserOwner &&
                             this.renderOwnerView()
                         }
-                        {!this.props.isUserOwner && user.isLoggedIn &&
-                            this.renderUserView()
-                        }
-                        {!this.props.isUserOwner && !user.isLoggedIn &&
-                            this.renderVisitorView()
-                        }
-                        {this.renderOwnerAcceptCandidacyModal()}
                     </div>
                 </Fade>
             </Slide>
@@ -353,14 +373,6 @@ class MissionTravellers extends React.PureComponent {
 
 MissionTravellers.propTypes = {
     isUserOwner: T.bool,
-    user: T.shape({
-        isLoggedIn: T.bool.isRequired,
-        isLoading: T.bool.isRequired,
-        isGettingData: T.bool.isRequired,
-        data: T.shape({
-            id: T.number,
-        }),
-    }).isRequired,
     mission: T.shape({
         current: T.shape({
             data: T.shape({
@@ -383,7 +395,8 @@ MissionTravellers.propTypes = {
     }).isRequired,
     classes: T.shape({
     }).isRequired,
-    validateCandidacy: T.func.isRequired,
+    acceptCandidacy: T.func.isRequired,
+    refuseCandidacy: T.func.isRequired,
 };
 
 export default withStyles(styles)(MissionTravellers);

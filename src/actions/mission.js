@@ -1,6 +1,7 @@
 /* global */
 import * as missionTypes from "./types/mission";
 import { displaySnackMsg } from "./snack";
+import user from "../utils/user";
 
 const fetchMissionsRequest = () => ({
     type: missionTypes.FETCH_MISSIONS_REQUEST
@@ -177,6 +178,27 @@ export const toggleMissionCandidacy = (apply = true, missionId, data) =>
         } catch (error) {
             verb = verb.replace("cancel", "cancell");
             dispatch(displaySnackMsg(`Your candidacy couldn't be ${verb}ed`));
+            return dispatch(toggleMissionCandidacyFail(error.message));
+        }
+    };
+
+export const acceptCandidate = (candidacy, accept = false) =>
+    async (dispatch, getState, API) => {
+        const mission = getState().mission.current.data;
+        dispatch(toggleMissionCandidacyRequest(mission.id));
+        let verb = accept ? "accept" : "refuse";
+        try {
+            const res = await API.missionApi[`${verb}Candidacy`](mission.id, candidacy.user.id);
+            verb = `${verb}ed`.replace("ee", "e");
+            if (res.hasError) {
+                dispatch(displaySnackMsg(`The candidacy couldn't be ${verb}ed on ${mission.title}`));
+                return dispatch(toggleMissionCandidacyFail(res.message));
+            }
+            const missionIsCurrent = res.id === getState().mission.current.data.id;
+            dispatch(displaySnackMsg(`The candidacy was ${verb} on ${mission.title}`));
+            return dispatch(toggleMissionCandidacySuccess(res, missionIsCurrent));
+        } catch (error) {
+            dispatch(displaySnackMsg(`The candidacy couldn't be ${verb}ed`));
             return dispatch(toggleMissionCandidacyFail(error.message));
         }
     };
