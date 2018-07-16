@@ -33,6 +33,7 @@ import getUserImg from "../../utils/user";
 
 function getCandidacyStatusMsg(candidacy) {
     switch (candidacy.status) {
+    case -1: return "Refused";
     case 0: return "Cancelled";
     case 1: return "Proposed";
     case 69: return "Booked";
@@ -162,11 +163,24 @@ class MissionTravellers extends React.PureComponent {
             candidacy: null
         });
     };
+
     validateCandidacyModal = () => {
-        if (!this.isCandidacyEditable(this.state.candidacy)) {
+        if (!this.isCandidacyEditable(this.state.candidacy)
+            || this.props.mission.current.isLoading) {
             return;
         }
         this.props.acceptCandidacy(this.state.candidacy);
+        this.setState({
+            candidacy: null
+        });
+    };
+
+    refuseCandidacyModal = () => {
+        if (!this.isCandidacyEditable(this.state.candidacy)
+            || this.props.mission.current.isLoading) {
+            return;
+        }
+        this.props.refuseCandidacy(this.state.candidacy);
         this.setState({
             candidacy: null
         });
@@ -221,8 +235,11 @@ class MissionTravellers extends React.PureComponent {
                     <Button onClick={this.handleCloseCandidacyModal} color="default">
                         Cancel
                     </Button>
+                    <Button disabled={!this.isCandidacyEditable(candidacy) || this.props.mission.current.isLoading} onClick={this.refuseCandidacyModal} color="secondary">
+                        Refuse Candidacy
+                    </Button>
                     <Button disabled={!this.isCandidacyEditable(candidacy) || this.props.mission.current.isLoading} onClick={this.validateCandidacyModal} color="primary" autoFocus>
-                        Validate
+                        Confirm Candidacy
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -248,6 +265,10 @@ class MissionTravellers extends React.PureComponent {
         const { classes } = this.props;
         return (
             <div>
+                {
+                    candidacy.status === -1 &&
+                    <CandidacyCancelledIcon size={tableIconSize} className={classes.tableIcon} />
+                }
                 {
                     candidacy.status === 0 &&
                     <CandidacyCancelledIcon size={tableIconSize} className={classes.tableIcon} />
@@ -363,6 +384,9 @@ class MissionTravellers extends React.PureComponent {
                     <div className={classes.container}>
                         {this.props.isUserOwner &&
                             this.renderOwnerView()
+                        }
+                        {this.props.isUserOwner &&
+                            this.renderOwnerAcceptCandidacyModal()
                         }
                     </div>
                 </Fade>
