@@ -23,12 +23,10 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import TodoIcon from "react-icons/lib/fa/question";
-import UnbookedIcon from "react-icons/lib/fa/paper-plane";
 import LockedIcon from "react-icons/lib/fa/lock";
-import BookedIcon from "react-icons/lib/fa/close";
+import BookIcon from "react-icons/lib/fa/book";
 import Avatar from "@material-ui/core/Avatar";
 import UserIcon from "react-icons/lib/fa/user";
-import Tooltip from "@material-ui/core/Tooltip";
 import Divider from "@material-ui/core/Divider";
 import Fade from "@material-ui/core/Fade";
 import Slide from "@material-ui/core/Slide";
@@ -115,6 +113,11 @@ const styles = theme => ({
         margin: theme.spacing.unit * 4,
         color: "#fff",
         fontWeight: 700,
+    },
+    connectedBookedUserLabelContainer: {
+        background: theme.palette.primary.light,
+        borderRadius: "2%",
+        boxShadow: "1px 3px 21px 0px #aeaeae",
     },
     selectFormControl: {
         margin: theme.spacing.unit * 4,
@@ -260,13 +263,8 @@ class MissionEdition extends React.PureComponent {
         if (!mission.current.data.travellers) {
             return false;
         }
-        if (!mission.current.data.isBooked === 1 ||
-            mission.current.data.travellers
-                .find(candidacy => candidacy.user === user.data.id && candidacy.status === 69)) {
-            return false;
-        }
         return mission.current.data.travellers
-            .find(candidacy => candidacy.user === user.data.id && candidacy.status === 1);
+            .find(candidacy => candidacy.user.id === user.data.id);
     }
 
     get userNotInTravellers() {
@@ -274,15 +272,21 @@ class MissionEdition extends React.PureComponent {
     }
 
     get userIsBookedTraveller() {
-        const { user, mission } = this.props;
-        if (mission.current.data.isBooked === 1) {
-            const bookedUserID = mission.current.data.travellers
-                .find(candidacy => candidacy.user === user.data.id && candidacy.status === 69).user;
-            if (bookedUserID !== user.data.id) {
-                return true;
-            }
+        const { mission } = this;
+        const { user } = this.props;
+        if (mission && mission.travellers && mission.isBooked === 1) {
+            const accepted = mission.travellers
+                .find(candidacy => candidacy.user.id === user.data.id && candidacy.status === 69);
+            return Boolean(accepted);
         }
         return false;
+    }
+
+
+    get canChangeCandidacy() {
+        return !this.isLoading && this.mission
+        && ((this.mission.isActive === 1 && this.mission.isBooked === 0)
+            || this.userIsBookedTraveller);
     }
 
     getSnapshotedDate(prop = "in" || "out") {
@@ -362,14 +366,15 @@ class MissionEdition extends React.PureComponent {
             || this.checkoutApplyDateError || this.checkinApplyDateError) {
             return;
         }
-        if (mission.isBooked === 1 && !this.userIsBookedTraveller) {
+        if ((mission.isBooked === 1 || mission.isActive === 0) && !this.userIsBookedTraveller) {
             return;
         }
         let { checkinApplyDate, checkoutApplyDate } = this.state;
         checkinApplyDate = checkinApplyDate || DEFAULT_CHECKIN_DATE;
         checkoutApplyDate = checkoutApplyDate || DEFAULT_CHECKOUT_DATE;
-
-        this.props.toggleMissionCandidacy(this.userNotInTravellers, {
+        const apply = this.userNotInTravellers
+            || (this.userCandidacy && this.userCandidacy.status === 0);
+        this.props.toggleMissionCandidacy(apply, {
             fromDate: checkinApplyDate.unix() < checkoutApplyDate.unix() ?
                 checkinApplyDate.format(`${DATE_FORMAT}, ${HOUR_FORMAT}`)
                 : checkoutApplyDate.format(`${DATE_FORMAT}, ${HOUR_FORMAT}`),
@@ -492,49 +497,13 @@ class MissionEdition extends React.PureComponent {
                         />
                     </Grid>
                     <Grid item xs={9}>
-                        {isActive &&
+                        {isActive && mission.isBooked <= 0 &&
                         <Typography variant="headline" color="textSecondary">
                             This mission is visible, travellers can apply for it
                         </Typography>}
                     </Grid>
                 </Grid>
             </Fade>
-        );
-    }
-
-    renderBookedStatus() {
-        const { user, classes, mission } = this.props;
-        if (user.isLoggedIn && !this.isUserOwner && !this.props.mission.current.isLoading) {
-            return (this.props.mission.current.data.isActive === 0 &&
-                <Button
-                    id="#mission-apply-toggle-modal-btn"
-                    className={classes.applyBtn}
-                    aria-label={this.userNotInTravellers ?
-                        "Applying will allow you to communicate with your potential host"
-                        : "Removing your candidacy will prevent you from communicating with the host"
-                    }
-                    disabled={this.props.mission.current.data.isActive === 0}
-                    color="default"
-                    onClick={this.handleOpenApplyModal}
-                    variant="raised"
-                >
-                    {this.userNotInTravellers ? "Submit your candidacy" : "Cancel candidacy"}
-                </Button>
-            );
-        }
-        if (!this.mission || this.mission.isBooked === 0) {
-            return (
-                <Tooltip title="No booked traveller yet">
-                    <UnbookedIcon className={this.props.classes.bookedIcon} size={25} />
-                </Tooltip>
-            );
-        }
-        return (
-            <Tooltip title="Mission booked">
-                <NavLink to={`/users/${mission.current.data.travellers.find(candidacy => candidacy.status === 69).user}`}>
-                    <BookedIcon className={this.props.classes.bookedIcon} size={25} />
-                </NavLink>
-            </Tooltip>
         );
     }
 
@@ -717,7 +686,7 @@ class MissionEdition extends React.PureComponent {
         );
     }
 
-    renderHostInfo() {
+    renderHostInfo(direction = "row") {
         const { mission } = this;
         if (!mission || !mission.accommodation || !mission.accommodation.host) {
             return null;
@@ -726,7 +695,7 @@ class MissionEdition extends React.PureComponent {
         const imgUrl = getUserImg(mission.accommodation.host.avatar);
         if (!imgUrl) {
             return (
-                <Grid className={classes.hostInfoContainer} container justify="flex-start">
+                <Grid className={classes.hostInfoContainer} container direction={direction} justify="flex-start">
                     <Grid item>
                         <UserIcon size={25} className={this.props.classes.icon} />
                     </Grid>
@@ -756,9 +725,9 @@ class MissionEdition extends React.PureComponent {
         );
     }
 
-    renderMissionDetails() {
+    renderInactiveLabel() {
         const { classes } = this.props;
-        const showInactiveLabel = this.props.mission.current.data.isActive <= 0;
+        const showInactiveLabel = this.mission && this.mission.isActive <= 0;
         const collapseStyle = {
             transition: ".2s transform ease-in-out",
             transform: showInactiveLabel ? "initial" : "scale(0, 0)",
@@ -770,30 +739,69 @@ class MissionEdition extends React.PureComponent {
             height: "auto",
         };
         return (
+            <Grid style={gridStyle} item xs={12}>
+                <Slide in={showInactiveLabel} mountOnEnter unmountOnExit>
+                    <Fade in={showInactiveLabel}>
+                        <Grid direction="row" className={classes.ownerInactiveWarningContainer} container alignItems="center" justify="center">
+                            <div style={collapseStyle}>
+                                <Grid direction="row" container alignItems="center" justify="center">
+                                    <LockedIcon style={{ color: "#fff" }} size={25} />
+                                    <Typography className={classes.ownerInactiveWarning} variant="headline" color="primary" component="h3">
+                                        This mission has been set to inactive,
+                                        it&#39;s
+                                        informations and travellers are now freezed
+                                    </Typography>
+                                </Grid>
+                            </div>
+                        </Grid>
+                    </Fade>
+                </Slide>
+            </Grid>
+        );
+    }
+
+    renderBookedLabel() {
+        const { classes } = this.props;
+        const showBookedLabel = this.props.mission.current.data.isBooked > 0;
+        const containerClass = this.userIsBookedTraveller ?
+            classes.connectedBookedUserLabelContainer : classes.ownerInactiveWarningContainer;
+        return (
+            <Grid item xs={12}>
+                {showBookedLabel &&
+                <Slide in mountOnEnter unmountOnExit>
+                    <Fade in mountOnEnter unmountOnExit>
+                        <Grid direction="row" className={containerClass} container alignItems="center" justify="center">
+                            <Grid direction="row" container alignItems="center" justify="center">
+                                <BookIcon style={{ color: "#fff" }} size={25} />
+                                {!this.userIsBookedTraveller &&
+                                <Typography className={classes.ownerInactiveWarning} variant="headline" color="primary" component="h3">
+                                    This mission has been booked
+                                        by {this.mission.travellers
+                                        .find(cand => cand.status === 69)
+                                        .user.userName}
+                                </Typography>}
+                                {this.userIsBookedTraveller &&
+                                <Typography className={classes.ownerInactiveWarning} variant="headline" color="primary" component="h3">
+                                    You are booked for this mission
+                                </Typography>}
+                            </Grid>
+                        </Grid>
+                    </Fade>
+                </Slide>}
+            </Grid>
+        );
+    }
+
+    renderMissionDetails() {
+        const { classes } = this.props;
+        return (
             this.mission &&
             <Slide direction="right" in mountOnEnter unmountOnExit>
                 <Fade in mountOnEnter unmountOnExit>
                     <Grid className="relative" container alignItems="center" justify="flex-start">
-                        {this.renderBookedStatus()}
                         {this.renderInactiveControl()}
-                        <Grid style={gridStyle} item xs={12}>
-                            <Slide in={showInactiveLabel} mountOnEnter unmountOnExit>
-                                <Fade in={showInactiveLabel}>
-                                    <Grid direction="row" className={classes.ownerInactiveWarningContainer} container alignItems="center" justify="center">
-                                        <div style={collapseStyle}>
-                                            <Grid direction="row" container alignItems="center" justify="center">
-                                                <LockedIcon style={{ color: "#fff" }} size={25} />
-                                                <Typography className={classes.ownerInactiveWarning} variant="headline" color="primary" component="h3">
-                                                    This mission has been set to inactive,
-                                                    it&#39;s
-                                                    informations and travellers are now freezed
-                                                </Typography>
-                                            </Grid>
-                                        </div>
-                                    </Grid>
-                                </Fade>
-                            </Slide>
-                        </Grid>
+                        {this.renderInactiveLabel()}
+                        {this.renderBookedLabel()}
                         {this.isUserOwner &&
                         <Grid container item direction="row" align="flex-start" xs={12} md={6}>
                             {this.renderTextField("title", this.mission.title, { color: darkGrey, fontWeight: 500, fontSize: "1.875em" })}
@@ -885,13 +893,15 @@ class MissionEdition extends React.PureComponent {
     }
 
     renderApplyModal() {
-        const { user, classes, mission } = this.props;
+        const { canChangeCandidacy } = this;
+        const { user, classes } = this.props;
         const style = {
             color: midGrey,
         };
+        const candidacy = this.userCandidacy;
         const checkinDateCandidacy = !this.userCandidacy ? DEFAULT_CHECKIN_DATE : moment(this.userCandidacy.fromDate, `${DATE_FORMAT} ${HOUR_FORMAT}`).local();
         const checkoutDateCandidacy = !this.userCandidacy ? DEFAULT_CHECKOUT_DATE : moment(this.userCandidacy.toDate, `${DATE_FORMAT} ${HOUR_FORMAT}`).local();
-        return (
+        return (this.mission &&
             <Dialog
                 open={this.state.openApplyModal && user.isLoggedIn && !this.isUserOwner}
                 onClose={this.handleCloseApplyModal}
@@ -900,9 +910,9 @@ class MissionEdition extends React.PureComponent {
                 <DialogTitle id="form-apply-dialog-title">Your Candidacy</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        {this.userNotInTravellers ?
-                            "Applying will allow you to communicate with your potential host"
-                            : "Removing your candidacy will prevent you from communicating with the host"
+                        {candidacy && candidacy.status > 0 ?
+                            "Removing your candidacy will prevent you from communicating with the host"
+                            : "Applying will allow you to communicate with your potential host"
                         }
                     </DialogContentText>
                     <Divider inset className={classes.modalDivider} />
@@ -915,11 +925,9 @@ class MissionEdition extends React.PureComponent {
                                     shrink: true,
                                 }}
                                 id="checkin-checkindate-apply-input"
-                                disabled={this.isLoading
-                                    || !this.userNotInTravellers || !this.userNotInTravellers
-                                    || mission.current.data.isActive === 0}
+                                disabled={!canChangeCandidacy}
                                 InputProps={{
-                                    disableUnderline: !this.isUserOwner,
+                                    disableUnderline: true,
                                     style: {
                                         ...style,
                                         maxWidth: 150
@@ -933,7 +941,7 @@ class MissionEdition extends React.PureComponent {
                                 name="checkinDateApply"
                                 min={moment().local().format(DATE_FORMAT)}
                                 onChange={(ev) => {
-                                    if (this.props.mission.current.data.isActive === 0) {
+                                    if (!canChangeCandidacy) {
                                         return;
                                     }
                                     const { value } = ev.target;
@@ -957,8 +965,7 @@ class MissionEdition extends React.PureComponent {
                                     shrink: true,
                                 }}
                                 id="checkout-checkoutdate-apply-input"
-                                disabled={this.isLoading || !this.userNotInTravellers
-                                    || mission.current.data.isActive === 0}
+                                disabled={!canChangeCandidacy}
                                 InputProps={{
                                     disableUnderline: !this.isUserOwner,
                                     style: {
@@ -974,7 +981,7 @@ class MissionEdition extends React.PureComponent {
                                 name="checkoutDateApply"
                                 min={moment().format(DATE_FORMAT)}
                                 onChange={(ev) => {
-                                    if (this.props.mission.current.data.isActive === 0) {
+                                    if (!canChangeCandidacy) {
                                         return;
                                     }
                                     const { value } = ev.target;
@@ -991,11 +998,11 @@ class MissionEdition extends React.PureComponent {
                             />
                         </Grid>
                     </Grid>
-                    {this.props.mission.current.data.isActive === 1 &&
+                    {!canChangeCandidacy &&
                     <Grid container>
                         <Typography type="paragraph" color="primary" variant="subheading">
-                            The mission has been closed by
-                            {this.props.mission.current.data.accommodation.host.userName}
+                            The mission has been locked
+                            by {this.props.mission.current.data.accommodation.host.userName}
                         </Typography>
                     </Grid>
                     }
@@ -1004,21 +1011,44 @@ class MissionEdition extends React.PureComponent {
                     <Button onClick={this.handleClose} color="primary">
                         Close
                     </Button>
-                    {this.props.mission.current.data.isActive === 1 &&
+                    {canChangeCandidacy &&
                     <Button
                         disabled={this.state.checkoutApplyDateError.length > 0
                             || this.state.checkinApplyDateError.length > 0
-                            || this.props.mission.current.data.isActive === 0
-                            || (mission.isBooked === 1 && !this.userIsBookedTraveller)
+                            || !canChangeCandidacy
                         }
                         onClick={this.handleApplyToggle}
                         color="primary"
                     >
-                        {this.userNotInTravellers ? "Apply" : "Cancel Candidacy"}
+                        {!candidacy || candidacy.status <= 0 ? "Apply" : "Cancel Candidacy"}
                     </Button>}
                 </DialogActions>
             </Dialog>
         );
+    }
+
+    renderApplyBtn() {
+        const { user, classes, mission } = this.props;
+        if (user.isLoggedIn && !this.isUserOwner && !mission.current.isLoading) {
+            const candidacy = this.userCandidacy;
+            return (this.canChangeCandidacy &&
+                <Button
+                    id="#mission-apply-toggle-modal-btn"
+                    className={classes.applyBtn}
+                    aria-label={candidacy && candidacy.status > 0 ?
+                        "Removing your candidacy will prevent you from communicating with the host"
+                        : "Applying will allow you to communicate with your potential host"
+                    }
+                    disabled={(mission.current.data.isActive === 0 && !this.userIsBookedTraveller)}
+                    color="default"
+                    onClick={this.handleOpenApplyModal}
+                    variant="raised"
+                >
+                    {candidacy && candidacy.status > 0 ? "Change your candidacy" : "Submit your candidacy"}
+                </Button>
+            );
+        }
+        return null;
     }
 
     renderNoMissionDetail() {
@@ -1072,12 +1102,13 @@ class MissionEdition extends React.PureComponent {
                     </Grid>
                     {this.mission
                         && this.mission.accommodation && this.mission.accommodation.host &&
-                        this.renderHostInfo()
+                        this.renderHostInfo("row-reverse")
                     }
                 </Card>
                 {this.isUserOwner && this.props.mission.current.data.isActive > 0 &&
                     this.renderSaveBtns()}
                 {this.renderApplyModal()}
+                {this.renderApplyBtn()}
             </div>
         );
     }
@@ -1109,12 +1140,11 @@ MissionEdition.propTypes = {
                     title: T.string,
                     address: T.string,
                     pictures: T.arrayOf(T.shape({})),
-                    isActive: T.number,
-                    isBooked: T.number,
                     host: T.shape({
                         userName: T.string.isRequired,
                     }),
                 }),
+                isBooked: T.number,
                 travellers: T.array,
                 isActive: T.number,
             }).isRequired,
