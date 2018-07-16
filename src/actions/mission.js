@@ -1,7 +1,6 @@
 /* global */
 import * as missionTypes from "./types/mission";
 import { displaySnackMsg } from "./snack";
-import user from "../utils/user";
 
 const fetchMissionsRequest = () => ({
     type: missionTypes.FETCH_MISSIONS_REQUEST
