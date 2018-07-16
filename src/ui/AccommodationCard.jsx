@@ -9,7 +9,8 @@ import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
-import { accommodationPropTypes } from "../propTypes/accommodationType";
+import moment from "moment";
+import { accommodationReducerPropTypes } from "../propTypes/accommodation.reducer.d";
 
 const styles = theme => ({
     card: {
@@ -58,13 +59,9 @@ const styles = theme => ({
 
 class AccommodationCard extends React.PureComponent {
     static propTypes = {
-        accommodations: T.arrayOf(accommodationPropTypes),
+        accommodation: accommodationReducerPropTypes.isRequired,
         onInit: T.func.isRequired,
         classes: T.shape({}).isRequired,
-    }
-
-    static defaultProps = {
-        accommodations: []
     }
 
     constructor(props) {
@@ -73,16 +70,32 @@ class AccommodationCard extends React.PureComponent {
     }
 
     componentDidMount() {
-        if (!this.props.accommodations.length) {
-            this.props.onInit();
+        this.props.onInit();
+    }
+
+    get accommodations() {
+        const { accommodation } = this.props;
+        if (accommodation.search.all.length > 0) {
+            if (accommodation.data.length > 0) {
+                const { lastSearchDate } = accommodation.search;
+                if (lastSearchDate &&
+                    moment().local().unix() - lastSearchDate.unix() > 1000 * 60 * 10) {
+                    return accommodation.data.map(accoId => accommodation.byID.get(accoId));
+                }
+            }
+            return accommodation.search.all;
         }
+        return accommodation.data.map(accoId => accommodation.byID.get(accoId));
+    }
+
+    get isLoading() {
+        return this.props.accommodation.isLoading || this.props.accommodation.search.isLoading;
     }
 
     renderListItems() {
         const { classes } = this.props;
         const iconContainer = `${classes.iconContainer} display-flex-row full-width space-around margin-auto`;
-        return this.props.accommodations
-            .map(allAccommodations => allAccommodations)
+        return this.accommodations
             .slice(0, 3)
             .map((a) => {
                 const imgUrl = a.pictures.length > 0 ? a.pictures[0].url : `${process.env.PUBLIC_URL}/img/accommodation.jpg`;

@@ -1,3 +1,4 @@
+/* global document */
 import React from "react";
 import * as T from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
@@ -16,10 +17,34 @@ const DATE_FORMAT = "YYYY-MM-DD";
 
 class HomeSearchForm extends React.PureComponent {
     state = {
-        startDate: moment(),
-        endDate: moment().add(1, "weeks"),
-        nbGuests: 1
+        fromDate: moment().local(),
+        toDate: moment().local().add(2, "weeks"),
+        nbGuests: 1,
+        location: "",
+    };
+
+    handleChange = prop => (event) => {
+        this.setState({
+            [prop]: !prop.includes("Date") ?
+                event.target.value
+                : moment(event.target.value, DATE_FORMAT).local()
+        });
     }
+
+    handleSubmit = async () => {
+        if (this.props.isLoading) {
+            return;
+        }
+
+        this.props.searchPlaces(this.state);
+        const domNode = document.getElementById("devaway-accommodations-home-container");
+        if (!domNode) return;
+        domNode.scrollIntoView({
+            behaviour: "smooth"
+        });
+    }
+
+    render
 
     render() {
         const { classes } = this.props;
@@ -29,10 +54,11 @@ class HomeSearchForm extends React.PureComponent {
                     <Grid item xs={12} sm={3} md={3}>
                         <div className="vertical-align">
                             <TextField
-                                value={this.state.checkinDate}
-                                label="Location"
+                                value={this.state.location}
+                                label="Where"
                                 id="location"
                                 name="location"
+                                onChange={this.handleChange("location")}
                                 className={this.props.classes.formControl}
                             />
                         </div>
@@ -43,13 +69,14 @@ class HomeSearchForm extends React.PureComponent {
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
-                                value={this.state.startDate.format(DATE_FORMAT)}
-                                min={moment().format(DATE_FORMAT)}
+                                value={this.state.fromDate.format(DATE_FORMAT)}
+                                min={moment().local().format(DATE_FORMAT)}
                                 name="fromDate"
                                 id="fromDate"
                                 className={this.props.classes.formControl}
                                 label="From"
                                 type="date"
+                                onChange={this.handleChange("fromDate")}
                             />
                         </div>
                     </Grid>
@@ -59,10 +86,11 @@ class HomeSearchForm extends React.PureComponent {
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
-                                value={this.state.endDate.format(DATE_FORMAT)}
-                                min={moment().format(DATE_FORMAT)}
+                                value={this.state.toDate.format(DATE_FORMAT)}
+                                min={moment().local().format(DATE_FORMAT)}
                                 name="fromDate"
                                 id="toDate"
+                                onChange={this.handleChange("toDate")}
                                 className={this.props.classes.formControl}
                                 label="To"
                                 type="date"
@@ -77,10 +105,10 @@ class HomeSearchForm extends React.PureComponent {
                                     value={this.state.nbGuests}
                                     input={<Input name="guests" id="guests" />}
                                 >
-                                    <MenuItem value={1}>1</MenuItem>
-                                    <MenuItem value={2}>2</MenuItem>
-                                    <MenuItem value={3}>3</MenuItem>
-                                    <MenuItem value={4}>4</MenuItem>
+                                    {Array.from({ length: 5 })
+                                        .map((v, i) => (
+                                            <MenuItem key={`${i + 1}`} value={i + 1}>{i + 1}</MenuItem>
+                                        ))}
                                 </Select>
                             </FormControl>
                         </div>
@@ -90,7 +118,8 @@ class HomeSearchForm extends React.PureComponent {
                             <Button
                                 className={classes.button}
                                 raised="true"
-                                type="submit"
+                                disabled={this.props.isLoading}
+                                onClick={this.handleSubmit}
                             >
                                 Search
                                 <Icon className={classes.rightIcon}>search</Icon>
@@ -108,7 +137,9 @@ HomeSearchForm.propTypes = {
         container: T.string,
         formControl: T.string,
         rightIcon: T.string
-    }).isRequired
+    }).isRequired,
+    searchPlaces: T.func.isRequired,
+    isLoading: T.bool.isRequired,
 };
 
 export default withStyles(theme => ({

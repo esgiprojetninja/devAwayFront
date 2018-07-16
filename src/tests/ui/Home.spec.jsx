@@ -3,10 +3,10 @@ import React from "react";
 import {
     shallow
 } from "enzyme";
-import ArticleWithMedia from "../../ui/ArticleWithMedia.jsx";
-import HomeSearchForm from "../../ui/HomeSearchForm.jsx";
+import ArticleWithMedia from "../../ui/ArticleWithMedia";
+import HomeSearchForm from "../../containers/HomeSearchForm";
 
-import HomeWithStyles, { Home } from "../../ui/Home.jsx";
+import HomeWithStyles, { Home } from "../../ui/Home";
 
 describe("ui <Home />", () => {
     global.localStorage = {

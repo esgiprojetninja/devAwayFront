@@ -5,6 +5,14 @@ export const accommodationReducerShape = {
     byID: T.object.isRequired,
     isLoading: T.bool.isRequired,
     hasError: T.bool.isRequired,
-    errorText: T.string
+    errorText: T.string,
+    search: T.shape({
+        all: T.arrayOf(T.any),
+        hasPrevious: T.bool.isRequired,
+        hasNext: T.bool.isRequired,
+        isLoading: T.bool.isRequired,
+        error: T.string.isRequired,
+        lastSearchDate: T.string,
+    })
 };
 export const accommodationReducerPropTypes = T.shape(accommodationReducerShape);

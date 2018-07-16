@@ -3,6 +3,10 @@ import "isomorphic-fetch";
 
 export const API_VERSION = "v1";
 
+export const dataToGetParams = (params) => {
+    return Object.keys(params).map(key => `${key}=${params[key]}`).join("&");
+};
+
 export const defaultErrorHandler = (err) => {
     return Promise.resolve({
         hasError: true,

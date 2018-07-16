@@ -4,9 +4,9 @@ import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import "animate.css/animate.min.css";
 import ScrollAnimation from "react-animate-on-scroll";
-import HomeSearchForm from "./HomeSearchForm.jsx";
-import ArticleWithMedia from "./ArticleWithMedia.jsx";
-import AccommodationCard from "../containers/AccommodationCard.js";
+import ArticleWithMedia from "./ArticleWithMedia";
+import HomeSearchForm from "../containers/HomeSearchForm";
+import AccommodationCard from "../containers/AccommodationCard";
 import Navbar from "../containers/Navbar";
 
 const titleService = "Our Service";
@@ -34,6 +34,15 @@ export class Home extends React.PureComponent {
             homePlWrapper: T.string.isRequired,
             destinationWrapper: T.string.isRequired,
             destinationsImg: T.string.isRequired
+        }).isRequired,
+        accommodation: T.shape({
+            isLoading: T.bool.isRequired,
+            search: T.shape({
+                isLoading: T.bool.isRequired,
+            }).isRequired
+        }).isRequired,
+        user: T.shape({
+            isLoading: T.bool.isRequired,
         }).isRequired,
     };
 
@@ -111,7 +120,7 @@ export class Home extends React.PureComponent {
 
     renderAccomodations() {
         return (
-            <div className={this.props.classes.subSection}>
+            <div id="devaway-accommodations-home-container" className={this.props.classes.subSection}>
                 <div className="d-block">
                     <Typography
                         type="headline"
@@ -162,9 +171,12 @@ export class Home extends React.PureComponent {
     }
 
     render() {
+        const { accommodation, user } = this.props;
+        const isLoading = accommodation.isLoading || accommodation.search.isLoading
+            || user.isLoading || user.isGettingData;
         return (
             <div>
-                <Navbar />
+                <Navbar replaceLogoWithSpinner={isLoading} />
                 <div id="home-container">
                     {this.renderFirstBlock()}
                     <HomeSearchForm />

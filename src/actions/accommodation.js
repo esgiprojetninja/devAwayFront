@@ -162,3 +162,32 @@ export function upsertPicture(picture) {
             });
     };
 }
+
+
+const searchAccommodationRequest = () => ({
+    type: types.SEARCH_ACCOMMODATIONS_REQUEST
+});
+
+const searchAccommodationSuccess = (accommodations, searchDate) => ({
+    type: types.SEARCH_ACCOMMODATIONS_SUCCESS,
+    payload: { accommodations, searchDate }
+});
+
+const searchAccommodationFailure = msg => ({
+    type: types.SEARCH_ACCOMMODATIONS_FAILURE,
+    payload: { msg }
+});
+
+export const searchAccommodations = (params, searchDate) =>
+    async (dispatch, getState, API) => {
+        dispatch(searchAccommodationRequest());
+        try {
+            const res = await API.accommodationApi.search(params);
+            if (!res || res.hasError) {
+                return dispatch(searchAccommodationFailure(res.message));
+            }
+            return dispatch(searchAccommodationSuccess(res, searchDate));
+        } catch (error) {
+            return dispatch(searchAccommodationFailure(error.message));
+        }
+    };
