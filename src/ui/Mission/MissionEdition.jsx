@@ -5,7 +5,6 @@ import { withStyles } from "@material-ui/core/styles";
 import { NavLink } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -53,12 +52,6 @@ const styles = theme => ({
         marginTop: theme.spacing.unit * 2,
         overflow: "hidden",
         position: "relative",
-    },
-    hostInfoContainer: {
-        maxWidth: 150,
-        top: 0,
-        right: theme.spacing.unit * 2,
-        position: "absolute",
     },
     carouselContainer: {
         marginTop: theme.spacing.unit * 4,
@@ -168,10 +161,18 @@ const styles = theme => ({
         minHeight: "80vh",
         width: "100%",
     },
-    cardSubHeader: {
-        "& > div > span:first-of-type": {
-            color: theme.palette.primary.darkGrey,
-        },
+    cardHeader: {
+        margin: theme.spacing.unit * 2,
+        paddingRight: theme.spacing.unit * 4,
+    },
+    headerTitle: {
+        color: theme.palette.primary.darkGrey,
+    },
+    subTitle: {
+        color: theme.palette.primary.lightGrey,
+    },
+    hostInfoContainer: {
+        width: "100%",
     },
 });
 
@@ -285,7 +286,6 @@ class MissionEdition extends React.PureComponent {
         }
         return false;
     }
-
 
     get canChangeCandidacy() {
         return !this.isLoading && this.mission
@@ -690,7 +690,7 @@ class MissionEdition extends React.PureComponent {
         );
     }
 
-    renderHostInfo(direction = "row") {
+    renderHostInfo(direction = "row", justify = "flex-start") {
         const { mission } = this;
         if (!mission || !mission.accommodation || !mission.accommodation.host) {
             return null;
@@ -699,12 +699,12 @@ class MissionEdition extends React.PureComponent {
         const imgUrl = getUserImg(mission.accommodation.host.avatar);
         if (!imgUrl) {
             return (
-                <Grid className={classes.hostInfoContainer} container direction={direction} justify="flex-start">
+                <Grid container alignItems="center" direction={direction} justify={justify}>
                     <Grid item>
-                        <UserIcon size={25} className={this.props.classes.icon} />
+                        <UserIcon size={25} className={classes.icon} />
                     </Grid>
                     <Grid item>
-                        <Typography className="full-height full-width display-flex-row" style={{ color: midGrey, paddingRight: "4px", display: "flex" }} variant="body2" color="inherit" component="p">
+                        <Typography style={{ color: midGrey, paddingRight: "4px" }} variant="body2" color="inherit" component="p">
                             {mission.accommodation.host.userName}
                         </Typography>
                     </Grid>
@@ -712,10 +712,10 @@ class MissionEdition extends React.PureComponent {
             );
         }
         return (
-            <Grid className={classes.hostInfoContainer} container justify="flex-start">
+            <Grid container alignItems="center" direction={direction} justify={justify}>
                 <Grid item>
                     <Avatar
-                        className={this.props.classes.avatar}
+                        className={classes.avatar}
                         alt={mission.accommodation.host.userName}
                         src={imgUrl}
                     />
@@ -780,9 +780,11 @@ class MissionEdition extends React.PureComponent {
                                 {!this.userIsBookedTraveller &&
                                 <Typography className={classes.ownerInactiveWarning} variant="headline" color="primary" component="h3">
                                     This mission has been booked
-                                        by {this.mission.travellers
-                                        .find(cand => cand.status === 69)
-                                        .user.userName}
+                                    {this.mission.travellers && this.mission.travellers
+                                        .find(cand => cand.status === 69) ?
+                                        `by ${this.mission.travellers.find(cand => cand.status === 69)}`
+                                        : ""
+                                    }
                                 </Typography>}
                                 {this.userIsBookedTraveller &&
                                 <Typography className={classes.ownerInactiveWarning} variant="headline" color="primary" component="h3">
@@ -1092,11 +1094,21 @@ class MissionEdition extends React.PureComponent {
             <div className="full-width">
                 <Navbar replaceLogoWithSpinner={this.isLoading} burgerColor={darkGrey} />
                 <Card className={this.props.classes.container}>
-                    {<CardHeader
-                        className={classes.cardSubHeader}
-                        title={`Mission ${this.isUserOwner ? "edition" : "detail"}`}
-                        subheader={suheader}
-                    />}
+                    <Grid container direction="row" alignItems="flex-start" justify="space-between" className={classes.cardHeader}>
+                        <Grid item xs={6}>
+                            <Typography className={classes.headerTitle} variant="headline" component="h2" color="inherit">
+                                {`Mission ${this.isUserOwner ? "edition" : "detail"}`}
+                            </Typography>
+                            <Typography className={classes.subTitle} variant="subheading" component="p" color="inherit">
+                                {suheader}
+                            </Typography>
+                        </Grid>
+                        {this.mission
+                            && this.mission.accommodation && this.mission.accommodation.host &&
+                            <Grid item xs={6}>
+                                {this.renderHostInfo("row-reverse", "flex-start")}
+                            </Grid>}
+                    </Grid>
                     <Divider inset className={classes.headDivider} />
                     <Grid className={classes.carouselContainer} container alignItems="center" justify="center">
                         {this.mission &&
@@ -1113,10 +1125,6 @@ class MissionEdition extends React.PureComponent {
                     <Grid container>
                         <Travellers mission={this.mission} isUserOwner={this.isUserOwner} />
                     </Grid>
-                    {this.mission
-                        && this.mission.accommodation && this.mission.accommodation.host &&
-                        this.renderHostInfo("row-reverse")
-                    }
                 </Card>
                 {this.isUserOwner && this.props.mission.current.data.isActive > 0 &&
                     this.renderSaveBtns()}

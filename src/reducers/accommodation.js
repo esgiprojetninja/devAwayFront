@@ -92,6 +92,7 @@ const accommodation = (state = initialSate, action) => {
             search: {
                 ...state.search,
                 isLoading: false,
+                all: [],
                 error: payload.msg,
             }
         };

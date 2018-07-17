@@ -15,8 +15,8 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Tooltip from "@material-ui/core/Tooltip";
 import InactiveIcon from "react-icons/lib/fa/lock";
 import ActiveIcon from "react-icons/lib/fa/plus";
-import UnbookedIcon from "react-icons/lib/fa/paper-plane";
-import BookedIcon from "react-icons/lib/fa/close";
+import UnbookedIcon from "react-icons/lib/fa/check";
+import BookedIcon from "react-icons/lib/fa/book";
 import { accommodationPropTypes } from "../../propTypes/accommodationType";
 import { DATE_FORMAT, HOUR_FORMAT } from "../../utils/mission";
 

@@ -186,7 +186,7 @@ export const searchAccommodations = (params, searchDate) =>
                 ...params,
             };
             if (params.location) {
-                const openRes = await API.openMapApi.search(params.location);
+                const openRes = await API.openmapApi.search(params.location);
                 if (openRes.address) {
                     queryParams = {
                         ...queryParams,
@@ -199,9 +199,11 @@ export const searchAccommodations = (params, searchDate) =>
                 dispatch(displaySnackMsg("Research failed"));
                 return dispatch(searchAccommodationFailure(res.message));
             }
-            if (res.length < 0) {
+            if (res.length === 0) {
                 dispatch(displaySnackMsg("No matching places were found"));
+                return dispatch(searchAccommodationFailure("No matching places were found, you're looking at the latest updates ones"));
             }
+            dispatch(displaySnackMsg(`${res.length} places were found`));
             return dispatch(searchAccommodationSuccess(res, searchDate));
         } catch (error) {
             dispatch(displaySnackMsg("Research failed"));
