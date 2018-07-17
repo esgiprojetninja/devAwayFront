@@ -1,16 +1,20 @@
 import * as React from "react";
 import { NavLink } from "react-router-dom";
 import * as T from "prop-types";
+import { withRouter } from "react-router";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { withStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuIcon from "@material-ui/icons/Menu";
 import OkIcon from "@material-ui/icons/Check";
+import MsgIcon from "@material-ui/icons/Message";
+import GoBackIcon from "@material-ui/icons/ArrowBack";
 import Snackbar from "@material-ui/core/Snackbar";
 import Fade from "@material-ui/core/Fade";
 
@@ -72,7 +76,6 @@ export class NavBarComponent extends React.PureComponent {
     }
 
     renderPlacesMenu() {
-        if (!this.props.user.isLoggedIn) return null;
         return (
             <Menu
                 id="long-menu"
@@ -98,6 +101,7 @@ export class NavBarComponent extends React.PureComponent {
                         All places
                     </NavLink>
                 </MenuItem>
+                {this.props.user.isLoggedIn &&
                 <MenuItem
                     key="/poulafefzee"
                     selected={false}
@@ -109,13 +113,12 @@ export class NavBarComponent extends React.PureComponent {
                     >
                         New place
                     </NavLink>
-                </MenuItem>
+                </MenuItem>}
             </Menu>
         );
     }
 
-    renderMenuToggler() {
-        if (!this.props.user.isLoggedIn) return null;
+    renderPlaceMenuToggler() {
         return (
             <Button
                 id="menu-toggler"
@@ -168,22 +171,46 @@ export class NavBarComponent extends React.PureComponent {
             <div style={containerStyle} className={classes.root}>
                 <AppBar position="fixed" style={this.state.open ? { transform: "scaleY(1)" } : { transform: "scaleY(0)" }} className={classes.navStyle}>
                     <Toolbar className={classes.toolbar}>
-                        <div className="full-width">
-                            <NavLink
-                                id="home-link-logo"
-                                to="/"
-                            >
-                                {!this.props.replaceLogoWithSpinner && <img
-                                    className={classes.logo}
-                                    alt="Devaway Logo"
-                                    src={`${process.env.PUBLIC_URL}/img/logowhite.png`}
-                                />}
-                            </NavLink>
-                        </div>
-                        <SubscribeBox />
-                        {this.renderMenuToggler()}
-                        {this.renderPlacesMenu()}
-                        <LogBox />
+                        <Grid container alignItems="center" justify="flex-start">
+                            <Grid item xs={2} lg={1} container alignItems="center" justify="space-between">
+                                <NavLink
+                                    id="home-link-logo"
+                                    to="/"
+                                >
+                                    {!this.props.replaceLogoWithSpinner && <img
+                                        className={classes.logo}
+                                        alt="Devaway Logo"
+                                        src={`${process.env.PUBLIC_URL}/img/logowhite.png`}
+                                    />}
+                                </NavLink>
+                                <Button
+                                    id="go-back-arrow"
+                                    color="inherit"
+                                    size="small"
+                                    className={classes.gobackbtn}
+                                    onClick={this.props.router.history.goBack}
+                                >
+                                    <GoBackIcon size={30} />
+                                </Button>
+                            </Grid>
+                            <Grid item xs={10} lg={11}>
+                                <Grid container alignItems="center" justify="flex-end">
+                                    {this.props.user.isLoggedIn &&
+                                        <Button
+                                            id="messages-menu-toggler"
+                                            aria-label="More"
+                                            aria-haspopup="true"
+                                            color="inherit"
+                                        >
+                                            <MsgIcon />
+                                        </Button>
+                                    }
+                                    {this.renderPlaceMenuToggler()}
+                                    <SubscribeBox />
+                                    <LogBox />
+                                </Grid>
+                            </Grid>
+                        </Grid>
                     </Toolbar>
                 </AppBar>
                 <IconButton
@@ -200,6 +227,7 @@ export class NavBarComponent extends React.PureComponent {
                     <CircularProgress className={classes.fixedSpinner} style={togglerStyle} color="inherit" />
                 </Fade>
                 }
+                {this.renderPlacesMenu()}
                 {this.renderSnackbar()}
             </div>
         );
@@ -216,16 +244,27 @@ NavBarComponent.propTypes = {
     user: T.shape({
         isLoggedIn: T.bool.isRequired
     }).isRequired,
+    router: T.shape({
+        history: T.shape({
+            goBack: T.func.isRequired,
+        }),
+        push: undefined,
+    }).isRequired,
     replaceLogoWithSpinner: T.bool,
 };
 
-export default withStyles(theme => ({
+export default withRouter(withStyles(theme => ({
     root: {
         width: "100%",
         transition: "height .2s ease-in-out"
     },
     flex: {
         flex: 1
+    },
+    gobackbtn: {
+        padding: 0,
+        width: 30,
+        minWidth: 30,
     },
     logo: {
         display: "flex",
@@ -261,4 +300,4 @@ export default withStyles(theme => ({
         width: "300px",
         left: "calc(50% - 150px)"
     },
-}))(NavBarComponent);
+}))(NavBarComponent));
