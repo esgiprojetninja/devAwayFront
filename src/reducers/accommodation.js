@@ -6,7 +6,15 @@ const initialSate = {
     byID: new Map(),
     isLoading: false,
     hasError: false,
-    errorText: ""
+    errorText: "",
+    search: {
+        all: [],
+        hasPrevious: false,
+        hasNext: false,
+        isLoading: false,
+        error: "",
+        lastSearchDate: null,
+    }
 };
 
 const accommodation = (state = initialSate, action) => {
@@ -68,6 +76,36 @@ const accommodation = (state = initialSate, action) => {
             isLoading: false,
             hasError: true,
             errorText: payload
+        };
+    case accoTypes.SEARCH_ACCOMMODATIONS_REQUEST:
+        return {
+            ...state,
+            search: {
+                ...state.search,
+                error: "",
+                isLoading: true,
+            }
+        };
+    case accoTypes.SEARCH_ACCOMMODATIONS_FAILURE:
+        return {
+            ...state,
+            search: {
+                ...state.search,
+                isLoading: false,
+                all: [],
+                error: payload.msg,
+            }
+        };
+    case accoTypes.SEARCH_ACCOMMODATIONS_SUCCESS:
+        return {
+            ...state,
+            search: {
+                ...state.search,
+                isLoading: false,
+                error: "",
+                all: payload.accommodations,
+                lastSearchDate: payload.searchDate,
+            }
         };
     default:
         return state;

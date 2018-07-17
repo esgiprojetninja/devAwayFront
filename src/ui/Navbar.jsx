@@ -10,6 +10,7 @@ import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuIcon from "@material-ui/icons/Menu";
+import OkIcon from "@material-ui/icons/Check";
 import Snackbar from "@material-ui/core/Snackbar";
 import Fade from "@material-ui/core/Fade";
 
@@ -146,7 +147,7 @@ export class NavBarComponent extends React.PureComponent {
                 onClose={this.props.closeSnack}
                 action={[
                     <Button key="undo" color="primary" onClick={this.props.closeSnack}>
-                        OK
+                        <OkIcon />
                     </Button>
                 ]}
             />

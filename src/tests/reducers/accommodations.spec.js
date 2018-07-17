@@ -9,7 +9,15 @@ describe("Reducer ACCOMMODATION", function () {
             byID: new Map(),
             isLoading: false,
             hasError: false,
-            errorText: ""
+            errorText: "",
+            search: {
+                all: [],
+                hasPrevious: false,
+                hasNext: false,
+                isLoading: false,
+                error: "",
+                lastSearchDate: null,
+            }
         };
     });
 
@@ -134,6 +142,47 @@ describe("Reducer ACCOMMODATION", function () {
             ...this.initialSate,
             hasError: true,
             errorText: "groussaics"
+        });
+    });
+
+    it("should dispatch SEARCH_ACCOMMODATIONS_REQUEST", () => {
+        expect(accommodationReducer(this.initialSate, {
+            type: accoTypes.SEARCH_ACCOMMODATIONS_REQUEST,
+        })).toEqual({
+            ...this.initialSate,
+            search: {
+                ...this.initialSate.search,
+                isLoading: true,
+            }
+        });
+    });
+
+    it("should dispatch SEARCH_ACCOMMODATIONS_FAILURE", () => {
+        expect(accommodationReducer(this.initialSate, {
+            type: accoTypes.SEARCH_ACCOMMODATIONS_FAILURE,
+            payload: { msg: "coucou error" },
+        })).toEqual({
+            ...this.initialSate,
+            search: {
+                ...this.initialSate.search,
+                isLoading: false,
+                error: "coucou error",
+            }
+        });
+    });
+
+    it("should dispatch SEARCH_ACCOMMODATIONS_SUCCESS", () => {
+        expect(accommodationReducer(this.initialSate, {
+            type: accoTypes.SEARCH_ACCOMMODATIONS_SUCCESS,
+            payload: { accommodations: [1, 2, 3], searchDate: "POULAY" },
+        })).toEqual({
+            ...this.initialSate,
+            search: {
+                ...this.initialSate.search,
+                isLoading: false,
+                all: [1, 2, 3],
+                lastSearchDate: "POULAY",
+            }
         });
     });
 });

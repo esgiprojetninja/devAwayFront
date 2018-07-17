@@ -162,3 +162,52 @@ export function upsertPicture(picture) {
             });
     };
 }
+
+
+const searchAccommodationRequest = () => ({
+    type: types.SEARCH_ACCOMMODATIONS_REQUEST
+});
+
+const searchAccommodationSuccess = (accommodations, searchDate) => ({
+    type: types.SEARCH_ACCOMMODATIONS_SUCCESS,
+    payload: { accommodations, searchDate }
+});
+
+const searchAccommodationFailure = msg => ({
+    type: types.SEARCH_ACCOMMODATIONS_FAILURE,
+    payload: { msg }
+});
+
+export const searchAccommodations = (params, searchDate) =>
+    async (dispatch, getState, API) => {
+        dispatch(searchAccommodationRequest());
+        try {
+            let queryParams = {
+                ...params,
+            };
+            if (params.location) {
+                const openRes = await API.openmapApi.search(params.location);
+                if (openRes.address) {
+                    queryParams = {
+                        ...queryParams,
+                        ...openRes.address,
+                    };
+                }
+            }
+            const res = await API.accommodationApi.search(queryParams);
+            if (!res || res.hasError) {
+                dispatch(displaySnackMsg("Research failed"));
+                return dispatch(searchAccommodationFailure(res.message));
+            }
+            if (res.length === 0) {
+                dispatch(displaySnackMsg("No matching places were found"));
+                return dispatch(searchAccommodationFailure("No matching places were found, you're looking at the latest updates ones"));
+            }
+            dispatch(displaySnackMsg(`${res.length} places were found`));
+            return dispatch(searchAccommodationSuccess(res, searchDate));
+        } catch (error) {
+            dispatch(displaySnackMsg("Research failed"));
+            return dispatch(searchAccommodationFailure(error.message));
+        }
+    };
+

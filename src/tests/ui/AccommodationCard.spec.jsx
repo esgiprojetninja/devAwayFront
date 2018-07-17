@@ -5,16 +5,21 @@ import {
 } from "enzyme";
 import mainReducer from "../../reducers/index";
 import AccommodationCard from "../../ui/AccommodationCard.jsx";
-import { genAccommodationsMock } from "../mock/body/accommodation";
 
 describe("ui <AccommodationCard />", function () {
     beforeAll(() => {
         const initialState = mainReducer(undefined, {}).accommodation;
         this.initialProps = {
             ...initialState,
-            accommodations: genAccommodationsMock(),
-            current: {},
-            onInit: jest.fn()
+            onInit: jest.fn(),
+            accoArr: [],
+            classes: {},
+            accommodation: {
+                isLoading: false,
+                hasError: false,
+                data: [],
+                byID: new Map(),
+            },
         };
     });
 

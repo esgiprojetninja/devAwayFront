@@ -4,6 +4,7 @@ import missionApi from "./missionApi";
 import messageApi from "./messageApi";
 import profileApi from "./profileApi";
 import guardApi from "./guardApi";
+import openmapApi from "./openmapApi";
 
 const API = {
     userApi,
@@ -11,7 +12,8 @@ const API = {
     missionApi,
     messageApi,
     profileApi,
-    guardApi
+    guardApi,
+    openmapApi,
 };
 
 export default API;

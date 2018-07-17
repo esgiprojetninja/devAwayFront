@@ -5,7 +5,8 @@ import {
 
 import {
     generateFetch,
-    generateAnonymousFetch
+    generateAnonymousFetch,
+    dataToGetParams,
 } from "./utils/utils";
 
 function create(accommodation) {
@@ -61,6 +62,7 @@ const accommodationApi = {
             generateFetch(`accommodations/${picture.accommodation_id}/pictures`, "PUT", null, picture)
             : generateFetch("pictures/accommodations", "PUT", picture.id, picture);
     },
+    search: data => generateAnonymousFetch(`accommodations/search?${dataToGetParams(data)}`, "GET"),
 };
 
 export default accommodationApi;
