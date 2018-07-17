@@ -6,6 +6,10 @@ import Paper from "@material-ui/core/Paper";
 import Avatar from "@material-ui/core/Avatar";
 import UserIcon from "react-icons/lib/fa/user";
 import Typography from "@material-ui/core/Typography";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import Icon from "@material-ui/core/Icon";
 import moment from "moment";
 
 import Home from "../../containers/Home";
@@ -13,6 +17,7 @@ import Navbar from "../../containers/Navbar";
 import { messageReducerPropTypes } from "../../propTypes/message.reducer.d";
 import getUserImg from "../../utils/user";
 import { DATE_FORMAT, HOUR_FORMAT } from "../../utils/mission";
+import { SEND_MSG_SUCCESS } from "../../actions/types/message";
 
 const styles = theme => ({
     root: {
@@ -32,6 +37,11 @@ const styles = theme => ({
     userPaper: {
         margin: theme.spacing.unit * 4,
         padding: theme.spacing.unit * 4,
+    },
+    formPaper: {
+        padding: theme.spacing.unit * 4,
+        paddingTop: 0,
+        width: "100%",
     },
     msgPaper: {
         padding: theme.spacing.unit * 2,
@@ -59,9 +69,20 @@ const styles = theme => ({
         marginBottom: 0,
         color: theme.palette.primary.midGrey,
     },
+    rightIcon: {
+        marginLeft: theme.spacing.unit,
+    },
+    button: {
+        margin: theme.spacing.unit,
+    },
 });
 
 class Discussion extends React.PureComponent {
+    state = {
+        msg: "",
+        msgError: "",
+    }
+
     componentDidMount() {
         this.props.onInit(this.props.match.params.userID);
     }
@@ -73,6 +94,39 @@ class Discussion extends React.PureComponent {
             return data.users.find(usr => usr.id !== currentUserId);
         }
         return null;
+    }
+
+    get isLoading() {
+        const { current } = this.props.message;
+        return current && current.isLoading;
+    }
+
+    handleSendMsg = async () => {
+        if (this.state.msg.length === 0
+            || this.state.msgError.length > 0
+            || this.isLoading) return;
+        const { msg } = this.state;
+        const res = await this.props.sendMsg(msg, this.contactUser.id);
+        if (res.type === SEND_MSG_SUCCESS) {
+            this.setState({
+                msg: "",
+                msgError: "",
+            });
+        } else {
+            this.setState({
+                msgError: res.payload.msg,
+            });
+        }
+    }
+
+    handleChangeMsg = (event) => {
+        const { value } = event.target;
+        this.setState({
+            msg: value,
+            msgError: value.length < 10 || value.length > 255 ?
+                "Message has to be at least 10 characters long and less than 255"
+                : ""
+        });
     }
 
     renderCardAvatar() {
@@ -91,13 +145,62 @@ class Discussion extends React.PureComponent {
         const user = this.contactUser;
         return (user &&
             <Grid container spacing={24} direction="row" alignItems="center" justify="center">
-                <Grid item className={classes.userPaperContainer}>
+                <Grid item>
                     <Paper className={classes.userPaper}>
                         <Grid container alignItems="center" justify="center">
                             {this.renderCardAvatar()}
                         </Grid>
                         <Grid container alignItems="center" justify="center">
                             <Typography className={classes.contactUserName} variant="subheading" color="inherit" component="p">{user.userName}</Typography>
+                        </Grid>
+                        {this.isLoading &&
+                        <LinearProgress color="primary" mode="query" />}
+                    </Paper>
+                </Grid>
+            </Grid>
+        );
+    }
+
+    renderFormMessage() {
+        const { classes } = this.props;
+        const user = this.contactUser;
+        return (user &&
+            <Grid container spacing={24} direction="row" alignItems="center" justify="flex-start">
+                <Grid item xs={8}>
+                    <Paper className={classes.formPaper}>
+                        <Grid container spacing={24} direction="row" alignItems="flex-end" justify="flex-start">
+                            <Grid item xs={9}>
+                                <TextField
+                                    id="discussion-from-msg-input"
+                                    label={this.state.msgError.length > 0 ?
+                                        this.state.msgError : "Your message"
+                                    }
+                                    error={this.state.msgError.length > 0}
+                                    multiline
+                                    className={classes.modalTextInput}
+                                    rows={3}
+                                    min="10"
+                                    max="255"
+                                    fullWidth
+                                    value={this.state.msg}
+                                    onChange={this.handleChangeMsg}
+                                    margin="normal"
+                                />
+                            </Grid>
+                            <Grid item xs={3}>
+                                <Button
+                                    className={classes.button}
+                                    variant="outlined"
+                                    color="default"
+                                    onClick={this.handleSendMsg}
+                                    disabled={this.state.msg.length === 0
+                                        || this.state.msgError.length > 0
+                                        || this.isLoading}
+                                >
+                                    Send
+                                    <Icon className={classes.rightIcon}>send</Icon>
+                                </Button>
+                            </Grid>
                         </Grid>
                     </Paper>
                 </Grid>
@@ -172,6 +275,7 @@ class Discussion extends React.PureComponent {
                 <Navbar />
                 <Grid container spacing={24} direction="row" alignItems="center" justify="center" className={classes.container}>
                     {this.renderContactCard()}
+                    {this.renderFormMessage()}
                     {this.renderMessages()}
                 </Grid>
             </div>
@@ -196,6 +300,7 @@ Discussion.propTypes = {
     }).isRequired,
     message: messageReducerPropTypes.isRequired,
     onInit: T.func.isRequired,
+    sendMsg: T.func.isRequired,
 };
 
 export default withStyles(styles)(Discussion);
