@@ -126,12 +126,16 @@ export default class AccommodationsList extends React.PureComponent {
         });
     }
 
-    renderAccommodationList() {
+    renderSpinner() {
         if (this.props.accommodation.isLoading) {
             return (
                 <CircularProgress />
             );
         }
+        return null;
+    }
+
+    renderAccommodationList() {
         const { accommodation } = this.props;
         if (!this.props.accommodation.data.length) {
             return (
@@ -212,7 +216,7 @@ export default class AccommodationsList extends React.PureComponent {
                                 </NavLink>
                             </GridListTile>
                         );
-                    }).slice(0, 12) // @TODO: Adapt to eventual server pagination
+                    })
                 }
             </GridList>
         );
@@ -225,6 +229,7 @@ export default class AccommodationsList extends React.PureComponent {
         };
         return (
             <div style={listStyle}>
+                {this.renderSpinner()}
                 {this.renderAccommodationList()}
             </div>
         );

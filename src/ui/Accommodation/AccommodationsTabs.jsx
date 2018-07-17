@@ -6,6 +6,7 @@ import Tab from "@material-ui/core/Tab";
 import Navbar from "../../containers/Navbar";
 import AccommodationsList from "../../containers/AccommodationsList";
 import AccommodationsPersonnalList from "../../containers/AccommodationsPersonnalList";
+import Footer from "../../ui/Footer";
 
 const styles = theme => ({
     root: {
@@ -89,6 +90,7 @@ class AccommodationsTabs extends React.Component {
                     </Tabs>
                     {this.renderCurrentTab()}
                 </div>
+                <Footer />
             </div>
         );
     }

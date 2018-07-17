@@ -50,10 +50,10 @@ describe("ui <AccommodationDetail />", function () {
         const wrapper = shallow(
             <AccommodationDetail {...this.initialProps} />
         );
-        expect(wrapper.text()).toBe("<Connect(withRouter(WithStyles(NavBarComponent))) /><Connect(WithStyles(AccommodationDetailImages)) /><WithStyles(Card) />");
+        expect(wrapper.text()).toBe("<Connect(withRouter(WithStyles(NavBarComponent))) /><Connect(WithStyles(AccommodationDetailImages)) /><WithStyles(Card) /><WithStyles(Footer) />");
     });
 
-    it("should render navbar and accommodation container", () => {
+    it("should render navbar, footer and accommodation container", () => {
         const initialState = mainReducer(undefined, {});
         const map = new Map();
         map.set(acco.id, acco);
@@ -80,7 +80,7 @@ describe("ui <AccommodationDetail />", function () {
         const wrapper = shallow(
             <AccommodationDetail {...this.initialProps} />
         );
-        expect(wrapper.text()).toBe("<Connect(withRouter(WithStyles(NavBarComponent))) /><Connect(WithStyles(AccommodationDetailImages)) /><WithStyles(Card) />");
+        expect(wrapper.text()).toBe("<Connect(withRouter(WithStyles(NavBarComponent))) /><Connect(WithStyles(AccommodationDetailImages)) /><WithStyles(Card) /><WithStyles(Footer) />");
     });
 
     it("should call onInit after component mount", () => {

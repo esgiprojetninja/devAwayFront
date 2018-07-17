@@ -22,6 +22,7 @@ import { getAdaptedContainerWidth } from "./AccommodationsList";
 import { accommodationReducerPropTypes } from "../../propTypes/accommodation.reducer.d";
 import { midGrey, darkGrey } from "../../styles/theme";
 import parseUserImg from "../../utils/user";
+import Footer from "../../ui/Footer";
 
 const styles = {
     container: {
@@ -393,6 +394,7 @@ export default class AccommodationDetail extends React.PureComponent {
                     </Grid>
                     {this.renderSaveBtn()}
                 </Card>
+                <Footer />
             </div>
         );
     }
