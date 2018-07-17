@@ -53,6 +53,7 @@ export const mockAPI = {
         fetchOwnerMessages: () => Promise.resolve(["POULAY"]),
         fetchTravllererMessages: () => Promise.resolve(["POULAY"]),
         fetchDiscussionMessages: () => Promise.resolve(["POULAY"]),
+        sendMessage: () => Promise.resolve(["POULAY"]),
     },
     profileApi: {
         fetchAll: () => Promise.resolve([]),
@@ -149,6 +150,10 @@ export const mockAPIWithErrors = {
             hasError: true,
             message: "Ooops"
         }),
+        sendMessage: () => Promise.resolve({
+            hasError: true,
+            message: "Ooops"
+        }),
     },
     profileApi: {
         fetchAll: () => Promise.resolve({
@@ -220,6 +225,7 @@ export const mockAPIWithServerFailure = {
         fetchOwnerMessages: () => Promise.reject(new Error("gtfo")),
         fetchTravllererMessages: () => Promise.reject(new Error("gtfo")),
         fetchDiscussionMessages: () => Promise.reject(new Error("gtfo")),
+        sendMessage: () => Promise.reject(new Error("gtfo")),
     },
     profileApi: {
         fetchAll: () => Promise.reject(new Error("gtfo")),

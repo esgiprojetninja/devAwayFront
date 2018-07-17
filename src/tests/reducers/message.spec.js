@@ -4,22 +4,31 @@ import * as messageTypes from "../../actions/types/message";
 
 describe("Reducer message", () => {
     const initialSate = {
+        all: {
+            data: [],
+            potentialUsers: [],
+            isLoading: false,
+            error: "",
+        },
         owner: {
             data: [],
+            potentialUsers: [],
             isLoading: false,
             error: "",
         },
         traveller: {
             data: [],
+            potentialUsers: [],
             isLoading: false,
             error: "",
         },
         current: {
             data: [],
             isLoading: false,
+            newMsg: "",
             error: "",
         },
-        waitingForConnetion: false,
+        waitingForConnetion: null,
     };
 
     it("should return initialSate", () => {
@@ -146,12 +155,13 @@ describe("Reducer message", () => {
         });
     });
 
-    it("should TOGGLE_WAITING_FOR_CONNECTION", () => {
+    it("should SET_WAITING_FOR_CONNECTION", () => {
         expect(messageReducer(initialSate, {
-            type: messageTypes.TOGGLE_WAITING_FOR_CONNECTION,
+            type: messageTypes.SET_WAITING_FOR_CONNECTION,
+            payload: { funcName: "POULAY" }
         })).toEqual({
             ...initialSate,
-            waitingForConnetion: true,
+            waitingForConnetion: "POULAY",
         });
     });
 });
