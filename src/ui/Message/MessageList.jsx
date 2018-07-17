@@ -104,12 +104,12 @@ class MessageList extends React.PureComponent {
                 </Grid>
                 <Grid item>
                     <Button variant={filter === "owner" ? "contained" : "outlined"} onClick={this.handleChangeFilter("owner")} size="large" color="primary">
-                        Candidates
+                        Unreached hosts
                     </Button>
                 </Grid>
                 <Grid item>
                     <Button variant={filter === "traveller" ? "contained" : "outlined"} onClick={this.handleChangeFilter("traveller")} size="large" color="primary">
-                        Your applications
+                        Unreached candidates
                     </Button>
                 </Grid>
             </Grid>
@@ -162,7 +162,7 @@ class MessageList extends React.PureComponent {
 
     renderDiscussionPreview(discussion) {
         const { classes } = this.props;
-        return (
+        return (discussion && discussion.from && discussion.to &&
             <NavLink
                 key={discussion.id}
                 className={classes.linkContainer}
