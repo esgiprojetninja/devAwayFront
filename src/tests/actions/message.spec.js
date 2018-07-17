@@ -18,118 +18,119 @@ describe("Actions message", () => {
         mockStore = configureMockStore([thunk.withExtraArgument(mockAPI)]);
     });
 
-    it("should fetch messages", async () => {
+    it("should fetch owner discussions", async () => {
         const expectedActions = [
-            { type: messageTypes.FETCH_MESSAGES_REQUEST },
-            { type: messageTypes.FETCH_MESSAGES_SUCCESS, payload: [] }
+            { type: messageTypes.FETCH_DISCUSSIONS_OWNER_REQUEST },
+            {
+                type: messageTypes.FETCH_DISCUSSIONS_OWNER_SUCCESS,
+                payload: { discussions: ["POULAY"] },
+            }
         ];
         const store = mockStore();
-        await store.dispatch(messageActions.fetchMessages());
+        await store.dispatch(messageActions.fetchOwnerMessages());
         expect(store.getActions()).toEqual(expectedActions);
     });
-
-    it("should fetch messages - API error", async () => {
+    it("should fetch owner discussions - API error", async () => {
         const expectedActions = [
-            { type: messageTypes.FETCH_MESSAGES_REQUEST },
-            { type: messageTypes.FETCH_MESSAGES_FAILURE, payload: "Ooops" }
+            { type: messageTypes.FETCH_DISCUSSIONS_OWNER_REQUEST },
+            {
+                type: messageTypes.FETCH_DISCUSSIONS_OWNER_FAILURE,
+                payload: { msg: "Ooops" }
+            }
         ];
         const storeError = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)])();
-        await storeError.dispatch(messageActions.fetchMessages());
+        await storeError.dispatch(messageActions.fetchOwnerMessages());
         expect(storeError.getActions()).toEqual(expectedActions);
     });
-
-    it("should fetch messages - Server failure", async () => {
+    it("should fetch owner discussions - Server failure", async () => {
         const expectedActions = [
-            { type: messageTypes.FETCH_MESSAGES_REQUEST },
+            { type: messageTypes.FETCH_DISCUSSIONS_OWNER_REQUEST },
             {
-                type: messageTypes.FETCH_MESSAGES_FAILURE,
-                payload: new Error("gtfo")
+                type: messageTypes.FETCH_DISCUSSIONS_OWNER_FAILURE,
+                payload: { msg: "gtfo" }
             }
         ];
         mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithServerFailure)]);
         const storeError = mockStore();
-        await storeError.dispatch(messageActions.fetchMessages());
+        await storeError.dispatch(messageActions.fetchOwnerMessages());
         expect(storeError.getActions()).toEqual(expectedActions);
     });
 
-    it("should savestoreError a message", async () => {
-        const expectedActions = [
-            { type: messageTypes.SAVE_MESSAGE_REQUEST },
-            { type: messageTypes.SAVE_MESSAGE_SUCCESS }
-        ];
-        const store = mockStore({
-            message: {
-                current: {}
-            }
-        });
-        await store.dispatch(messageActions.saveMessage());
-        expect(store.getActions()).toEqual(expectedActions);
-    });
 
-    it("should save a message - API error", async () => {
+    it("should fetch traveller discussions", async () => {
         const expectedActions = [
-            { type: messageTypes.SAVE_MESSAGE_REQUEST },
-            { type: messageTypes.SAVE_MESSAGE_FAILURE, payload: "Won't save" }
-        ];
-        const storeError = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)])({
-            message: {
-                current: {}
-            }
-        });
-        await storeError.dispatch(messageActions.saveMessage());
-        expect(storeError.getActions()).toEqual(expectedActions);
-    });
-
-    it("should save a message - Server failure", async () => {
-        const expectedActions = [
-            { type: messageTypes.SAVE_MESSAGE_REQUEST },
+            { type: messageTypes.FETCH_DISCUSSIONS_TRAVELLER_REQUEST },
             {
-                type: messageTypes.SAVE_MESSAGE_FAILURE,
-                payload: new Error("gtfo")
+                type: messageTypes.FETCH_DISCUSSIONS_TRAVELLER_SUCCESS,
+                payload: { discussions: ["POULAY"] },
             }
-        ];
-        const storeError = configureMockStore([thunk.withExtraArgument(mockAPIWithServerFailure)])({
-            message: {
-                current: {}
-            }
-        });
-        await storeError.dispatch(messageActions.saveMessage());
-        expect(storeError.getActions()).toEqual(expectedActions);
-    });
-
-    it("should delete a message", async () => {
-        const expectedActions = [
-            { type: messageTypes.DELETE_MESSAGE_REQUEST },
-            { type: messageTypes.DELETE_MESSAGE_SUCCESS },
-            { type: messageTypes.FETCH_MESSAGES_REQUEST },
-            { type: messageTypes.FETCH_MESSAGES_SUCCESS, payload: [] }
         ];
         const store = mockStore();
-        await store.dispatch(messageActions.deleteMessage(1000));
+        await store.dispatch(messageActions.fetchTravellerMessages());
         expect(store.getActions()).toEqual(expectedActions);
     });
-
-    it("should delete a message - API error", async () => {
+    it("should fetch traveller discussions - API error", async () => {
         const expectedActions = [
-            { type: messageTypes.DELETE_MESSAGE_REQUEST },
-            { type: messageTypes.DELETE_MESSAGE_FAILURE, payload: "Couldn't delete" }
+            { type: messageTypes.FETCH_DISCUSSIONS_TRAVELLER_REQUEST },
+            {
+                type: messageTypes.FETCH_DISCUSSIONS_TRAVELLER_FAILURE,
+                payload: { msg: "Ooops" }
+            }
         ];
         const storeError = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)])();
-        await storeError.dispatch(messageActions.deleteMessage(1000));
+        await storeError.dispatch(messageActions.fetchTravellerMessages());
         expect(storeError.getActions()).toEqual(expectedActions);
     });
-
-    it("should delete a message - Server failure", async () => {
+    it("should fetch traveller discussions - Server failure", async () => {
         const expectedActions = [
-            { type: messageTypes.DELETE_MESSAGE_REQUEST },
+            { type: messageTypes.FETCH_DISCUSSIONS_TRAVELLER_REQUEST },
             {
-                type: messageTypes.DELETE_MESSAGE_FAILURE,
-                payload: new Error("gtfo")
+                type: messageTypes.FETCH_DISCUSSIONS_TRAVELLER_FAILURE,
+                payload: { msg: "gtfo" }
             }
         ];
         mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithServerFailure)]);
         const storeError = mockStore();
-        await storeError.dispatch(messageActions.deleteMessage(1000));
+        await storeError.dispatch(messageActions.fetchTravellerMessages());
+        expect(storeError.getActions()).toEqual(expectedActions);
+    });
+
+
+    it("should fetch current discussions", async () => {
+        const expectedActions = [
+            { type: messageTypes.FETCH_CURRENT_DISCUSSION_REQUEST },
+            {
+                type: messageTypes.FETCH_CURRENT_DISCUSSION_SUCCESS,
+                payload: { discussions: ["POULAY"] },
+            }
+        ];
+        const store = mockStore();
+        await store.dispatch(messageActions.fetchDiscussion());
+        expect(store.getActions()).toEqual(expectedActions);
+    });
+    it("should fetch current discussions - API error", async () => {
+        const expectedActions = [
+            { type: messageTypes.FETCH_CURRENT_DISCUSSION_REQUEST },
+            {
+                type: messageTypes.FETCH_CURRENT_DISCUSSION_FAILURE,
+                payload: { msg: "Ooops" }
+            }
+        ];
+        const storeError = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)])();
+        await storeError.dispatch(messageActions.fetchDiscussion());
+        expect(storeError.getActions()).toEqual(expectedActions);
+    });
+    it("should fetch current discussions - Server failure", async () => {
+        const expectedActions = [
+            { type: messageTypes.FETCH_CURRENT_DISCUSSION_REQUEST },
+            {
+                type: messageTypes.FETCH_CURRENT_DISCUSSION_FAILURE,
+                payload: { msg: "gtfo" }
+            }
+        ];
+        mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithServerFailure)]);
+        const storeError = mockStore();
+        await storeError.dispatch(messageActions.fetchDiscussion());
         expect(storeError.getActions()).toEqual(expectedActions);
     });
 });

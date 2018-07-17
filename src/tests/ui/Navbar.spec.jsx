@@ -21,6 +21,11 @@ describe("ui <NavBar />", () => {
             open: false,
             openPlacesMenuEl: null
         },
+        router: {
+            history: {
+                goBack: jest.fn()
+            },
+        },
         store: {
             ...configureMockStore()(),
             ...initialState
@@ -161,6 +166,6 @@ describe("ui <NavBar />", () => {
         };
 
         wrapper = shallow(<StyledNav {...props} />);
-        expect(wrapper.text()).toBe("<NavBarComponent />");
+        expect(wrapper.text()).toBe("<WithStyles(NavBarComponent) />");
     });
 });

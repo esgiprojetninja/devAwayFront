@@ -1,85 +1,84 @@
 import * as messageTypes from "./types/message";
 
-const fetchMessagesRequest = () => ({
-    type: messageTypes.FETCH_MESSAGES_REQUEST
+const fetchOwnerMessagesRequest = () => ({
+    type: messageTypes.FETCH_DISCUSSIONS_OWNER_REQUEST
 });
-
-const fetchMessagesSuccess = payload => ({
-    type: messageTypes.FETCH_MESSAGES_SUCCESS,
-    payload
+const fetchOwnerMessagesSuccess = discussions => ({
+    type: messageTypes.FETCH_DISCUSSIONS_OWNER_SUCCESS,
+    payload: { discussions }
 });
-
-const fetchMessagesFailure = payload => ({
-    type: messageTypes.FETCH_MESSAGES_FAILURE,
-    payload
+const fetchOwnerMessagesFailure = msg => ({
+    type: messageTypes.FETCH_DISCUSSIONS_OWNER_FAILURE,
+    payload: { msg }
 });
-
-export function fetchMessages() {
-    return (dispatch, getState, API) => {
-        dispatch(fetchMessagesRequest());
-        return API.messageApi.fetchAll()
-            .then(
-                (res) => {
-                    if (res.hasError) {
-                        return dispatch(fetchMessagesFailure(res.message));
-                    }
-                    return dispatch(fetchMessagesSuccess(res));
-                },
-                error => dispatch(fetchMessagesFailure(error))
-            );
-    };
-}
-
-const saveMessageRequest = () => ({
-    type: messageTypes.SAVE_MESSAGE_REQUEST
-});
-
-const saveMessageSuccess = () => ({
-    type: messageTypes.SAVE_MESSAGE_SUCCESS
-});
-
-const saveMessageFailure = payload => ({
-    type: messageTypes.SAVE_MESSAGE_FAILURE,
-    payload
-});
-
-export const saveMessage = () =>
-    (dispatch, getState, API) => {
-        dispatch(saveMessageRequest());
-        return API.messageApi.createOrUpdate(getState().message.current)
-            .then(
-                (res) => {
-                    if (res.hasError) {
-                        return dispatch(saveMessageFailure(res.message));
-                    }
-                    return dispatch(saveMessageSuccess());
-                },
-                error => dispatch(saveMessageFailure(error))
-            );
-    };
-
-const deleteMessageRequest = () => ({
-    type: messageTypes.DELETE_MESSAGE_REQUEST
-});
-
-const deleteMessageSuccess = () => ({
-    type: messageTypes.DELETE_MESSAGE_SUCCESS
-});
-
-const deleteMessageFailure = payload => ({
-    type: messageTypes.DELETE_MESSAGE_FAILURE,
-    payload
-});
-
-export function deleteMessage(id) {
-    return (dispatch, getState, API) => {
-        dispatch(deleteMessageRequest());
-        return API.messageApi.deleteItem(id).then((res) => {
+export const fetchOwnerMessages = () =>
+    async (dispatch, getState, API) => {
+        dispatch(fetchOwnerMessagesRequest());
+        try {
+            const res = await API.messageApi.fetchOwnerMessages();
             if (res.hasError) {
-                return dispatch(deleteMessageFailure(res.message));
+                return dispatch(fetchOwnerMessagesFailure(res.message));
             }
-            dispatch(deleteMessageSuccess());
-            return dispatch(fetchMessages());
-        }, err => dispatch(deleteMessageFailure(err)));
+            return dispatch(fetchOwnerMessagesSuccess(res));
+        } catch (error) {
+            return dispatch(fetchOwnerMessagesFailure(error.message));
+        }
     };
-}
+
+
+const fetchTravellerMessagesRequest = () => ({
+    type: messageTypes.FETCH_DISCUSSIONS_TRAVELLER_REQUEST
+});
+
+const fetchTravellerMessagesSuccess = discussions => ({
+    type: messageTypes.FETCH_DISCUSSIONS_TRAVELLER_SUCCESS,
+    payload: { discussions }
+});
+
+const fetchTravellerMessagesFailure = msg => ({
+    type: messageTypes.FETCH_DISCUSSIONS_TRAVELLER_FAILURE,
+    payload: { msg }
+});
+
+export const fetchTravellerMessages = () =>
+    async (dispatch, getState, API) => {
+        dispatch(fetchTravellerMessagesRequest());
+        try {
+            const res = await API.messageApi.fetchTravllererMessages();
+            if (res.hasError) {
+                return dispatch(fetchTravellerMessagesFailure(res.message));
+            }
+            return dispatch(fetchTravellerMessagesSuccess(res));
+        } catch (error) {
+            return dispatch(fetchTravellerMessagesFailure(error.message));
+        }
+    };
+
+
+const fetchDiscussionRequest = () => ({
+    type: messageTypes.FETCH_CURRENT_DISCUSSION_REQUEST
+});
+
+const fetchDiscussionSuccess = discussions => ({
+    type: messageTypes.FETCH_CURRENT_DISCUSSION_SUCCESS,
+    payload: { discussions }
+});
+
+const fetchDiscussionFailure = msg => ({
+    type: messageTypes.FETCH_CURRENT_DISCUSSION_FAILURE,
+    payload: { msg }
+});
+
+export const fetchDiscussion = userId =>
+    async (dispatch, getState, API) => {
+        dispatch(fetchDiscussionRequest());
+        try {
+            const res = await API.messageApi.fetchDiscussionMessages(userId);
+            if (res.hasError) {
+                return dispatch(fetchDiscussionFailure(res.message));
+            }
+            return dispatch(fetchDiscussionSuccess(res));
+        } catch (error) {
+            return dispatch(fetchDiscussionFailure(error.message));
+        }
+    };

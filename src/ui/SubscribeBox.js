@@ -9,6 +9,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import Dialog from "@material-ui/core/Dialog";
+import SubscribeIcon from "react-icons/lib/fa/user-plus";
 import FormControl from "@material-ui/core/FormControl";
 
 const passwordInputProps = {
@@ -241,8 +242,9 @@ export class SubscribeBox extends React.PureComponent {
                 <Button
                     onClick={this.toggleBtnHandler}
                     color="inherit"
+                    size="small"
                 >
-                Inscription
+                    <SubscribeIcon size={30} />
                 </Button>
                 {this.renderDialog()}
             </div>

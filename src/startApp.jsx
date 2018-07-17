@@ -4,7 +4,7 @@ import thunk from "redux-thunk";
 import { createStore, applyMiddleware, compose } from "redux";
 import { createLogger } from "redux-logger";
 import { render } from "react-dom";
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { Provider } from "react-redux";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 
@@ -16,11 +16,11 @@ import MainReducer from "./reducers";
 import API from "./api/mainApi";
 import routes from "./routes";
 
-
 const RouteWithSubRoutes = route => (
     <Route
         exact={route.exact || false}
         path={route.path}
+        status={200 || route.status}
         render={props => (<route.component {...props} routes={route.routes} />)}
     />
 );
@@ -45,7 +45,9 @@ function startApp(node) {
             <BrowserRouter basename={routes[0].path} forceRefresh={!supportsHistory} >
                 <Provider store={store}>
                     <div className="full-width full-height">
-                        {routes.map(route => (<RouteWithSubRoutes key={`${Date.now()}+${route.path}`} {...route} />))}
+                        <Switch>
+                            {routes.map(route => (<RouteWithSubRoutes key={`${Date.now()}+${route.path}`} {...route} />))}
+                        </Switch>
                     </div>
                 </Provider>
             </BrowserRouter>

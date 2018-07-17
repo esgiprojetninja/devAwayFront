@@ -4,123 +4,143 @@ import * as messageTypes from "../../actions/types/message";
 
 describe("Reducer message", () => {
     const initialSate = {
-        data: [],
-        byID: new Map(),
-        isLoading: false,
-        current: {
-            data: {},
-            isLoading: false
+        owner: {
+            data: [],
+            isLoading: false,
+            error: "",
         },
-        hasError: false,
-        errorText: ""
+        traveller: {
+            data: [],
+            isLoading: false,
+            error: "",
+        },
+        current: {
+            data: [],
+            isLoading: false,
+            error: "",
+        },
     };
 
     it("should return initialSate", () => {
         expect(messageReducer(undefined, {})).toEqual(initialSate);
     });
 
-    it("should FETCH_MESSAGES_REQUEST", () => {
+    it("should FETCH_DISCUSSIONS_OWNER_REQUEST", () => {
         expect(messageReducer(initialSate, {
-            type: messageTypes.FETCH_MESSAGES_REQUEST
+            type: messageTypes.FETCH_DISCUSSIONS_OWNER_REQUEST
         })).toEqual({
             ...initialSate,
-            isLoading: true
-        });
-    });
-
-    it("should FETCH_MESSAGES_SUCCESS", () => {
-        const state = {
-            ...initialSate,
-            isLoading: true
-        };
-        const byID = new Map();
-        byID.set(1, { id: 1, name: "toto" });
-        expect(messageReducer(state, {
-            type: messageTypes.FETCH_MESSAGES_SUCCESS,
-            payload: {
-                data: [1],
-                byID
+            owner: {
+                ...initialSate.owner,
+                isLoading: true,
             }
-        })).toEqual({
-            ...state,
-            isLoading: false,
-            data: [1],
-            byID
         });
     });
 
-    it("should FETCH_MESSAGES_FAILURE", () => {
-        const state = {
-            ...initialSate,
-            isLoading: true
-        };
-        expect(messageReducer(state, {
-            type: messageTypes.FETCH_MESSAGES_FAILURE,
-            payload: "Sorry boss :/"
-        })).toEqual({
-            ...state,
-            isLoading: false,
-            hasError: true,
-            errorText: "Sorry boss :/"
-        });
-    });
-
-    it("should SAVE_MESSAGE_REQUEST", () => {
+    it("should FETCH_DISCUSSIONS_OWNER_SUCCESS", () => {
         expect(messageReducer(initialSate, {
-            type: messageTypes.SAVE_MESSAGE_REQUEST
+            type: messageTypes.FETCH_DISCUSSIONS_OWNER_SUCCESS,
+            payload: { discussions: "POULAY" }
         })).toEqual({
             ...initialSate,
-            current: {
-                ...initialSate.current,
-                isLoading: true
+            owner: {
+                ...initialSate.owner,
+                isLoading: false,
+                data: "POULAY"
             }
         });
     });
 
-    it("should SAVE_MESSAGE_SUCCESS", () => {
-        const state = {
-            ...initialSate,
-            current: {
-                ...initialSate.current,
-                isLoading: true
-            }
-        };
-        expect(messageReducer(state, {
-            type: messageTypes.SAVE_MESSAGE_SUCCESS,
-            payload: {
-                id: 1000,
-                name: "Toto"
-            }
+    it("should FETCH_DISCUSSIONS_OWNER_FAILURE", () => {
+        expect(messageReducer(initialSate, {
+            type: messageTypes.FETCH_DISCUSSIONS_OWNER_FAILURE,
+            payload: { msg: "POULAY" }
         })).toEqual({
-            ...state,
-            current: {
-                data: {
-                    id: 1000,
-                    name: "Toto"
-                },
-                isLoading: false
+            ...initialSate,
+            owner: {
+                ...initialSate.owner,
+                isLoading: false,
+                error: "POULAY"
             }
         });
     });
 
-    it("should SAVE_MESSAGE_FAILURE", () => {
-        const state = {
+    it("should FETCH_DISCUSSIONS_TRAVELLER_REQUEST", () => {
+        expect(messageReducer(initialSate, {
+            type: messageTypes.FETCH_DISCUSSIONS_TRAVELLER_REQUEST
+        })).toEqual({
+            ...initialSate,
+            traveller: {
+                ...initialSate.traveller,
+                isLoading: true,
+            }
+        });
+    });
+
+    it("should FETCH_DISCUSSIONS_TRAVELLER_SUCCESS", () => {
+        expect(messageReducer(initialSate, {
+            type: messageTypes.FETCH_DISCUSSIONS_TRAVELLER_SUCCESS,
+            payload: { discussions: "POULAY" }
+        })).toEqual({
+            ...initialSate,
+            traveller: {
+                ...initialSate.traveller,
+                isLoading: false,
+                data: "POULAY"
+            }
+        });
+    });
+
+    it("should FETCH_DISCUSSIONS_TRAVELLER_FAILURE", () => {
+        expect(messageReducer(initialSate, {
+            type: messageTypes.FETCH_DISCUSSIONS_TRAVELLER_FAILURE,
+            payload: { msg: "POULAY" }
+        })).toEqual({
+            ...initialSate,
+            traveller: {
+                ...initialSate.traveller,
+                isLoading: false,
+                error: "POULAY"
+            }
+        });
+    });
+
+    it("should FETCH_CURRENT_DISCUSSION_REQUEST", () => {
+        expect(messageReducer(initialSate, {
+            type: messageTypes.FETCH_CURRENT_DISCUSSION_REQUEST
+        })).toEqual({
             ...initialSate,
             current: {
                 ...initialSate.current,
-                isLoading: true
+                isLoading: true,
             }
-        };
-        expect(messageReducer(state, {
-            type: messageTypes.SAVE_MESSAGE_FAILURE,
-            payload: "Won't save"
+        });
+    });
+
+    it("should FETCH_CURRENT_DISCUSSION_SUCCESS", () => {
+        expect(messageReducer(initialSate, {
+            type: messageTypes.FETCH_CURRENT_DISCUSSION_SUCCESS,
+            payload: { discussions: "POULAY" }
         })).toEqual({
-            ...state,
-            hasError: true,
-            errorText: "Won't save",
+            ...initialSate,
             current: {
-                ...state.current,
-                isLoading: false
+                ...initialSate.current,
+                isLoading: false,
+                data: "POULAY"
+            }
+        });
+    });
+
+    it("should FETCH_CURRENT_DISCUSSION_FAILURE", () => {
+        expect(messageReducer(initialSate, {
+            type: messageTypes.FETCH_CURRENT_DISCUSSION_FAILURE,
+            payload: { msg: "POULAY" }
+        })).toEqual({
+            ...initialSate,
+            current: {
+                ...initialSate.current,
+                isLoading: false,
+                error: "POULAY"
             }
         });
     });

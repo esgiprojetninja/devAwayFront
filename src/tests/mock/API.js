@@ -49,7 +49,10 @@ export const mockAPI = {
     messageApi: {
         fetchAll: () => Promise.resolve([]),
         createOrUpdate: () => Promise.resolve({}),
-        deleteItem: () => Promise.resolve({})
+        deleteItem: () => Promise.resolve({}),
+        fetchOwnerMessages: () => Promise.resolve(["POULAY"]),
+        fetchTravllererMessages: () => Promise.resolve(["POULAY"]),
+        fetchDiscussionMessages: () => Promise.resolve(["POULAY"]),
     },
     profileApi: {
         fetchAll: () => Promise.resolve([]),
@@ -134,6 +137,18 @@ export const mockAPIWithErrors = {
             hasError: true,
             message: "Couldn't delete"
         }),
+        fetchOwnerMessages: () => Promise.resolve({
+            hasError: true,
+            message: "Ooops"
+        }),
+        fetchTravllererMessages: () => Promise.resolve({
+            hasError: true,
+            message: "Ooops"
+        }),
+        fetchDiscussionMessages: () => Promise.resolve({
+            hasError: true,
+            message: "Ooops"
+        }),
     },
     profileApi: {
         fetchAll: () => Promise.resolve({
@@ -201,7 +216,10 @@ export const mockAPIWithServerFailure = {
     messageApi: {
         fetchAll: () => Promise.reject(new Error("gtfo")),
         createOrUpdate: () => Promise.reject(new Error("gtfo")),
-        deleteItem: () => Promise.reject(new Error("gtfo"))
+        deleteItem: () => Promise.reject(new Error("gtfo")),
+        fetchOwnerMessages: () => Promise.reject(new Error("gtfo")),
+        fetchTravllererMessages: () => Promise.reject(new Error("gtfo")),
+        fetchDiscussionMessages: () => Promise.reject(new Error("gtfo")),
     },
     profileApi: {
         fetchAll: () => Promise.reject(new Error("gtfo")),

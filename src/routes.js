@@ -6,6 +6,7 @@ import AccommodationsTabs from "./containers/AccommodationsTabs";
 import AccommodationCreation from "./containers/AccommodationCreation";
 import MissionCreation from "./containers/Mission/MissionCreation";
 import MissionEdition from "./containers/Mission/MissionEdition";
+import MessagesList from "./containers/Message/MessageList";
 
 export default [
     {
@@ -29,6 +30,11 @@ export default [
         component: AccommodationsTabs
     },
     {
+        path: "/messages",
+        exact: true,
+        component: MessagesList
+    },
+    {
         path: "/place/creation",
         exact: true,
         component: AccommodationCreation
@@ -50,6 +56,10 @@ export default [
     {
         path: "/users/:userID",
         exact: true,
+        component: Home
+    },
+    {
+        path: "*",
         component: Home
     },
 ];
