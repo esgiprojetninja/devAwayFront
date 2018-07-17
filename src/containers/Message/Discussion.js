@@ -2,6 +2,7 @@ import { connect } from "react-redux";
 import DiscussionComponent from "../../ui/Message/Discussion";
 import {
     fetchCurrentDiscussion,
+    sendMessage,
 } from "../../actions/message";
 
 export const mapStateToProps = state => ({
@@ -12,6 +13,9 @@ export const mapStateToProps = state => ({
 export const mapDispatchToProps = dispatch => ({
     onInit(userId) {
         dispatch(fetchCurrentDiscussion(userId));
+    },
+    sendMsg(msg, userId) {
+        return dispatch(sendMessage(msg, userId));
     },
 });
 
