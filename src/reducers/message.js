@@ -1,6 +1,11 @@
 import * as messageTypes from "../actions/types/message";
 
 const initialSate = {
+    all: {
+        data: [],
+        isLoading: false,
+        error: "",
+    },
     owner: {
         data: [],
         isLoading: false,
@@ -16,11 +21,38 @@ const initialSate = {
         isLoading: false,
         error: "",
     },
+    waitingForConnetion: null,
 };
 
 const message = (state = initialSate, action) => {
     const { payload } = action;
     switch (action.type) {
+    case messageTypes.FETCH_DISCUSSIONS_ALL_REQUEST:
+        return {
+            ...state,
+            all: {
+                ...state.all,
+                isLoading: true,
+            }
+        };
+    case messageTypes.FETCH_DISCUSSIONS_ALL_SUCCESS:
+        return {
+            ...state,
+            all: {
+                ...state.all,
+                isLoading: false,
+                data: payload.discussions,
+            }
+        };
+    case messageTypes.FETCH_DISCUSSIONS_ALL_FAILURE:
+        return {
+            ...state,
+            all: {
+                ...state.all,
+                isLoading: false,
+                error: payload.msg,
+            }
+        };
     case messageTypes.FETCH_DISCUSSIONS_OWNER_REQUEST:
         return {
             ...state,
@@ -98,6 +130,11 @@ const message = (state = initialSate, action) => {
                 isLoading: false,
                 error: payload.msg,
             }
+        };
+    case messageTypes.SET_WAITING_FOR_CONNECTION:
+        return {
+            ...state,
+            waitingForConnetion: payload.funcName
         };
     default:
         return state;

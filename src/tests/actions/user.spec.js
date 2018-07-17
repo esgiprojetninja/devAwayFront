@@ -3,6 +3,7 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import * as userActionTypes from "../../actions/types/user";
+import * as messageTypes from "../../actions/types/message";
 import * as userActions from "../../actions/user";
 import { SET_SNACK_MSG } from "../../actions/types/snack";
 import { basicUser } from "../mock/body/user";
@@ -69,7 +70,11 @@ describe("Actions user", () => {
             },
             { type: userActionTypes.USER_REQUEST },
         ];
-        const store = mockStore();
+        const store = mockStore({
+            message: {
+                waitingForConnetion: false,
+            }
+        });
         return store.dispatch(userActions.login({
             userName: "azy",
             password: "secret"
@@ -201,8 +206,23 @@ describe("Actions user", () => {
                 }
             },
             { type: userActionTypes.USER_REQUEST },
+            { type: messageTypes.FETCH_DISCUSSIONS_OWNER_REQUEST },
+            { type: messageTypes.FETCH_DISCUSSIONS_TRAVELLER_REQUEST },
+            { type: messageTypes.TOGGLE_WAITING_FOR_CONNECTION },
+            {
+                type: messageTypes.FETCH_DISCUSSIONS_OWNER_SUCCESS,
+                payload: { discussions: ["POULAY"] }
+            },
+            {
+                type: messageTypes.FETCH_DISCUSSIONS_TRAVELLER_SUCCESS,
+                payload: { discussions: ["POULAY"] }
+            },
         ];
-        const store = mockStore();
+        const store = mockStore({
+            message: {
+                waitingForConnetion: true,
+            }
+        });
         await store.dispatch(userActions.getMe("coucouToken"));
         expect(store.getActions()).toEqual(expectedActions);
     });

@@ -1,6 +1,7 @@
 /* global window */
 import * as types from "./types/user";
 import { displaySnackMsg } from "./snack";
+import * as messagesActions from "./message";
 
 export const logout = () => {
     window.localStorage.removeItem("authToken");
@@ -78,13 +79,17 @@ export const getMe = (token) => {
                 window.localStorage.setItem("filledUser", sessionUser);
                 dispatch(loginSuccess(res));
                 dispatch(fetchUserAccommodations());
+                const funcName = getState().message.waitingForConnetion;
+                if (funcName) {
+                    dispatch(messagesActions[funcName]());
+                    dispatch(messagesActions.setWaitingForConnection(null));
+                }
                 return;
             }
             dispatch(displaySnackMsg("Login failed"));
             dispatch(logout());
             dispatch(loginFailure(res.message));
         } catch (err) {
-            // console.error("getMe error", err);
             dispatch(displaySnackMsg("Login failed"));
             dispatch(logout());
             dispatch(loginFailure(err));
@@ -104,10 +109,14 @@ export function login(credentials) {
                     }
                     window.localStorage.setItem("authToken", res.success.token);
                     dispatch(loginSuccess(res.success));
+                    const funcName = getState().message.waitingForConnetion;
+                    if (funcName) {
+                        dispatch(messagesActions[funcName]());
+                        dispatch(messagesActions.setWaitingForConnection(null));
+                    }
                     return dispatch(getMe(res.success.token));
                 },
                 (error) => {
-                    // console.log("login error:: ", error);
                     dispatch(displaySnackMsg("Failed to login"));
                     window.localStorage.removeItem("authToken");
                     return dispatch(loginFailure(error));

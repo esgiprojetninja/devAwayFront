@@ -39,7 +39,6 @@ const fetchTravellerMessagesFailure = msg => ({
     type: messageTypes.FETCH_DISCUSSIONS_TRAVELLER_FAILURE,
     payload: { msg }
 });
-
 export const fetchTravellerMessages = () =>
     async (dispatch, getState, API) => {
         dispatch(fetchTravellerMessagesRequest());
@@ -55,30 +54,72 @@ export const fetchTravellerMessages = () =>
     };
 
 
-const fetchDiscussionRequest = () => ({
+const fetchCurrentDiscussionRequest = () => ({
     type: messageTypes.FETCH_CURRENT_DISCUSSION_REQUEST
 });
-
-const fetchDiscussionSuccess = discussions => ({
+const fetchCurrentDiscussionSuccess = discussions => ({
     type: messageTypes.FETCH_CURRENT_DISCUSSION_SUCCESS,
     payload: { discussions }
 });
-
-const fetchDiscussionFailure = msg => ({
+const fetchCurrentDiscussionFailure = msg => ({
     type: messageTypes.FETCH_CURRENT_DISCUSSION_FAILURE,
     payload: { msg }
 });
-
-export const fetchDiscussion = userId =>
+export const fetchCurrentDiscussion = userId =>
     async (dispatch, getState, API) => {
-        dispatch(fetchDiscussionRequest());
+        dispatch(fetchCurrentDiscussionRequest());
         try {
             const res = await API.messageApi.fetchDiscussionMessages(userId);
             if (res.hasError) {
-                return dispatch(fetchDiscussionFailure(res.message));
+                return dispatch(fetchCurrentDiscussionFailure(res.message));
             }
-            return dispatch(fetchDiscussionSuccess(res));
+            return dispatch(fetchCurrentDiscussionSuccess(res));
         } catch (error) {
-            return dispatch(fetchDiscussionFailure(error.message));
+            return dispatch(fetchCurrentDiscussionFailure(error.message));
         }
+    };
+
+
+const fetchAllMessagesRequest = () => ({
+    type: messageTypes.FETCH_DISCUSSIONS_ALL_REQUEST
+});
+const fetchAllMessagesSuccess = discussions => ({
+    type: messageTypes.FETCH_DISCUSSIONS_ALL_SUCCESS,
+    payload: { discussions }
+});
+const fetchAllMessagesFailure = msg => ({
+    type: messageTypes.FETCH_DISCUSSIONS_ALL_FAILURE,
+    payload: { msg }
+});
+export const fetchAllMessages = () =>
+    async (dispatch, getState, API) => {
+        dispatch(fetchAllMessagesRequest());
+        try {
+            const res = await API.messageApi.fetchAllMessages();
+            if (res.hasError) {
+                return dispatch(fetchAllMessagesFailure(res.message));
+            }
+            return dispatch(fetchAllMessagesSuccess(res));
+        } catch (error) {
+            return dispatch(fetchAllMessagesFailure(error.message));
+        }
+    };
+
+export const setWaitingForConnection = funcName => ({
+    type: messageTypes.SET_WAITING_FOR_CONNECTION,
+    payload: { funcName },
+});
+
+export const fetchCurrentIfConnected = filter =>
+    async (dispatch, getState) => {
+        const funcName = `fetch${filter.charAt(0).toUpperCase()}${filter.slice(1)}Messages`;
+        if (getState().user.isLoggedIn) {
+            switch (filter) {
+            case "traveller": return (dispatch(fetchTravellerMessages()));
+            case "owner": return (dispatch(fetchOwnerMessages()));
+            case "all": return (dispatch(fetchAllMessages()));
+            default: return (dispatch(fetchAllMessages()));
+            }
+        }
+        return dispatch(setWaitingForConnection(funcName));
     };

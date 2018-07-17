@@ -133,4 +133,14 @@ describe("Actions message", () => {
         await storeError.dispatch(messageActions.fetchDiscussion());
         expect(storeError.getActions()).toEqual(expectedActions);
     });
+
+
+    it("should toggle waitingForConnection", async () => {
+        const expectedActions = [
+            { type: messageTypes.TOGGLE_WAITING_FOR_CONNECTION },
+        ];
+        const store = mockStore();
+        await store.dispatch(messageActions.toggleWaitingForConnection());
+        expect(store.getActions()).toEqual(expectedActions);
+    });
 });

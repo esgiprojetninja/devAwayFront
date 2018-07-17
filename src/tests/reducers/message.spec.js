@@ -19,6 +19,7 @@ describe("Reducer message", () => {
             isLoading: false,
             error: "",
         },
+        waitingForConnetion: false,
     };
 
     it("should return initialSate", () => {
@@ -142,6 +143,15 @@ describe("Reducer message", () => {
                 isLoading: false,
                 error: "POULAY"
             }
+        });
+    });
+
+    it("should TOGGLE_WAITING_FOR_CONNECTION", () => {
+        expect(messageReducer(initialSate, {
+            type: messageTypes.TOGGLE_WAITING_FOR_CONNECTION,
+        })).toEqual({
+            ...initialSate,
+            waitingForConnetion: true,
         });
     });
 });
