@@ -8,6 +8,7 @@ import {
     mockAPIWithServerFailure
 } from "../mock/API";
 
+import { SET_SNACK_MSG } from "../../actions/types/snack";
 import * as messageTypes from "../../actions/types/message";
 import * as messageActions from "../../actions/message";
 
@@ -34,6 +35,13 @@ describe("Actions message", () => {
         const expectedActions = [
             { type: messageTypes.FETCH_DISCUSSIONS_OWNER_REQUEST },
             {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "No unreached hosts were found",
+                    snackDuration: undefined,
+                }
+            },
+            {
                 type: messageTypes.FETCH_DISCUSSIONS_OWNER_FAILURE,
                 payload: { msg: "Ooops" }
             }
@@ -45,6 +53,13 @@ describe("Actions message", () => {
     it("should fetch owner discussions - Server failure", async () => {
         const expectedActions = [
             { type: messageTypes.FETCH_DISCUSSIONS_OWNER_REQUEST },
+            {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "No unreached hosts were found",
+                    snackDuration: undefined,
+                }
+            },
             {
                 type: messageTypes.FETCH_DISCUSSIONS_OWNER_FAILURE,
                 payload: { msg: "gtfo" }
@@ -73,6 +88,13 @@ describe("Actions message", () => {
         const expectedActions = [
             { type: messageTypes.FETCH_DISCUSSIONS_TRAVELLER_REQUEST },
             {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "No unreached candidates were found",
+                    snackDuration: undefined,
+                }
+            },
+            {
                 type: messageTypes.FETCH_DISCUSSIONS_TRAVELLER_FAILURE,
                 payload: { msg: "Ooops" }
             }
@@ -84,6 +106,13 @@ describe("Actions message", () => {
     it("should fetch traveller discussions - Server failure", async () => {
         const expectedActions = [
             { type: messageTypes.FETCH_DISCUSSIONS_TRAVELLER_REQUEST },
+            {
+                type: SET_SNACK_MSG,
+                payload: {
+                    msg: "No unreached candidates were found",
+                    snackDuration: undefined,
+                }
+            },
             {
                 type: messageTypes.FETCH_DISCUSSIONS_TRAVELLER_FAILURE,
                 payload: { msg: "gtfo" }
