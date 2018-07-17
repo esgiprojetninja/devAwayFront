@@ -7,6 +7,7 @@ import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import Typography from "@material-ui/core/Typography";
+import IconButton from "@material-ui/core/IconButton";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
@@ -17,14 +18,17 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TablePagination from "@material-ui/core/TablePagination";
+import LinearProgress from "@material-ui/core/LinearProgress";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Paper from "@material-ui/core/Paper";
+import TextField from "@material-ui/core/TextField";
 import Avatar from "@material-ui/core/Avatar";
 import UserIcon from "react-icons/lib/fa/user";
+import MsgIcon from "react-icons/lib/fa/envelope";
 import CandidacyCancelledIcon from "react-icons/lib/fa/minus";
 import CandidacyProposedIcon from "react-icons/lib/fa/check";
 import moment from "moment";
@@ -82,18 +86,25 @@ const styles = theme => ({
     },
     candidacyStatusMsg: {
         marginTop: theme.spacing.unit * 2,
+    },
+    modalTextInput: {
+        width: 400,
+        maxWidth: "100%",
     }
 });
 
 const tableIconSize = 25;
 
-class MissionTravellers extends React.PureComponent {
+class MissionOwnerTravellers extends React.PureComponent {
     static defaultProps = {
         isUserOwner: false,
     }
 
     state = {
         candidacy: null,
+        msgToCandidate: "",
+        msgToCandidateError: "",
+        messageCandidacy: null,
     }
 
     get mission() {
@@ -153,6 +164,17 @@ class MissionTravellers extends React.PureComponent {
         });
     }
 
+    handleOpenMessageCandidacyModal = candidacy => () => {
+        this.setState({
+            messageCandidacy: candidacy
+        });
+    };
+    handleCloseMessageCandidacyModal = () => {
+        this.setState({
+            messageCandidacy: null
+        });
+    };
+
     handleOpenCandidacyModal = candidacy => () => {
         this.setState({
             candidacy
@@ -185,6 +207,26 @@ class MissionTravellers extends React.PureComponent {
             candidacy: null
         });
     };
+
+    handleSendMsg = () => {
+        if (this.state.msgToCandidate.length === 0
+            || this.state.msgToCandidateError.length > 0
+            || this.props.message.current.isLoading) return;
+        const { msgToCandidate, messageCandidacy } = this.state;
+        this.props.sendMsg(messageCandidacy, msgToCandidate);
+        this.setState({
+            messageCandidacy: null
+        });
+    }
+    handleChangeMsg = (event) => {
+        const { value } = event.target;
+        this.setState({
+            msgToCandidate: value,
+            msgToCandidateError: value.length < 10 || value.length > 255 ?
+                "Message has to be at least 10 characters long and less than 255"
+                : ""
+        });
+    }
 
     renderOwnerAcceptCandidacyModal() {
         const { candidacy } = this.state;
@@ -240,6 +282,71 @@ class MissionTravellers extends React.PureComponent {
                     </Button>
                     <Button disabled={!this.isCandidacyEditable(candidacy) || this.props.mission.current.isLoading} onClick={this.validateCandidacyModal} color="primary" autoFocus>
                         Confirm Candidacy
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        );
+    }
+
+    renderOwnerMessageModal() {
+        const { messageCandidacy } = this.state;
+        const { classes } = this.props;
+        return (
+            <Dialog
+                open={Boolean(messageCandidacy)}
+                onClose={this.handleCloseMessageCandidacyModal}
+                aria-labelledby="responsive-dialog-title"
+            >
+                <DialogTitle>
+                    <Grid container>
+                        <Grid item xs={3}>
+                            <Typography className={classes.tableIcon} variant="headline" color="inherit" component="h3">
+                                Message
+                            </Typography>
+                        </Grid>
+                        {messageCandidacy &&
+                            this.renderCandidacyUser(messageCandidacy, 9, "flex-end")
+                        }
+                    </Grid>
+                </DialogTitle>
+                <DialogContent>
+                    <Divider inset className={classes.modalDivider} />
+                    {this.props.message.current.isLoading &&
+                        <LinearProgress color="primary" mode="query" />}
+                    <DialogContentText color="default">
+                        <Grid container spacin={24}>
+                            <TextField
+                                id="candidacy-message-from-owner"
+                                label={this.state.msgToCandidateError.length > 0 ?
+                                    this.state.msgToCandidateError : "Your message"
+                                }
+                                error={this.state.msgToCandidateError.length > 0}
+                                multiline
+                                className={classes.modalTextInput}
+                                rows={4}
+                                min="10"
+                                max="255"
+                                value={this.state.msgToCandidate}
+                                onChange={this.handleChangeMsg}
+                                margin="normal"
+                            />
+                        </Grid>
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={this.handleCloseMessageCandidacyModal} color="default">
+                        Cancel
+                    </Button>
+                    <Button
+                        disabled={this.state.msgToCandidate.length === 0
+                            || this.state.msgToCandidateError.length > 0
+                            || this.props.message.current.isLoading
+                        }
+                        onClick={this.handleSendMsg}
+                        color="primary"
+                        autoFocus
+                    >
+                        Send Message
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -316,12 +423,21 @@ class MissionTravellers extends React.PureComponent {
                     this.mission.isActive === 1 && !this.mission.isLoading &&
                     <TableCell padding="dense">
                         <Button
-                            aria-label="Accept candidacy"
+                            aria-label="Manage candidacy"
+                            size="small"
                             color={candidacy.status === 1 ? "primary" : "default"}
                             onClick={this.handleOpenCandidacyModal(candidacy)}
                         >
                             Manage Candidacy
                         </Button>
+                        <IconButton
+                            aria-label={`Send a message to ${candidacy.user.userName}`}
+                            size="small"
+                            color="primary"
+                            onClick={this.handleOpenMessageCandidacyModal(candidacy)}
+                        >
+                            <MsgIcon />
+                        </IconButton>
                     </TableCell>}
             </TableRow>
         );
@@ -388,6 +504,9 @@ class MissionTravellers extends React.PureComponent {
                         {this.props.isUserOwner &&
                             this.renderOwnerAcceptCandidacyModal()
                         }
+                        {this.props.isUserOwner &&
+                            this.renderOwnerMessageModal()
+                        }
                     </div>
                 </Fade>
             </Slide>
@@ -395,7 +514,7 @@ class MissionTravellers extends React.PureComponent {
     }
 }
 
-MissionTravellers.propTypes = {
+MissionOwnerTravellers.propTypes = {
     isUserOwner: T.bool,
     mission: T.shape({
         current: T.shape({
@@ -417,10 +536,16 @@ MissionTravellers.propTypes = {
             isLoading: T.bool.isRequired,
         }).isRequired,
     }).isRequired,
+    message: T.shape({
+        current: T.shape({
+            isLoading: T.bool.isRequired,
+        }).isRequired,
+    }).isRequired,
     classes: T.shape({
     }).isRequired,
     acceptCandidacy: T.func.isRequired,
     refuseCandidacy: T.func.isRequired,
+    sendMsg: T.func.isRequired,
 };
 
-export default withStyles(styles)(MissionTravellers);
+export default withStyles(styles)(MissionOwnerTravellers);

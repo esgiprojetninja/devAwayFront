@@ -1,7 +1,8 @@
 /* global */
 import { connect } from "react-redux";
-import MissionTravellersComponent from "../../ui/Mission/MissionTravellers";
+import MissionOwnerTravellersComponent from "../../ui/Mission/MissionOwnerTravellers";
 import { acceptCandidate } from "../../actions/mission";
+import { sendMessage } from "../../actions/message";
 
 export const mapStateToProps = state => state;
 
@@ -12,11 +13,14 @@ export const mapDispatchToProps = dispatch => ({
     refuseCandidacy(candidacy) {
         dispatch(acceptCandidate(candidacy, false));
     },
+    sendMsg(candidacy, msg) {
+        dispatch(sendMessage(msg, candidacy.user.id));
+    },
 });
 
-const MissionTravellers = connect(
+const MissionOwnerTravellers = connect(
     mapStateToProps,
     mapDispatchToProps,
-)(MissionTravellersComponent);
+)(MissionOwnerTravellersComponent);
 
-export default MissionTravellers;
+export default MissionOwnerTravellers;

@@ -7,6 +7,7 @@ import AccommodationCreation from "./containers/AccommodationCreation";
 import MissionCreation from "./containers/Mission/MissionCreation";
 import MissionEdition from "./containers/Mission/MissionEdition";
 import MessagesList from "./containers/Message/MessageList";
+import Discussion from "./containers/Message/Discussion";
 
 export default [
     {
@@ -25,28 +26,13 @@ export default [
         component: Profile
     },
     {
-        path: "/places",
+        path: "/messages/:userID",
         exact: true,
-        component: AccommodationsTabs
-    },
-    {
-        path: "/messages",
-        exact: true,
-        component: MessagesList
-    },
-    {
-        path: "/place/creation",
-        exact: true,
-        component: AccommodationCreation
+        component: Discussion
     },
     {
         path: "/places/:accoID",
         component: AccommodationDetail
-    },
-    {
-        path: "/mission/creation",
-        exact: true,
-        component: MissionCreation
     },
     {
         path: "/missions/:missionID",
@@ -56,7 +42,27 @@ export default [
     {
         path: "/users/:userID",
         exact: true,
-        component: Home
+        component: Profile
+    },
+    {
+        path: "/messages",
+        exact: true,
+        component: MessagesList
+    },
+    {
+        path: "/places",
+        exact: true,
+        component: AccommodationsTabs
+    },
+    {
+        path: "/place/creation",
+        exact: true,
+        component: AccommodationCreation
+    },
+    {
+        path: "/mission/creation",
+        exact: true,
+        component: MissionCreation
     },
     {
         path: "*",

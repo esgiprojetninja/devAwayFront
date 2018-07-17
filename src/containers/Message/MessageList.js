@@ -8,7 +8,11 @@ import {
     fetchOwnerMessages,
 } from "../../actions/message";
 
-export const mapStateToProps = state => ({ message: state.message });
+export const mapStateToProps = state => ({
+    message: state.message,
+    user: state.user,
+    isLoggedIn: state.user.isLoggedIn
+});
 
 export const mapDispatchToProps = dispatch => ({
     onInit(filter) {

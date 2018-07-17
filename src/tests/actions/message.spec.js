@@ -105,7 +105,7 @@ describe("Actions message", () => {
             }
         ];
         const store = mockStore();
-        await store.dispatch(messageActions.fetchDiscussion());
+        await store.dispatch(messageActions.fetchCurrentDiscussion());
         expect(store.getActions()).toEqual(expectedActions);
     });
     it("should fetch current discussions - API error", async () => {
@@ -117,7 +117,7 @@ describe("Actions message", () => {
             }
         ];
         const storeError = configureMockStore([thunk.withExtraArgument(mockAPIWithErrors)])();
-        await storeError.dispatch(messageActions.fetchDiscussion());
+        await storeError.dispatch(messageActions.fetchCurrentDiscussion());
         expect(storeError.getActions()).toEqual(expectedActions);
     });
     it("should fetch current discussions - Server failure", async () => {
@@ -130,17 +130,19 @@ describe("Actions message", () => {
         ];
         mockStore = configureMockStore([thunk.withExtraArgument(mockAPIWithServerFailure)]);
         const storeError = mockStore();
-        await storeError.dispatch(messageActions.fetchDiscussion());
+        await storeError.dispatch(messageActions.fetchCurrentDiscussion());
         expect(storeError.getActions()).toEqual(expectedActions);
     });
 
-
-    it("should toggle waitingForConnection", async () => {
+    it("should toggle setWaitingForConnection", async () => {
         const expectedActions = [
-            { type: messageTypes.TOGGLE_WAITING_FOR_CONNECTION },
+            {
+                type: messageTypes.SET_WAITING_FOR_CONNECTION,
+                payload: { funcName: "POULAY" }
+            },
         ];
         const store = mockStore();
-        await store.dispatch(messageActions.toggleWaitingForConnection());
+        await store.dispatch(messageActions.setWaitingForConnection("POULAY"));
         expect(store.getActions()).toEqual(expectedActions);
     });
 });

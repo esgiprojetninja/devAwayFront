@@ -36,7 +36,8 @@ import Navbar from "../../containers/Navbar";
 import { getAccoImg } from "../../utils/accommodation";
 import CarouselImages from "../../containers/AccommodationDetailImages";
 import GMap from "../../containers/AccommodationDetailMap";
-import Travellers from "../../containers/Mission/MissionTravellers";
+import OwnerTravellers from "../../containers/Mission/MissionOwnerTravellers";
+import CandidateTravellers from "../../containers/Mission/MissionCandidateTravellers";
 import missionRules from "../../propTypes/missionRulesType";
 import { getStateFromRules, DATE_FORMAT, HOUR_FORMAT } from "../../utils/mission";
 import getUserImg from "../../utils/user";
@@ -1123,7 +1124,8 @@ class MissionEdition extends React.PureComponent {
                     {this.renderMissionDetails()}
                     {!this.mission && this.renderNoMissionDetail()}
                     <Grid container>
-                        <Travellers mission={this.mission} isUserOwner={this.isUserOwner} />
+                        <OwnerTravellers mission={this.mission} isUserOwner={this.isUserOwner} />
+                        <CandidateTravellers />
                     </Grid>
                 </Card>
                 {this.isUserOwner && this.props.mission.current.data.isActive > 0 &&

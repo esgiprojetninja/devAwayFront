@@ -37,9 +37,11 @@ const messageApi = {
     deleteItem: (id) => {
         return generateFetch("messages", "DELETE", id);
     },
+    fetchDiscussionMessages: userId => generateFetch("messages/me/with", "GET", userId),
     fetchOwnerMessages: () => generateFetch("missions/me/owners", "GET"),
     fetchTravllererMessages: () => generateFetch("missions/me", "GET"),
     fetchAllMessages: () => generateFetch("messages/me/latest", "GET"),
+    sendMessage: data => generateFetch("messages", "POST", null, data),
 };
 
 export default messageApi;

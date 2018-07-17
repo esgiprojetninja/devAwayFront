@@ -1,4 +1,5 @@
 import * as messageTypes from "./types/message";
+import { displaySnackMsg } from "./snack";
 
 const fetchOwnerMessagesRequest = () => ({
     type: messageTypes.FETCH_DISCUSSIONS_OWNER_REQUEST
@@ -122,4 +123,38 @@ export const fetchCurrentIfConnected = filter =>
             }
         }
         return dispatch(setWaitingForConnection(funcName));
+    };
+
+
+const sendNewMessageRequest = msg => ({
+    type: messageTypes.SEND_MSG_REQUEST,
+    payload: { msg }
+});
+const sendNewMessageSuccess = discussion => ({
+    type: messageTypes.SEND_MSG_SUCCESS,
+    payload: { discussion }
+});
+const sendNewMessageFailure = msg => ({
+    type: messageTypes.SEND_MSG_FAILURE,
+    payload: { msg }
+});
+
+export const sendMessage = (message, userId) =>
+    async (dispatch, getState, API) => {
+        dispatch(sendNewMessageRequest());
+        try {
+            const res = await API.messageApi.sendMessage({
+                content: message,
+                to: userId,
+            });
+            if (res.hasError) {
+                dispatch(displaySnackMsg("Failed to send message"));
+                return dispatch(sendNewMessageFailure(res.message));
+            }
+            dispatch(displaySnackMsg("Message sent"));
+            return dispatch(sendNewMessageSuccess(res));
+        } catch (error) {
+            dispatch(displaySnackMsg("Failed to send message"));
+            return dispatch(sendNewMessageFailure(error.message));
+        }
     };

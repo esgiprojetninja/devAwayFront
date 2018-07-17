@@ -206,13 +206,8 @@ describe("Actions user", () => {
                 }
             },
             { type: userActionTypes.USER_REQUEST },
-            { type: messageTypes.FETCH_DISCUSSIONS_OWNER_REQUEST },
             { type: messageTypes.FETCH_DISCUSSIONS_TRAVELLER_REQUEST },
-            { type: messageTypes.TOGGLE_WAITING_FOR_CONNECTION },
-            {
-                type: messageTypes.FETCH_DISCUSSIONS_OWNER_SUCCESS,
-                payload: { discussions: ["POULAY"] }
-            },
+            { type: messageTypes.SET_WAITING_FOR_CONNECTION, payload: { funcName: null } },
             {
                 type: messageTypes.FETCH_DISCUSSIONS_TRAVELLER_SUCCESS,
                 payload: { discussions: ["POULAY"] }
@@ -220,7 +215,7 @@ describe("Actions user", () => {
         ];
         const store = mockStore({
             message: {
-                waitingForConnetion: true,
+                waitingForConnetion: "fetchTravellerMessages",
             }
         });
         await store.dispatch(userActions.getMe("coucouToken"));

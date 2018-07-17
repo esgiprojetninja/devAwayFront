@@ -3,22 +3,26 @@ import * as messageTypes from "../actions/types/message";
 const initialSate = {
     all: {
         data: [],
+        potentialUsers: [],
         isLoading: false,
         error: "",
     },
     owner: {
         data: [],
+        potentialUsers: [],
         isLoading: false,
         error: "",
     },
     traveller: {
         data: [],
+        potentialUsers: [],
         isLoading: false,
         error: "",
     },
     current: {
         data: [],
         isLoading: false,
+        newMsg: "",
         error: "",
     },
     waitingForConnetion: null,
@@ -123,6 +127,32 @@ const message = (state = initialSate, action) => {
             }
         };
     case messageTypes.FETCH_CURRENT_DISCUSSION_FAILURE:
+        return {
+            ...state,
+            current: {
+                ...state.current,
+                isLoading: false,
+                error: payload.msg,
+            }
+        };
+    case messageTypes.SEND_MSG_REQUEST:
+        return {
+            ...state,
+            current: {
+                ...state.current,
+                isLoading: true,
+            }
+        };
+    case messageTypes.SEND_MSG_SUCCESS:
+        return {
+            ...state,
+            current: {
+                ...state.current,
+                isLoading: false,
+                data: payload.discussion,
+            }
+        };
+    case messageTypes.SEND_MSG_FAILURE:
         return {
             ...state,
             current: {
