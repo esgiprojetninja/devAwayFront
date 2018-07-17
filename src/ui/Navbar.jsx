@@ -13,6 +13,7 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuIcon from "@material-ui/icons/Menu";
 import OkIcon from "@material-ui/icons/Check";
+import PlacesIcon from "react-icons/lib/fa/globe";
 import MsgIcon from "@material-ui/icons/Message";
 import GoBackIcon from "@material-ui/icons/ArrowBack";
 import Snackbar from "@material-ui/core/Snackbar";
@@ -120,16 +121,17 @@ export class NavBarComponent extends React.PureComponent {
 
     renderPlaceMenuToggler() {
         return (
-            <Button
+            <IconButton
                 id="menu-toggler"
                 aria-label="More"
                 aria-haspopup="true"
                 aria-owns={this.state.openPlacesMenuEl ? "long-menu" : null}
                 color="inherit"
+                size="small"
                 onClick={this.handlePlacesMenuClick}
             >
-                places
-            </Button>
+                <PlacesIcon size={30} />
+            </IconButton>
         );
     }
 
@@ -183,7 +185,7 @@ export class NavBarComponent extends React.PureComponent {
                                         src={`${process.env.PUBLIC_URL}/img/logowhite.png`}
                                     />}
                                 </NavLink>
-                                <Button
+                                <IconButton
                                     id="go-back-arrow"
                                     color="inherit"
                                     size="small"
@@ -191,22 +193,26 @@ export class NavBarComponent extends React.PureComponent {
                                     onClick={this.props.router.history.goBack}
                                 >
                                     <GoBackIcon size={30} />
-                                </Button>
+                                </IconButton>
                             </Grid>
                             <Grid item xs={10} lg={11}>
                                 <Grid container alignItems="center" justify="flex-end">
                                     {this.props.user.isLoggedIn &&
-                                        <Button
-                                            id="messages-menu-toggler"
-                                            aria-label="More"
-                                            aria-haspopup="true"
-                                            color="inherit"
+                                        <NavLink
+                                            to="/messages"
                                         >
-                                            <MsgIcon />
-                                        </Button>
+                                            <IconButton
+                                                id="messages-menu-toggler"
+                                                aria-label="More"
+                                                aria-haspopup="true"
+                                                color="inherit"
+                                            >
+                                                <MsgIcon />
+                                            </IconButton>
+                                        </NavLink>
                                     }
-                                    {this.renderPlaceMenuToggler()}
                                     <SubscribeBox />
+                                    {this.renderPlaceMenuToggler()}
                                     <LogBox />
                                 </Grid>
                             </Grid>

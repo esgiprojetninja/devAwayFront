@@ -1,63 +1,102 @@
 import * as messageTypes from "../actions/types/message";
 
 const initialSate = {
-    data: [],
-    byID: new Map(),
-    isLoading: false,
-    current: {
-        data: {},
-        isLoading: false
+    owner: {
+        data: [],
+        isLoading: false,
+        error: "",
     },
-    hasError: false,
-    errorText: ""
+    traveller: {
+        data: [],
+        isLoading: false,
+        error: "",
+    },
+    current: {
+        data: [],
+        isLoading: false,
+        error: "",
+    },
 };
 
 const message = (state = initialSate, action) => {
     const { payload } = action;
     switch (action.type) {
-    case messageTypes.FETCH_MESSAGES_REQUEST:
+    case messageTypes.FETCH_DISCUSSIONS_OWNER_REQUEST:
         return {
             ...state,
-            isLoading: true
+            owner: {
+                ...state.owner,
+                isLoading: true,
+            }
         };
-    case messageTypes.FETCH_MESSAGES_SUCCESS:
+    case messageTypes.FETCH_DISCUSSIONS_OWNER_SUCCESS:
         return {
             ...state,
-            isLoading: false,
-            data: payload.data,
-            byID: payload.byID
+            owner: {
+                ...state.owner,
+                isLoading: false,
+                data: payload.discussions,
+            }
         };
-    case messageTypes.FETCH_MESSAGES_FAILURE:
+    case messageTypes.FETCH_DISCUSSIONS_OWNER_FAILURE:
         return {
             ...state,
-            isLoading: false,
-            hasError: true,
-            errorText: payload
+            owner: {
+                ...state.owner,
+                isLoading: false,
+                error: payload.msg,
+            }
         };
-    case messageTypes.SAVE_MESSAGE_REQUEST:
+    case messageTypes.FETCH_DISCUSSIONS_TRAVELLER_REQUEST:
+        return {
+            ...state,
+            traveller: {
+                ...state.traveller,
+                isLoading: true,
+            }
+        };
+    case messageTypes.FETCH_DISCUSSIONS_TRAVELLER_SUCCESS:
+        return {
+            ...state,
+            traveller: {
+                ...state.traveller,
+                isLoading: false,
+                data: payload.discussions,
+            }
+        };
+    case messageTypes.FETCH_DISCUSSIONS_TRAVELLER_FAILURE:
+        return {
+            ...state,
+            traveller: {
+                ...state.traveller,
+                isLoading: false,
+                error: payload.msg,
+            }
+        };
+    case messageTypes.FETCH_CURRENT_DISCUSSION_REQUEST:
         return {
             ...state,
             current: {
                 ...state.current,
-                isLoading: true
+                isLoading: true,
             }
         };
-    case messageTypes.SAVE_MESSAGE_SUCCESS:
+    case messageTypes.FETCH_CURRENT_DISCUSSION_SUCCESS:
         return {
             ...state,
-            current: {
-                data: payload,
-                isLoading: false
-            }
-        };
-    case messageTypes.SAVE_MESSAGE_FAILURE:
-        return {
-            ...state,
-            hasError: true,
-            errorText: payload,
             current: {
                 ...state.current,
-                isLoading: false
+                isLoading: false,
+                data: payload.discussions,
+            }
+        };
+    case messageTypes.FETCH_CURRENT_DISCUSSION_FAILURE:
+        return {
+            ...state,
+            current: {
+                ...state.current,
+                isLoading: false,
+                error: payload.msg,
             }
         };
     default:

@@ -16,6 +16,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Icon from "@material-ui/core/Icon";
+import SigninIcon from "react-icons/lib/fa/sign-in";
 import UserIcon from "react-icons/lib/fa/user";
 import { withStyles } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
@@ -176,7 +177,7 @@ class LogBox extends React.PureComponent {
     renderLogBox() {
         return (
             <div>
-                <Button id="devaway-logbox-toggler" className="btn-white" onClick={this.handleClickOpen}>Log in</Button>
+                <Button id="devaway-logbox-toggler" size="small" className="btn-white" onClick={this.handleClickOpen}><SigninIcon size={30} /></Button>
                 <Dialog
                     id="devaway-logbox-dialog"
                     open={this.state.open}
