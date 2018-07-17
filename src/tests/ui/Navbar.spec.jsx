@@ -93,7 +93,7 @@ describe("ui <NavBar />", () => {
             }
         };
         wrapper = shallow(<NavBarComponent {...props} />);
-        expect(wrapper.instance().renderMenuToggler()).not.toBeNull();
+        expect(wrapper.instance().renderPlaceMenuToggler()).not.toBeNull();
     });
 
     it("should toggle open the navbar", () => {
