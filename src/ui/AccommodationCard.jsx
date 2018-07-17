@@ -187,7 +187,7 @@ class AccommodationCard extends React.PureComponent {
                     <Grid item xs={12} sm={6} md={4} key={a.id}>
                         <ScrollAnimation animateIn="fadeIn">
                             <Slide in direction={this.state.slideDirection}>
-                                <Card className={classes.card}>
+                                <Card>
                                     <CardMedia
                                         className={classes.media}
                                         image={imgUrl}

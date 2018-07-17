@@ -37,30 +37,22 @@ describe("Container AccommodationCard", () => {
     });
     describe("mapStateToProps", () => {
         it("dispatch accomodation specific state", () => {
-            const fakeAcco = { idchibar: "ohmyagad" };
+            const fakeAcco = { id: 123, updated_at: "2018-12-12 01:01:01" };
             const accommodation = {
                 isLoading: false,
                 current: "chibar",
                 hasError: false,
                 errorText: "chibar",
-                data: [fakeAcco],
-                byID: new WeakMap()
-                    .set(fakeAcco, { chibar: "chibar", selected: true }),
-                mode: "chibar"
-            };
-            expect(mapStateToProps(
-                {
-                    accommodation,
-                    coucou: "coucou"
+                data: [123],
+                byID: new Map()
+                    .set(123, fakeAcco),
+                search: {
+                    all: []
                 }
-            )).toEqual({
-                isLoading: false,
-                hasError: false,
-                errorText: "chibar",
-                accommodations: [{
-                    chibar: "chibar",
-                    selected: true
-                }]
+            };
+            expect(mapStateToProps({ accommodation })).toEqual({
+                accommodation,
+                accoArr: [fakeAcco]
             });
         });
     });

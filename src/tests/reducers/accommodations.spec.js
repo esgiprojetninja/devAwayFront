@@ -16,6 +16,7 @@ describe("Reducer ACCOMMODATION", function () {
                 hasNext: false,
                 isLoading: false,
                 error: "",
+                lastSearchDate: null,
             }
         };
     });
@@ -173,13 +174,14 @@ describe("Reducer ACCOMMODATION", function () {
     it("should dispatch SEARCH_ACCOMMODATIONS_SUCCESS", () => {
         expect(accommodationReducer(this.initialSate, {
             type: accoTypes.SEARCH_ACCOMMODATIONS_SUCCESS,
-            payload: { accommodations: [1, 2, 3] },
+            payload: { accommodations: [1, 2, 3], searchDate: "POULAY" },
         })).toEqual({
             ...this.initialSate,
             search: {
                 ...this.initialSate.search,
                 isLoading: false,
                 all: [1, 2, 3],
+                lastSearchDate: "POULAY",
             }
         });
     });

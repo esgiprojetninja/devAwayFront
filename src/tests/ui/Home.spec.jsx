@@ -37,6 +37,15 @@ describe("ui <Home />", () => {
                     destinationsImg: ""
                 }}
                 onInit={() => {}}
+                accommodation={{
+                    isLoading: false,
+                    search: {
+                        isLoading: false,
+                    }
+                }}
+                user={{
+                    isLoading: false,
+                }}
             />);
         expect(wrapper.find(ArticleWithMedia).length).toBe(1);
         expect(wrapper.find(HomeSearchForm).length).toBe(1);
@@ -46,6 +55,15 @@ describe("ui <Home />", () => {
         const wrapper = shallow(
             <HomeWithStyles
                 onInit={() => { }}
+                accommodation={{
+                    isLoading: false,
+                    search: {
+                        isLoading: false,
+                    }
+                }}
+                user={{
+                    isLoading: false,
+                }}
             />);
         expect(wrapper.text()).toMatch(/Home/);
     });

@@ -23,8 +23,9 @@ export const mapStateToProps = (state) => {
         } else {
             accoArr = accommodation.search.all;
         }
+    } else {
+        accoArr = accommodation.data.map(accoId => accommodation.byID.get(accoId));
     }
-    accoArr = accommodation.data.map(accoId => accommodation.byID.get(accoId));
     return {
         accommodation: state.accommodation,
         accoArr: accoArr.sort((a, b) => {
