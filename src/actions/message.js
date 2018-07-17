@@ -18,10 +18,15 @@ export const fetchOwnerMessages = () =>
         try {
             const res = await API.messageApi.fetchOwnerMessages();
             if (res.hasError) {
+                dispatch(displaySnackMsg("No unreached hosts were found"));
                 return dispatch(fetchOwnerMessagesFailure(res.message));
+            }
+            if (res && !res.length) {
+                dispatch(displaySnackMsg("No unreached hosts were found"));
             }
             return dispatch(fetchOwnerMessagesSuccess(res));
         } catch (error) {
+            dispatch(displaySnackMsg("No unreached hosts were found"));
             return dispatch(fetchOwnerMessagesFailure(error.message));
         }
     };
@@ -46,10 +51,15 @@ export const fetchTravellerMessages = () =>
         try {
             const res = await API.messageApi.fetchTravllererMessages();
             if (res.hasError) {
+                dispatch(displaySnackMsg("No unreached candidates were found"));
                 return dispatch(fetchTravellerMessagesFailure(res.message));
+            }
+            if (res && !res.length) {
+                dispatch(displaySnackMsg("No unreached candidates were found"));
             }
             return dispatch(fetchTravellerMessagesSuccess(res));
         } catch (error) {
+            dispatch(displaySnackMsg("No unreached candidates were found"));
             return dispatch(fetchTravellerMessagesFailure(error.message));
         }
     };

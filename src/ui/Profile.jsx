@@ -13,7 +13,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
 import UserIcon from "react-icons/lib/fa/user";
 
-import Guard from "../containers/Guard";
+// import Guard from "../containers/Guard";
 import Navbar from "../containers/Navbar";
 
 class Profile extends React.PureComponent {
@@ -202,11 +202,11 @@ class Profile extends React.PureComponent {
                             {this.props.current.isLoggedIn && this.renderProfile()}
                         </Paper>
                     </Grid>
-                    <Grid item xs={12}>
+                    {/* <Grid item xs={12}>
                         <Paper className={classes.paper}>
                             <Guard />
                         </Paper>
-                    </Grid>
+                    </Grid> */}
                 </Grid>
                 {this.renderSaveBtns()}
             </div>

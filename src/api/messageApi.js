@@ -38,8 +38,8 @@ const messageApi = {
         return generateFetch("messages", "DELETE", id);
     },
     fetchDiscussionMessages: userId => generateFetch("messages/me/with", "GET", userId),
-    fetchOwnerMessages: () => generateFetch("missions/me/owners", "GET"),
-    fetchTravllererMessages: () => generateFetch("missions/me", "GET"),
+    fetchOwnerMessages: () => generateFetch("missions/me/get/new/host", "GET"),
+    fetchTravllererMessages: () => generateFetch("missions/me/owners/get/travellers", "GET"),
     fetchAllMessages: () => generateFetch("messages/me/latest", "GET"),
     sendMessage: data => generateFetch("messages", "POST", null, data),
 };
