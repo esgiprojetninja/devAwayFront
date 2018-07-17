@@ -176,7 +176,7 @@ export class Home extends React.PureComponent {
             || user.isLoading || user.isGettingData;
         return (
             <div>
-                <Navbar replaceLogoWithSpinner={isLoading} />
+                <Navbar removeGoBackBtn replaceLogoWithSpinner={isLoading} />
                 <div id="home-container">
                     {this.renderFirstBlock()}
                     <HomeSearchForm />
