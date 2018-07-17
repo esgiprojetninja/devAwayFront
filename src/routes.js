@@ -8,6 +8,7 @@ import MissionCreation from "./containers/Mission/MissionCreation";
 import MissionEdition from "./containers/Mission/MissionEdition";
 import MessagesList from "./containers/Message/MessageList";
 import Discussion from "./containers/Message/Discussion";
+import UserDetail from "./containers/User/UserDetail";
 
 export default [
     {
@@ -42,7 +43,7 @@ export default [
     {
         path: "/users/:userID",
         exact: true,
-        component: Profile
+        component: UserDetail
     },
     {
         path: "/messages",

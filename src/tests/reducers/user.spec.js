@@ -21,6 +21,7 @@ describe("Reducer USER", () => {
         isLoading: false,
         isGettingData: false,
         hasError: false,
+        fetchedUser: null,
         error: "",
         accommodations: {},
     };
