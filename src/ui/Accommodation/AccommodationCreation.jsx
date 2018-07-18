@@ -12,7 +12,6 @@ import FormControl from "@material-ui/core/FormControl";
 import Save from "@material-ui/icons/Save";
 
 import Navbar from "../../containers/Navbar";
-import Footer from "../../ui/Footer";
 import AccommodationDetailMap from "../../containers/AccommodationDetailMap";
 import { lightGrey } from "../../styles/theme";
 
@@ -292,9 +291,6 @@ class AccommocationCreation extends React.PureComponent {
                 <Navbar burgerColor="#acacac" />
                 {this.renderContent()}
                 {this.renderSpinner()}
-                <div style={{ marginTop: 150 }}>
-                    <Footer />
-                </div>
             </div>
         );
     }
