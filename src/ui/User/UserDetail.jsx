@@ -6,8 +6,11 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import { Typography } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import UserIcon from "react-icons/lib/fa/user";
+import CheckedIcon from "react-icons/lib/fa/check-circle";
+import UnCheckedIcon from "react-icons/lib/fa/close";
 import { withStyles } from "@material-ui/core/styles";
 import moment from "moment";
+import Tooltip from "@material-ui/core/Tooltip";
 
 import UnloggedComp from "../NoUserComp";
 import FooterComp from "../Footer";
@@ -55,6 +58,27 @@ class UserDetail extends React.PureComponent {
                         <Grid container alignItems="center" justify="center">
                             <Typography className={classes.contactUserName} variant="subheading" color="inherit" component="p">{moment(user.created_at, `${DATE_FORMAT}, ${HOUR_FORMAT}:ss`).format("MMMM Do YYYY")}</Typography>
                         </Grid>}
+
+                        <Grid container alignItems="center" justify="center">
+                            {user.isActive >= 1 &&
+                                <Grid item>
+                                    <Typography className={classes.verfiedLabel} variant="subheading" color="inherit" component="p">Verified email</Typography>
+                                </Grid>}
+                            {user.isActive >= 1 &&
+                                <Grid item>
+                                    <Tooltip title="Email verified">
+                                        <CheckedIcon className={classes.icon} size={50} />
+                                    </Tooltip>
+                                </Grid>}
+                            <Grid item>
+                                <Typography className={classes.verifiedLabel} variant="subheading" color="inherit" component="p">Unchecked address</Typography>
+                            </Grid>
+                            <Grid item>
+                                <Tooltip title="Email verified">
+                                    <UnCheckedIcon className={classes.icon} size={50} />
+                                </Tooltip>
+                            </Grid>
+                        </Grid>
                     </Paper>
                 </Grid>
             </Grid>
@@ -112,8 +136,22 @@ export default withStyles(theme => ({
         marginBottom: 0,
         color: theme.palette.primary.midGrey,
     },
+    verfiedLabel: {
+        marginTop: theme.spacing.unit * 2,
+        color: theme.palette.primary.midGrey,
+    },
+    verifiedLabel: {
+        marginTop: theme.spacing.unit * 2,
+        marginLeft: theme.spacing.unit * 2,
+        color: theme.palette.primary.midGrey,
+    },
     userPaper: {
         margin: theme.spacing.unit * 4,
         padding: theme.spacing.unit * 4,
+    },
+    icon: {
+        marginTop: theme.spacing.unit * 2,
+        color: theme.palette.primary.light,
+        fill: theme.palette.primary.light,
     },
 }))(UserDetail);
