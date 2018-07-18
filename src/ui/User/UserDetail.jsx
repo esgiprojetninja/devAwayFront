@@ -59,17 +59,18 @@ class UserDetail extends React.PureComponent {
                             <Typography className={classes.contactUserName} variant="subheading" color="inherit" component="p">{moment(user.created_at, `${DATE_FORMAT}, ${HOUR_FORMAT}:ss`).format("MMMM Do YYYY")}</Typography>
                         </Grid>}
 
+                        {user.isActive >= 1 &&
                         <Grid container alignItems="center" justify="center">
-                            {user.isActive >= 1 &&
-                                <Grid item>
-                                    <Typography className={classes.verfiedLabel} variant="subheading" color="inherit" component="p">Verified email</Typography>
-                                </Grid>}
-                            {user.isActive >= 1 &&
-                                <Grid item>
-                                    <Tooltip title="Email verified">
-                                        <CheckedIcon className={classes.icon} size={50} />
-                                    </Tooltip>
-                                </Grid>}
+                            <Grid item>
+                                <Typography className={classes.verifiedLabel} variant="subheading" color="inherit" component="p">Verified email</Typography>
+                            </Grid>
+                            <Grid item>
+                                <Tooltip title="Email verified">
+                                    <CheckedIcon className={classes.icon} size={50} />
+                                </Tooltip>
+                            </Grid>
+                        </Grid>}
+                        <Grid container alignItems="center" justify="center">
                             <Grid item>
                                 <Typography className={classes.verifiedLabel} variant="subheading" color="inherit" component="p">Unchecked address</Typography>
                             </Grid>
@@ -136,13 +137,10 @@ export default withStyles(theme => ({
         marginBottom: 0,
         color: theme.palette.primary.midGrey,
     },
-    verfiedLabel: {
-        marginTop: theme.spacing.unit * 2,
-        color: theme.palette.primary.midGrey,
-    },
     verifiedLabel: {
         marginTop: theme.spacing.unit * 2,
         marginLeft: theme.spacing.unit * 2,
+        marginRight: theme.spacing.unit * 2,
         color: theme.palette.primary.midGrey,
     },
     userPaper: {
