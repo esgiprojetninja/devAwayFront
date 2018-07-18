@@ -1,4 +1,3 @@
-/* global Date */
 import React from "react";
 import * as T from "prop-types";
 import Grid from "@material-ui/core/Grid";
@@ -15,6 +14,8 @@ import UserIcon from "react-icons/lib/fa/user";
 
 // import Guard from "../containers/Guard";
 import Navbar from "../containers/Navbar";
+import UnloggedUser from "../ui/NoUserComp";
+import Footer from "../ui/Footer";
 
 class Profile extends React.PureComponent {
     constructor(props) {
@@ -180,35 +181,46 @@ class Profile extends React.PureComponent {
         );
     }
 
+    renderContent() {
+        const { classes } = this.props;
+        return (
+            <Grid container spacing={24} className={classes.container}>
+                <Grid item xs={12}>
+                    <Typography color="inherit" component="h2" variant="headline">
+                        Your informations
+                    </Typography>
+                </Grid>
+
+                {this.renderUserImage()}
+
+                <Grid item xs={12}>
+                    <Paper className={classes.paper} >
+                        {this.props.current.isLoading &&
+                            <LinearProgress id="getMeProgess" color="primary" mode="query" />
+                        }
+                        {this.props.current.isLoggedIn && this.renderProfile()}
+                    </Paper>
+                </Grid>
+                {/* <Grid item xs={12}>
+                        <Paper className={classes.paper}>
+                            <Guard />
+                        </Paper>
+                    </Grid> */}
+            </Grid>
+        );
+    }
+
     render() {
         const { classes } = this.props;
         return (
             <div className={classes.root}>
                 <Navbar />
-                <Grid container spacing={24} className={classes.container}>
-                    <Grid item xs={12}>
-                        <Typography color="inherit" component="h2" variant="headline">
-                            Your informations
-                        </Typography>
-                    </Grid>
-
-                    {this.renderUserImage()}
-
-                    <Grid item xs={12}>
-                        <Paper className={classes.paper} >
-                            {this.props.current.isLoading &&
-                                <LinearProgress id="getMeProgess" color="primary" mode="query" />
-                            }
-                            {this.props.current.isLoggedIn && this.renderProfile()}
-                        </Paper>
-                    </Grid>
-                    {/* <Grid item xs={12}>
-                        <Paper className={classes.paper}>
-                            <Guard />
-                        </Paper>
-                    </Grid> */}
-                </Grid>
-                {this.renderSaveBtns()}
+                {this.props.current.isLoggedIn && this.renderContent()}
+                {this.props.current.isLoggedIn && this.renderSaveBtns()}
+                {!this.props.current.isLoggedIn && <UnloggedUser />}
+                <div style={{ marginTop: 150 }}>
+                    <Footer />
+                </div>
             </div>
         );
     }

@@ -84,9 +84,7 @@ describe("ui <AccommodationsList />", function () {
         const wrapper = shallow(
             <AccommodationsList {...props} />
         );
-        expect(
-            wrapper.instance().renderAccommodationList().type.options.name
-        ).toBe(CircularProgress.options.name);
+        expect(wrapper.find(CircularProgress).length).toBe(1);
     });
 
     it("should return 1 for phone screen size", () => {

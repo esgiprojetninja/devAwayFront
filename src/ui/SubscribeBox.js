@@ -11,12 +11,14 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Dialog from "@material-ui/core/Dialog";
 import SubscribeIcon from "react-icons/lib/fa/user-plus";
 import FormControl from "@material-ui/core/FormControl";
+import Grid from "@material-ui/core/Grid";
+import Divider from "@material-ui/core/Divider";
 
 const passwordInputProps = {
     type: "password"
 };
 
-const styles = theme => ({ // eslint-disable-line
+const styles = () => ({
 });
 
 const initialState = {
@@ -129,6 +131,9 @@ export class SubscribeBox extends React.PureComponent {
                     inputProps={passwordInputProps}
                     name="passwordCheck"
                     margin="dense"
+                    multiline
+                    fullWidth
+                    rows="2"
                     onChange={this.handlePasswordCheckChange}
                 />
             </FormControl>
@@ -146,6 +151,9 @@ export class SubscribeBox extends React.PureComponent {
                     type="password"
                     inputProps={passwordInputProps}
                     name="password"
+                    multiline
+                    fullWidth
+                    rows="2"
                     margin="dense"
                     onChange={this.handlePasswordChange}
                 />
@@ -164,6 +172,7 @@ export class SubscribeBox extends React.PureComponent {
                     type="text"
                     name="userName"
                     multiline
+                    fullWidth
                     rows="2"
                     margin="dense"
                     onChange={(ev) => {
@@ -198,10 +207,20 @@ export class SubscribeBox extends React.PureComponent {
     renderDialogContent() {
         return (
             <DialogContent>
-                {this.renderEmailField()}
-                {this.renderUserNameField()}
-                {this.renderPasswordField()}
-                {this.renderPasswordCheckField()}
+                <Grid container direction="row" alignItems="flex-start" justify="center">
+                    <Grid xs={6} item>
+                        {this.renderEmailField()}
+                    </Grid>
+                    <Grid xs={6} item>
+                        {this.renderUserNameField()}
+                    </Grid>
+                    <Grid xs={6} item>
+                        {this.renderPasswordField()}
+                    </Grid>
+                    <Grid xs={6} item>
+                        {this.renderPasswordCheckField()}
+                    </Grid>
+                </Grid>
             </DialogContent>
         );
     }
@@ -214,12 +233,14 @@ export class SubscribeBox extends React.PureComponent {
                 aria-labelledby="form-inscription-title"
             >
                 <DialogTitle id="form-inscription-title">Inscription</DialogTitle>
+                <Divider />
                 <form
                     onSubmit={this.onSubmit}
                 >
                     {this.renderDialogContent()}
                     <DialogActions>
                         <Button
+                            color="primary"
                             type="submit"
                         >
                             Send

@@ -37,14 +37,12 @@ class HomeSearchForm extends React.PureComponent {
         }
 
         this.props.searchPlaces(this.state);
-        const domNode = document.getElementById("devaway-accommodations-home-container");
+        const domNode = document.getElementById("devaway-places");
         if (!domNode) return;
         domNode.scrollIntoView({
             behaviour: "smooth"
         });
     }
-
-    render
 
     render() {
         const { classes } = this.props;

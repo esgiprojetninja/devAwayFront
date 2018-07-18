@@ -160,7 +160,6 @@ class LogBox extends React.PureComponent {
                                 id="devaway-user-logout-btn"
                                 className="full-width"
                                 color="primary"
-                                variant="contained"
                                 onClick={() => {
                                     this.handleClickOpen();
                                     this.props.onLogoutClicked();
@@ -193,7 +192,7 @@ class LogBox extends React.PureComponent {
                     >
                         <DialogContent>
                             <FormControl>
-                                <InputLabel htmlFor="userName">Username</InputLabel>
+                                <InputLabel htmlFor="userName">Email</InputLabel>
                                 <Input
                                     error={this.props.hasError && !this.state.noticedError}
                                     type="text"

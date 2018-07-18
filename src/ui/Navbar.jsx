@@ -39,7 +39,11 @@ export class NavBarComponent extends React.PureComponent {
         closeSnack: T.func.isRequired,
     };
 
-    static defaultProps = { burgerColor: "#fff", replaceLogoWithSpinner: false }
+    static defaultProps = {
+        burgerColor: "#fff",
+        replaceLogoWithSpinner: false,
+        removeGoBackBtn: false,
+    }
 
     constructor(props) {
         super(props);
@@ -185,6 +189,7 @@ export class NavBarComponent extends React.PureComponent {
                                         src={`${process.env.PUBLIC_URL}/img/logowhite.png`}
                                     />}
                                 </NavLink>
+                                {!this.props.removeGoBackBtn &&
                                 <IconButton
                                     id="go-back-arrow"
                                     color="inherit"
@@ -193,7 +198,7 @@ export class NavBarComponent extends React.PureComponent {
                                     onClick={this.props.router.history.goBack}
                                 >
                                     <GoBackIcon size={30} />
-                                </IconButton>
+                                </IconButton>}
                             </Grid>
                             <Grid item xs={10} lg={11}>
                                 <Grid container alignItems="center" justify="flex-end">
@@ -257,6 +262,7 @@ NavBarComponent.propTypes = {
         push: undefined,
     }).isRequired,
     replaceLogoWithSpinner: T.bool,
+    removeGoBackBtn: T.bool,
 };
 
 export default withRouter(withStyles(theme => ({

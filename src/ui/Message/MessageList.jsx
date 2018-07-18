@@ -12,6 +12,7 @@ import UserIcon from "react-icons/lib/fa/user";
 import moment from "moment";
 
 import Home from "../../containers/Home";
+import Footer from "../../ui/Footer";
 import Navbar from "../../containers/Navbar";
 import { messageReducerPropTypes } from "../../propTypes/message.reducer.d";
 import getUserImg from "../../utils/user";
@@ -23,6 +24,7 @@ const styles = theme => ({
         margin: theme.spacing.unit * 2,
     },
     container: {
+        minHeight: "70vh",
         width: "100%",
         marginTop: theme.spacing.unit * 2,
         marginBottom: theme.spacing.unit * 4,
@@ -40,7 +42,6 @@ const styles = theme => ({
     noMessagesContainer: {
         marginTop: theme.spacing.unit * 4,
         marginBottom: theme.spacing.unit * 4,
-        minHeight: "60vh",
     },
     messagesSubContainer: {
         width: "100%",
@@ -227,6 +228,7 @@ class MessageList extends React.PureComponent {
                     {this.renderFilters()}
                     {this.renderMessagesContainer()}
                 </Grid>
+                <Footer />
             </div>
         );
     }

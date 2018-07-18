@@ -105,6 +105,7 @@ export function login(credentials) {
                 (res) => {
                     if (!res || !res.success || !res.success.token) {
                         dispatch(displaySnackMsg("Failed to login"));
+                        window.localStorage.removeItem("authToken");
                         return dispatch(loginFailure(res.message));
                     }
                     window.localStorage.setItem("authToken", res.success.token);
@@ -166,3 +167,31 @@ export const loadSessionUser = () =>
             dispatch(getMe(token));
         }
     };
+
+const fetchUserSuccess = data => ({
+    type: types.FETCH_USER_SUCCESS,
+    payload: { data }
+});
+const fetchUserFailure = msg => ({
+    type: types.FETCH_USER_FAILURE,
+    payload: { msg }
+});
+export const fetchUserById = userid =>
+    async (dispatch, getState, API) => {
+        dispatch(userRequest());
+        try {
+            const res = await API.userApi.getUser(userid);
+            if (res.hasError) {
+                dispatch(displaySnackMsg("Failed to fetch user data"));
+                return dispatch(fetchUserFailure(res.message));
+            }
+            const user = res.length ? res[0] : res;
+            return dispatch(fetchUserSuccess(user));
+        } catch (error) {
+            dispatch(displaySnackMsg("Failed to fetch user data"));
+            return dispatch(fetchUserFailure(error.message));
+        }
+    };
+export const cleanFetchedUser = () => ({
+    type: types.CLEAN_FETCHED_USER,
+});

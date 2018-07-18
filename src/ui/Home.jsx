@@ -8,6 +8,7 @@ import ArticleWithMedia from "./ArticleWithMedia";
 import HomeSearchForm from "../containers/HomeSearchForm";
 import AccommodationCard from "../containers/AccommodationCard";
 import Navbar from "../containers/Navbar";
+import Footer from "./Footer";
 
 const titleService = "Our Service";
 const lead = "Stay in distinctive private homes in over 180 destinations - with an unprecedented level of service.";
@@ -120,7 +121,7 @@ export class Home extends React.PureComponent {
 
     renderAccomodations() {
         return (
-            <div id="devaway-accommodations-home-container" className={this.props.classes.subSection}>
+            <div id="devaway-places" className={this.props.classes.subSection}>
                 <div className="d-block">
                     <Typography
                         type="headline"
@@ -138,45 +139,13 @@ export class Home extends React.PureComponent {
         );
     }
 
-    renderFooter() {
-        return (
-            <footer className={this.props.classes.footer}>
-                <Typography
-                    type="subheading"
-                >
-                    <span className="d-block"> d e v a w a y © provides you the best accommodations </span>
-                    <span className="d-block"> with a sharing human experience. </span>
-                </Typography>
-                <ul className={this.props.classes.footerList}>
-                    <li className={this.props.classes.footerListItem}>
-                        <a href="/#">Accommodations</a>
-                    </li>
-                    <li className={this.props.classes.footerListItem}>
-                        <a href="/#">Contact us</a>
-                    </li>
-                    <li className={this.props.classes.footerListItem}>
-                        <a href="/#">Cookies policy</a>
-                    </li>
-                    <li className={this.props.classes.footerListItem}>
-                        <a href="/#">Legal terms</a>
-                    </li>
-                </ul>
-                <Typography
-                    type="subheading"
-                >
-                    <span className="d-block"> Public Cloud by <a href="https://github.com/esgiprojetninja/workaway" rel="noopener noreferrer" target="_blank">ESGI Ninja</a></span>
-                </Typography>
-            </footer>
-        );
-    }
-
     render() {
         const { accommodation, user } = this.props;
         const isLoading = accommodation.isLoading || accommodation.search.isLoading
             || user.isLoading || user.isGettingData;
         return (
             <div>
-                <Navbar replaceLogoWithSpinner={isLoading} />
+                <Navbar removeGoBackBtn replaceLogoWithSpinner={isLoading} />
                 <div id="home-container">
                     {this.renderFirstBlock()}
                     <HomeSearchForm />
@@ -191,7 +160,7 @@ export class Home extends React.PureComponent {
                     {this.renderBrandRibon()}
                     {this.renderDestinations()}
                     {this.renderAccomodations()}
-                    {this.renderFooter()}
+                    <Footer />
                 </div>
             </div>
         );

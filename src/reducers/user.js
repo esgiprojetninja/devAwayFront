@@ -20,6 +20,7 @@ const initialSate = {
     hasError: false,
     error: "",
     accommodations: {},
+    fetchedUser: null,
 };
 
 const userReducer = (state = initialSate, action) => {
@@ -107,6 +108,23 @@ const userReducer = (state = initialSate, action) => {
                     }),
                 state.accommodations
             )
+        };
+    case types.CLEAN_FETCHED_USER:
+        return {
+            ...state,
+            fetchedUser: null,
+        };
+    case types.FETCH_USER_SUCCESS:
+        return {
+            ...state,
+            fetchedUser: payload.data,
+            isLoading: false,
+        };
+    case types.FETCH_USER_FAILURE:
+        return {
+            ...state,
+            error: payload.msg,
+            isLoading: false,
         };
     default:
         return state;
