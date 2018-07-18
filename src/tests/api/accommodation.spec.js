@@ -43,7 +43,7 @@ describe("API accommodation", () => {
         const id = "100";
         fetchMock.delete(`https://${baseUrl}/api/v1/accommodations/${id}`, { success: true });
         const res = await accommodationApi.deleteItem(id);
-        expect(res).toEqual({ success: true });
+        expect(res).toBe(undefined);
     });
 
     it("should fetchById", async () => {
