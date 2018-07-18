@@ -209,7 +209,7 @@ describe("Actions accommodations", () => {
     it("should delete an accommodation", async () => {
         const expectedActions = [
             {
-                type: accoTypes.DELETE_ACCOMMODATION_REQUEST
+                type: accoTypes.FETCH_ACCOMMODATIONS_REQUEST
             },
             {
                 type: accoTypes.DELETE_ACCOMMODATION_SUCCESS
@@ -231,7 +231,7 @@ describe("Actions accommodations", () => {
     it("should NOT delete an accommodation with API error", async () => {
         const expectedActions = [
             {
-                type: accoTypes.DELETE_ACCOMMODATION_REQUEST
+                type: accoTypes.FETCH_ACCOMMODATIONS_REQUEST
             },
             {
                 type: SET_SNACK_MSG,
@@ -254,7 +254,7 @@ describe("Actions accommodations", () => {
     it("should NOT delete an accommodation with server failure", async () => {
         const expectedActions = [
             {
-                type: accoTypes.DELETE_ACCOMMODATION_REQUEST
+                type: accoTypes.FETCH_ACCOMMODATIONS_REQUEST
             },
             {
                 type: SET_SNACK_MSG,
