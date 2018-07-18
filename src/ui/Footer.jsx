@@ -60,10 +60,10 @@ export class Footer extends React.PureComponent {
 export default withStyles(theme => ({
     footer: {
         margin: "auto",
-        width: "100%",
+        width: "95%",
         maxWidth: 1200,
         backgroundColor: theme.palette.background.contentFrame,
-        padding: "50px"
+        padding: "50px 0"
     },
     footerList: {
         listStyleType: "none",

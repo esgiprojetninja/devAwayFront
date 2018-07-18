@@ -13,7 +13,7 @@ import Icon from "@material-ui/core/Icon";
 import moment from "moment";
 
 import Home from "../../containers/Home";
-import Footer from "../../ui/Footer";
+import FooterComp from "../../ui/Footer";
 import Navbar from "../../containers/Navbar";
 import { messageReducerPropTypes } from "../../propTypes/message.reducer.d";
 import getUserImg from "../../utils/user";
@@ -279,7 +279,7 @@ class Discussion extends React.PureComponent {
                     {this.renderFormMessage()}
                     {this.renderMessages()}
                 </Grid>
-                <Footer />
+                <FooterComp />
             </div>
         );
     }

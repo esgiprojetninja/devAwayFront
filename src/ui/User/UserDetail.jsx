@@ -7,12 +7,14 @@ import { Typography } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import UserIcon from "react-icons/lib/fa/user";
 import { withStyles } from "@material-ui/core/styles";
+import moment from "moment";
 
 import UnloggedComp from "../NoUserComp";
-import Footer from "../Footer";
+import FooterComp from "../Footer";
 import Navbar from "../../containers/Navbar";
 import getUserImg from "../../utils/user";
 import { darkGrey } from "../../styles/theme";
+import { DATE_FORMAT, HOUR_FORMAT } from "../../utils/mission";
 
 class UserDetail extends React.PureComponent {
     componentWillReceiveProps(props) {
@@ -40,7 +42,7 @@ class UserDetail extends React.PureComponent {
         const { classes } = this.props;
         const user = this.props.user.fetchedUser;
         return (user &&
-            <Grid style={{ minHeight: "85vh" }} container spacing={24} direction="row" alignItems="center" justify="center">
+            <Grid style={{ minHeight: "85vh" }} container spacing={24} direction="column" alignItems="center" justify="center">
                 <Grid item>
                     <Paper className={classes.userPaper}>
                         <Grid container alignItems="center" justify="center">
@@ -49,6 +51,10 @@ class UserDetail extends React.PureComponent {
                         <Grid container alignItems="center" justify="center">
                             <Typography className={classes.contactUserName} variant="subheading" color="inherit" component="p">{user.userName}</Typography>
                         </Grid>
+                        {user.created_at &&
+                        <Grid container alignItems="center" justify="center">
+                            <Typography className={classes.contactUserName} variant="subheading" color="inherit" component="p">{moment(user.created_at, `${DATE_FORMAT}, ${HOUR_FORMAT}:ss`).format("MMMM Do YYYY")}</Typography>
+                        </Grid>}
                     </Paper>
                 </Grid>
             </Grid>
@@ -64,7 +70,9 @@ class UserDetail extends React.PureComponent {
                     <LinearProgress color="primary" mode="query" />}
                 {this.props.user.isLoggedIn && this.renderContactCard()}
                 {!this.props.user.isLoggedIn && <UnloggedComp />}
-                <Footer />
+                <div style={{ marginTop: 150 }}>
+                    <FooterComp />
+                </div>
             </div>
         );
     }
