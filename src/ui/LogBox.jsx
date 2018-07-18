@@ -107,6 +107,7 @@ class LogBox extends React.PureComponent {
             password
         });
         this.handleClose();
+        this.handleUserMenuClose();
     }
 
     renderAvatar() {
@@ -153,6 +154,13 @@ class LogBox extends React.PureComponent {
                                 id="user-account-link"
                                 to="/profile"
                             >My account
+                            </NavLink>
+                        </MenuItem>
+                        <MenuItem onClick={this.handleClickOpen}>
+                            <NavLink
+                                id="user-admin-link"
+                                to="/admin"
+                            >Admin
                             </NavLink>
                         </MenuItem>
                         <MenuItem>
