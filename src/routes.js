@@ -9,6 +9,7 @@ import MissionEdition from "./containers/Mission/MissionEdition";
 import MessagesList from "./containers/Message/MessageList";
 import Discussion from "./containers/Message/Discussion";
 import UserDetail from "./containers/User/UserDetail";
+import Admin from "./containers/User/Admin";
 
 export default [
     {
@@ -54,6 +55,11 @@ export default [
         path: "/places",
         exact: true,
         component: AccommodationsTabs
+    },
+    {
+        path: "/admin",
+        exact: true,
+        component: Admin
     },
     {
         path: "/place/creation",

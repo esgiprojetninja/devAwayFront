@@ -39,7 +39,7 @@ const styles = theme => ({
     },
     userMenuCard: {
         width: "100%",
-        height: 155,
+        height: "auto",
         margin: 0,
         paddingTop: theme.spacing.unit * 2,
         paddingBottom: theme.spacing.unit * 2,
@@ -125,6 +125,22 @@ class LogBox extends React.PureComponent {
         );
     }
 
+    renderAdminItem() {
+        const isAdmin = this.props.data.roles && this.props.data.roles === 1;
+        if (!isAdmin) {
+            return null;
+        }
+        return (
+            <MenuItem onClick={this.handleClickOpen}>
+                <NavLink
+                    id="user-admin-link"
+                    to="/admin"
+                >Admin
+                </NavLink>
+            </MenuItem>
+        );
+    }
+
     renderLoggedBox() {
         const { anchorEl } = this.state;
         return (
@@ -156,13 +172,7 @@ class LogBox extends React.PureComponent {
                             >My account
                             </NavLink>
                         </MenuItem>
-                        <MenuItem onClick={this.handleClickOpen}>
-                            <NavLink
-                                id="user-admin-link"
-                                to="/admin"
-                            >Admin
-                            </NavLink>
-                        </MenuItem>
+                        {this.renderAdminItem()}
                         <MenuItem>
                             <Button
                                 id="devaway-user-logout-btn"
