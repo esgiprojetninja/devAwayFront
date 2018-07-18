@@ -90,7 +90,7 @@ export function saveAccommodation(newAccommodation) {
 }
 
 const deleteAccommodationRequest = () => ({
-    type: types.DELETE_ACCOMMODATION_REQUEST
+    type: types.FETCH_ACCOMMODATIONS_REQUEST
 });
 
 const deleteAccommodationSuccess = () => ({
@@ -106,7 +106,7 @@ export function deleteAccommodation(id) {
     return (dispatch, getState, API) => {
         dispatch(deleteAccommodationRequest());
         return API.accommodationApi.deleteItem(id).then((res) => {
-            if (res.hasError) {
+            if (res && res.hasError) {
                 dispatch(displaySnackMsg("Accomodation deleting failed !"));
                 return dispatch(deleteAccommodationFailure(res.message));
             }

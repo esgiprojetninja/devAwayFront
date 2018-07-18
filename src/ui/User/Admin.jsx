@@ -10,8 +10,10 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import IconButton from "@material-ui/core/IconButton";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
+import DeleteIcon from "@material-ui/icons/Delete";
 import moment from "moment";
 
 import Home from "../../containers/Home";
@@ -64,6 +66,11 @@ class UserDetail extends React.PureComponent {
             || this.props.accommodation.isLoading;
     }
 
+    handleAccoDete = accoId => () => {
+        if (this.props.accommodation.isLoading) return;
+        this.props.deleteAcco(accoId);
+    }
+
     handleChangePage = () => (event, page) => {
         this.setState({
             page,
@@ -76,6 +83,40 @@ class UserDetail extends React.PureComponent {
         });
     }
 
+    renderRow(acco) {
+        const { classes } = this.props;
+        return (
+            <TableRow key={acco.id}>
+                <TableCell numeric>{acco.id}</TableCell>
+                <TableCell numeric>
+                    <Avatar
+                        className={classes.placeAvatar}
+                        src={getAccoImg(acco)}
+                    />
+                </TableCell>
+                <TableCell numeric>{acco.user_id}</TableCell>
+                <TableCell>{cutString(acco.title)}</TableCell>
+                <TableCell>{cutString(acco.description || "Ungiven")}</TableCell>
+                <TableCell>{cutString(acco.address || "Ungiven", 10)}</TableCell>
+                <TableCell>{cutString(acco.city || "Ungiven")}</TableCell>
+                <TableCell>{cutString(acco.country || "Ungiven")}</TableCell>
+                <TableCell>{moment(acco.created_at, `${DATE_FORMAT} ${HOUR_FORMAT}:ss`).format("MMMM Do YYYY")}</TableCell>
+                <TableCell>{moment(acco.updated_at, `${DATE_FORMAT} ${HOUR_FORMAT}:ss`).format("MMMM Do YYYY")}</TableCell>
+                <TableCell numeric>
+                    <div>
+                        <IconButton
+                            color="primary"
+                            aria-haspopup="true"
+                            disabled={this.props.accommodation.isLoading}
+                            onClick={this.handleAccoDete(acco.id)}
+                        >
+                            <DeleteIcon />
+                        </IconButton>
+                    </div>
+                </TableCell>
+            </TableRow>
+        );
+    }
 
     renderPlacesTable() {
         const { classes } = this.props;
@@ -101,27 +142,8 @@ class UserDetail extends React.PureComponent {
                         </TableHead>
                         <TableBody>
                             {accommodations
-
                                 .slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage)
-                                .map(acco => (
-                                    <TableRow key={acco.id}>
-                                        <TableCell numeric>{acco.id}</TableCell>
-                                        <TableCell numeric>
-                                            <Avatar
-                                                className={classes.placeAvatar}
-                                                src={getAccoImg(acco)}
-                                            />
-                                        </TableCell>
-                                        <TableCell numeric>{acco.user_id}</TableCell>
-                                        <TableCell>{cutString(acco.title)}</TableCell>
-                                        <TableCell>{cutString(acco.description || "Ungiven")}</TableCell>
-                                        <TableCell>{cutString(acco.address || "Ungiven", 10)}</TableCell>
-                                        <TableCell>{cutString(acco.city || "Ungiven")}</TableCell>
-                                        <TableCell>{cutString(acco.country || "Ungiven")}</TableCell>
-                                        <TableCell>{moment(acco.created_at, `${DATE_FORMAT} ${HOUR_FORMAT}:ss`).format("MMMM Do YYYY")}</TableCell>
-                                        <TableCell>{moment(acco.updated_at, `${DATE_FORMAT} ${HOUR_FORMAT}:ss`).format("MMMM Do YYYY")}</TableCell>
-                                    </TableRow>
-                                ))}
+                                .map(acco => this.renderRow(acco))}
                         </TableBody>
                     </Table>
                 </div>
@@ -151,12 +173,12 @@ class UserDetail extends React.PureComponent {
         return (
             <div className={classes.root}>
                 <NavBar burgerColor={darkGrey} />
-                <Typography variant="headline" className={classes.title} color="inherit">
-                    Hello dear wised administrator
-                </Typography>
                 {this.isLoading &&
                     <LinearProgress color="primary" mode="query" />}
                 <Grid className={classes.container} container direction="column" alignItems="center" justify="center">
+                    <Typography variant="headline" className={classes.title} color="inherit">
+                        Hello dear wised administrator
+                    </Typography>
                     {this.renderPlacesTable()}
                 </Grid>
                 <div style={{ marginTop: 150 }}>
@@ -170,6 +192,7 @@ class UserDetail extends React.PureComponent {
 UserDetail.propTypes = {
     accommodation: accommodationReducerPropTypes.isRequired,
     onInit: T.func.isRequired,
+    deleteAcco: T.func.isRequired,
     user: T.shape({
         isLoggedIn: T.bool.isRequired,
         isLoading: T.bool.isRequired,
@@ -198,7 +221,7 @@ export default withStyles(theme => ({
     },
     container: {
         width: "100%",
-        maxWidth: 1280,
+        maxWidth: 1480,
         margin: "auto",
     },
     palceAvatar: {

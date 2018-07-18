@@ -39,6 +39,12 @@ export function generateFetch(entity, verb, id, data) {
                 message: response.statusText
             });
         }
+        if (entity.includes("accommodations") && verb === "DELETE") {
+            const { status, ok } = response;
+            if (status && status < 400 && status >= 200 && ok) {
+                return Promise.resolve();
+            }
+        }
         return response.json();
     }).catch(defaultErrorHandler);
 }
